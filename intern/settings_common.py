@@ -36,10 +36,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'myapp',
     'accounts',
+
+    'django_cleanup.apps.CleanupConfig',
     
     'django.contrib.sites',
     'allauth',
     'allauth.account',
+
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -165,3 +169,14 @@ ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 
 DEFAULT_FROM_EMAIL = 'admin@example.com'
 
+
+#channels
+ASGI_APPLICATION = 'intern.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}

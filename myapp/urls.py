@@ -15,6 +15,6 @@ urlpatterns = [
 
    # トーク画面
    # 誰とのトークかを、URLにて判別
-   # ユーザー名に重複が許されていないので、ユーザー名で判別
+   # ユーザーidに重複が許されていないので、ユーザーidで判別
    path("talk_room/<int:user_id>/", views.TalkRoomView.as_view(), name="talk_room"),
 ]

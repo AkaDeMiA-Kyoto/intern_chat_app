@@ -38,6 +38,7 @@
     margin: 0;
     height: calc(100vh - 128px - 6rem - 12px);
     overflow: auto;
+
 }
 
 /*
@@ -53,8 +54,12 @@
 }
 
 /* 下にしか枠線を引いていないので、初めの要素にだけ上にも枠線を引くように設定 */
-.friend-list__item:first-child {
+li:first-child {
     border-top: solid 1px #888;
+}
+
+li:last-child {
+    border-bottom: solid 1px #888;
 }
 
 .friend-list__link {

@@ -37,3 +37,4 @@ class ImageChangeForm(forms.ModelForm):
         model = User
         fields = ("icon",)
         labels = {"icon": "新しいアイコン画像"}
+        

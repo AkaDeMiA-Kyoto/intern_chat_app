@@ -32,7 +32,6 @@ class FriendsView(LoginRequiredMixin, generic.ListView):
             | Q(talk_from=user, talk_to=OuterRef("pk"))
         ).order_by("-time")
 
-
         friends = (
             User.objects.exclude(id=user.id)
             .annotate(

@@ -53,7 +53,7 @@
 }
 
 /* トーク送信部分 */
-.talk_room__sendbox {
+.text-container{
     width: 100%;
     min-height: 3rem;
     position: fixed;
@@ -67,15 +67,16 @@
     justify-content: space-around;
 }
 
-input {
-    font-size: 1rem;
-    width: calc(100% - 6rem);
-    margin: 8px auto;
-    border: solid 2px #000;
-    border-radius: 32px;
+.chat-message-input{
+    height: 1.8em;
+    width: 85%;
+    padding: 3px 14px;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+
 }
 
-.talk_room__sendbox-btn {
+.chat-message-submit{
     font-size: 1rem;
     margin: auto 8px;
     width: 4rem;
@@ -84,9 +85,12 @@ input {
     border-radius: 32px;
 }
 
+.chat-message-submit:hover{
+    cursor: pointer;
+}
+
+
 /* talk_roomのみのheaderのcss */
-
-
 .talk_room__reload {
     color: #888;
     font-size: 1.2rem;

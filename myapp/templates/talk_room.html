@@ -40,29 +40,27 @@
                 {% endif %}
                 <p class="chatboard__name">＞{{ talk.talk_from }}</p>
                 <p class="chatboard__text">{{ talk.talk }}</p>
-                <p class="chatboard__time">{{ talk.time|date:"m/d" }}　{{ talk.time|date:"H:i" }}</p>
+                <p class="chatboard__time">{{ talk.time|date:"m/d" }} {{ talk.time|date:"H:i" }}</p>
             </li>
         {% endfor %}
     </ul>
 
     <!-- トークの送信部分 -->
-    <form class="talk_room__sendbox" method="POST">
-        {% csrf_token %}
-        {{ form.talk }}
-        <button class="talk_room__sendbox-btn" type="submit">送信</button>
-    </form>
+    <div class="text-container">
+        <input id="chat-message-input" class="chat-message-input" type="text">
+        <input class="chat-message-submit" type="button" value="送信">
+    </div>
+
+    <!-- トークの送信部分 -->
+    
 </div>
 {% endblock %}
 
 {% block footer %}{% endblock %}
 
-{% block extra_js %}
-<!-- 機能を載せるために不可避だったので、ここだけコピペで実装してください -->
-<script>
-    // トークの表示を新しいものを下にしているため、最下にスクロールさせる
-    document.addEventListener("DOMContentLoaded", function () {
-        const chatboard = document.getElementById("chatboard");
-        window.scroll(0, chatboard.scrollHeight);
-    });
-</script>
+
+{% block script %}
+{{ friend.id|json_script:'friend' }}
+{{ user.id|json_script:'user' }}
+<script type='text/javascript' src="{% static 'js/talk_room.js' %}"></script>
 {% endblock %}
