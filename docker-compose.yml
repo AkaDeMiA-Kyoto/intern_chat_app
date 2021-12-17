@@ -30,7 +30,7 @@ services:
     volumes:
       - ./staticfiles:/staticfiles
       - ./media:/media
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ./nginx:/etc/nginx/conf.d
     ports:
       - 80:80
     depends_on:
