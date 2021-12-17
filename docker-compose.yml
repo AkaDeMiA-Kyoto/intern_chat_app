@@ -11,7 +11,7 @@ services:
       - ./postgres_data:/var/lib/postgresql/data
     user: ${POSTGRES_USER}
     healthcheck:
-      test: /usr/bin/pg_isready
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
