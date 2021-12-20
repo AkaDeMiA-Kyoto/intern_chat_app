@@ -5,11 +5,16 @@
 <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}" />
 {% endblock %}
 
-{% block header-title %}アイコン{% endblock %}
+{% block header-title %}{{ title }}{% endblock %}
 
 {% block content %}
 <div class="main-container">
-    <form action="{% url 'change_icon' %}" method="post" enctype="multipart/form-data">
+    <form action="{% url link %}" method="post" {% if link == 'change_icon' %}enctype="multipart/form-data"{% endif %}>
+        {% for message in messages %}
+            {% if message.tags == 'success' %}
+                <p class='message'>{{ message }}</p>
+            {% endif %}
+        {% endfor %}
         {% csrf_token %}
         <table>
         {% for field in form %}

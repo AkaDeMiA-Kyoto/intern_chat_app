@@ -1,15 +1,14 @@
 {% extends 'myapp/base.html' %}
 {% load static %}
-    
 {% block extra_style %}
 <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}" />
 {% endblock %}
 
-{% block header-title %}メールアドレス{% endblock %}
+{% block header-title %}会員登録{% endblock %}
 
 {% block content %}
 <div class="main-container">
-    <form action="{% url 'change_email' %}" method="post">
+    <form action="{% url 'account_signup' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <table>
         {% for field in form %}
@@ -31,4 +30,7 @@
         {% endif %}
     </form>
 </div>
+{% endblock %}
+
+{% block footer %}
 {% endblock %}

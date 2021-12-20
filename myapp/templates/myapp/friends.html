@@ -7,10 +7,20 @@
 
 {% block header-title %}友達{% endblock %}
 
+
 {% block content %}
 <div class="main-container">
+    <div class="searchbox">
+        <form action="" method="get">
+            <input type="text" name="query" value="{{ request.GET.query }}" class="text">
+            <button type="submit">検索</button>
+            <input type="radio" name="search-type" value="partial" class="radio" checked><span>部分一致</span>
+            <input type="radio" name="search-type" value="exact" class="radio"><span>完全一致</span>
+            <input type="radio" name="search-type" value="exclude" class="radio"><span>除外</span>
+        </form>
+    </div>
     <div class="users">
-        {% for user in data %}
+        {% for user in user_list %}
         <a href="{% url 'talk_room' user.id %}">
             <div class="user-row">
                 <div class="user-content">

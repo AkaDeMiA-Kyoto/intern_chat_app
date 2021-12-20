@@ -1,22 +1,16 @@
-from django.urls import path
+from django.urls import include, path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('signup', views.signup_view, name='signup_view'),
-    path('login', views.login_view.as_view(), name='login_view'),
-    path('friends', views.friends, name='friends'),
-    path('talk_room/<int:pk>', views.talk_room, name='talk_room'),
-    path('setting', views.setting, name='setting'),
-    path('change_username', views.change_username, name='change_username'),
-    path('change_email', views.change_email, name='change_email'),
-    path('change_icon', views.change_icon, name='change_icon'),
-    path('change_password', views.change_password.as_view(), name='change_password'),
-    path('change_username_done', views.change_username_done, name='change_username_done'),
-    path('change_email_done', views.change_email_done, name='change_email_done'),
-    path('change_icon_done', views.change_icon_done, name='change_icon_done'),
-    path('change_password_done', views.change_password_done.as_view(), name='change_password_done'),
-    path('logout', views.logout_view.as_view(), name='logout_view'),
+    path('', views.IndexView.as_view(), name='index'),
+    path('accounts', include('allauth.urls')),
+    path('friends', views.FriendListView.as_view(), name='friends'),
+    path('talk_room/<int:pk>', views.TalkRoomView.as_view(), name='talk_room'),
+    path('setting', views.SettingView.as_view(), name='setting'),
+    path('change_username', views.ChangeUsernameView.as_view(), name='change_username'),
+    path('change_email', views.ChangeEmailView.as_view(), name='change_email'),
+    path('change_icon', views.ChangeIconView.as_view(), name='change_icon'),
 ] + static(settings.IMAGE_URL, document_root=settings.IMAGE_ROOT)

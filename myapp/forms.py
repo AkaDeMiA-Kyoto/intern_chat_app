@@ -1,32 +1,42 @@
 from django import forms
-from django.contrib.auth.forms import (
-    UserCreationForm,
-    AuthenticationForm,
-    PasswordChangeForm,
+#from django.contrib.auth.forms import (
+    #UserCreationForm,
+    #AuthenticationForm,
+    #PasswordChangeForm,
+#)
+from allauth.account.forms import (
+    SignupForm,
+    LoginForm,
+    ChangePasswordForm,
 )
 from .models import User, Talk
 
 
-class SignupForm(UserCreationForm):
+class MySignupForm(SignupForm):
+    img = forms.ImageField()
+
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2', 'img')
-        labels = {
-            'username': 'ユーザーネーム',
-            'email': 'メールアドレス',
-            'img': 'アイコン',
-        }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['password1'].label = 'パスワード'
-        self.fields['password2'].label = 'パスワード確認'
-
-
-class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].label = 'ユーザーネーム'
+        self.fields['email'].label = 'メールアドレス'
+        self.fields['password1'].label = 'パスワード'
+        self.fields['password2'].label = 'パスワード確認'
+        self.fields['img'].label = 'アイコン'
+
+    def signup(self, request, user):
+        user.img = self.cleaned_data['img']
+        user.save()
+        return user
+
+
+class MyLoginForm(LoginForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['login'].label = 'ユーザーネーム'
         self.fields['password'].label = 'パスワード'
 
 
@@ -38,6 +48,7 @@ class ChangeUsernameForm(forms.ModelForm):
             'username': '新しいユーザーネーム',
         }
 
+
 class ChangeEmailForm(forms.ModelForm):
     class Meta:
         model = User
@@ -45,6 +56,7 @@ class ChangeEmailForm(forms.ModelForm):
         labels = {
             'email': '新しいメールアドレス',
         }
+
 
 class ChangeIconForm(forms.ModelForm):
     class Meta:
@@ -54,13 +66,14 @@ class ChangeIconForm(forms.ModelForm):
             'img': '新しいアイコン',
         }
 
-class ChangePasswordForm(PasswordChangeForm):
+
+class MyChangePasswordForm(ChangePasswordForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['old_password'].label = '現在のパスワード'
-        self.fields['new_password1'].label = '新しいパスワード'
-        self.fields['new_password2'].label = '新しいパスワード確認'
-    pass
+        self.fields['oldpassword'].label = '現在のパスワード'
+        self.fields['password1'].label = '新しいパスワード'
+        self.fields['password2'].label = '新しいパスワード確認'
+
 
 class TalkForm(forms.ModelForm):
     class Meta:

@@ -1,16 +1,22 @@
 {% extends 'myapp/base.html' %}
 {% load static %}
-    
+
 {% block extra_style %}
-<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/login.css' %}" />
 {% endblock %}
 
-{% block header-title %}パスワード{% endblock %}
+{% block header-title %}ログイン{% endblock %}
+
 
 {% block content %}
 <div class="main-container">
-    <form action="{% url 'change_password' %}" method="post">
+    <form action="{% url 'account_login' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        {% endif %}
         <table>
         {% for field in form %}
             <tr>
@@ -22,13 +28,10 @@
         <div class="signup-button-wrapper">
             <button type="submit">送信</button>
         </div>
-        {% if form.errors %}
-            {% for field in form %}
-                {% for error in field.errors %}
-                    <p>{{ error }}</p>
-                {% endfor %}
-            {% endfor %}
-        {% endif %}
     </form>
 </div>
 {% endblock %}
+
+{% block footer %}
+{% endblock %}
+

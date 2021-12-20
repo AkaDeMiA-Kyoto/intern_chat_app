@@ -10,7 +10,7 @@
 <header class="header">
     <div class="header-container">
         <span class="header-container__title">
-            {% block headersa-title %}{{ user2_name }}{% endblock %}
+            {% block headersa-title %}{{ friend_name }}{% endblock %}
         </span> 
         <a href="{% url 'friends' %}" class="return-button">
             <i class="fas fa-angle-left fa-2x"></i>
@@ -24,7 +24,7 @@
 <div class="main-container">
     <div class="messages">
         {% for item in data %}
-        <div class="message-row {% if item.from_user.username == user2_name %} not-from-me{% endif %}">
+        <div class="message-row {% if item.from_user.username != friend_name %} from-me{% endif %}">
             <div class="message-content">
                 <div class="username-row">
                     <div class="username">{{ item.from_user.username }}</div>

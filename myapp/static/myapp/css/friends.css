@@ -1,3 +1,43 @@
+.searchbox {
+    padding: 10px 30px;
+    height: 30px;
+    border-bottom: 0.5px solid #9b9b9b;
+}
+
+.searchbox form {
+    margin: 0 auto;
+    display: flex;
+    max-width: 700px;
+}
+
+.text {
+    margin-right: 10px;
+    border-radius: 10px;
+    border: 1px solid #9b9b9b;
+    padding: 2px 7px;
+    height: 1.2rem;
+    font-size: 0.8rem;
+    vertical-align: middle;
+}
+
+.searchbox button {
+    border: #9b9b9b solid 1px;
+    border-radius: 13px;
+    padding: 2px 10px;
+    text-decoration: none;
+    background-color: white;
+}
+
+.radio {
+    margin-left: 7px;
+    vertical-align: middle;
+    height: 1.2rem;
+}
+
+.searchbox span {
+    font-size: 0.7rem;
+    line-height: 1.5rem;
+}
 
 .user-icon {
     width: 50px;
