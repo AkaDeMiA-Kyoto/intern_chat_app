@@ -1,0 +1,43 @@
+body{
+    width:100%;
+}
+
+.footer-coutainer{
+    margin-right:auto;
+    margin-left:auto;
+    width:100%;
+}
+.form{
+    display:flex;
+    width:100%;
+}
+textarea{
+    width:80%;
+    border-radius:20px;
+}
+.btn{
+    width:20%;
+    border-radius:20px;
+}
+.message{
+    border-bottom: solid 0.5px gray;
+    font-size:20px;
+}
+.date{
+    font-size:8px;
+    text-align:right;
+}
+.header_flex{
+    display:flex;
+}
+.back{
+    font-size:40px;
+    text-decoration:none;
+    color:black;
+    width:50px;
+}
+.username{
+    font-size:30px;
+    margin-right:auto;
+    margin-left:auto;
+}

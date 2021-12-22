@@ -1,1 +1,52 @@
-TR
+{% extends 'myapp/base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block extra_style %}
+        <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talkroom.css' %}" />
+    {% endblock %}
+    <title>DeMiAインターン</title>
+</head>
+<body>
+    {% block header %}
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container__title">
+                {% block header-title %}
+                    <div class="header_flex">
+                        <div align="left" ><a href="{% url 'friends' %}" class="back"><</a></div>
+                        <div class="username">{{username}}</div>
+                    </div>
+                {% endblock %}
+            </span>
+        </div>
+    </header>
+    {% endblock %}
+
+    {% block content %}
+    <table>
+        {% for item in message %}
+            <div>
+                <div>>>{{item.you}}</div>
+                <div class="message">{{item.message}}</div>
+                <div class="date">{{item.date}}</div>
+            </div>
+        {% endfor %} 
+    </table>
+    {% endblock %}
+    {% block footer %}
+    <footer class="footer">
+        <div class="footer-container">
+            <form method = 'POST' class="form">
+                {% csrf_token %}
+                {{ form.message }}
+                <button type = "submit" class="btn">送信</button>
+            </form>
+        </div>
+    </footer>
+    {% endblock %}
+</body>
+</html>

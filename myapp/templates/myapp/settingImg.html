@@ -1,4 +1,4 @@
-
+{% extends 'myapp/base.html' %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="ja">
@@ -6,9 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
-    {% block extra_style %}
-    <link rel="stylesheet" href="{% static 'myapp/css/setting.css' %}">
-    {% endblock %}
+    {% block extra_style %}{% endblock %}
     <title>DeMiAインターン</title>
 </head>
 <body>
@@ -16,20 +14,22 @@
     <header class="header">
         <div class="header-container">
             <span class="header-container__title">
-                {% block header-title %}設定{% endblock %}
+                {% block header-title %}Img変更{% endblock %}
             </span>
         </div>
     </header>
     {% endblock %}
 
     {% block content %}
-    <main>
-        <a href="{% url 'setting_name'  %}" class="btn">ユーザ名変更</a>
-        <br><a href="{% url 'setting_mail'  %}" class="btn">メールアドレス変更</a>
-        <br><a href="{% url 'setting_img'  %}" class="btn">アイコン変更</a>
-        <br><a href="{% url 'setting_password'  %}" class="btn">パスワード変更</a>
-        <br><a href="{% url 'login_view'%}" class="btn">ログアウト</a>
-    </main>
+    <form action="{% url 'setting_img' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table class="table">
+            {{ form.as_table}}
+            <tr><th><td>
+                <input type="submit" value="変更" class="btn btn-primary mt-2">
+            </td></th></tr>
+        </table>
+    </form>
     {% endblock %}
 
     {% block footer %}
@@ -42,7 +42,7 @@
                 </a>
             </div>
             <div class="footer-container__item">
-                <a href="{% url 'setting'  %}" class="footer-item__link">
+                <a href="{% url 'setting' %}" class="footer-item__link">
                     <span class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></span>
                     <span class="footer-item__text">設定</span>
                 </a>

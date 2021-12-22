@@ -1,0 +1,43 @@
+@charset "UTF-8";
+a{
+    text-decoration: none;
+    color:black;
+}
+.image{
+    border-radius: 50%;
+    border-bottom: solid 5px #9b9b9b;
+    height:60px;
+    width:60px;
+}
+.flex{
+    display:flex;
+    border:gray solid 1px;
+    width:100%;
+
+}
+.content{
+    color:gray;
+}
+.message{
+    font-size:12px;
+}
+.content_1{
+    width:20%;
+    margin-right:10%;
+    margin-left:10%;
+}
+.content_2{
+    width:50%;
+    /* margin-right:auto;
+    margin-left:auto; */
+}
+.content_2_1{
+    font-size:20px;
+}
+.content_2_2{
+    display:flex;
+    position: relative
+}
+.date{
+    font-size:15px;
+}

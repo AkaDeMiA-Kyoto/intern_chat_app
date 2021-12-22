@@ -1,0 +1,20 @@
+@charset "UTF-8";
+body{
+    width:100%
+}
+p{
+    height:600px;
+    padding-top:300px;
+    padding-bottom:300px;
+}
+.btn {
+    display: block;
+    text-align:center;
+    width: 200px;
+    margin: 0 auto 60px;
+    color:black;
+    border: 2px solid #000;
+    text-decoration: none;
+    padding: 13px 0 12px;
+    font-weight: bold;
+}

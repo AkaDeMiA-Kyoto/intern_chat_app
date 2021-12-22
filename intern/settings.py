@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+from pathlib import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -81,6 +82,8 @@ DATABASES = {
     }
 }
 
+MIDDLEWARE_CLASSES = (
+'django.middleware.csrf.CsrfViewMiddleware'),
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -106,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tokyo'
 
 USE_I18N = True
 
@@ -118,4 +121,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+AUTH_USER_MODEL = "myapp.CustomUser"
+
 STATIC_URL = '/static/'
+LOGIN_URL = 'register:login'
+LOGIN_REDIRECT_URL = 'register:top'
+MEDIA_ROOT= os.path.join(BASE_DIR,'media')
+MEDIA_URL='/media/'
+STATICFILES_DIRS=(
+    os.path.join(BASE_DIR,'static'),
+)
+STATIC_ROOT = BASE_DIR / "staticfiles"
+try:
+    from .local_settings import *
+except ImportError:
+    # local_settings.py が存在しなくてもエラーにならないようにする
+    pass
