@@ -1,25 +1,21 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
-    {% block extra_style %}{% endblock %}
-    <title>DeMiAインターン</title>
-</head>
+<html>
 <body>
     {% block header %}
-    <header class="header">
-        <div class="header-container">
-            <span class="header-container__title">
-                {% block header-title %}{{ receiver }}{% endblock %}
-            </span>
-        </div>
-    </header>
+        <header class="header">
+            <div class="header-container">
+                <span class="header-container__title">
+                    {% block header-title %}
+                        <img class="receiverimg-header" src="{{ receiver.image.url }}">
+                        {{ receiver }}
+                    {% endblock %}
+                </span>
+            </div>
+        </header>
     {% endblock %}
-
     {% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
     {% for item in data %}
         <div class="container">
             {% if item.sender == user %}
@@ -34,10 +30,6 @@
             <br>
         </div>
     {% endfor %}
-    </table>
-    {% endblock %}
-
-    {% block footer %}
     <form method="post">
         <table class="table">
             <td>
@@ -45,23 +37,8 @@
                 &emsp13;{{ form.content }} <input type="submit" value="send" class="btn btn--shadow">
             </td>            
         </table>
-    </form>
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-container__item">
-                <a href="{% url 'friends' %}" class="footer-item__link">
-                    <span class="footer-item__icon"><img src="{% static 'myapp/img/people-24px.svg' %}"></span>
-                    <span class="footer-item__text">友達</span>
-                </a>
-            </div>
-            <div class="footer-container__item">
-                <a href="{% url 'setting' %}" class="footer-item__link">
-                    <span class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></span>
-                    <span class="footer-item__text">設定</span>
-                </a>
-            </div>
-        </div>
-    </footer>
+    </form> 
+
     {% endblock %}
 </body>
 </html>

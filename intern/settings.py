@@ -11,9 +11,13 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from re import L
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
+# 画像を扱う設定
 MEDIA_ROOT = BASE_DIR.joinpath('media')
 MEDIA_URL = '/media/'
 
@@ -28,8 +32,40 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-LOGIN_REDIRECT_URL = "friends"
-LOGOUT_REDIRECT_URL = "index"
+LOGGING = {
+    'version':1,
+    'disable_existing_loggers':False,
+
+    'loggers':{
+        'django':{
+            'handlers':['console'],
+            'level':'INFO',
+        },
+        # diaryアプリケーションが利用するロガー
+        'diary':{
+            'handlers':['console'],
+            'level':'DEBUG',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level':'DEBUG',
+            'class':'logging.StreamHandler',
+            'formatter':'dev',
+        },
+    },
+
+    'formatters': {
+        'dev': {
+            'format':'\t'.join([
+                '%(asctime)s',
+                '[%(levelname)s]',
+                '%(pathname)s(Line:%(lineno)d)',
+                '%(message)s',
+            ])
+        },
+    }
+}
 
 # Application definition
 
@@ -40,9 +76,52 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+
     'myapp',
-    'widget_tweaks',
+
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+
+    # 'widget_tweaks',
 ]
+
+# django-allauthで利用するdjango.contrib.sitesを使うためにサイト識別用IDを設定
+SITE_ID = 1
+
+# これ何やってるかわからん！！！！！allauth.account.auth_backends.AuthenticationBackendって何～～～
+AUTHENTICATION_BACKENDS = (
+    # 一般ユーザ用(メールアドレス認証)
+    'allauth.account.auth_backends.AuthenticationBackend',
+    # 管理サイト用(ユーザ名認証)
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+# メールアドレス認証に変更する設定
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_USERNAME_REQUIRED = True
+
+# サインアップにメールアドレス確認をはさむよう設定
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory',
+ACCOUNT_EMAIL_REQUIRED = True
+
+# ログアウトリンクのクリック後即ログアウトする設定
+ACCOUNT_LOGOUT_ON_GET = True,
+
+# django-allauthが送信するメールの件名に自動付与される接頭辞をブランクにする設定(？)
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
+
+# ログイン後、ログアウト後にリダイレクトするURLを設定
+LOGIN_REDIRECT_URL = "myapp:friends"
+LOGOUT_REDIRECT_URL = "index"
+
+# formをカスタマイズ
+ACCOUNT_FORMS = {
+    'signup': 'myapp.forms.CustomSignUpForm',
+}
+
+# ACCOUNT_ADAPTER = 'myapp.adapter.AccoutAdapter'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -59,7 +138,12 @@ ROOT_URLCONF = 'intern.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            # allauth用です
+            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'myapp', 'templates', 'account'),
+            os.path.join(BASE_DIR, 'myapp'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -78,12 +162,29 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+'''postgresにすげかえるための設定(なんもわからん)'''
+# env = environ.Env()
+# env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# DATABASES = {
+#    # postgres
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'myapp',
+#         'USER': env('DB_USER'),
+#         'PASSWORD': env('DB_PASSWORD'),
+#         'HOST': '',
+#         'PORT': 5433,
+#     }
+# }
+''''''
 DATABASES = {
-    'default': {
+    'default':{
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
 
 AUTH_USER_MODEL = 'myapp.CustomUser'
 
@@ -109,7 +210,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ja'
 
 TIME_ZONE = 'Asia/Tokyo'
 
@@ -126,7 +227,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-try:
-    from .local_settings import *
-except ImportError:
-    pass
+#signupformからの情報をcustomusermodelに保存するのに必要
+ACCOUNT_ADAPTER = 'myapp.adapter.AccountAdapter'

@@ -12,37 +12,54 @@ from django.contrib.auth.forms import AuthenticationForm
 from myapp.models import CustomUser
 from myapp.models import Message
 
+# 最適化に使うやつ
+from allauth.account.forms import SignupForm
 
-class SignupForm(UserCreationForm):
-    username = forms.CharField(
-        max_length=30,
-        required=True,
-        label="Username",
-    )
-    email = forms.EmailField(
-        max_length=100,
-        required=True,
-        label="Email",
-    )
-    image = forms.ImageField(
+class CustomSignUpForm(SignupForm):
+    print("SIGNUP")
+    image = fields.ImageField(
         required=False,
-        label="Image",
+        # label: フォームのラベルとして表示するためのもの(何かの引数になるとかではない)
+        label='image',
     )
-
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs["class"] = "form-control"
+        
+    def save(self, request):
+        user = super(CustomSignUpForm, self).save(request)
+        return user
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'image')
 
-class LoginForm(AuthenticationForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs['class'] = 'form-control'
-        self.fields['password'].widget.attrs['class'] = 'form-control'
+# class SignupForm(UserCreationForm):
+#     username = forms.CharField(
+#         max_length=30,
+#         required=True,
+#         label="Username",
+#     )
+#     email = forms.EmailField(
+#         max_length=100,
+#         required=True,
+#         label="Email",
+#     )
+#     image = forms.ImageField(
+#         required=False,
+#         label="Image",
+#     )
+
+#     def __init__(self, *args, **kwargs) -> None:
+#         super().__init__(*args, **kwargs)
+#         for field in self.fields.values():
+#             field.widget.attrs["class"] = "form-control"
+
+#     class Meta:
+#         model = CustomUser
+#         fields = ('username', 'email', 'image')
+
+# class LoginForm(AuthenticationForm):
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.fields['username'].widget.attrs['class'] = 'form-control'
+#         self.fields['password'].widget.attrs['class'] = 'form-control'
 
 class MessageForm(forms.Form):
     content = forms.CharField(

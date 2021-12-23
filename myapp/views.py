@@ -1,22 +1,16 @@
-from django.contrib.auth.forms import UserCreationForm
-from django.db.models.fields import EmailField
-from django.db.models.query import QuerySet
 from django.shortcuts import redirect, render
-from django import forms
 
 from .models import CustomUser
 # 会員登録
-from .forms import SignupForm
+from .forms import CustomSignUpForm
 # ログイン
-from .forms import LoginForm
-from django.contrib.auth import login, authenticate
+from django.views import generic
 # 友だち表示, トークルーム
 from django.contrib.auth.decorators import login_required
 from .models import Message
 # トークルーム
 from django.db.models import Q
 from .forms import MessageForm
-from django.utils import timezone
 # 設定
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -24,44 +18,16 @@ from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from django.urls import reverse_lazy
 from .forms import UserUpdateForm
 
+class IndexView(generic.TemplateView):
+    def get_template_names(self):
+        template_name = "index.html"
+        return [template_name]
 
-def index(request):
-    return render(request, "myapp/index.html")
-
-def signup_view(request):
-    params = {
-        'header_title':"会員登録",
-        'title': "",
-        'form': SignupForm(),
-    }
-    if request.method == 'POST':
-        obj = CustomUser()
-        form = SignupForm(request.POST, request.FILES, instance=obj)
-        if form.is_valid():
-            form.save()
-            return redirect(to='/')
-        else:
-            params['title'] = 'エラー'
-            params['form'] = form
-    return render(request, "myapp/signup.html", params)
-
-def login_view(request):
-    params = {
-        'header_title':"ログイン",
-        'title': '',
-        "errormessage":"",
-        'form': LoginForm(),
-    }
-    if request.method == "POST":
-        form = LoginForm(data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            user = CustomUser.objects.get(username=username)
-            login(request, user)
-            return redirect(to="/friends")
-        else:
-            params["errormessage"] = "正しく入力されていません"
-    return render(request, 'myapp/login.html', params)
+class SignUpView(generic.TemplateView):
+    form_class = CustomSignUpForm
+    def get_template_names(self):
+        template_name = "signup.html"
+        return [template_name]
 
 @login_required
 def friends(request):
@@ -74,7 +40,7 @@ def friends(request):
     for friend in data:
         if friend.id == request.user.id:
             continue
-        latests = Message.objects.all().filter(Q(sender=request.user.id) | Q(receiver=request.user.id))\
+        latests = Message.objects.filter(Q(sender=request.user.id) | Q(receiver=request.user.id))\
         .filter(Q(sender=friend.id) | Q(receiver=friend.id)).order_by("-sendtime").first()
         if latests != None:
             list_w_talks.append([latests.sendtime, friend, latests])

@@ -10,14 +10,16 @@ body{
 .header{
     width: 100vw;
     height: 64px;
-    border-bottom: solid 1px #9b9b9b;
+    position: fixed;
 }
 .header-container{
     position: relative;
-    width: 90%;
+    width: 100%;
     height: 100%;
     margin-left: auto;
     margin-right: auto;
+    background-color: #fff;
+    border-bottom: solid 1px #9b9b9b;
 }
 .header-container__title{
     position: absolute;
@@ -37,6 +39,7 @@ body{
 .footer{
     width: 100vw;
     height: 64px;
+    /* position: fixed; */
 }
 .footer-container{
     display: flex;
@@ -45,6 +48,7 @@ body{
     width: 100%;
     height: 64px;
     text-align: center;
+    background-color: #fff;
     border-top: solid 1px #9b9b9b;
 }
 .footer-container__item{
