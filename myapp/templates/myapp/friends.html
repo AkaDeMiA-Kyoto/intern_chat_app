@@ -16,16 +16,14 @@
     {% for photo1 in photo %}
  
     {% if photo1.username == data1 %}
-
-            
-    
                 <img src={{photo1.image.url}} alt="サンプル" width="96" height="65">
             {{data1.username}}
-          
-            
-   
     {% endif %}
- 
+    {% endfor %}
+    {% for message1 in message %}
+    {% if message1.tousername == data1 %}
+            {{message1.content}} 
+    {% endif %}
     {% endfor %}
     <a class ="Link" href="{% url 'talk_room' data1.username %}"></a>
     </div>

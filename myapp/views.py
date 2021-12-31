@@ -65,11 +65,11 @@ def signup_view(request):
 # def login_view(request):
     
 #     return render(request, "myapp/login.html")
-def friends(request):
+def friends(request):   
     user = request.user
     data = User.objects.exclude(username=user.username)
     print(User.objects.exclude(username=user.username))
-    message = Message.objects.all()
+    message = Message.objects.all().order_by('pub_date').reverse()
     photo = Photo.objects.all()
     params = {
                 'data': data,
@@ -253,6 +253,7 @@ def iconok(request):
         'body': 'アイコン変更完了'
     }
     return render(request, "myapp/iconok.html", params)
+
 
 
 
