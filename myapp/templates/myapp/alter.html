@@ -18,19 +18,16 @@
         </div>
     </header>
     {% endblock %}
-
-    {% block content %}
-    <table class="table">
-        {% for item in data %}
-        <h2><tr><td><img src='{{item.1.image.url}}' width='100' height='100'></td>
-            <td><a href="{% url 'talk_room' item.1.id %}">{{item.1.name}}</a></td>
-            <td><p>{{item.0}}</p></td></tr></h2>
-                
-        {% endfor %}
-    </table>
-    <!-- data のままだと、<td>とかがそのまま表示されてしまう -->
-    {% endblock %}
-
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+            <table class="table">
+                {{form.as_table}}
+                    <tr><th><td>
+                        <input type="submit" value="変更"
+                        class="btn btn-primary mt-2">
+                    </td></th></tr>
+            </table>
+        </form>
     {% block footer %}
     <footer class="footer">
         <div class="footer-container">

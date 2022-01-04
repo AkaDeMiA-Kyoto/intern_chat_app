@@ -18,19 +18,8 @@
         </div>
     </header>
     {% endblock %}
-
-    {% block content %}
-    <table class="table">
-        {% for item in data %}
-        <h2><tr><td><img src='{{item.1.image.url}}' width='100' height='100'></td>
-            <td><a href="{% url 'talk_room' item.1.id %}">{{item.1.name}}</a></td>
-            <td><p>{{item.0}}</p></td></tr></h2>
-                
-        {% endfor %}
-    </table>
-    <!-- data のままだと、<td>とかがそのまま表示されてしまう -->
-    {% endblock %}
-
+    <div class="messsage">{{msg}}</div>
+    <div><a href="{% url 'index' %}">ホーム画面へ戻る</a></div>
     {% block footer %}
     <footer class="footer">
         <div class="footer-container">

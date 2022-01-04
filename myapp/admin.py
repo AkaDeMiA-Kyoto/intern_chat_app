@@ -1,3 +1,6 @@
 from django.contrib import admin
+from myapp.models import Message, Talker
 
-# Register your models here.
+admin.site.register(Talker)
+admin.site.register(Message)
+
