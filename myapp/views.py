@@ -56,13 +56,6 @@ def friends(request):
     list_w_talks.sort(key=lambda x: x[0], reverse=True)
     list_wo_talks.sort(key=lambda x: x[0],reverse=True)
 
-    # print("トークありユーザ", len(list_w_talks), "人", sep="")
-    # for i in list_w_talks:
-    #     print(i[1])
-    # print("トークなしユーザ", len(list_wo_talks), "人", sep="")
-    # for i in list_wo_talks:
-    #     print(i[1])
-
     params = {
         "user":request.user.username,
         "header_title":"友だち",

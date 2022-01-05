@@ -42,7 +42,7 @@ LOGGING = {
             'level':'INFO',
         },
         # diaryアプリケーションが利用するロガー
-        'diary':{
+        'myapp':{
             'handlers':['console'],
             'level':'DEBUG',
         },
@@ -167,7 +167,7 @@ env = environ.Env()
 env.read_env(os.path.join(BASE_DIR, '.env'))
 
 DATABASES = {
-   # postgres
+    # postgres
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'myapp',
@@ -177,13 +177,7 @@ DATABASES = {
         'PORT': '',
     }
 }
-''''''
-# DATABASES = {
-#     'default':{
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
+
 
 
 AUTH_USER_MODEL = 'myapp.CustomUser'
