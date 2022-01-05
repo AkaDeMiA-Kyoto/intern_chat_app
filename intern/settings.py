@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
-from re import L
 import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -77,20 +76,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-
     'myapp',
+    'debug_toolbar',
 
     'django.contrib.sites',
     'allauth',
     'allauth.account',
-
-    # 'widget_tweaks',
 ]
 
 # django-allauthで利用するdjango.contrib.sitesを使うためにサイト識別用IDを設定
 SITE_ID = 1
 
-# これ何やってるかわからん！！！！！allauth.account.auth_backends.AuthenticationBackendって何～～～
 AUTHENTICATION_BACKENDS = (
     # 一般ユーザ用(メールアドレス認証)
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -121,7 +117,6 @@ ACCOUNT_FORMS = {
     'signup': 'myapp.forms.CustomSignUpForm',
 }
 
-# ACCOUNT_ADAPTER = 'myapp.adapter.AccoutAdapter'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -131,7 +126,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK' : lambda request: True,
+}
 
 ROOT_URLCONF = 'intern.urls'
 
@@ -177,8 +182,6 @@ DATABASES = {
         'PORT': '',
     }
 }
-
-
 
 AUTH_USER_MODEL = 'myapp.CustomUser'
 

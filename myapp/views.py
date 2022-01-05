@@ -42,12 +42,15 @@ def friends(request):
     list_w_talks = []
     # request.userとトーク履歴のないユーザー
     list_wo_talks = []
+    latests2 = Message.objects.select_related('sender').select_related('receiver').all()
+    # for i in latests2:
+    #     print(i.sender, i.receiver, i.content)
 
     for friend in data:
         if friend.id == request.user.id:
             continue
-        latests = Message.objects.filter(Q(sender=request.user.id) | Q(receiver=request.user.id))\
-        .filter(Q(sender=friend.id) | Q(receiver=friend.id)).order_by("-sendtime").first()
+        latests = Message.objects.filter(Q(sender=request.user.id) | Q(receiver=request.user.id)).filter(Q(sender=friend.id) | Q(receiver=friend.id)).order_by("-sendtime").first()
+        # latests = latests2.filter(Q(sender=request.user.id) | Q(receiver=request.user.id)).filter(Q(sender=friend.id) | Q(receiver=friend.id)).order_by("-sendtime").first()
         if latests != None:
             list_w_talks.append([latests.sendtime, friend, latests])
         else:
