@@ -10,5 +10,7 @@ class AccountAdapter(DefaultAccountAdapter):
         # Do not persist the user yet so we pass commit=False
         # (last argument)
         user = super(AccountAdapter, self).save_user(request, user, form, commit=False)
-        user.image = form.cleaned_data.get('image')
+        # 気を付けて！アカウント作成時にユーザー画像を登録していないのにuser.imageを更新しちゃうと、カスタムユーザーモデルでデフォルトで指定した画像が保存されなくなっちゃう～～～
+        if form.cleaned_data.get('image') != None:
+            user.image = form.cleaned_data.get('image')
         user.save()
