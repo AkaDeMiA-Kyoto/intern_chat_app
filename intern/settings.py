@@ -163,27 +163,27 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 '''postgresにすげかえるための設定(なんもわからん)'''
-# env = environ.Env()
-# env.read_env(os.path.join(BASE_DIR, '.env'))
+env = environ.Env()
+env.read_env(os.path.join(BASE_DIR, '.env'))
 
-# DATABASES = {
-#    # postgres
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'myapp',
-#         'USER': env('DB_USER'),
-#         'PASSWORD': env('DB_PASSWORD'),
-#         'HOST': '',
-#         'PORT': 5433,
-#     }
-# }
-''''''
 DATABASES = {
-    'default':{
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+   # postgres
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'myapp',
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': '',
+        'PORT': '',
     }
 }
+''''''
+# DATABASES = {
+#     'default':{
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 
 AUTH_USER_MODEL = 'myapp.CustomUser'

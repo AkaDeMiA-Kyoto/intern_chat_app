@@ -23,24 +23,26 @@
     
     {% block content %}
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/friends.css' %}" />
-    <table>
-    {% for _, friend, talk in list_w_talks %}
-        <tr class="friendsshow">
-            <td><a href="{% url 'myapp:talk_room' friend.id %}"><img class="friendimg" src="{{ friend.image.url }}"></a></td>
-            <td class="friendname"><a href="{% url 'myapp:talk_room' friend.id %}">{{ friend.username }}</a></td>
-            <td class="latestmessage"><a href="{% url 'myapp:talk_room' friend.id %}">{{ talk.content }}</a></td>
-            <td class="time"><a href="{% url 'myapp:talk_room' friend.id %}">{{ talk.sendtime }}</a></td>
-        </tr>
-    {% endfor %}
-    {% for _, friend in list_wo_talks %}
-        <tr class="friendsshow">
-            <td><a href="{% url 'myapp:talk_room' friend.id %}"><img class="friendimg" src="{{ friend.image.url }}"></a></td>
-            <td class="friendname"><a href="{% url 'myapp:talk_room' friend.id %}">{{ friend.username }}</a></td>
-            <td class="latestmessage"></td>
-            <td class="time"><a href="{% url 'myapp:talk_room' friend.id %}">{{ friend.regtime }}</a></td>
-        </tr>
-    {% endfor %}
-    </table>
+    <div class="container">
+        <table>
+        {% for _, friend, talk in list_w_talks %}
+            <tr class="friendsshow">
+                <td><a href="{% url 'myapp:talk_room' friend.id %}"><img class="friendimg" src="{{ friend.image.url }}"></a></td>
+                <td class="friendname"><a href="{% url 'myapp:talk_room' friend.id %}">{{ friend.username }}</a></td>
+                <td class="latestmessage"><a href="{% url 'myapp:talk_room' friend.id %}">{{ talk.content }}</a></td>
+                <td class="time"><a href="{% url 'myapp:talk_room' friend.id %}">{{ talk.sendtime }}</a></td>
+            </tr>
+        {% endfor %}
+        {% for _, friend in list_wo_talks %}
+            <tr class="friendsshow">
+                <td><a href="{% url 'myapp:talk_room' friend.id %}"><img class="friendimg" src="{{ friend.image.url }}"></a></td>
+                <td class="friendname"><a href="{% url 'myapp:talk_room' friend.id %}">{{ friend.username }}</a></td>
+                <td class="latestmessage"></td>
+                <td class="time"><a href="{% url 'myapp:talk_room' friend.id %}">{{ friend.regtime }}</a></td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
     {% endblock %}
 
 

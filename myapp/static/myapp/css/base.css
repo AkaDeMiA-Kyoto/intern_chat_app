@@ -9,7 +9,7 @@ body{
 /* ヘッダー */
 .header{
     width: 100vw;
-    height: 64px;
+    height: 10vw;
     position: fixed;
 }
 .header-container{
@@ -33,6 +33,11 @@ body{
     text-align: center;
     font-size: 1.2rem;
     color: #000;
+}
+
+.container {
+    padding-top: 10vw;
+    padding-bottom: 60px;
 }
 
 /* フッター */

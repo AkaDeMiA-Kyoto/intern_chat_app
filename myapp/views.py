@@ -25,6 +25,12 @@ class IndexView(generic.TemplateView):
 
 class SignUpView(generic.TemplateView):
     form_class = CustomSignUpForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['header_title'] = '会員登録'
+        return context
+    
     def get_template_names(self):
         template_name = "signup.html"
         return [template_name]
@@ -49,6 +55,13 @@ def friends(request):
 
     list_w_talks.sort(key=lambda x: x[0], reverse=True)
     list_wo_talks.sort(key=lambda x: x[0],reverse=True)
+
+    # print("トークありユーザ", len(list_w_talks), "人", sep="")
+    # for i in list_w_talks:
+    #     print(i[1])
+    # print("トークなしユーザ", len(list_wo_talks), "人", sep="")
+    # for i in list_wo_talks:
+    #     print(i[1])
 
     params = {
         "user":request.user.username,

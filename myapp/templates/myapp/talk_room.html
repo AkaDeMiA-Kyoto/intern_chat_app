@@ -16,8 +16,9 @@
     {% endblock %}
     {% block content %}
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
-    {% for item in data %}
-        <div class="container">
+    <div class="container">
+        {% for item in data %}
+        <div class="container-element">
             {% if item.sender == user %}
                 <div class="sendertext">&emsp;{{ item.content }}</div> 
                 <div class="sendtime">{{ item.sendtime }}</div>
@@ -29,7 +30,8 @@
             {% endif %}
             <br>
         </div>
-    {% endfor %}
+            {% endfor %}
+    </div>
     <form method="post">
         <table class="table">
             <td>

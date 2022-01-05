@@ -76,16 +76,16 @@ class MessageForm(forms.Form):
 class UserUpdateForm(forms.Form):
     username = forms.CharField(
         max_length=30,
-        required=False,
+        required=True,
         label="Username",
     )
     email = forms.EmailField(
         max_length=100,
-        required=False,
+        required=True,
         label="Email",
     )
     image = forms.ImageField(
-        required=False,
+        required=True,
         label="Image",
     )
 
