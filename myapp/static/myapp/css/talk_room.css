@@ -1,11 +1,140 @@
+header {
+    background-color: rgba(218, 218, 218, 0.959);
+    height: 70px;
+}
+
+.header-container {
+    height: 100%;
+}
+
+.header-container_title{
+    width: 100%;
+}
+
+.updatetd {
+    width: 70px;
+}
+
+.updatebtn {
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    color: rgb(77, 75, 75);
+    border: 3px solid grey;
+    border-radius: 30px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+
+}
+
+.backtd {
+    width: 70px;
+}
+
+.backbtn {
+    text-decoration: none;
+    color: rgb(77, 75, 75);
+    font-size: 30px;
+    padding-left: 15px;
+    font-weight: bold;
+}
+
+.h2td {
+    width: auto;
+}
+
+h2 {
+    width: auto;
+    font-size: 30px;
+    margin-top: 0%;
+    margin-bottom: 0%;
+}
+
+
 .mymsg {
-    text-align: left;
+    width: 100%;
+    height: 100px;
+    padding-bottom: 10px;
 }
 
 .yourmsg {
     text-align: right;
+    width: 100%;
+    height: 100px;
+    padding-bottom: 10px;
 }
+
+table{
+    width: 100%;
+}
+
+.time {
+    color: gray;
+    font-size: 8px;
+}
+
+.content {
+    border: 1px solid grey;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: bold;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
 
 header {
     text-align: center;
+}
+
+img {
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+    border: solid 2px black ;
+}
+
+.imagetd {
+    width: 70px;
+}
+
+.document{
+    padding-bottom: 100px;
+    padding-top: 100px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+
+form {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.input {
+    width: 100%;
+}
+
+
+input[name="content"]{
+    width: 80%;
+    height: 30px;
+    padding-bottom: 0%;
+    border: 3px solid black;
+    border-radius: 30px;
+}
+
+.btn {
+    background-color: rgba(218, 218, 218, 0.959);
+    width: 15%;
+    height: 30px;
+    border-radius: 30px;
+}
+
+footer {
+    background-color:rgba(218, 218, 218, 0.959) ;
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
     {% block extra_style %}{% endblock %}
     <title>DeMiAインターン</title>
 </head>
@@ -13,19 +13,24 @@
     <header class="header">
         <div class="header-container">
             <span class="header-container__title">
-                {% block header-title %}{% endblock %}
+                {% block header-title %}{{title}}{% endblock %}
             </span>
         </div>
     </header>
     {% endblock %}
 
+    <table>
+        <div class="btns">
+            <tr><td><div class="item"><a class="moji" href="{% url 'name_alt' %}">ユーザ名変更</a></div></td></tr>
+            <tr><td><div class="item"><a class="moji" href="{% url 'mail_alt' %}">メールアドレス変更</a></div></td></tr>
+            <tr><td><div class="item"><a class="moji" href="{% url 'image_alt' %}">アイコン変更</a></div></td></tr>
+            <tr><td><div class="item"><a class="moji" href="{% url 'pass_alt' %}">パスワード変更</a></div></td></tr>
+            <tr><td><div class="item"><a class="moji" href="{% url 'logout_view' %}">ログアウト</a></div></td></tr>
+        </div>
+    </table>
     
-    <a href="{% url 'name_alt' %}"><div>ユーザ名変更</div></a>
-    <a href="{% url 'mail_alt' %}"><div>メールアドレス変更</div></a>
-    <a href="{% url 'image_alt' %}"><div>アイコン変更</div></a>
-    <a href="{% url 'pass_alt' %}"><div>パスワード変更</div></a>
-    <a href="{% url 'logout' %}"><div>ログアウト</div></a>
-
+    
+    
 
     {% block footer %}
     <footer class="footer">

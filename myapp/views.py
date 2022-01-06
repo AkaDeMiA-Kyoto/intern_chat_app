@@ -8,8 +8,8 @@ from django.http import HttpResponse
 from .forms import LoginForm, NameAlterForm,MailAlterForm, PassAlterForm, ImageAlterForm, SendForm, SignupForm
 from .models import Message, Talker
 from django.db.models import QuerySet
-from django.core.exceptions import ValidationError
-
+from django.core.exceptions import ImproperlyConfigured, ValidationError
+import datetime
 
 
 
@@ -41,18 +41,7 @@ def findByID(ID=0):
     
 
 
-def __new_str__(self):
-    result = ''
-    for item in self:
-        result += '<h2><tr><td>' + '<img src=\''+ item.image.url+\
-            '\' width=\'100\' height=\'100\'\ >' +'</td><td>' +\
-            '<a href=\'http://127.0.0.1:8000/talk_room/'+ str(item.id) + '\' >'\
-                + item.name +'</a></td>' + '</tr></h2>'
-    return result
-
 def index(request):
-    for t in Talker.objects.all():
-        print(t.name + " : " + str(t.time) + ", ")
     return render(request, "myapp/index.html")
 
 def signup_view(request):
@@ -62,10 +51,11 @@ def signup_view(request):
         'form':SignupForm(),
     }
     if(request.method == 'POST'):
-        if(request.POST['conf_pass'] == request.POST['password']):
-            name = request.POST['name']
+        form = SignupForm(request.POST, request.FILES)
+        if form.is_valid():
+            name = request.POST['username']
             mail = request.POST['mail']
-            password = request.POST['password']
+            password = request.POST['password1']
             img = request.FILES['image']
             talker = Talker(name=name, mail=mail, password = password, image = img)
             try:
@@ -84,7 +74,7 @@ def signup_view(request):
         else:
             params = {
                 'title':'会員登録',
-                'msg':'パスワードと確認用のパスワードが一致しません',
+                'msg':'入力内容に不備があります',
                 'form':SignupForm(request.POST, request.FILES),
                 }
     return render(request, "myapp/signup.html", params)
@@ -98,7 +88,7 @@ def login_view(request):
         talker = findByName(request.POST['name'])
         if(talker == None):
             params = {
-                'msg':'does not exist',
+                'msg':'ユーザーネームが間違っています',
                 'form':LoginForm(request.POST),
                 }
         else:
@@ -107,47 +97,55 @@ def login_view(request):
                 return redirect(to='/friends')
             else:
                 params = {
-                    'msg':'wrong password',
+                    'msg':'パスワードが間違っています',
                     'form':LoginForm(request.POST),
                     }   
     return render(request, "myapp/login.html", params)
 
-def latestMsg(counterpart, user):
+def latestMsgContent(counterpart, user):
     messages = Message.objects.filter(Q(sender = user,recipient = counterpart)|Q(sender = counterpart,recipient = user)).order_by('time').reverse()
     if(messages.count() == 0):
         return ""
     else:
         for msg in messages:
-            return str(msg)
+            return msg.content
+    
+def latestMsgTime(counterpart, user):
+    messages = Message.objects.filter(Q(sender = user,recipient = counterpart)|Q(sender = counterpart,recipient = user)).order_by('time').reverse()
+    if(messages.count() == 0):
+        return ""
+    else:
+        for msg in messages:
+            y = str(msg.time.year)
+            m = str(msg.time.month)
+            d = str(msg.time.day)
+            h = str(msg.time.hour)
+            min = str(msg.time.minute)
+            return y + "-" + m + "-" + d + " " + h + ":" + min
 
 def friends(request):
-    # QuerySet.__str__ = __new_str__
     user = findByID(pres.LoggedIn_ID)
     if (user == None):
         return redirect(to='logout_view')
     
     messages = Message.objects.filter(Q(sender = user)|Q(recipient = user)).order_by('time').reverse()
-    lis1 = []
-    lis2 = []
+    friendsList = []
+    data = []
+
     for msg in messages:
         if(msg.sender == user):
-            lis1.append(msg.recipient)
+            friendsList.append(msg.recipient)
         else:
-            lis1.append(msg.sender)
-    for talker in Talker.objects.all().order_by('time'):
-        lis1.append(talker)
-    lis1 = list(dict.fromkeys(lis1))
-    lis1.remove(findByID(pres.LoggedIn_ID))
-    for f in lis1:
-        lis2.append(latestMsg(f, user))
-    l = []
-    for int in range(0, len(lis1)):
-        l.append([lis2[int],lis1[int]])
-        
+            friendsList.append(msg.sender)
+    for friend in Talker.objects.all().order_by('time'):
+        friendsList.append(friend)
+    friendsList = list(dict.fromkeys(friendsList))
+    friendsList.remove(findByID(pres.LoggedIn_ID))
+    for friend in friendsList:
+        data.append([friend,latestMsgContent(friend, user),latestMsgTime(friend, user)])
+
     params = {
-        'data': l ,
-        'lis1': lis1,
-        'lis2': lis2,
+        'data': data ,
     }
     return render(request, "myapp/friends.html", params)
 
@@ -162,69 +160,117 @@ def talk_room(request,id):
         Message(content = cnt, sender = sndr, recipient = rcpt).save()
 
     msglist = Message.objects.filter(Q(sender = sndr,recipient = rcpt)|Q(sender = rcpt,recipient = sndr)).order_by('time')
+    data = []
+    for msg in msglist:
+        y = str(msg.time.year)
+        m = str(msg.time.month)
+        d = str(msg.time.day)
+        h = str(msg.time.hour)
+        min = str(msg.time.minute)
+        if int(min)<10:
+            min = "0"+ min
+        date = y + "-" + m + "-" + d + " " + h + ":" + min
+        data.append([msg,date])
     params = {
-        'msg':'',
-        'msglist':msglist,
+        'id':id,
+        'msglist':data,
         'name':rcpt.name,
         'form':SendForm(),
         }
     return render(request, "myapp/talk_room.html", params)
 
 def setting(request):
-    return render(request, "myapp/setting.html")
+    return render(request, "myapp/setting.html", {'title':'設定'})
 
 def name_altering(request):
+    obj = findByID(pres.LoggedIn_ID)
+    if (findByID(pres.LoggedIn_ID) == None):
+        return render(request, "myapp/logout.html", {'msg':'ログインできていません'})
     if(request.method =='POST'):
-        obj = findByID(pres.LoggedIn_ID)
-        if (findByID(pres.LoggedIn_ID) == None):
-            return redirect(to='logout_view')
         obj.name = request.POST['newVal']
-        obj.save()
-        return redirect(to='setting')
+        try:
+            obj.validate_unique()
+            obj.save()
+            params ={
+            'title':'ユーザーネームの変更',
+            'msg':'ユーザーネーム変更完了',
+            'form': '',
+            }
+            return render(request, "myapp/alter.html", params)
+        except ValidationError:
+            params = {
+                'title':'ユーザーネームの変更',
+                'msg':'既にこの名前は使われています',
+                'form':NameAlterForm(request.POST),
+                }
+            return render(request, "myapp/alter.html", params)
     params ={
+        'title':'ユーザーネームの変更',
+        'msg':'',
         'form': NameAlterForm()
     }
     return render(request, "myapp/alter.html", params)
 
 def mail_altering(request):
+    obj = findByID(pres.LoggedIn_ID)
+    if (findByID(pres.LoggedIn_ID) == None):
+        return render(request, "myapp/logout.html", {'msg':'ログインできていません'})
     if(request.method=='POST'):
-        obj = findByID(pres.LoggedIn_ID)
-        if (findByID(pres.LoggedIn_ID) == None):
-            return redirect(to='logout_view')        
         obj.mail = request.POST['newVal']
         obj.save()
-        return redirect(to='setting')
+        params ={
+            'title':'メールアドレスの変更',
+            'msg':'メールアドレス変更完了',
+            'form': '',
+            }
+        return render(request, "myapp/alter.html", params)
     params ={
+        'title':'メールアドレスの変更',
+        'msg':'',
         'form': MailAlterForm()
     }
     return render(request, "myapp/alter.html", params)
     
 def pass_altering(request):
+    obj = findByID(pres.LoggedIn_ID)
+    if (findByID(pres.LoggedIn_ID) == None):
+        return render(request, "myapp/logout.html", {'msg':'ログインできていません'})
     if(request.method=='POST'):
-        obj = findByID(pres.LoggedIn_ID)
-        if (findByID(pres.LoggedIn_ID) == None):
-            return redirect(to='logout_view')
         obj.password = request.POST['newVal']
         obj.save()
-        return redirect(to='setting')
+        params ={
+        'title':'パスワードの変更',
+        'msg':'パスワード変更完了',
+        'form': '',
+        }
+        return render(request, "myapp/alter.html", params)
     params ={
+        'title':'パスワードの変更',
+        'msg':'',
         'form': PassAlterForm()
     }
     return render(request, "myapp/alter.html", params)
 
 def image_altering(request):
+    obj = findByID(pres.LoggedIn_ID)
+    if (findByID(pres.LoggedIn_ID) == None):
+        return render(request, "myapp/logout.html", {'msg':'ログインできていません'})
     if(request.method=='POST'):
-        obj = findByID(pres.LoggedIn_ID)
-        if (obj == None):
-            return redirect(to='logout_view')
         obj.image = request.FILES['newVal']
         obj.save()
-        return redirect(to='setting')
+        params ={
+            'title':'アイコンの変更',
+            'msg':'アイコン変更完了',
+            'form': '',
+            }
+        return render(request, "myapp/alter.html", params)
     params ={
+        'title':'アイコンの変更',
+        'msg':'',
         'form': ImageAlterForm()
     }
     return render(request, "myapp/alter.html", params)
 
 def logout_view(request):
     pres.LoggedIn_ID = 0
-    return render(request, "myapp/logout.html", {'msg':'you logged out'})
+    return render(request, "myapp/logout.html", {'msg':'ログアウトしました'})

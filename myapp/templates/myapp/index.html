@@ -9,8 +9,10 @@
         href="{% static 'myapp/css/index.css' %}" />
 </head>
 <body>
-    <p class="login"><a href="{% url 'login_view' %}" class="item">ログイン</a></p>
-    <p class="signup"><a href="{% url 'signup_view' %}" class="item">会員登録</a></p>
-        <!-- ここのurlはurlpatternsでのnameを参照していることに注意 -->
+    <div class="onlyone">
+        <p class="login"><a href="{% url 'login_view' %}" class="item">ログイン</a></p>
+        <p class="signup" ><a href="{% url 'signup_view' %}" class="item">会員登録</a></p>
+    </div>
+    <!-- ここのurlはurlpatternsでのnameを参照していることに注意 -->
 </body>
 </html>

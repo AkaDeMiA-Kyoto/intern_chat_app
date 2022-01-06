@@ -13,21 +13,19 @@
     <header class="header">
         <div class="header-container">
             <span class="header-container__title">
-                {% block header-title %}{% endblock %}
+                {% block header-title %}{{title}}{% endblock %}
             </span>
         </div>
     </header>
     {% endblock %}
+    <div><h2>{{msg}}</h2></div>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-            <table class="table">
-                {{form.as_table}}
-                    <tr><th><td>
-                        <input type="submit" value="変更"
-                        class="btn btn-primary mt-2">
-                    </td></th></tr>
-            </table>
-        </form>
+        {{form.as_p}}
+        {% if form != '' %}
+        <input type="submit" value="変更" class="btn btn-primary mt-2">
+        {% endif %}
+    </form>
     {% block footer %}
     <footer class="footer">
         <div class="footer-container">
