@@ -1,20 +1,9 @@
-from os import truncate
 from django import forms
-from django.contrib import auth
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from django.db import models
-from django.db.models.fields import CharField, TextField
-from django.forms import fields, widgets
-from django.forms.forms import Form
-from django.contrib.auth.forms import AuthenticationForm
+from django.forms import fields
+from django.core.exceptions import ValidationError
 
 from myapp.models import CustomUser
-from myapp.models import Message
-
-# 最適化に使うやつ
 from allauth.account.forms import SignupForm
-from django.core.exceptions import ValidationError
 
 def clean_image(img):
     '''サインアップ時の画像サイズが大きいとエラーを出す関数'''
@@ -27,6 +16,7 @@ def clean_image(img):
         raise ValidationError('画像を読み込めませんでした')
 
 class CustomSignUpForm(SignupForm):
+    '''サインアップ用フォーム'''
     image = fields.ImageField(
         required=False,
         label='image',
@@ -40,7 +30,9 @@ class CustomSignUpForm(SignupForm):
     class Meta:
         model = CustomUser
 
+
 class MessageForm(forms.Form):
+    '''新規メッセージ用フォーム'''
     content = forms.CharField(
         label="message", 
         required=True,
@@ -53,6 +45,7 @@ class MessageForm(forms.Form):
     )
 
 class UserUpdateForm(forms.Form):
+    '''ユーザー情報アップデート用フォーム'''
     username = forms.CharField(
         max_length=30,
         required=True,

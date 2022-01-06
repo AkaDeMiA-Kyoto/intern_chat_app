@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.shortcuts import redirect, render
 
 from .models import CustomUser
@@ -10,8 +9,7 @@ from django.views import generic
 from django.contrib.auth.decorators import login_required
 from .models import Message
 # トークルーム
-from django.db.models import Q, Max, Case, When, F
-from django.db.models.functions import Greatest, Coalesce
+from django.db.models import Q, Max
 from .forms import MessageForm
 # 設定
 from django.views import generic
@@ -91,7 +89,9 @@ def talk_room(request, your_id):
     me = request.user
     # 受け取る側のユーザー
     you = CustomUser.objects.get(id = your_id)
+
     data = Message.objects.select_related('sender', 'receiver').filter( Q(sender=me) | Q(receiver=me) ).filter( Q(sender=you) | Q(receiver=you) ).order_by("sendtime")
+
     params = {
         "sender":me,
         "receiver":you,
@@ -99,7 +99,7 @@ def talk_room(request, your_id):
         "form":MessageForm(),
         "data":data,
     }
-    # ここから先　以下のコードの代わりにギター本のp.198でできないか？
+
     if request.method == "POST":
         form = MessageForm(request.POST)
         if form.is_valid():
@@ -166,17 +166,17 @@ def change_setting_done(request, change_command):
     return render(request, "myapp/change_setting_done.html", params)
 
 class PasswordChange(LoginRequiredMixin, PasswordChangeView):
-    """パスワード変更ビュー"""
+    '''パスワード変更ビュー'''
     success_url = reverse_lazy('password_change_done')
     template_name = 'myapp/change_password.html'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs) # 継承元のメソッドCALL
+        context = super().get_context_data(**kwargs)
         context["form_name"] = "password_change"
         return context
 
 class PasswordChangeDone(LoginRequiredMixin,PasswordChangeDoneView):
-    """パスワード変更完了"""
+    '''パスワード変更完了'''
     template_name = 'myapp/change_password_done.html'
 
 class Logout(LogoutView):
