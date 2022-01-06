@@ -26,8 +26,9 @@
     <h1>{{title}}</h1>
     <div class="container">
         <form action="{% url 'account_signup' %}" method="post" enctype="multipart/form-data">
-            <!-- ユーザ名 -->
             <table class="formtable">
+
+            <!-- ユーザ名 -->
             <tr>
                 <th class="form-label">
                     ユーザ名 <span class="badge-warning">必須</span>
@@ -39,6 +40,7 @@
             </tr>
             <!-- /ユーザ名 -->
 
+            <!-- Eメール -->
             <tr>
                 <th class="form-label">
                     Eメール <span class="badge badge-warning">必須</span>
@@ -48,6 +50,7 @@
                     {{ form.email }}
                 </td>
             </tr>
+            <!-- Eメール -->
 
             <!-- パスワード -->
             <tr>
@@ -71,7 +74,9 @@
                     {{ form.password2 }}
                 </td>
             </tr>
+            <!-- パスワード確認 -->
 
+            <!-- アイコン画像 -->
             <tr>
                 <th class="form-label">
                     アイコン画像
@@ -81,12 +86,24 @@
                     {{ form.image }}
                 </td>
             </tr>
+            <!-- アイコン画像 -->
 
         </table>
+
         <div class="form-btn">
             <button type="submit" class="form-btn">登録する</button>
         </div>
+
         </form>
+
+        <ul>
+            {% for field in form %}
+                {% if field.errors %}
+                    {{ field.errors }}
+                {% endif %}
+            {% endfor %}
+        </ul>
+        
     </div>
     {% endblock %}
 

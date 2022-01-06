@@ -28,14 +28,29 @@ class IndexView(generic.TemplateView):
 class SignUpView(generic.TemplateView):
     form_class = CustomSignUpForm
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['header_title'] = '会員登録'
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['header_title'] = '会員登録'
+    #     return context
     
-    def get_template_names(self):
-        template_name = "signup.html"
-        return [template_name]
+    # def get_template_names(self):
+    #     template_name = "signup.html"
+    #     return [template_name]
+    def get(self, request, *args, **kwargs):
+        print('get')
+        form = CustomSignUpForm()
+        return render(request, 'signup.html', {'form': form})
+    
+    def post(self, request, *args, **kwargs):
+        form = CustomSignUpForm(request.POST, request.FILES)
+        # for _ in range(10):
+            # print('post') conmout
+        if form.is_valid():
+            # print('no errors') comout
+            pass
+        else:
+            # print('some error occurs') comout
+            return render(request, 'signup.html', {'form':form})
 
 @login_required
 def friends(request):

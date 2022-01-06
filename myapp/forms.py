@@ -14,52 +14,31 @@ from myapp.models import Message
 
 # 最適化に使うやつ
 from allauth.account.forms import SignupForm
+from django.core.exceptions import ValidationError
+
+def clean_image(img):
+    '''サインアップ時の画像サイズが大きいとエラーを出す関数'''
+    if img:
+        if img.size > 2*1024*1024:
+            # comout print('file too large')
+            raise ValidationError('ファイルサイズは2MB以下にしてください')
+        return img
+    else:
+        raise ValidationError('画像を読み込めませんでした')
 
 class CustomSignUpForm(SignupForm):
-    print("SIGNUP")
     image = fields.ImageField(
         required=False,
-        # label: フォームのラベルとして表示するためのもの(何かの引数になるとかではない)
         label='image',
+        validators=[clean_image],
     )
-        
+
     def save(self, request):
         user = super(CustomSignUpForm, self).save(request)
         return user
 
     class Meta:
         model = CustomUser
-
-# class SignupForm(UserCreationForm):
-#     username = forms.CharField(
-#         max_length=30,
-#         required=True,
-#         label="Username",
-#     )
-#     email = forms.EmailField(
-#         max_length=100,
-#         required=True,
-#         label="Email",
-#     )
-#     image = forms.ImageField(
-#         required=False,
-#         label="Image",
-#     )
-
-#     def __init__(self, *args, **kwargs) -> None:
-#         super().__init__(*args, **kwargs)
-#         for field in self.fields.values():
-#             field.widget.attrs["class"] = "form-control"
-
-#     class Meta:
-#         model = CustomUser
-#         fields = ('username', 'email', 'image')
-
-# class LoginForm(AuthenticationForm):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         self.fields['username'].widget.attrs['class'] = 'form-control'
-#         self.fields['password'].widget.attrs['class'] = 'form-control'
 
 class MessageForm(forms.Form):
     content = forms.CharField(
