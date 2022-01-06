@@ -28,14 +28,6 @@ class IndexView(generic.TemplateView):
 class SignUpView(generic.TemplateView):
     form_class = CustomSignUpForm
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['header_title'] = '会員登録'
-    #     return context
-    
-    # def get_template_names(self):
-    #     template_name = "signup.html"
-    #     return [template_name]
     def get(self, request, *args, **kwargs):
         print('get')
         form = CustomSignUpForm()
@@ -99,7 +91,7 @@ def talk_room(request, your_id):
     me = request.user
     # 受け取る側のユーザー
     you = CustomUser.objects.get(id = your_id)
-    data = Message.objects.filter( Q(sender=me) | Q(receiver=me) ).filter( Q(sender=you) | Q(receiver=you) ).order_by("sendtime")
+    data = Message.objects.select_related('sender', 'receiver').filter( Q(sender=me) | Q(receiver=me) ).filter( Q(sender=you) | Q(receiver=you) ).order_by("sendtime")
     params = {
         "sender":me,
         "receiver":you,
