@@ -63,7 +63,6 @@ def friends(request):
         WHERE f.rownum=1;
         """)
 
-
     unknown_friends = CustomUser.objects.exclude(id=request.user.id).annotate(
         sender__sendtime__max=Max("sender__sendtime", filter=Q(sender__receiver=user)),
         receiver__sendtime__max=Max("receiver__sendtime", filter=Q(receiver__sender=user)),
