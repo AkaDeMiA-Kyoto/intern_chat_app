@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import redirect, render
 
 from .models import CustomUser
@@ -9,7 +10,8 @@ from django.views import generic
 from django.contrib.auth.decorators import login_required
 from .models import Message
 # トークルーム
-from django.db.models import Q
+from django.db.models import Q, Max, Case, When, F
+from django.db.models.functions import Greatest, Coalesce
 from .forms import MessageForm
 # 設定
 from django.views import generic
@@ -37,34 +39,42 @@ class SignUpView(generic.TemplateView):
 
 @login_required
 def friends(request):
-    data = CustomUser.objects.all()
-    # request.userとトーク履歴のあるユーザー
-    list_w_talks = []
-    # request.userとトーク履歴のないユーザー
-    list_wo_talks = []
-    latests2 = Message.objects.select_related('sender').select_related('receiver').all()
-    # for i in latests2:
-    #     print(i.sender, i.receiver, i.content)
+    user = request.user
+    # 土佐さんありがとうございました！
+    friends = CustomUser.objects.raw(
+        f"""
+        SELECT *
+        FROM (
+            SELECT
+            u.id as id,
+            u.username as username,
+            row_number() over (
+                partition by
+                u.id
+                order by
+                t.sendtime desc
+            ) rownum,
+            t.content as content
+            FROM myapp_customuser u 
+            LEFT OUTER JOIN myapp_message t 
+                ON (u.id=t.sender_id OR u.id=t.receiver_id)
+            WHERE (t.sender_id={user.id} OR t.receiver_id={user.id}) AND NOT u.id={user.id}
+        ) f
+        WHERE f.rownum=1;
+        """)
 
-    for friend in data:
-        if friend.id == request.user.id:
-            continue
-        latests = Message.objects.filter(Q(sender=request.user.id) | Q(receiver=request.user.id)).filter(Q(sender=friend.id) | Q(receiver=friend.id)).order_by("-sendtime").first()
-        # latests = latests2.filter(Q(sender=request.user.id) | Q(receiver=request.user.id)).filter(Q(sender=friend.id) | Q(receiver=friend.id)).order_by("-sendtime").first()
-        if latests != None:
-            list_w_talks.append([latests.sendtime, friend, latests])
-        else:
-            list_wo_talks.append([friend.regtime, friend])
 
-    list_w_talks.sort(key=lambda x: x[0], reverse=True)
-    list_wo_talks.sort(key=lambda x: x[0],reverse=True)
+    unknown_friends = CustomUser.objects.exclude(id=request.user.id).annotate(
+        sender__sendtime__max=Max("sender__sendtime", filter=Q(sender__receiver=user)),
+        receiver__sendtime__max=Max("receiver__sendtime", filter=Q(receiver__sender=user)),
+    ).filter(sender__sendtime__max=None, receiver__sendtime__max=None).order_by("id")
 
     params = {
         "user":request.user.username,
         "header_title":"友だち",
         "title":"",
-        "list_w_talks":list_w_talks,
-        "list_wo_talks":list_wo_talks,
+        "friends": friends,
+        "unknown_friends": unknown_friends,
     }
 
     return render(request, "myapp/friends.html", params)
