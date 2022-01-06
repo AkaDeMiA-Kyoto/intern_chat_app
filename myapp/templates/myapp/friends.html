@@ -29,6 +29,7 @@
         <table>
             {% for i in friends %}
                 <tr class="friendsshow">
+                    <!-- アイコン・ユーザー名・最新トーク・送信日時を表示 -->
                     <td><a href="{% url 'myapp:talk_room' i.id%}"><img class="friendimg" src="{{ i.image.url }}"></a></td>
                     <td class="friendname"><a href="{% url 'myapp:talk_room' i.id %}">{{ i.username }}</a></td>
                     <td class="latestmessage"><a href="{% url 'myapp:talk_room' i.id %}">{{ i.content }}</a></td>
@@ -37,6 +38,7 @@
             {% endfor %}
             {% for i in unknown_friends %}
                 <tr class="friendsshow">
+                    <!-- アイコン・ユーザー名・登録日時を表示 -->
                     <td><a href="{% url 'myapp:talk_room' i.id %}"><img class="friendimg" src="{{ i.image.url }}"></a></td>
                     <td class="friendname"><a href="{% url 'myapp:talk_room' i.id %}">{{ i.username }}</a></td>
                     <td class="latestmessage"></td>

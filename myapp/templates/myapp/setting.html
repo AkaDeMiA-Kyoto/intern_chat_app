@@ -1,6 +1,8 @@
+{% extends 'base.html' %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +10,7 @@
     {% block extra_style %}{% endblock %}
     <title>DeMiAインターン</title>
 </head>
+
 <body>
     {% block header %}
     <header class="header">
@@ -20,14 +23,19 @@
     {% endblock %}
 
     {% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
     <div class="container">
+    <div class="setting-body">
+        <!-- 各種変更リンク -->
         <div><a href="{% url 'myapp:change_setting' 'change_username' user.id %}" class="btn">ユーザ名変更</a></div>
         <div><a href="{% url 'myapp:change_setting' 'change_email' user.id %}" class="btn">メールアドレス変更</a></div>
         <div><a href="{% url 'myapp:change_setting' 'change_image' user.id %}" class="btn">アイコン変更</a></div>
         <div><a href="{% url 'myapp:password_change' %}" class="btn">パスワード変更</a></div>
         <div><a href="{% url 'account_logout' %}" class="btn">ログアウト</a></div>
     </div>
+    </div>
     {% endblock %}
+</body>
 
     {% block footer %}
     <footer class="footer">
@@ -47,5 +55,4 @@
         </div>
     </footer>
     {% endblock %}
-</body>
 </html>

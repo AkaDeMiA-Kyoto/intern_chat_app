@@ -1,15 +1,14 @@
 from django import forms
 from django.forms import fields
 from django.core.exceptions import ValidationError
+from allauth.account.forms import SignupForm
 
 from myapp.models import CustomUser
-from allauth.account.forms import SignupForm
 
 def clean_image(img):
     '''サインアップ時の画像サイズが大きいとエラーを出す関数'''
     if img:
         if img.size > 2*1024*1024:
-            # comout print('file too large')
             raise ValidationError('ファイルサイズは2MB以下にしてください')
         return img
     else:

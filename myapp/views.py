@@ -1,22 +1,14 @@
-from django.shortcuts import redirect, render
-
-from .models import CustomUser
-# 会員登録
-from .forms import CustomSignUpForm
-# ログイン
-from django.views import generic
-# 友だち表示, トークルーム
 from django.contrib.auth.decorators import login_required
-from .models import Message
-# トークルーム
-from django.db.models import Q, Max
-from .forms import MessageForm
-# 設定
-from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView, LogoutView
+from django.db.models import Q, Max
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from .forms import UserUpdateForm
+from django.views import generic
+
+from .models import CustomUser, Message
+from .forms import CustomSignUpForm, MessageForm, UserUpdateForm
+
 
 class IndexView(generic.TemplateView):
     def get_template_names(self):
@@ -33,13 +25,7 @@ class SignUpView(generic.TemplateView):
     
     def post(self, request, *args, **kwargs):
         form = CustomSignUpForm(request.POST, request.FILES)
-        # for _ in range(10):
-            # print('post') conmout
-        if form.is_valid():
-            # print('no errors') comout
-            pass
-        else:
-            # print('some error occurs') comout
+        if not form.is_valid():
             return render(request, 'signup.html', {'form':form})
 
 @login_required
@@ -139,7 +125,6 @@ def change_setting(request, change_command, your_id):
     if request.method == "POST":
         form = UserUpdateForm(request.POST, request.FILES)
         if form.is_valid():
-            print("フォームは有効です")
             if change_command == "change_username":
                 obj.username = form.cleaned_data["username"]
             elif change_command == "change_email":
@@ -149,8 +134,6 @@ def change_setting(request, change_command, your_id):
             obj.save()
             params["isform"] = False
             return redirect(to="/change_setting_done/" + str(change_command))
-        else:
-            print("フォームは有効ではありません")
     return render(request, "myapp/change_setting.html", params)
 
 def change_setting_done(request, change_command):
@@ -169,11 +152,6 @@ class PasswordChange(LoginRequiredMixin, PasswordChangeView):
     '''パスワード変更ビュー'''
     success_url = reverse_lazy('password_change_done')
     template_name = 'myapp/change_password.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["form_name"] = "password_change"
-        return context
 
 class PasswordChangeDone(LoginRequiredMixin,PasswordChangeDoneView):
     '''パスワード変更完了'''
