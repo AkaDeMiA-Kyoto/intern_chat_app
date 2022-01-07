@@ -2,7 +2,8 @@ from django import forms
 from django.db.models import fields 
 from .models import Message, Talker
 from django.contrib.auth.forms import UserCreationForm
-
+from .views import *
+import django.contrib.auth.password_validation as validators
 
 class TalkerForm(forms.ModelForm):
     class Meta:
@@ -20,13 +21,15 @@ class SignupForm(UserCreationForm):
 
 class LoginForm(forms.Form):
     name = forms.CharField(max_length=100, label="ユーザーネーム")
-    password = forms.CharField(max_length=100, label="パスワード")
+    password = forms.CharField(max_length=100, label="パスワード", widget=forms.PasswordInput )
 
 class NameAlterForm(forms.Form):
     newVal = forms.CharField(label="新しい名前")
 
 class PassAlterForm(forms.Form):
-    newVal = forms.CharField(label="新しいパスワード")
+    password1 = forms.CharField(min_length=8, label="Password",widget=forms.PasswordInput )
+    password2 = forms.CharField(min_length=8, label="Password confirmation", widget=forms.PasswordInput )
+
 
 class MailAlterForm(forms.Form):
     newVal = forms.EmailField(label="新しいメールアドレス")

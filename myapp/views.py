@@ -235,20 +235,27 @@ def pass_altering(request):
     obj = findByID(pres.LoggedIn_ID)
     if (findByID(pres.LoggedIn_ID) == None):
         return render(request, "myapp/logout.html", {'msg':'ログインできていません'})
-    if(request.method=='POST'):
-        obj.password = request.POST['newVal']
-        obj.save()
-        params ={
-        'title':'パスワードの変更',
-        'msg':'パスワード変更完了',
-        'form': '',
-        }
-        return render(request, "myapp/alter.html", params)
+    
     params ={
         'title':'パスワードの変更',
         'msg':'',
         'form': PassAlterForm()
     }
+    if(request.method=='POST'):
+        form = PassAlterForm(request.POST)
+        if (request.POST['password1'] != request.POST['password2']):
+            params ={
+            'title':'パスワードの変更',
+            'msg':'確認用パスワードが一致しません',
+            'form': PassAlterForm(),
+                }
+        else: 
+            obj.save()
+            params ={
+            'title':'パスワードの変更',
+            'msg':'パスワード変更完了',
+            'form': '',
+                }        
     return render(request, "myapp/alter.html", params)
 
 def image_altering(request):
