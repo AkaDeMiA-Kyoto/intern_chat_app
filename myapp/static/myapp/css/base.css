@@ -44,7 +44,7 @@ body{
 .footer{
     width: 100vw;
     height: 64px;
-    /* position: fixed; */
+    position: fixed;
 }
 .footer-container{
     display: flex;

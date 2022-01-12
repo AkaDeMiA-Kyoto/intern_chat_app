@@ -21,11 +21,9 @@ class CustomSignUpForm(SignupForm):
         label='image',
         validators=[clean_image],
     )
-
     def save(self, request):
         user = super(CustomSignUpForm, self).save(request)
         return user
-
     class Meta:
         model = CustomUser
 
@@ -43,28 +41,48 @@ class MessageForm(forms.Form):
         )
     )
 
-class UserUpdateForm(forms.Form):
-    '''ユーザー情報アップデート用フォーム'''
+class ChangeUsernameForm(forms.Form):
+    '''ユーザ名アップデート用フォーム'''
     username = forms.CharField(
         max_length=30,
         required=True,
         label="Username",
     )
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "form-control"
+    class Meta:
+        model = CustomUser
+        fields = ('username')
+
+class ChangeEmailForm(forms.Form):
+    '''Eメールアドレスアップデート用フォーム'''
+    print('change_email')
     email = forms.EmailField(
         max_length=100,
         required=True,
         label="Email",
     )
-    image = forms.ImageField(
-        required=True,
-        label="Image",
-    )
-
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs["class"] = "form-control"
-
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'image')
+        fields = ('email')
+
+class ChangeImageForm(forms.Form):
+    '''アイコン画像アップデート用フォーム'''
+    image = forms.ImageField(
+        required=True,
+        label="Image",
+        validators=[clean_image]
+    )
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "form-control"
+    class Meta:
+        model = CustomUser
+        fields = ('image')

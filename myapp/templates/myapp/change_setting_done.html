@@ -13,14 +13,14 @@
     <header class="header">
         <div class="header-container">
             <span class="header-container__title">
-                {% block header-title %}{% endblock %}
+                {% block header-title %}設定変更完了{% endblock %}
             </span>
         </div>
     </header>
     {% endblock %}
 
     {% block content %}
-    <div>
+    <div class="container">
         {{ change_command }}が完了しました。
     </div>
     {% endblock %}
@@ -29,7 +29,7 @@
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-container__item">
-                <a href="{% url 'friends' %}" class="footer-item__link">
+                <a href="{% url 'myapp:friends' %}" class="footer-item__link">
                     <span class="footer-item__icon">
                         <img src="{% static 'myapp/img/people-24px.svg' %}">
                     </span>
@@ -39,7 +39,7 @@
                 </a>
             </div>
             <div class="footer-container__item">
-                <a href="{% url 'setting' %}" class="footer-item__link">
+                <a href="{% url 'myapp:setting' %}" class="footer-item__link">
                     <span class="footer-item__icon">
                         <img src="{% static 'myapp/img/settings-black-18dp.svg' %}">
                     </span>

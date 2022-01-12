@@ -27,9 +27,9 @@
     <div class="container">
     <div class="setting-body">
         <!-- 各種変更リンク -->
-        <div><a href="{% url 'myapp:change_setting' 'change_username' user.id %}" class="btn">ユーザ名変更</a></div>
-        <div><a href="{% url 'myapp:change_setting' 'change_email' user.id %}" class="btn">メールアドレス変更</a></div>
-        <div><a href="{% url 'myapp:change_setting' 'change_image' user.id %}" class="btn">アイコン変更</a></div>
+        <div><a href="{% url 'myapp:change_username' %}" class="btn">ユーザ名変更</a></div>
+        <div><a href="{% url 'myapp:change_email'  %}" class="btn">メールアドレス変更</a></div>
+        <div><a href="{% url 'myapp:change_image' %}" class="btn">アイコン変更</a></div>
         <div><a href="{% url 'myapp:password_change' %}" class="btn">パスワード変更</a></div>
         <div><a href="{% url 'account_logout' %}" class="btn">ログアウト</a></div>
     </div>

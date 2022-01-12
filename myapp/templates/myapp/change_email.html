@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/change_setting.css' %}" />
+    {% block extra_style %}{% endblock %}
+    <title>DeMiAインターン</title>
+</head>
+<body>
+    {% block header %}
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container__title">
+                {% block header-title %}{{ header_title }}{% endblock %}
+            </span>
+        </div>
+    </header>
+    {% endblock %}
+
+    {% block content %}
+    <div class="container">
+        <table class="formtable">
+            <form action="{% url change_url %}" method="post">
+                <tr>
+                    <th class="form-label">
+                        {{ label }}
+                    </th>
+                    <td class="col-md-9">
+                        {% csrf_token %}
+                        {{ form.email }}
+                    </td>
+                    <td>
+                        <button type="submit" class="form-btn">登録する</button>
+                    </td>
+                </tr>
+            </form>
+        </table>
+    {% endblock %}
+
+    {% block footer %}
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-container__item">
+                <a href="{% url 'myapp:friends' %}" class="footer-item__link">
+                        <span class="footer-item__icon"><img src="{% static 'myapp/img/people-24px.svg' %}"></span>
+                        <span class="footer-item__text">友達</span>
+                    </a>
+            </div>
+            <div class="footer-container__item">
+                <a href="{% url 'myapp:setting' %}" class="footer-item__link">
+                    <span class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></span>
+                    <span class="footer-item__text">設定</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
+</body>
+</html>

@@ -20,14 +20,12 @@
     {% endblock %}
 
     {% block content %}
-    {% if isform == True %}
     <div class="container">
-        {% if change_command == "ユーザ名変更" %}
         <table class="formtable">
-            <form action="{% url 'change_setting' 'change_username' user.id %}" method="post">
+            <form action="{% url change_url %}" method="post">
                 <tr>
                     <th class="form-label">
-                        新しいユーザ名：
+                        {{ label }}
                     </th>
                     <td class="col-md-9">
                         {% csrf_token %}
@@ -39,60 +37,19 @@
                 </tr>
             </form>
         </table>
-        {% endif %}
-
-        {% if change_command == "メールアドレス変更" %}
-        <table class="formtable">
-            <form action="{% url 'change_setting' 'change_email' user.id %}" method="post">
-                <tr>
-                    <th class="form-label">
-                        新しいEメールアドレス
-                    </th>
-                    <td class="col-md-9">
-                        {% csrf_token %}
-                        {{ form.email }}
-                    </td>
-                    <td>
-                        <button type="submit" class="form-btn">登録する</button>
-                    </td>
-                </tr>
-            </form>
-        </table>
-        {% endif %}
-        
-        {% if change_command == "アイコン変更" %}
-        <table>
-            <form action="{% url 'change_setting' 'change_image' user.id %}" method="post" enctype="multipart/form-data">
-                <tr>
-                    <th class="form-label">
-                        新しいアイコン画像
-                    </th>
-                    <td>
-                        {% csrf_token %}
-                        {{ form.image }}
-                    </td>
-                    <td>
-                        <button type="submit" class="form-btn">登録する</button>
-                    </td>
-                </tr>
-            </form>
-        </table>
-        {% endif %}
-    </div>
-    {% endif %} <!-- isform == True -->
     {% endblock %}
 
     {% block footer %}
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-container__item">
-                <a href="{% url 'friends' %}" class="footer-item__link">
+                <a href="{% url 'myapp:friends' %}" class="footer-item__link">
                         <span class="footer-item__icon"><img src="{% static 'myapp/img/people-24px.svg' %}"></span>
                         <span class="footer-item__text">友達</span>
                     </a>
             </div>
             <div class="footer-container__item">
-                <a href="{% url 'setting' %}" class="footer-item__link">
+                <a href="{% url 'myapp:setting' %}" class="footer-item__link">
                     <span class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></span>
                     <span class="footer-item__text">設定</span>
                 </a>
