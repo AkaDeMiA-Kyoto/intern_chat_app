@@ -1,60 +1,24 @@
-from django.contrib.auth.forms import UserChangeForm
-from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
-#サインアップ
-from .forms import SignupForm
-#ログイン
-from .forms import LoginForm
-from django.contrib.auth import authenticate,login
-#フレンド
-from .models import CustomUser
-#トークルーム
-from .models import Message
-from .forms import MessageForm
 from django.db.models import Q
-#settings
-from django.contrib.auth import logout
-from .forms import UsernameChangeForm
-from .forms import UsermailChangeForm
-from .forms import UsericonChangeForm
 from django.urls import reverse_lazy
+from django.urls.base import reverse
+from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
+from django.contrib import messages
 
+from .models import(
+    CustomUser,
+    Message,
+)
+from .forms import(
+    MessageForm,
+    UsernameChangeForm,
+    UsermailChangeForm,
+    UsericonChangeForm,
+)
 
-def index(request):
-    return render(request, "myapp/index.html")
-
-def signup_view(request):
-    if(request.method =='POST'):
-        form = SignupForm(request.POST, request.FILES) #POSTは大文字 noreverseerrorが出る 画像はrequest.FILES
-        # バリデーションする
-        if form.is_valid():
-            form.save()
-            return redirect(to = '/')
-        else:
-            return render(request, "myapp/signup.html", {"form": form,})
-    else:
-        form = SignupForm()
-        return render(request, "myapp/signup.html", {"form": form,})
-
-def login_view(request):
-    if(request.method == 'POST'):
-        form = LoginForm(data=request.POST)
-        if form.is_valid():
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return redirect(to = '/friends')
-        else:
-            return render(request, "myapp/login.html", {"form": form,})
-        
-    else:
-        form = LoginForm()
-    return render(request, "myapp/login.html", {"form": form,})
+class IndexView(generic.TemplateView):
+     template_name = 'myapp/index.html'
 
 def friends(request):
     data = CustomUser.objects.exclude(id=request.user.id)
@@ -79,88 +43,118 @@ def friends(request):
     }
     return render(request, "myapp/friends.html", params)
 
-def talk_room(request, num):
-    friend = CustomUser.objects.get(id=num)
-    msg_data = Message.objects.filter(Q(sender = request.user) | Q(receiver = request.user))\
-        .filter(Q(sender = friend) | Q(receiver = friend)).order_by("msg_date")
-    params = {
-        'username': CustomUser.objects.get(id=num),
-        'form': MessageForm(),
-        'data': msg_data,
-    }
-    if (request.method == 'POST'):
-        obj = Message(receiver=friend, sender=request.user)
-        form = MessageForm(request.POST, instance=obj)
-        form.save()
-        return render(request, "myapp/talk_room.html", params)
-    return render(request, "myapp/talk_room.html", params)
+class FriendsView(LoginRequiredMixin, generic.ListView):
+    model = CustomUser
+    template_name = 'myapp/friends.html'
+    #form_class = FriendSearchForm
+    #検索機能をつける時に必要なフォームの作成。その際にListViewから違うクラスに帰る必要ありそう。
 
-def setting(request):
-    return render(request, "myapp/setting.html")
+    #テンプレートに使う辞書データを作成.。メッセージが存在する、しないー＞メッセージの時間順に並べる
 
-def change_username(request):
-    myid = CustomUser.objects.get(id=request.user.id)
-    form = UsernameChangeForm(data=request.POST, instance=myid)
-    params={
-            'form': form,
-            'title': 'ユーザーネーム変更',
-            'content': 'ユーザーネーム変更完了',
-        }
-    if(request.method == 'POST'):
-        if form.is_valid():
-            form.save()
-            return render(request, "myapp/complete.html", params)
-        else:
-            return render(request, "myapp/change_username.html", params)
-    return render(request, "myapp/change_username.html", params)
+    def get_context_data(self, **kwargs):
+        
+        return super().get_context_data(**kwargs)
 
-def change_mail(request):
-    myid = CustomUser.objects.get(id=request.user.id)
-    form = UsermailChangeForm(data=request.POST, instance=myid)
-    params={
-            'form': form,
-            'title': 'メールアドレス変更',
-            'content': 'メールアドレス変更完了',
-        }
-    if(request.method == 'POST'):
-        if form.is_valid():
-            form.save()
-            return render(request, "myapp/complete.html", params)
-        else:
-            return render(request, "myapp/change_mail.html", params)
-    return render(request, "myapp/change_mail.html", params)
+    #クエリーセットゲットしたけど、どう使うん？
+    def get_queryset(self, request):
+        friend = CustomUser.objects.exclude(id=request.user).order_by
+        return friend
 
-def change_icon(request):
-    myid = CustomUser.objects.get(id=request.user.id)
-    form = UsericonChangeForm(request.POST, request.FILES, instance=myid) #request.POSTが必要
-    params={
-            'form': form,
-            'title': 'アイコン変更',
-            'content': 'アイコン変更完了',
-        }
-    if(request.method == 'POST'):
-        if form.is_valid():
-            form.save()
-            return render(request, "myapp/complete.html", params)
-        else:
-            return render(request, "myapp/change_icon.html", params)
-    return render(request, "myapp/change_icon.html", params)
+# def talk_room(request, num):
+    # friend = CustomUser.objects.get(id=num)
+    # msg_data = Message.objects.filter(Q(sender = request.user) | Q(receiver = request.user))\
+    #     .filter(Q(sender = friend) | Q(receiver = friend)).order_by("msg_date")
+    # params = {
+    #     'username': CustomUser.objects.get(id=num),
+    #     'form': MessageForm(),
+    #     'data': msg_data,
+    # }
+    # if (request.method == 'POST'):
+    #     obj = Message(receiver=friend, sender=request.user)
+    #     form = MessageForm(request.POST, instance=obj)
+    #     form.save()
+    #     return render(request, "myapp/talk_room.html", params)
+    # return render(request, "myapp/talk_room.html", params)
 
-class PasswordChange(LoginRequiredMixin, PasswordChangeView):
-    success_url = reverse_lazy('setting/password_change_done')
-    template_name = 'myapp/password_change.html'
+class TalkRoomView(LoginRequiredMixin, generic.CreateView):
+    model = Message
+    template_name = 'myapp/talk_room.html'
+    form_class = MessageForm
+    # pk_url_kwargs = 'id'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form_name"] = "password_change"
+        friend = CustomUser.objects.get(id=self.kwargs['pk'])
+        msg_data = Message.objects.filter(Q(sender = self.request.user) | Q(receiver = self.request.user))\
+        .filter(Q(sender = friend) | Q(receiver = friend)).order_by("msg_date")
+        context['username'] = CustomUser.objects.get(id=self.kwargs['pk'])
+        context['data'] = msg_data
         return context
 
-class PasswordChangeDone(LoginRequiredMixin, PasswordChangeDoneView):
-    template_name = 'myapp/password_change_done.html'
+    def get_success_url(self):
+        return reverse('talk_room', kwargs={'pk':self.kwargs['pk']})
+    
+    def form_valid(self, form):
+        message = form.save(commit=False)
+        message.sender = self.request.user
+        message.receiver = CustomUser.objects.get(id=self.kwargs['pk'])
+        message.save()
+        return super().form_valid(form)
 
-def complete(request):
-    return render(request, "myapp/complete.html")
+    def form_invalid(self, form):
+        messages.error(self.request, "送信に失敗")
+        return super().form_invalid(form)
 
-def logout_view(request):
-    logout(request)
-    return redirect(to = "/")
+class SettingView(LoginRequiredMixin, generic.TemplateView):
+    template_name = 'myapp/setting.html'
+
+class UsernameChangeView(LoginRequiredMixin, generic.UpdateView):
+    model = CustomUser
+    template_name = 'myapp/change_username.html'
+    form_class = UsernameChangeForm
+    success_url = reverse_lazy('complete')
+
+    def get_object(self, queryset=None):
+        return CustomUser.objects.get(id=self.request.user.id)
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request,"失敗しました")
+        return super().form_invalid(form)
+
+class UsermailChangeView(LoginRequiredMixin, generic.UpdateView):
+    model = CustomUser
+    template_name = 'myapp/change_mail.html'
+    form_class = UsermailChangeForm
+    success_url = reverse_lazy('complete')
+
+    def get_object(self, queryset=None):
+        return CustomUser.objects.get(id=self.request.user.id)
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request,"失敗しました")
+        return super().form_invalid(form)    
+
+class UsericonChangeView(LoginRequiredMixin, generic.UpdateView):
+    model = CustomUser
+    template_name = 'myapp/change_icon.html'
+    form_class = UsericonChangeForm
+    success_url = reverse_lazy('complete')
+
+    def get_object(self, queryset=None):
+        return CustomUser.objects.get(id=self.request.user.id)
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request,"失敗しました")
+        return super().form_invalid(form)   
+    
+class CompleteView(generic.TemplateView):
+    template_name = 'myapp/complete.html'

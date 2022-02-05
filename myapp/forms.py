@@ -1,21 +1,14 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, UserCreationForm
+from allauth.account.forms import SignupForm
 from .models import CustomUser, Message
-from django.contrib.auth.forms import get_user_model
 
-class SignupForm(UserCreationForm):
+class CustomSignupForm(SignupForm):
     email = forms.EmailField(label='Email')
     img = forms.ImageField(label='Img')
 
-    class Meta:
-        model = CustomUser
-        fields = ('username', 'email', 'password1', 'password2', 'img',)
-
-class LoginForm(AuthenticationForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs['class'] = 'form-control'
-        self.fields['password'].widget.attrs['class'] = 'form-control'
+    def signup(self, request, user):
+        user.save()
+        return user
 
 class MessageForm(forms.ModelForm):
     class Meta:
@@ -51,9 +44,3 @@ class UsericonChangeForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ('img',)
-
-class MyPasswordChangeForm(PasswordChangeForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs['class'] = 'form-control'

@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 SECRET_KEY = 'oaab#2kr%trbj2h-w9ycf0&f$7dgi2+p=37!cjw$*y0@26pq77'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
+DEBUG = True
 
-# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -39,6 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',
+
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
 ]
 
 MIDDLEWARE = [
@@ -77,8 +81,14 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'myapp',
+        'USER': os.environ.get('Hironori'),
+        'PASSWORD': os.environ.get('HEbilorn'),
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -105,9 +115,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ja'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tokyo'
 
 USE_I18N = True
 
@@ -127,8 +137,34 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 AUTH_USER_MODEL = 'myapp.CustomUser'
 
-try:
-    from .local_settings import *
-except ImportError:
-    pass
+#allauth関連の設定
+
+#defaultから変更する必要があるFormはここに追加
+ACCOUNT_FORMS = {
+    'signup':'myapp.forms.CustomSignupForm',
+
+}
+
+SITE_ID = 1 #必要（理由は知らない）
+
+AUTHENTICATION_BACKENDS = (
+    'allauth.account.auth_backends.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+ACCOUNT_AUTHENTIACATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+
+#ログイン後の設定
+LOGIN_REDIRECT_URL = 'friends'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'index'
+
+ACCOUNT_LOGOUT_ON_GET = True
+
+
+
+# try:　　#開発環境では必要ない
+#     from .local_settings import *
+# except ImportError: 
+#     pass
 

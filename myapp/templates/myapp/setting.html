@@ -23,11 +23,11 @@
 
     {% block content %}
     <main>
-        <a href="setting/change_username" class="btn">ユーザ名変更</a>
-        <br><a href="setting/change_mail" class="btn">メールアドレス変更</a>
-        <br><a href="setting/change_icon" class="btn">アイコン変更</a>
-        <br><a href="setting/password_change" class="btn">パスワード変更</a>
-        <br><a href="/logout" class="btn">ログアウト</a>
+        <a href="{% url 'change_username' %}" class="btn">ユーザ名変更</a>
+        <br><a href="{% url 'change_mail' %}" class="btn">メールアドレス変更</a>
+        <br><a href="{% url 'change_icon' %}" class="btn">アイコン変更</a>
+        <br><a href="{% url 'account_change_password' %}" class="btn">パスワード変更</a>
+        <br><a href="{% url 'account_logout' %}" class="btn">ログアウト</a>
     </main>
     {% endblock %}
 
