@@ -20,6 +20,7 @@ from .forms import(
 class IndexView(generic.TemplateView):
      template_name = 'myapp/index.html'
 
+
 def friends(request):
     data = CustomUser.objects.exclude(id=request.user.id)
     # requestuserとトーク履歴のあるユーザー
@@ -60,6 +61,7 @@ class FriendsView(LoginRequiredMixin, generic.ListView):
         friend = CustomUser.objects.exclude(id=request.user).order_by
         return friend
 
+
 # def talk_room(request, num):
     # friend = CustomUser.objects.get(id=num)
     # msg_data = Message.objects.filter(Q(sender = request.user) | Q(receiver = request.user))\
@@ -73,7 +75,6 @@ class FriendsView(LoginRequiredMixin, generic.ListView):
     #     obj = Message(receiver=friend, sender=request.user)
     #     form = MessageForm(request.POST, instance=obj)
     #     form.save()
-    #     return render(request, "myapp/talk_room.html", params)
     # return render(request, "myapp/talk_room.html", params)
 
 class TalkRoomView(LoginRequiredMixin, generic.CreateView):
@@ -105,8 +106,10 @@ class TalkRoomView(LoginRequiredMixin, generic.CreateView):
         messages.error(self.request, "送信に失敗")
         return super().form_invalid(form)
 
+
 class SettingView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'myapp/setting.html'
+
 
 class UsernameChangeView(LoginRequiredMixin, generic.UpdateView):
     model = CustomUser
@@ -124,6 +127,7 @@ class UsernameChangeView(LoginRequiredMixin, generic.UpdateView):
         messages.error(self.request,"失敗しました")
         return super().form_invalid(form)
 
+
 class UsermailChangeView(LoginRequiredMixin, generic.UpdateView):
     model = CustomUser
     template_name = 'myapp/change_mail.html'
@@ -140,6 +144,7 @@ class UsermailChangeView(LoginRequiredMixin, generic.UpdateView):
         messages.error(self.request,"失敗しました")
         return super().form_invalid(form)    
 
+
 class UsericonChangeView(LoginRequiredMixin, generic.UpdateView):
     model = CustomUser
     template_name = 'myapp/change_icon.html'
@@ -155,6 +160,7 @@ class UsericonChangeView(LoginRequiredMixin, generic.UpdateView):
     def form_invalid(self, form):
         messages.error(self.request,"失敗しました")
         return super().form_invalid(form)   
-    
+
+
 class CompleteView(generic.TemplateView):
     template_name = 'myapp/complete.html'
