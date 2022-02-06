@@ -10,10 +10,10 @@
     <title>{{title}}</title>
 </head>
 <body>
-    <p><a href="{% url 'usernamechange' data.username %}">{{'ユーザー名変更'}}</a></p>
-    <p><a href="{% url 'emailchange' data.username %}">{{'メールアドレス変更'}}</a></p>
-    <p><a href="{% url 'iconchange' data.username %}">{{'アイコン変更'}}</a></p>
-    <p><a href="{% url 'passwordchange' data.username %}">{{'パスワード変更'}}</a></p>
+    <p><a href="{% url 'username_update' user.id %}">{{'ユーザー名変更'}}</a></p>
+    <p><a href="{% url 'email_update' user.id %}">{{'メールアドレス変更'}}</a></p>
+    <p><a href="{% url 'icon_update' user.id %}">{{'アイコン変更'}}</a></p>
+    <p><a href="{% url 'password_update' user.id %}">{{'パスワード変更'}}</a></p>
     <p><a href="logout">ログアウト</a></p>
 
 

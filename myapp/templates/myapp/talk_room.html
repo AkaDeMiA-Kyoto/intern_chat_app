@@ -4,35 +4,28 @@
 <header>
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}">
 </header>
-{{data5}}
-    
+{{t_user}}
 {% endblock %}
 {% block content %}
 <p>
-
-
-
-        {% for item in data6 %}
-            <tr>
-                <p><td>{{ abc }}</td><td>{{item.fromusername}}</td>
-                <td>{{ def }}</td><td>{{item.tousername}}</td>
-                <td>{{item.content}}</td>
-                <td>{{item.pub_date}}</td></p>
-            </tr>
-        {% endfor %}
-
-</p>
+{% for talk in talk %}
+<tr>
+    <p><td>送信</td><td>{{talk.f_user}}</td>
+    <td>受信</td><td>{{talk.t_user}}</td>
+    <td>{{talk.content}}</td>
+    <td>{{talk.pub_date}}</td></p>
+</tr>
+{% endfor %}
 {% endblock %}
+</p>
 
 {% block footer %}
-
 <footer>
     <form method="POST" novalidate>
-        {% csrf_token %}
-        {{ messageform.as_p }}
-        <button type="submit">送信</button>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">送信</button>
     </form>
-
 </footer>
 {% endblock %}
 

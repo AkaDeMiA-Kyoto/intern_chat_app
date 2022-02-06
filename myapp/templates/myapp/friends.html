@@ -7,28 +7,34 @@
 友達
 {% endblock %}
 {% block content %}
+
  <!doctype html>
 <html lang="ja">
 <body>
-    
-    {% for data1 in data %}
+    <form action="" method="get">
+        <input name="query" value="{{ request.GET.query }}" type="text">
+        <button type="submit">検索する</button>
+    </form>
+
+    {% for talk in talk_list %}
     <div class="DivLink">
-    {% for photo1 in photo %}
- 
-    {% if photo1.username == data1 %}
-                <img src={{photo1.image.url}} alt="サンプル" width="96" height="65">
-            {{data1.username}}
-    {% endif %}
-    {% endfor %}
-    {% for message1 in message %}
-    {% if message1.tousername == data1 %}
-            {{message1.content}} 
-    {% endif %}
-    {% endfor %}
-    <a class ="Link" href="{% url 'talk_room' data1.username %}"></a>
+    <img src={{talk.t_user.icon.url}} alt="サンプル" width="96" height="65">
+    {{talk.t_user.username}}
+    {{talk.content}}
+    <a class ="Link" href="{% url 'talk_room' talk.t_user.id %}"></a>
     </div>
     {% endfor %}
+    {% for user in user_list %}
+    <div class="DivLink">
+    <img src={{user.icon.url}} alt="サンプル" width="96" height="65">
+    {{user.username}}
+    <a class ="Link" href="{% url 'talk_room' user.id %}"></a>
+    </div>
+    {% endfor %}    
+    
+ 
 </body>
 </html>
 {% endblock %}
+
 

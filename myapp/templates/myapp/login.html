@@ -1,6 +1,10 @@
-
+{% extends 'myapp/base.html' %}
 {% load static %}
+{% block header %}
+ログイン
+{% endblock %}
 
+{% block content %}
       {% if form.errors  %}
       <div>
         <p>ユーザーネームとパスワードが一致しません．<p>
@@ -20,4 +24,7 @@
         </div>
         <button type="submit">ログイン</button>
       </form>
+{% endblock %}
+{% block footer %}
+{% endblock %}
   

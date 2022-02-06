@@ -1,31 +1,13 @@
-from django import forms
-from django.contrib.admin.options import get_content_type_for_model
-from django.db import models
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.core.exceptions import ValidationError
-from django.core.validators import FileExtensionValidator
 from django import forms
-from django.contrib.auth.forms import UsernameField	
-from django.contrib.auth.models import User
 from django.contrib.auth import forms as auth_forms
-from .models import Photo, Message
-
-class HelloForm(forms.Form):
-    Username = forms.CharField(label='Username')
-    Passward = forms.CharField(min_length=8, label='Passward')
-
-class PhotoForm(forms.ModelForm):
-    class Meta:
-        model = Photo
-        fields = ('image',)
-        labels = {
-            'image': 'img'
-        }
+from .models import User, Talk
 
 class SignUpForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2', 'icon')
     
     def clean(self):
         cleaned_data = super(SignUpForm, self).clean()
@@ -36,20 +18,32 @@ class SignUpForm(UserCreationForm):
             "パスワードが一致しませんでした。パスワードを入力し直してください。"
             )
 
-class NameForm(forms.ModelForm):
+class UsernameUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username']
 
-class emailchangeForm(forms.ModelForm):
+class EmailUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['email']
 
-class passwordchangeForm(forms.ModelForm):
+class IconUpdateForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['password']
+        fields = ['icon']
+
+class PasswordUpdateForm(PasswordChangeForm):
+    new_password1 = forms.CharField(
+        label=("新しいパスワード"),
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}),
+        strip=False,
+    )
+    new_password2 = forms.CharField(
+        label=("新しいパスワード　（確認）"),
+        strip=False,
+        widget=forms.PasswordInput(attrs={'autocomplete': 'new-password'}),
+    )
 
 
 class LoginForm(auth_forms.AuthenticationForm):
@@ -60,12 +54,11 @@ class LoginForm(auth_forms.AuthenticationForm):
             field.widget.attrs['class'] = 'form-control'
             field.widget.attrs['placeholder'] = field.label 
 
-class MessageForm(forms.ModelForm):
+class TalkForm(forms.ModelForm):
     class Meta:
-        model = Message
+        model = Talk
         fields = ['content']
         labels = {
             'content': '',
-
         }
     

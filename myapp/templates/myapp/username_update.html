@@ -1,0 +1,17 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+<!doctype html>
+<html lang="ja">
+{% block header %}
+ユーザ名
+{% endblock %}
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form }}
+        <tr><th><td>
+        <button type = "submit" >登録</button>
+        </td></th></tr>
+    </form>
+{% endblock %}
+</html>

@@ -7,12 +7,11 @@
 {% endblock %}
 {% block content %}
     <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form }}
-            <tr><th><td>
-                <input type="submit" value="click"
-                    class="btn btn-primary mt-2">
-            </td></th>
+    {% csrf_token %}
+    {{ form }}
+        <tr><th><td>
+        <button type = "submit" >登録</button>
+        </td></th></tr>
     </form>
-</html>
 {% endblock %}
+</html>

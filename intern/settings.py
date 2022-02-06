@@ -78,8 +78,12 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'taichi',
+        'USER': 'taichi',
+        'PASSWORD': 'masuda20010108',
+        'HOST': 'localhost',
+        'PORT': '5433',
     }
 }
 
@@ -129,6 +133,8 @@ LOGIN_REDIRECT_URL = '/friends'
 LOGOUT_REDIRECT_URL = '/'
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+AUTH_USER_MODEL = 'myapp.User'
+
 
 # ...
 try:
@@ -136,3 +142,4 @@ try:
 except ImportError:
     # local_settings.py が存在しなくてもエラーにならないようにする
     pass
+
