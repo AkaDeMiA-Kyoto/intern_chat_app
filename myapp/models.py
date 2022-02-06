@@ -1,8 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-
-class Profile(AbstractUser):
-    image=models.ImageField(upload_to='images/', default='', blank=True, null=True,)
+from accounts.models import Profile
 
 class Message(models.Model):
     sender=models.ForeignKey(
@@ -24,5 +21,4 @@ class Message(models.Model):
 
     class Meta:
         ordering = ('created_at',)
-
-# Create your models here.
+        verbose_name_plural = "Message"

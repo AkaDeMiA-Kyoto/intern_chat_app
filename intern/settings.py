@@ -38,7 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'myapp',
+    'myapp.apps.MyappConfig',
+    'accounts.apps.AccountsConfig',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 ]
 
 MIDDLEWARE = [
@@ -108,9 +113,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ja'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tokyo'
 
 USE_I18N = True
 
@@ -129,7 +134,34 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-AUTH_USER_MODEL='myapp.Profile'
+AUTH_USER_MODEL='accounts.Profile'
+
+ACCOUNT_FORMS = {
+    'login': 'accounts.forms.LoginForm',
+    'signup': 'accounts.forms.SignUpForm',
+}
+
+ACCOUNT_ADAPTER = 'accounts.adapter.AccountAdapter'
+
+# 以下の設定を追加
+SITE_ID = 1
+ 
+AUTHENTICATION_BACKENDS = (
+    'allauth.account.auth_backends.AuthenticationBackend',  # 一般ユーザー用(メールアドレス認証)
+    'django.contrib.auth.backends.ModelBackend',  # 管理サイト用(ユーザー名認証)
+)
+ 
+ACCOUNT_AUTHENTICATION_METHOD = 'email'  # メールアドレス認証に変更する設定
+ACCOUNT_USERNAME_REQUIRED = True  # ユーザー名を使用する
+ 
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # ユーザー登録メールは送信しない
+ACCOUNT_EMAIL_REQUIRED = True
+ 
+LOGIN_REDIRECT_URL = 'myapp:index'  # ログイン成功後の遷移先の指定
+ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'  # ログアウト成功後の遷移先の指定
+ 
+ACCOUNT_LOGOUT_ON_GET = True  # 確認を行わずログアウトする設定
+
 
 # ...
 try:
