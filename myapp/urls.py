@@ -3,7 +3,6 @@ from . import views
 
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
-    #path('friends', views.friends, name='friends'),
     path('friends', views.FriendsView.as_view(), name='friends'),
     path('talk_room/<int:pk>', views.TalkRoomView.as_view(), name='talk_room'),
     #setting
