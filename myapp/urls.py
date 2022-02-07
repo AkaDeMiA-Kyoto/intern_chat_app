@@ -3,9 +3,8 @@ from . import views
 
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
-    path('friends', views.friends, name='friends'),
-    # path('friends', views.FriendsView.as_view(), name='friends'),
-    # path('talk_room/<int:num>', views.talk_room, name='talk_room'),
+    #path('friends', views.friends, name='friends'),
+    path('friends', views.FriendsView.as_view(), name='friends'),
     path('talk_room/<int:pk>', views.TalkRoomView.as_view(), name='talk_room'),
     #setting
     path('setting', views.SettingView.as_view(), name='setting'),

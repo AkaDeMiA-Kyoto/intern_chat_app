@@ -10,6 +10,7 @@ class CustomSignupForm(SignupForm):
         user.save()
         return user
 
+
 class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
@@ -17,6 +18,7 @@ class MessageForm(forms.ModelForm):
         widgets = {
             'content': forms.Textarea(attrs={'class':'form-control form-control-sm', 'rows':2})
         }
+
 
 class UsernameChangeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -27,6 +29,7 @@ class UsernameChangeForm(forms.ModelForm):
         model = CustomUser
         fields = ('username',)
 
+
 class UsermailChangeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -35,6 +38,7 @@ class UsermailChangeForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ('email',)
+
 
 class UsericonChangeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

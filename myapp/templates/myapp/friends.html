@@ -10,7 +10,15 @@
         <header class="header">
             <div class="header-container">
                 <span class="header-container__title">
-                    {% block header-title %}友達{% endblock %}
+                    {% block header-title %}
+                    友達
+                    <div align="right">
+                        <form action="" method="get">
+                            <input name="query" value="{{ request.GET.query }}" type="text">
+                            <button type="submit">検索</button>
+                        </form>
+                    </div>
+                    {% endblock %}
                 </span>
             </div>
         </header>
@@ -18,18 +26,18 @@
 
     {% block content %}
     <table class="table">
-    {% for _, friend, talk in list_w_talks %}
-        <tr>
-            <td><img src="{{friend.img.url}}"></td>
-            <td><a href ="{% url 'talk_room' friend.id %}">{{friend.username}}</a></td>
-            <td>{{talk.content}}</td>
-        </tr>
+    {% for _, friend, talk in history %}
+    <tr>
+        <td><img src="{{friend.img.url}}"></td>
+        <td><a href ="{% url 'talk_room' friend.id %}">{{friend.username}}</a></td>
+        <td>{{talk.content}}</td>
+    </tr>
     {% endfor %}
-    {% for _, friend in list_wo_talks %}
-        <tr>
-            <td><img src="{{friend.img.url}}"></td>
-            <td><a href ="{% url 'talk_room' friend.id %}">{{friend.username}}</a></td>
-        </tr>
+    {% for _, friend in no_history %}
+    <tr>
+        <td><img src="{{friend.img.url}}"></td>
+        <td><a href ="{% url 'talk_room' friend.id%}">{{friend.username}}</a></td>
+    </tr>
     {% endfor %}
     </table>
     {% endblock %}

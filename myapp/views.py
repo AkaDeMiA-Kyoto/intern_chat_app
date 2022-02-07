@@ -1,4 +1,3 @@
-from django.shortcuts import redirect, render
 from django.db.models import Q
 from django.urls import reverse_lazy
 from django.urls.base import reverse
@@ -21,61 +20,37 @@ class IndexView(generic.TemplateView):
      template_name = 'myapp/index.html'
 
 
-def friends(request):
-    data = CustomUser.objects.exclude(id=request.user.id)
-    # requestuserとトーク履歴のあるユーザー
-    list_w_talks = []
-    # request.userとトーク履歴のないユーザー
-    list_wo_talks = []
-    for friend in data:
-        latests = Message.objects.all().filter(Q(sender=request.user.id) | Q(receiver=request.user.id))\
-            .filter(Q(sender=friend.id) | Q(receiver=friend.id)).order_by("-msg_date").first()
-        if latests != None:
-            list_w_talks.append([latests.msg_date, friend, latests])
-        else:
-            list_wo_talks.append([friend.created_date, friend])
-
-    list_w_talks.sort(key=lambda x: x[0] ,reverse=True)
-    list_wo_talks.sort(key=lambda x: x[0] ,reverse=True)
-    params={
-        'data': data,
-        'list_w_talks':list_w_talks,
-        'list_wo_talks':list_wo_talks,
-    }
-    return render(request, "myapp/friends.html", params)
-
 class FriendsView(LoginRequiredMixin, generic.ListView):
     model = CustomUser
     template_name = 'myapp/friends.html'
-    #form_class = FriendSearchForm
-    #検索機能をつける時に必要なフォームの作成。その際にListViewから違うクラスに帰る必要ありそう。
-
-    #テンプレートに使う辞書データを作成.。メッセージが存在する、しないー＞メッセージの時間順に並べる
 
     def get_context_data(self, **kwargs):
-        
-        return super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+        friends_exclude_me = CustomUser.objects.exclude(id=self.request.user.id)
+        search_word = self.request.GET.get('query')
 
-    #クエリーセットゲットしたけど、どう使うん？
-    def get_queryset(self, request):
-        friend = CustomUser.objects.exclude(id=request.user).order_by
-        return friend
+        if search_word:
+            friend_list = CustomUser.objects.filter(username__icontains=search_word)
+        else:
+            friend_list = friends_exclude_me
 
+        exist_friend_talk = []
+        not_exist_friend_talk = []
+        for friend in friend_list:
+            latest_meg = Message.objects.all().filter(Q(sender=self.request.user.id) | Q(receiver=self.request.user.id))\
+                .filter(Q(sender=friend.id) | Q(receiver=friend.id)).order_by("-msg_date").first()
+            if latest_meg != None:
+                exist_friend_talk.append([latest_meg.msg_date, friend, latest_meg])
+            else:
+                not_exist_friend_talk.append([friend.created_date, friend])
 
-# def talk_room(request, num):
-    # friend = CustomUser.objects.get(id=num)
-    # msg_data = Message.objects.filter(Q(sender = request.user) | Q(receiver = request.user))\
-    #     .filter(Q(sender = friend) | Q(receiver = friend)).order_by("msg_date")
-    # params = {
-    #     'username': CustomUser.objects.get(id=num),
-    #     'form': MessageForm(),
-    #     'data': msg_data,
-    # }
-    # if (request.method == 'POST'):
-    #     obj = Message(receiver=friend, sender=request.user)
-    #     form = MessageForm(request.POST, instance=obj)
-    #     form.save()
-    # return render(request, "myapp/talk_room.html", params)
+        exist_friend_talk.sort(key=lambda x: x[0], reverse=True)
+        not_exist_friend_talk.sort(key=lambda x: x[0], reverse=True)
+
+        context['history'] = exist_friend_talk
+        context['no_history'] = not_exist_friend_talk
+        return context
+
 
 class TalkRoomView(LoginRequiredMixin, generic.CreateView):
     model = Message
@@ -87,7 +62,7 @@ class TalkRoomView(LoginRequiredMixin, generic.CreateView):
         context = super().get_context_data(**kwargs)
         friend = CustomUser.objects.get(id=self.kwargs['pk'])
         msg_data = Message.objects.filter(Q(sender = self.request.user) | Q(receiver = self.request.user))\
-        .filter(Q(sender = friend) | Q(receiver = friend)).order_by("msg_date")
+            .filter(Q(sender = friend) | Q(receiver = friend)).order_by("msg_date")
         context['username'] = CustomUser.objects.get(id=self.kwargs['pk'])
         context['data'] = msg_data
         return context
