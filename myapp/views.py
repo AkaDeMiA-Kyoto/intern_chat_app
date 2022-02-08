@@ -5,12 +5,13 @@ from django.views.generic import TemplateView,ListView,CreateView,FormView
 from django.contrib.auth.views import PasswordChangeView,PasswordChangeDoneView 
 from django.contrib.auth import authenticate
 from django.db.models import Q
-from accounts.models import Profile
+from django.contrib.auth import get_user_model
 from .models import Message
 from .forms import UsernameChangeForm,UserEmailChangeForm,UserImageChangeForm,UserPasswordChangeForm
 from .forms import MessageForm
 from django.urls import reverse_lazy
 
+Profile = get_user_model()
 
 class Index(TemplateView):
     template_name = "myapp/index.html"

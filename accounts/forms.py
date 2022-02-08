@@ -1,7 +1,9 @@
 from allauth.account.forms import SignupForm,LoginForm
 from django import forms
-from .models import Profile
+from django.contrib.auth import get_user_model
 from allauth.account.adapter import DefaultAccountAdapter
+
+Profile = get_user_model()
 
 class SignUpForm(SignupForm):
 

@@ -1,5 +1,7 @@
 from django.db import models
-from accounts.models import Profile
+from django.contrib.auth import get_user_model
+
+Profile = get_user_model()
 
 class Message(models.Model):
     sender=models.ForeignKey(
