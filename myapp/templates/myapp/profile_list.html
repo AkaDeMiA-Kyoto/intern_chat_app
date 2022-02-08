@@ -1,6 +1,20 @@
 {% extends 'myapp/base.html' %}
 
-{% block header-title %}友達{% endblock %}
+{% block header %}
+    <header class="header">
+        <div class="header-container flex items-center">
+            <span class="header-container__title">
+                {% block header-title %}友達{% endblock %}
+            </span>
+            <div class="my-3 absolute right-3">
+                <form action="" method="get">
+                    <input name="query" value="{{ request.GET.query }}" type="text" class="shadow border-gray-500 border rounded text-black leading-tight focus:outline-none focus:shadow-outline">
+                    <button type="submit" class="px-2 py-1 bg-blue-400 text-white font-semibold rounded hover:bg-blue-500">検索する</button>
+                </form>
+            </div>
+        </div>
+    </header>
+    {% endblock %}
 
 {% block content %}
 {% for friend,talk in friends %}

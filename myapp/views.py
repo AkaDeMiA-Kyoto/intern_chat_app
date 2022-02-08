@@ -25,7 +25,6 @@ class Index(TemplateView):
 class FriendList(ListView,LoginRequiredMixin):
     template_name = 'myapp/profile_list.html'
     model = Message
-    context_object_name = 'profile_list'
         
     def get_context_data(self, **kwargs):
         friends=[]
@@ -33,6 +32,12 @@ class FriendList(ListView,LoginRequiredMixin):
         user=self.request.user
         #ユーザー以外の友達
         data = Profile.objects.exclude(id=user.id)
+        q_word = self.request.GET.get('query')
+        if q_word:
+            data = Profile.objects.filter(
+                Q(username__icontains=q_word))
+        else:
+            data = Profile.objects.exclude(id=user.id)
         for friend in data:
             latests = Message.objects.all().filter(Q(sender=user) | Q(receiver=user)).filter(Q(sender=friend) | Q(receiver=friend)).order_by('created_at').last()
             if latests != None:
