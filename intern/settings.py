@@ -82,8 +82,12 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'myapp',
+        'USER': 'admin',
+        'PASSWORD': 'ryu120411',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -157,7 +161,7 @@ ACCOUNT_USERNAME_REQUIRED = True  # ユーザー名を使用する
 ACCOUNT_EMAIL_VERIFICATION = 'none'  # ユーザー登録メールは送信しない
 ACCOUNT_EMAIL_REQUIRED = True
  
-LOGIN_REDIRECT_URL = 'myapp:index'  # ログイン成功後の遷移先の指定
+LOGIN_REDIRECT_URL = 'myapp:profile'  # ログイン成功後の遷移先の指定
 ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'  # ログアウト成功後の遷移先の指定
  
 ACCOUNT_LOGOUT_ON_GET = True  # 確認を行わずログアウトする設定

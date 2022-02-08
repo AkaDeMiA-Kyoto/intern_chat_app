@@ -1,46 +1,29 @@
+{% extends 'myapp/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
-    {% block extra_style %}{% endblock %}
-    <title>DeMiAインターン</title>
-</head>
-<body>
-    {% block header %}
-    <header class="header bg-gray-200">
-        <div class="header-container">
-            <span class="header-container__title">
-                {% block header-title %}アイコン{% endblock %}
-            </span>
-        </div>
-    </header>
-    {% endblock %}
 
-    {% block content %}
-    アイコン変更完了
-    {% endblock %}
+{% block extra_style %}<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">{% endblock %}
 
-    {% block footer %}
-    <footer class="footer">
-        <div class="footer-container bg-gray-200">
-            <div class="footer-container__item">
-                <a href="{% url 'friends' %}" class="footer-item__link">
-                    <span class="footer-item__icon"><img src="{% static 'myapp/img/people-24px.svg' %}"></span>
-                    <span class="footer-item__text">友達</span>
-                </a>
-            </div>
-            <div class="footer-container__item">
-                <a href="{% url 'setting' %}" class="footer-item__link">
-                    <span class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></span>
-                    <span class="footer-item__text">設定</span>
-                </a>
-            </div>
+{% block header-title %}アイコン変更{% endblock %}
+
+{% block content %}
+アイコン画像変更完了
+{% endblock %}
+
+{% block footer %}
+<footer class="footer">
+    <div class="footer-container bg-gray-200">
+        <div class="footer-container__item">
+            <a href="{% url 'myapp:profile' %}" class="footer-item__link">
+                <span class="footer-item__icon"><img src="{% static 'myapp/img/people-24px.svg' %}"></span>
+                <span class="footer-item__text">友達</span>
+            </a>
         </div>
-    </footer>
-    {% endblock %}
-</body>
-</html>
+        <div class="footer-container__item">
+            <a href="{% url 'myapp:setting' %}" class="footer-item__link">
+                <span class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></span>
+                <span class="footer-item__text">設定</span>
+            </a>
+        </div>
+    </div>
+</footer>
+{% endblock %}
