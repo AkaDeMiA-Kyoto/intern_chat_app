@@ -163,8 +163,8 @@ ACCOUNT_LOGOUT_ON_GET = True
 
 
 
-# try:　　#開発環境では必要ない
-#     from .local_settings import *
-# except ImportError: 
-#     pass
+try: #開発環境では必要ない
+    from .local_settings import *
+except ImportError: 
+    pass
 
