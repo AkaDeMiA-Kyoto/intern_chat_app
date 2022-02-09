@@ -7,7 +7,7 @@
 {% block body %}
 {% block contents %}
 <h1>サインアップ</h1>
-<form method="post" action="{% url 'account_signup' %}">
+<form method="post" action="{% url 'account_signup' %}" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
     {% if redirect_field_value %}
