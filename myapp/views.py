@@ -14,6 +14,7 @@ def index(request):
 
 def signup(request):
     parameters = {}
+
     if request.method == 'GET':
         parameters['form'] = SignupForm()
     elif request.method == 'POST':
@@ -22,6 +23,7 @@ def signup(request):
             form.save()
             return redirect(to="/")
         parameters['form'] = form
+        
     return render(request, "myapp/signup.html", parameters)
 
 
@@ -46,6 +48,7 @@ def talk_room(request, partner):
         partner_id = User.objects.get(username=partner).unique_id
     except ObjectDoesNotExist:
         raise Http404
+
     if request.method == 'POST':
         form = MessageForm(request.POST)
         if form.is_valid():
@@ -55,6 +58,7 @@ def talk_room(request, partner):
                 contents=form.cleaned_data['contents']
             )
             message.save()
+
     parameters['messages'] = Message.objects.filter(Q(sender=partner_id, receiver=user_id) | Q(sender=user_id, receiver=partner_id)) 
     parameters['form'] = MessageForm() # 文字さえ入力していれば基本validateは通る気がするのでrequest.POSTは入れない
     parameters['partner'] = partner
@@ -86,13 +90,16 @@ def GetForm(item, request):
 @login_required
 def change(request, item):
     parameters = {}
+
     if item not in { 'username', 'email', 'image' }:
         raise Http404
+
     if request.method == 'POST':
         form = PostForm(item, request)
         if form.is_valid():
             form.save()
             return redirect(to=item+"/done")
+
     parameters['item'] = item
     parameters['form'] = GetForm(item, request)
     return render(request, "myapp/change.html", parameters)

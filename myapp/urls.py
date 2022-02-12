@@ -15,5 +15,5 @@ urlpatterns = [
     path('setting/<item>', views.change, name='change'), 
     # 上から順に確認しているので、↑とその一つ上のものを交換するとエラーになる。
     # それが嫌だったらchange.htmlとかのactionをちゃんと設定しましょう。
-    path('setting/<item>/done', views.change_done, name='change_done')
+    path('setting/<item>/done', views.change_done, name='change_done'),
 ]
