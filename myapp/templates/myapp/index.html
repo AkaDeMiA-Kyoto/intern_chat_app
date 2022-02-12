@@ -1,1 +1,16 @@
-I
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8">
+        <title>Index</title>
+        <link rel="stylesheet" href="../../static/myapp/css/html5reset-1.6.1.css">
+        <link rel="stylesheet" href="../../static/myapp/css/index.css">
+    </head>
+    <body>
+        <div class="container">
+            <button onclick="location.href='{% url 'login_view' %}'" class="btn1">LOGIN</button>    
+            <br>
+            <button onclick="location.href='{% url 'signup_view' %}'" class="btn1">会員登録</button>
+        </div>
+    </body>
+</html>
