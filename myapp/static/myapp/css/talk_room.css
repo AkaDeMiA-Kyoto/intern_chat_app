@@ -18,7 +18,7 @@ form {
     border: none;
 }
 
-#btn {
+#send-button {
     color: black;
     background-color: white;
     /* border-left: solid 2px grey ; */
@@ -27,7 +27,7 @@ form {
     height: 32px;
     width: calc(10% - 2px);
 }
-#btn:hover {
+#send-button:hover {
     color: white;
     background-color: black;
     border-color: grey;

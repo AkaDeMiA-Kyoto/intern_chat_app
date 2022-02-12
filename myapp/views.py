@@ -42,6 +42,7 @@ def friends(request):
 
 @login_required
 def talk_room(request, partner):
+    print("talk_room")
     parameters = {}
     user_id = request.user.unique_id
     try:
@@ -57,7 +58,7 @@ def talk_room(request, partner):
                 receiver=partner_id, \
                 contents=form.cleaned_data['contents']
             )
-            message.save()
+            message.save()  
 
     parameters['messages'] = Message.objects.filter(Q(sender=partner_id, receiver=user_id) | Q(sender=user_id, receiver=partner_id)) 
     parameters['form'] = MessageForm() # 文字さえ入力していれば基本validateは通る気がするのでrequest.POSTは入れない

@@ -10,7 +10,7 @@ class User(AbstractUser):
     unique_id = models.UUIDField(default=uuid.uuid4, editable=False)
 
     def __str__(self):
-        return self.username + ' ' + self.password
+        return self.username
 
 class Message(models.Model):
     sender = models.UUIDField(default=uuid.uuid4, editable=False)

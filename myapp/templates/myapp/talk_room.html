@@ -16,12 +16,12 @@
             {% if message.sender == request.user.unique_id %}
                 <div class="message from-user">
                     <div class="message-content from-user-content">{{message.contents}}</div>
-                    <div class="message-datetime">{{message.date_joined}}</div>
+                    <!-- <div class="message-datetime">{{message.date_joined}}</div> -->
                 </div>
             {% elif message.sender == partner_id %}
                 <div class="message">
                     <div class="message-content">{{message.contents}}</div>
-                    <div class="message-datetime">{{message.date_joined}}</div>
+                    <!-- <div class="message-datetime">{{message.date_joined}}</div> -->
                 </div>
             {% endif %}
         </li><br>
@@ -30,45 +30,70 @@
 <form action="{% url 'myapp:talk_room' partner %}" method="post">
     {% csrf_token %}
     {{ form.contents }}
-    <input type="submit" value="send" id="btn">
+    <input type="submit" value="send" id="send-button">
 </form>
 
-{{ partner|json_script:"room-name" }}
+// ここ、セキュリティ的にまずいのでどうにかするべき
+{{ partner|json_script:"partner" }}
+{{ partner_id|json_script:"partner-id" }}
+{{ request.user.unique_id|json_script:"user-id" }}
 
 <script>
-    const roomName = JSON.parse(document.getElementById('room-name').textContent);
+    const partner = JSON.parse(document.getElementById('partner').textContent);
+    const partnerId = JSON.parse(document.getElementById('partner-id').textContent);
+    const userId = JSON.parse(document.getElementById('user-id').textContent);
+
+    // console.log(partner);
+    // console.log(partnerId);
+    // console.log(userId);
 
     const chatSocket = new WebSocket(
         'ws://'
         + window.location.host
         + '/ws/talk_room/'
-        + roomName
-        + '/'
+        + partner
     );
 
-    // chatSocket.onmessage = function(e) {
-    //     const data = JSON.parse(e.data);
-    //     document.querySelector('#chat-log').value += (data.message + '\n');
-    // };
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        let cssMessage = 'message', cssMessageContent = 'message-content';
+        console.log(data);
+        if(userId == data.sender){
+            cssMessage += ' from-user';
+            cssMessageContent += ' from-user-content';
+        }
+        //可読性のなさ
+        let htmlMessageContent = "<div class=\"" + cssMessageContent + "\">" + data.message + "</div>";
+        let htmlMessage = "<div class=\"" + cssMessage + "\">" + htmlMessageContent + "</div>"
+
+        let html = document.createElement('li');
+        html.innerHTML = htmlMessage;
+
+        document.getElementById('message-area').appendChild(html);
+
+    };
 
     chatSocket.onclose = function(e) {
         console.error('Chat socket closed unexpectedly');
     };
 
     // document.querySelector('#chat-message-input').focus();
-    // document.querySelector('#chat-message-input').onkeyup = function(e) {
+    // document.querySelector('#id_contents').onkeyup = function(e) {
     //     if (e.keyCode === 13) {  // enter, return
-    //         document.querySelector('#chat-message-submit').click();
+    //         document.querySelector('#send-button').click();
     //     }
     // };
 
-    // document.querySelector('#chat-message-submit').onclick = function(e) {
-    //     const messageInputDom = document.querySelector('#chat-message-input');
-    //     const message = messageInputDom.value;
-    //     chatSocket.send(JSON.stringify({
-    //         'message': message
-    //     }));
-    //     messageInputDom.value = '';
-    // };
+    document.querySelector('#send-button').onclick = function(e) {
+        const messageInputDom = document.querySelector('#id_contents');
+        const message = messageInputDom.value;
+        // console.log(message);
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'sender': userId,
+            'receiver': partnerId
+        }));
+        messageInputDom.value = '';
+    };
 </script>
 {% endblock %}
