@@ -30,7 +30,8 @@
 <form action="{% url 'myapp:talk_room' partner %}" method="post">
     {% csrf_token %}
     {{ form.contents }}
-    <input type="submit" value="send" id="send-button">
+    <input type="text" style="display: none;">
+    <input type="button" value="send" id="send-button">
 </form>
 
 // ここ、セキュリティ的にまずいのでどうにかするべき
