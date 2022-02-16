@@ -29,12 +29,14 @@
 </ul>
 <form action="{% url 'myapp:talk_room' partner %}" method="post">
     {% csrf_token %}
+    <!-- 今は空白でも許している -->
     {{ form.contents }}
     <input type="text" style="display: none;">
     <input type="button" value="send" id="send-button">
+    <!-- 空白だとボタンを押せなくするとかもありかもしれない -->
 </form>
 
-// ここ、セキュリティ的にまずいのでどうにかするべき
+<!-- ここ、どうにかするべきだと思う -->
 {{ partner|json_script:"partner" }}
 {{ partner_id|json_script:"partner-id" }}
 {{ request.user.unique_id|json_script:"user-id" }}
@@ -43,10 +45,6 @@
     const partner = JSON.parse(document.getElementById('partner').textContent);
     const partnerId = JSON.parse(document.getElementById('partner-id').textContent);
     const userId = JSON.parse(document.getElementById('user-id').textContent);
-
-    // console.log(partner);
-    // console.log(partnerId);
-    // console.log(userId);
 
     const chatSocket = new WebSocket(
         'ws://'
@@ -58,7 +56,6 @@
     chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
         let cssMessage = 'message', cssMessageContent = 'message-content';
-        console.log(data);
         if(userId == data.sender){
             cssMessage += ' from-user';
             cssMessageContent += ' from-user-content';
@@ -68,7 +65,7 @@
         let htmlMessage = "<div class=\"" + cssMessage + "\">" + htmlMessageContent + "</div>"
 
         let html = document.createElement('li');
-        html.innerHTML = htmlMessage;
+        html.innerHTML = htmlMessage + "<br>";
 
         document.getElementById('message-area').appendChild(html);
 
@@ -78,17 +75,9 @@
         console.error('Chat socket closed unexpectedly');
     };
 
-    // document.querySelector('#chat-message-input').focus();
-    // document.querySelector('#id_contents').onkeyup = function(e) {
-    //     if (e.keyCode === 13) {  // enter, return
-    //         document.querySelector('#send-button').click();
-    //     }
-    // };
-
     document.querySelector('#send-button').onclick = function(e) {
         const messageInputDom = document.querySelector('#id_contents');
         const message = messageInputDom.value;
-        // console.log(message);
         chatSocket.send(JSON.stringify({
             'message': message,
             'sender': userId,

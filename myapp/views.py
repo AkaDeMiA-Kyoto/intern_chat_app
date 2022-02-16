@@ -42,26 +42,15 @@ def friends(request):
 
 @login_required
 def talk_room(request, partner):
-    print("talk_room")
+    # DBからのデータの取り出し方が効率悪い
     parameters = {}
     user_id = request.user.unique_id
     try:
         partner_id = User.objects.get(username=partner).unique_id
     except ObjectDoesNotExist:
         raise Http404
-
-    if request.method == 'POST':
-        form = MessageForm(request.POST)
-        if form.is_valid():
-            message = Message(
-                sender=user_id, \
-                receiver=partner_id, \
-                contents=form.cleaned_data['contents']
-            )
-            message.save()  
-
     parameters['messages'] = Message.objects.filter(Q(sender=partner_id, receiver=user_id) | Q(sender=user_id, receiver=partner_id)) 
-    parameters['form'] = MessageForm() # 文字さえ入力していれば基本validateは通る気がするのでrequest.POSTは入れない
+    parameters['form'] = MessageForm()
     parameters['partner'] = partner
     parameters['partner_id'] = partner_id
     return render(request, "myapp/talk_room.html", parameters)

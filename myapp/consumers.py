@@ -14,6 +14,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         self.partner = self.scope['url_route']['kwargs']['partner']
+        # 効率悪い
         partner_id = await self.get_id(self.partner)
         user_id = await self.get_id(self.scope['user'])
 
@@ -42,28 +43,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def save_message(self, text_data_json):
-        print("before save?2")
         data = eval(text_data_json)
-        # message = Message(
-        #     sender = data['sender'], \
-        #     receiver = data['receiver'], \
-        #     contents = data['message']
-        # )
-        print("before save?")
+        # validationするならここ？
         Message.objects.create(
             sender = data['sender'], \
             receiver = data['receiver'], \
             contents = data['message']
         )
-        print("save?")
 
 
     # Receive message from WebSocket
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        print("W to G")
         await self.save_message(text_data)
-        print("W to G after")
 
         # Send message to room group
         await self.channel_layer.group_send(
