@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from .forms import LoginForm, SignUpForm,TalkForm,UsernameForm,MailForm,PasswordForm,UpdateForm
+from .forms import LoginForm, SignUpForm,TalkForm,UsernameForm,MailForm,PasswordForm,UpdateForm,SearchForm
 from django.contrib.auth.views import LoginView,PasswordChangeView,LogoutView
 from .models import TalkModel,User
 from django.db.models import Q
@@ -38,7 +38,7 @@ def index(request):
     return render(request, "myapp/index.html")
 
 
-class login_view(LoginView):
+class LoginView(LoginView):
     authentication_form = LoginForm
     template_name = "myapp/login.html"
     success_url = reverse_lazy('friends')
@@ -47,9 +47,17 @@ class login_view(LoginView):
 @login_required
 def friends(request):
     login_user = request.user
-    data = User.objects.exclude(id = login_user.id)
-    params = {'data':data,'login_user':login_user}
+    data = User.objects.exclude(Q(id=login_user.id)|Q(id=2)) #adminを除外
+    if request.method == 'POST':
+        word = request.POST['word']
+        data = User.objects.filter(username__contains=word).exclude(Q(id=login_user.id)|Q(id=2))
+        params = {'data':data,'login_user':login_user,'form':SearchForm}
+        return render(request,'myapp/friends.html',params)
+
+
+    params = {'data':data,'login_user':login_user,'form':SearchForm}
     return render(request, 'myapp/friends.html', params)
+
 
 @login_required
 def talk_room(request,user_id,friend_id):
@@ -69,49 +77,28 @@ def talk_room(request,user_id,friend_id):
 
     return render(request,'myapp/talk_room.html',params)
 
+
 @login_required
 def setting(request):
     return render(request, "myapp/setting.html")
 
-@login_required
-def username_change(request):
-    user = request.user
-    obj = User.objects.get(id= user.id)
-    form = UsernameForm()
-    if request.method == 'POST':
-        username = UsernameForm(request.POST,instance = obj)
-        if username.is_valid:
-            username.save()
-            return render(request,'myapp/change_complete.html',{'item':'ユーザー名'})
-    
-    return render(request,'myapp/change.html',{'item':'ユーザー名','form':form})
-
-@login_required
-def mail_change(request):
-    user = request.user
-    obj = User.objects.get(id= user.id)
-    form = MailForm()
-    if request.method == 'POST':
-        email = MailForm(request.POST,instance = obj)
-        if email.is_valid:
-            email.save()
-            return render(request,'myapp/change_complete.html',{'item':'メールアドレス'})
-    
-    return render(request,'myapp/change.html',{'item':'メールアドレス','form':form})
     
 class UserUpdateView(LoginRequiredMixin,UpdateView):
     model = User
     form_class = UpdateForm
-    template_name = 'myapp/setting2.html'
+    template_name = 'myapp/update.html'
     success_url = reverse_lazy('change_complete')
 
 
+def change_complete(request):
+    return render(request,'myapp/change_complete.html')
 
-class password_change(LoginRequiredMixin,PasswordChangeView):
+
+class PasswordChangeView(LoginRequiredMixin,PasswordChangeView):
     form_class = PasswordForm
     template_name = 'myapp/password_change.html'
     success_url = reverse_lazy('setting')
 
 
-class logout_view(LoginRequiredMixin,LogoutView):
+class LogoutView(LoginRequiredMixin,LogoutView):
     template_name = 'myapp/index.html'

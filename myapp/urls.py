@@ -5,13 +5,12 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('signup', views.SignupView.as_view(), name='signup'),
-    path('login', views.login_view.as_view(), name='login'),
+    path('login', views.LoginView.as_view(), name='login'),
     path('friends', views.friends, name='friends'),
     path('talk_room/<int:user_id>/<int:friend_id>', views.talk_room, name='talk_room'),
     path('setting', views.setting, name='setting'),
-    path('username_change',views.username_change,name='username_change'),
-    path('mail_change',views.mail_change,name='mail_change'),
-    path('password_change',views.password_change.as_view(),name='password_change'),
-    path('logout',views.logout_view.as_view(),name='logout'),
-    path('setting2/<int:pk>',views.UserUpdateView.as_view(),name='setting2')
+    path('password_change',views.PasswordChangeView.as_view(),name='password_change'),
+    path('logout',views.LogoutView.as_view(),name='logout'),
+    path('update/<int:pk>',views.UserUpdateView.as_view(),name='update'),
+    path('change_complete',views.change_complete,name='change_complete')
 ]

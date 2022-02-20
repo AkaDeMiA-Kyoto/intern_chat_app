@@ -49,3 +49,6 @@ class UpdateForm(UserChangeForm):
         model = User
         fields = ['username','email','icon']
 
+
+class SearchForm(forms.Form):
+    word = forms.CharField(max_length=100,label='友達検索')
