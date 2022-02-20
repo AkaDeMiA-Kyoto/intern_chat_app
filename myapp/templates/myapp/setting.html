@@ -1,1 +1,17 @@
-S
+<!DOCTYPE html>
+<html lang="ja">
+<center>
+<br><br>
+<input type = "button" onclick = "location.href='username_change'" value ="ユーザー名変更" style ="width: 40%;padding: 11px;font-size: 31px;background-color: white;" >
+<br><br>
+<input type = "button" onclick = "location.href='mail_change'" value ="メールアドレス変更" style ="width: 40%;padding: 11px;font-size: 31px;background-color: white;" >
+<br><br>
+<input type = "button" onclick = "location.href='icon_change'" value ="アイコン変更" style ="width: 40%;padding: 11px;font-size: 31px;background-color: white;" >
+<br><br>
+<input type = "button" onclick = "location.href='password_change'" value ="パスワード変更" style ="width: 40%;padding: 11px;font-size: 31px;background-color: white;" >
+<br><br>
+<input type = "button" onclick = "location.href='logout'" value ="ログアウト" style ="width: 40%;padding: 11px;font-size: 31px;background-color: white;" >
+<br><br>
+<a href="{% url 'setting2' request.user.id %}" class="">変更</a>
+</center>
+</html>

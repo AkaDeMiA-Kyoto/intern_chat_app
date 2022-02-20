@@ -1,1 +1,22 @@
-LI
+
+<!DOCTYPE html>
+<html lang="ja">
+<center>
+  <br><br><br><br>
+  <body>
+    {% if form.errors  %}
+    <p>ユーザーネーム, パスワードが一致しません．</p>
+    {% endif %}
+    <form method="POST" action="{% url 'login' %}">
+      {% csrf_token %}
+      <label>ユーザーネーム</label>
+      {{ form.username}}
+      {{ form.username.errors }}
+      <label>パスワード</label>
+      {{ form.password }}
+      {{ form.password.errors }}
+      <button type = "submit">ログイン</button>
+    </form>
+  </body>
+</center>
+</html>

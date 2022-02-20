@@ -1,1 +1,46 @@
-TR
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
+    {% block extra_style %}{% endblock %}
+    <title>トーク</title>
+</head>
+<body>
+    {% block header %}
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container__title">
+                {% block header-title %}
+                {{friend.username}}
+                {% endblock %}
+            </span>
+        </div>
+    </header>
+    {% endblock %}
+
+    {% block content %}
+
+    {% for talk in talk %}
+    <p>{{talk.sender}}</p>
+    {{talk.content}}
+    <h6 style="text-align: right;">{{talk.pub_date}}</h1>
+    <HR>
+    {% endfor %}
+
+    {% endblock %}
+
+    {% block footer %}
+    <footer class="footer">
+        <form method = "POST" action="">
+            {% csrf_token %}
+            {{form}}
+            <button type="submit">送信</button>
+        </form>
+        
+    </footer>
+    {% endblock %}
+</body>
+</html>

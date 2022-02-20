@@ -1,1 +1,15 @@
-SU
+<!DOCTYPE html>
+<html lang="ja">
+<body>
+<h1 class="display-4 text-primary">サインアップ</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            {{ form }}
+            <tr><td></td><td>
+            <button type="submit">ユーザー登録</button>
+            </td></tr>
+        </table>
+    </form>
+</body>
+</html>

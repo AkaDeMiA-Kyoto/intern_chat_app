@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ja">
+<center>
+<br><br><br><br><br>
+<form action = "" method = "post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label>新しいアイコン</label>
+    {{form}}
+    {{form.errors}}
+    <button type = "submit">変更</button>
+
+</form>
+</center>
+</html>

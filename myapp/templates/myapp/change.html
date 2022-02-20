@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ja">
+<center>
+<br><br><br><br><br>
+<form action = "" method = "post">
+    {% csrf_token %}
+    <label>新しい{{item}}を入力してください</label>
+    {{form}}
+    {{form.errors}}
+    <button type = "submit">変更</button>
+
+</form>
+</center>
+</html>
