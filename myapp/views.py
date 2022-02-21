@@ -1,13 +1,8 @@
-from allauth.account.forms import LoginForm, SignupForm
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView, LogoutView
 from django.db.models import Q, Max
-from django.http import request
-from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.utils.translation import templatize
 from django.views import generic
 
 from .models import CustomUser, Message
