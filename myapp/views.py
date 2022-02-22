@@ -80,7 +80,7 @@ class TalkRoomView(LoginRequiredMixin, generic.CreateView):
         friend = CustomUser.objects.get(id=self.kwargs['pk'])
         msg_data = Message.objects.filter(Q(sender = self.request.user) | Q(receiver = self.request.user))\
             .filter(Q(sender = friend) | Q(receiver = friend)).order_by("msg_date")
-        context['username'] = CustomUser.objects.get(id=self.kwargs['pk'])
+        context['username'] = friend.username
         context['data'] = msg_data
         return context
 
