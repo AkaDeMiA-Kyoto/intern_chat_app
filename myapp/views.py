@@ -110,7 +110,7 @@ class UsernameChangeView(LoginRequiredMixin, generic.UpdateView):
     success_url = reverse_lazy('complete')
 
     def get_object(self, queryset=None):
-        return CustomUser.objects.get(id=self.request.user.id)
+        return self.request.user
 
     def form_valid(self, form):
         return super().form_valid(form)
