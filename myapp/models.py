@@ -14,4 +14,3 @@ class Message(models.Model):
     receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="receiver", null=True)
     content = models.TextField()
     msg_date = models.DateTimeField(default=timezone.now)
-# Create your models here.

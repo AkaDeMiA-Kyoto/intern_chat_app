@@ -5,5 +5,3 @@ from .models import Message
 
 admin.site.register(CustomUser)
 admin.site.register(Message)
-
-# Register your models here.
