@@ -30,7 +30,7 @@ class FriendsView(LoginRequiredMixin, generic.ListView):
         search_word = self.request.GET.get('query')
 
         if search_word:
-            friend_list = CustomUser.objects.filter(username__icontains=search_word)
+            friend_list = friends_exclude_me.filter(username__icontains=search_word)
         else:
             friend_list = friends_exclude_me
 
