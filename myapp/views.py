@@ -38,14 +38,14 @@ class FriendsView(LoginRequiredMixin, generic.ListView):
             SELECT *
             FROM (
                 SELECT
-                u.id as id,
-                u.username as username,
                 row_number() over (
                     partition by
                     u.id
                     order by
                     t.sendtime desc
                 ) rownum,
+                u.id as id,
+                u.username as username,
                 t.sendtime as sendtime,
                 t.content as content
                 FROM myapp_customuser u 
@@ -53,8 +53,10 @@ class FriendsView(LoginRequiredMixin, generic.ListView):
                     ON (u.id=t.sender_id OR u.id=t.receiver_id)
                 WHERE (t.sender_id={user.id} OR t.receiver_id={user.id}) AND NOT u.id={user.id}
             ) f
-            WHERE f.rownum=1;
+            WHERE f.rownum=1
+            ORDER BY f.sendtime DESC;
             """)
+            
         # こっちも土佐さんありがとうございました！
         unknown_friends = CustomUser.objects.exclude(id=user.id).annotate(
             sender__sendtime__max=Max("sender__sendtime", filter=Q(sender__receiver=user)),
