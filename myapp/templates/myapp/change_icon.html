@@ -1,35 +1,23 @@
 {% extends 'myapp/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
-    {% block extra_style %}{% endblock %}
-    <title>DeMiAインターン</title>
-</head>
-<body>
-    {% block header %}
-    <header class="header">
-        <div class="header-container">
-            <span class="header-container__title">
-                {% block header-title %}アイコン変更{% endblock %}
-            </span>
-        </div>
-    </header>
-    {% endblock %}
+{% block header %}
+<header class="header">
+    <div class="header-container">
+        <span class="header-container__title">
+            {% block header-title %}アイコン変更{% endblock %}
+        </span>
+    </div>
+</header>
+{% endblock %}
 
-    {% block content %}
-    <form action="{% url 'change_icon' %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <table class="table">
-            {{ form.as_table}}
-            <tr><th><td>
-                <input type="submit" value="変更" class="btn btn-primary mt-2">
-            </td></th></tr>
-        </table>
-    </form>
-    {% endblock %}
-</body>
-</html>
+{% block content %}
+<form action="{% url 'change_icon' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table class="table">
+        {{ form.as_table}}
+        <tr><th><td>
+            <input type="submit" value="変更" class="btn btn-primary mt-2">
+        </td></th></tr>
+    </table>
+</form>
+{% endblock %}

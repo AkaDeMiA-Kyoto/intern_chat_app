@@ -1,8 +1,6 @@
 {% extends 'myapp/base.html' %}
 
-{% block header %}
-    {% block header-title %}会員登録{% endblock %}
-{% endblock %}
+{% block header-title %}会員登録{% endblock %}
 
 {% block content %}
 <form action="{% url 'signup_view' %}" method="post" enctype="multipart/form-data">

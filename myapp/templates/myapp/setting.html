@@ -1,38 +1,18 @@
+{% extends 'myapp/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
-    {% block extra_style %}
-    <link rel="stylesheet" href="{% static 'myapp/css/index.css' %}">
-    {% endblock %}
-    <title>DeMiAインターン</title>
-</head>
-<body>
-    {% block header %}
-    <header class="header">
-        <div class="header-container">
-            <span class="header-container__title">
-                {% block header-title %}設定{% endblock %}
-            </span>
-        </div>
-    </header>
-    {% endblock %}
 
-    {% block content %}
-    <main>
-        <a href="{% url 'change_username' %}" class="btn">ユーザ名変更</a>
-        <br><a href="{% url 'change_mail' %}" class="btn">メールアドレス変更</a>
-        <br><a href="{% url 'change_icon' %}" class="btn">アイコン変更</a>
-        <br><a href="{% url 'account_change_password' %}" class="btn">パスワード変更</a>
-        <br><a href="{% url 'account_logout' %}" class="btn">ログアウト</a>
-    </main>
-    {% endblock %}
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/index.css' %}">
+{% endblock %}
 
-    {% block footer %}
-    {% include 'common/footer.html' %}
-    {% endblock %}
-</body>
-</html>
+{% block header-title %}設定{% endblock %}
+
+{% block content %}
+<main>
+    <a href="{% url 'change_username' %}" class="btn">ユーザ名変更</a>
+    <br><a href="{% url 'change_mail' %}" class="btn">メールアドレス変更</a>
+    <br><a href="{% url 'change_icon' %}" class="btn">アイコン変更</a>
+    <br><a href="{% url 'account_change_password' %}" class="btn">パスワード変更</a>
+    <br><a href="{% url 'account_logout' %}" class="btn">ログアウト</a>
+</main>
+{% endblock %}

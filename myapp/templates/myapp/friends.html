@@ -1,43 +1,43 @@
 {% extends 'myapp/base.html' %}
 {% load static %}
     
-    {% block extra_style %}
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
-    {% endblock %}
+{% block extra_style %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
+{% endblock %}
 
-    {% block header %}
-        <header class="header">
-            <div class="header-container">
-                <span class="header-container__title">
-                    {% block header-title %}
-                    友達
-                    <div align="right">
-                        <form action="" method="get">
-                            <input name="query" value="{{ request.GET.query }}" type="text">
-                            <button type="submit">検索</button>
-                        </form>
-                    </div>
-                    {% endblock %}
-                </span>
-            </div>
-        </header>
-    {% endblock %}
+{% block header %}
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container__title">
+                {% block header-title %}
+                友達
+                {% endblock %}
+                <div align="right">
+                    <form action="" method="get">
+                        <input name="query" value="{{ request.GET.query }}" type="text">
+                        <button type="submit">検索</button>
+                    </form>
+                </div>
+            </span>
+        </div>
+    </header>
+{% endblock %}
 
-    {% block content %}
-    <table class="table">
-    {% for friend in history %}
-    <tr>
-        <td><img src="{{friend.img.url}}"></td>
-        <td><a href ="{% url 'talk_room' friend.id %}">{{friend.username}}</a></td>
-        <td>{{friend.content}}</td>
-    </tr>
-    {% endfor %}
-    {% for friend in no_history %}
-    <tr>
-        <td><img src="{{friend.img.url}}"></td>
-        <td><a href ="{% url 'talk_room' friend.id%}">{{friend.username}}</a></td>
-    </tr>
-    {% endfor %}
-    </table>
-    {% endblock %}
+{% block content %}
+<table class="table">
+{% for friend in history %}
+<tr>
+    <td><img src="{{friend.img.url}}"></td>
+    <td><a href ="{% url 'talk_room' friend.id %}">{{friend.username}}</a></td>
+    <td>{{friend.content}}</td>
+</tr>
+{% endfor %}
+{% for friend in no_history %}
+<tr>
+    <td><img src="{{friend.img.url}}"></td>
+    <td><a href ="{% url 'talk_room' friend.id%}">{{friend.username}}</a></td>
+</tr>
+{% endfor %}
+</table>
+{% endblock %}
