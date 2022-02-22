@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, Max
 from django.urls import reverse_lazy
 from django.urls.base import reverse
 from django.views import generic
@@ -25,8 +25,9 @@ class FriendsView(LoginRequiredMixin, generic.ListView):
     template_name = 'myapp/friends.html'
 
     def get_context_data(self, **kwargs):
+        user_id = self.request.user.id
         context = super().get_context_data(**kwargs)
-        friends_exclude_me = CustomUser.objects.exclude(id=self.request.user.id)
+        friends_exclude_me = CustomUser.objects.exclude(id=user_id)
         search_word = self.request.GET.get('query')
 
         if search_word:
@@ -34,18 +35,34 @@ class FriendsView(LoginRequiredMixin, generic.ListView):
         else:
             friend_list = friends_exclude_me
 
-        exist_friend_talk = []
-        not_exist_friend_talk = []
-        for friend in friend_list:
-            latest_meg = Message.objects.all().filter(Q(sender=self.request.user.id) | Q(receiver=self.request.user.id))\
-                .filter(Q(sender=friend.id) | Q(receiver=friend.id)).order_by("-msg_date").first()
-            if latest_meg != None:
-                exist_friend_talk.append([latest_meg.msg_date, friend, latest_meg])
-            else:
-                not_exist_friend_talk.append([friend.created_date, friend])
+        exist_friend_talk = friend_list.raw(
+            f"""
+            SELECT *
+            FROM (
+                SELECT
+                u.id as id,
+                u.username as username,
+                row_number() over (
+                    partition by
+                    u.id
+                    order by
+                    t.msg_date desc
+                ) rownum,
+                t.content as content,
+                t.msg_date as msg_date
+                FROM myapp_customuser u 
+                LEFT OUTER JOIN myapp_message t 
+                    ON (u.id=t.sender_id OR u.id=t.receiver_id)
+                WHERE (t.sender_id={user_id} OR t.receiver_id={user_id}) AND NOT u.id={user_id}
+            ) f
+            WHERE f.rownum=1
+            ORDER BY f.msg_date DESC;
+            """)
 
-        exist_friend_talk.sort(key=lambda x: x[0], reverse=True)
-        not_exist_friend_talk.sort(key=lambda x: x[0], reverse=True)
+        not_exist_friend_talk = friend_list.annotate(
+            sender__msg_date__max=Max("sender__msg_date", filter=Q(sender__receiver=user_id)),
+            receiver__msg_date__max=Max("receiver__msg_date", filter=Q(receiver__sender=user_id)),
+        ).filter(sender__msg_date__max=None, receiver__msg_date__max=None).order_by("id")
 
         context['history'] = exist_friend_talk
         context['no_history'] = not_exist_friend_talk
