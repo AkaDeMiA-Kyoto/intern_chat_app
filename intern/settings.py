@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'myapp',
+    'django_bootstrap5'
 ]
 
 MIDDLEWARE = [

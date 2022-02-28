@@ -1,15 +1,21 @@
 <!DOCTYPE html>
+{% load static %}
+{% load django_bootstrap5 %}
 <html lang="ja">
+<head>
+    <link rel="stylesheet" href="{% static 'myapp/css/signup.css' %}">
+</head>
+
 <body>
-<h1 class="display-4 text-primary">サインアップ</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <table>
-            {{ form }}
-            <tr><td></td><td>
-            <button type="submit">ユーザー登録</button>
-            </td></tr>
-        </table>
-    </form>
+    <main>
+        <div class="container">
+            <h1 class="display-4 text-primary">サインアップ</h1>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                {% bootstrap_button button_type="submit" content="登録" %}
+            </form>
+        </div>
+    </main>
 </body>
 </html>

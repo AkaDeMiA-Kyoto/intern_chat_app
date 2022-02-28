@@ -1,5 +1,6 @@
 {% extends 'myapp/base.html' %}
 {% load static %}
+{% load django_bootstrap5 %}
 <head>
     {% block extra_style %}
      <link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
@@ -9,11 +10,11 @@
 {% block header %}
 
 <div class="center">
-    <p>友達</p>
+    <h2>友達</h2>
     <form method = 'post'>
         {% csrf_token %}
-        {{form}}
-        <button type="submit" >検索</button>
+        {% bootstrap_form form %}
+        {% bootstrap_button button_type="submit" content="検索" %}
     </form>
 </div>
 {% endblock %}
