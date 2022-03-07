@@ -84,6 +84,18 @@ class UserUpdateView(LoginRequiredMixin,UpdateView):
     template_name = 'myapp/update.html'
     success_url = reverse_lazy('change_complete')
 
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object != request.user:
+            raise Http404
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object != request.user:
+            raise Http404
+        return super().post(request, *args, **kwargs)
+
 
 def change_complete(request):
     return render(request,'myapp/change_complete.html')
