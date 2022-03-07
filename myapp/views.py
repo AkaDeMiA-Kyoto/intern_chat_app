@@ -36,7 +36,6 @@ class SignupView(CreateView):
 
 
 def index(request):
-
     return render(request, "myapp/index.html")
 
 
