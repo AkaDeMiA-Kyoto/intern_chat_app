@@ -14,4 +14,3 @@ class TalkModel(models.Model):
 
     class Meta:
         ordering = ('pub_date',)
-

@@ -1,23 +1,17 @@
-from urllib import request
 from django.http import Http404
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import redirect, render
+from django.contrib import messages
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .forms import LoginForm, SignUpForm,TalkForm,UsernameForm,MailForm,PasswordForm,UpdateForm,SearchForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView,PasswordChangeView,LogoutView
-from .models import TalkModel,User
 from django.db.models import Q
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import authenticate, login
-from django.views.generic import CreateView,UpdateView,DeleteView
-from django.http.response import HttpResponse, HttpResponseRedirect
-from django.contrib import messages
+from django.views.generic import CreateView,UpdateView
 
-
-
-@login_required
-def home(request):
-    return render(request, 'myapp/home.html')
+from .models import TalkModel, User
+from .forms import LoginForm, SignUpForm, TalkForm, PasswordForm, UpdateForm, SearchForm
 
 
 class SignupView(CreateView):
@@ -49,7 +43,7 @@ class LoginView(LoginView):
 @login_required
 def friends(request):
     login_user = request.user
-    data = User.objects.exclude(id=login_user.id) #adminを除外
+    data = User.objects.exclude(id=login_user.id)
     if "word" in request.GET:
         word = request.GET['word']
         data = User.objects.filter(username__contains=word).exclude(id=login_user.id)

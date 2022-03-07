@@ -1,8 +1,7 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm, UserChangeForm
 
 from .models import TalkModel,User
-from django.contrib.auth.forms import AuthenticationForm,PasswordChangeForm,UserChangeForm
 
 
 class SignUpForm(UserCreationForm):
@@ -21,16 +20,16 @@ class TalkForm(forms.ModelForm):
         fields = ['content']
 
 
-class UsernameForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['username']
+# class UsernameForm(forms.ModelForm):
+#     class Meta:
+#         model = User
+#         fields = ['username']
 
 
-class MailForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['email']
+# class MailForm(forms.ModelForm):
+#     class Meta:
+#         model = User
+#         fields = ['email']
 
 
 class PasswordForm(PasswordChangeForm):
