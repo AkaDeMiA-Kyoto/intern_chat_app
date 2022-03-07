@@ -152,3 +152,8 @@ SITE_ID = 1
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 AUTH_USER_MODEL = "myapp.User"
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
