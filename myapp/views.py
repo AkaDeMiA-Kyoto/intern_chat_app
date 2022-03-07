@@ -1,4 +1,5 @@
 from urllib import request
+from django.http import Http404
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, SignUpForm,TalkForm,UsernameForm,MailForm,PasswordForm,UpdateForm,SearchForm
@@ -59,11 +60,13 @@ def friends(request):
 
 @login_required
 def talk_room(request,user_id,friend_id):
-    user = User.objects.get(id = user_id)
-    friend = User.objects.get(id = friend_id)
-    talk = TalkModel.objects.filter(Q(sender = user,talkname = friend)|Q(sender = friend,talkname = user))
+    if user_id != request.user.id:
+        raise Http404
+    user = User.objects.get(id=user_id)
+    friend = User.objects.get(id=friend_id)
+    talks = TalkModel.objects.filter(Q(sender=user, talkname=friend) | Q(sender=friend, talkname=user))
     talkform = TalkForm()
-    params = {'friend':friend,'talk':talk,'form':talkform}
+    params = {'friend':friend,'talks':talks,'form':talkform}
     
     if request.method == 'POST':
         talkform = TalkForm(request.POST)
