@@ -48,13 +48,10 @@ class LoginView(LoginView):
 @login_required
 def friends(request):
     login_user = request.user
-    data = User.objects.exclude(Q(id=login_user.id)|Q(id=2)) #adminを除外
-    if request.method == 'POST':
-        word = request.POST['word']
-        data = User.objects.filter(username__contains=word).exclude(Q(id=login_user.id)|Q(id=2))
-        params = {'data':data,'login_user':login_user,'form':SearchForm}
-        return render(request,'myapp/friends.html',params)
-
+    data = User.objects.exclude(id=login_user.id) #adminを除外
+    if "word" in request.GET:
+        word = request.GET['word']
+        data = User.objects.filter(username__contains=word).exclude(id=login_user.id)
 
     params = {'data':data,'login_user':login_user,'form':SearchForm}
     return render(request, 'myapp/friends.html', params)

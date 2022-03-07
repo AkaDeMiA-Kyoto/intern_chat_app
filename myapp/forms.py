@@ -14,20 +14,24 @@ class SignUpForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     pass
 
+
 class TalkForm(forms.ModelForm):
     class Meta:
         model = TalkModel
         fields = ['content']
+
 
 class UsernameForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username']
 
+
 class MailForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['email']
+
 
 class PasswordForm(PasswordChangeForm):
     def __init__(self, *args, **kwargs):
@@ -35,8 +39,6 @@ class PasswordForm(PasswordChangeForm):
        for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
     
-
-
 
 class UpdateForm(UserChangeForm):
     class Meta:

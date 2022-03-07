@@ -35,6 +35,8 @@ body{
 
 /* フッター */
 .footer{
+    position: fixed;
+    left: 0;
     width: 100vw;
     height: 64px;
 }
