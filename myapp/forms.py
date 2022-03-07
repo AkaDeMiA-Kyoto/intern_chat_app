@@ -11,7 +11,6 @@ class SignUpForm(UserCreationForm):
         fields = ['username', 'email','password1','password2','icon']
 
 
-
 class LoginForm(AuthenticationForm):
     pass
 

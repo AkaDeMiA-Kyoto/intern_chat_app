@@ -18,6 +18,7 @@ from django.contrib import messages
 def home(request):
     return render(request, 'myapp/home.html')
 
+
 class SignupView(CreateView):
     model = User
     form_class = SignUpForm
@@ -26,7 +27,7 @@ class SignupView(CreateView):
 
     def form_valid(self,form):
         user = form.save()
-        login(self.request, user,backend='django.contrib.auth.backends.ModelBackend')
+        login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
         return HttpResponseRedirect(self.success_url)
 
     def form_invalid(self,form):
