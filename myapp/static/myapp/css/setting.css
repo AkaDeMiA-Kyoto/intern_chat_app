@@ -1,3 +1,12 @@
 .center{
     text-align: center;
 }
+
+.setting-btn {
+    display: block;
+    width: 40%;
+    margin: 2rem auto 0 auto;
+    padding: 11px;
+    font-size: 31px;
+    background-color: white;
+}

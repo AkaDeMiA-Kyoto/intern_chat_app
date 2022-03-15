@@ -20,8 +20,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'oaab#2kr%trbj2h-w9ycf0&f$7dgi2+p=37!cjw$*y0@26pq77'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -43,7 +42,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'myapp',
-    'django_bootstrap5'
+    'django_bootstrap5',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -75,6 +75,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'intern.wsgi.application'
+
+ASGI_APPLICATION = 'intern.asgi.application'
 
 
 # Database
@@ -152,3 +154,8 @@ SITE_ID = 1
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 AUTH_USER_MODEL = "myapp.User"
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass

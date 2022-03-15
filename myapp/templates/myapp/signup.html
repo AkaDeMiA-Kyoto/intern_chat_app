@@ -1,9 +1,12 @@
+{% load static django_bootstrap5 %}
 <!DOCTYPE html>
-{% load static %}
-{% load django_bootstrap5 %}
 <html lang="ja">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'myapp/css/signup.css' %}">
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
 </head>
 
 <body>

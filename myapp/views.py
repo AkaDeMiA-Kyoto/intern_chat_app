@@ -1,16 +1,18 @@
-from urllib import request
+from django.http import Http404
+from django.http.response import HttpResponseRedirect
+from django.contrib import messages
+from django.contrib.auth import login
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from .forms import LoginForm, SignUpForm,TalkForm,UsernameForm,MailForm,PasswordForm,UpdateForm,SearchForm
+from .forms import LoginForm, SignUpForm,TalkForm,PasswordForm,UpdateForm,SearchForm
 from django.contrib.auth.views import LoginView,PasswordChangeView,LogoutView
 from .models import TalkModel,User
 from django.db.models import Q
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import authenticate, login
-from django.views.generic import CreateView,UpdateView,DeleteView
-from django.http.response import HttpResponse, HttpResponseRedirect
-from django.contrib import messages
+from django.views.generic import CreateView,UpdateView
+
+
 
 
 
@@ -48,12 +50,10 @@ class LoginView(LoginView):
 @login_required
 def friends(request):
     login_user = request.user
-    data = User.objects.exclude(Q(id=login_user.id)|Q(id=2)) #adminを除外
-    if request.method == 'POST':
-        word = request.POST['word']
-        data = User.objects.filter(username__contains=word).exclude(Q(id=login_user.id)|Q(id=2))
-        params = {'data':data,'login_user':login_user,'form':SearchForm}
-        return render(request,'myapp/friends.html',params)
+    data = User.objects.exclude(id=login_user.id)
+    if "word" in request.GET:
+        word = request.GET['word']
+        data = User.objects.filter(username__contains=word).exclude(id=login_user.id)
 
 
     params = {'data':data,'login_user':login_user,'form':SearchForm}
@@ -62,11 +62,19 @@ def friends(request):
 
 @login_required
 def talk_room(request,user_id,friend_id):
-    user = User.objects.get(id = user_id)
-    friend = User.objects.get(id = friend_id)
-    talk = TalkModel.objects.filter(Q(sender = user,talkname = friend)|Q(sender = friend,talkname = user))
+    if user_id != request.user.id:
+        raise Http404
+    user = User.objects.get(id=user_id)
+    friend = User.objects.get(id=friend_id)
+    if user.id > friend.id:
+        room_id1 = user.id
+        room_id2 = friend.id
+    else:
+        room_id1 = friend.id
+        room_id2 = user.id   
+    talks = TalkModel.objects.filter(Q(sender=user, talkname=friend) | Q(sender=friend, talkname=user))
     talkform = TalkForm()
-    params = {'friend':friend,'talk':talk,'form':talkform}
+    params = {'friend':friend,'talks':talks,'form':talkform,'room_id1':room_id1,'room_id2':room_id2}
     
     if request.method == 'POST':
         talkform = TalkForm(request.POST)
@@ -74,6 +82,7 @@ def talk_room(request,user_id,friend_id):
             talkform.instance.sender = user
             talkform.instance.talkname = friend
             talkform.save()
+            print(talkform.instance.content)
         return redirect('talk_room',user_id,friend_id)
 
     return render(request,'myapp/talk_room.html',params)
@@ -89,6 +98,18 @@ class UserUpdateView(LoginRequiredMixin,UpdateView):
     form_class = UpdateForm
     template_name = 'myapp/update.html'
     success_url = reverse_lazy('change_complete')
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object != request.user:
+            raise Http404
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object != request.user:
+            raise Http404
+        return super().post(request, *args, **kwargs)
 
 
 def change_complete(request):

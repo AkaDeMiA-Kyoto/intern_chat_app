@@ -1,22 +1,25 @@
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
-<center>
-  <br><br><br><br>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'myapp/css/login.css' %}">
+    <title>DeMiAインターン</title>
+  </head>
   <body>
-    {% if form.errors  %}
+    {% if form.errors %}
     <p>ユーザーネーム, パスワードが一致しません．</p>
     {% endif %}
-    <form method="POST" action="{% url 'login' %}">
+    <form method="POST">
       {% csrf_token %}
       <label>ユーザーネーム</label>
-      {{ form.username}}
-      {{ form.username.errors }}
+      {{form.username}}
+      {{form.username.errors }}
       <label>パスワード</label>
       {{ form.password }}
       {{ form.password.errors }}
-      <button type = "submit">ログイン</button>
+      <button type="submit">ログイン</button>
     </form>
   </body>
-</center>
 </html>

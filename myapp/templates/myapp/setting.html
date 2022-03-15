@@ -1,13 +1,17 @@
-<!DOCTYPE html>
 {% load static %}
-<link rel="stylesheet" href="{% static 'myapp/css/setting.css' %}">
+<!DOCTYPE html>
 <html lang="ja">
-<div class="center">
-    <br><br>
-    <input type = "button" onclick = "location.href='password_change'" value ="パスワード変更" style ="width: 40%;padding: 11px;font-size: 31px;background-color: white;" >
-    <br><br>
-    <input type = "button" onclick = "location.href='logout'" value ="ログアウト" style ="width: 40%;padding: 11px;font-size: 31px;background-color: white;" >
-    <br><br>
-    <input type = "button" onclick = "location.href='{% url 'update' request.user.id %}'" value ="ユーザー情報変更" style ="width: 40%;padding: 11px;font-size: 31px;background-color: white;" >
-</div>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>DeMiAインターン</title>
+        <link rel="stylesheet" href="{% static 'myapp/css/setting.css' %}">
+    </head>
+    <body>
+        <div class="center">
+            <input type="button" class="setting-btn" onclick="location.href='password_change'" value="パスワード変更" >
+            <input type="button" class="setting-btn" onclick="location.href='logout'" value="ログアウト">
+            <input type="button" class="setting-btn" onclick="location.href='{% url 'update' request.user.id %}'" value="ユーザー情報変更">
+        </div>
+    </body>
 </html>
