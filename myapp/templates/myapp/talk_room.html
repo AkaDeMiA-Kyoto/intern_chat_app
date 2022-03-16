@@ -16,11 +16,15 @@
     </header>
 
     {% for talk in talks %}
+    <div id="talk_content">
     <p>{{talk.sender}}</p>
     {{talk.content}}
     <h6 style="text-align: right;">{{talk.pub_date}}</h6>
+    </div>
     <hr>
     {% endfor %}
+    <div id="talk_append">
+    </div>
 
 
     <footer class="footer">

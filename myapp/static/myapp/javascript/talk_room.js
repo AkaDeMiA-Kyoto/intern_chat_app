@@ -1,7 +1,4 @@
 
-console.log(location.pathname.split('/')[2]);
-console.log(location.pathname.split('/')[3]);
-
 var pathname1 = location.pathname.split('/')[2];
 var pathname2 = location.pathname.split('/')[3];
 
@@ -25,7 +22,24 @@ const talkSocket = new WebSocket(
 
 talkSocket.onmessage = function(e){
     const data = JSON.parse(e.data);
-    document.getElementById('').value += data.message
+    var time 
+    var p1 = document.createElement('p');
+    var sender = document.createTextNode(data.sender);
+    p1.appendChild(sender);
+    var p2 = document.createElement('p');
+    var content = document.createTextNode(data.message);
+    p2.appendChild(content);
+    var h = document.createElement('h6');
+    var date = document.createTextNode(data.time);
+    h.appendChild(date);
+    h.style = "text-align: right;";
+    var hr = document.createElement('hr');
+    var talk_append = document.getElementById('talk_append');
+    talk_append.appendChild(p1);
+    talk_append.appendChild(p2);
+    talk_append.appendChild(h);
+    talk_append.appendChild(hr);
+
 
 };
 
@@ -36,10 +50,12 @@ talkSocket.onclose = function(e){
 
 //送信ボタンクリック時
 document.querySelector('#submit').onclick = function(e){
-    const messageInputDom = document.querySelector('#submit');
+    const messageInputDom = document.querySelector('#id_content');
     const message = messageInputDom.value;
+    console.log(message);
     talkSocket.send(JSON.stringify({
-        'message':message
+        'message':message,
+        'friend_id': pathname2
     }));
     messageInputDom.value = '';
 };

@@ -66,24 +66,18 @@ def talk_room(request,user_id,friend_id):
         raise Http404
     user = User.objects.get(id=user_id)
     friend = User.objects.get(id=friend_id)
-    if user.id > friend.id:
-        room_id1 = user.id
-        room_id2 = friend.id
-    else:
-        room_id1 = friend.id
-        room_id2 = user.id   
     talks = TalkModel.objects.filter(Q(sender=user, talkname=friend) | Q(sender=friend, talkname=user))
     talkform = TalkForm()
-    params = {'friend':friend,'talks':talks,'form':talkform,'room_id1':room_id1,'room_id2':room_id2}
+    params = {'friend':friend,'talks':talks,'form':talkform}
     
-    if request.method == 'POST':
+    '''if request.method == 'POST':
         talkform = TalkForm(request.POST)
         if talkform.is_valid:
             talkform.instance.sender = user
             talkform.instance.talkname = friend
             talkform.save()
             print(talkform.instance.content)
-        return redirect('talk_room',user_id,friend_id)
+        return redirect('talk_room',user_id,friend_id)'''
 
     return render(request,'myapp/talk_room.html',params)
 
