@@ -277,3 +277,15 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/django,python,windows,macos,linux
 
 .vscode
+
+__pycache__
+
+local_settings.py
+
+django.db.backends.postgresql_psycopg2
+
+staticfiles/
+
+
+
+
