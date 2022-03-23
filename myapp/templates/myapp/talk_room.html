@@ -8,25 +8,84 @@
 {% endblock %}
 {% block content %}
 <p>
-{% for talk in talk %}
-<tr>
-    <p><td>送信</td><td>{{talk.f_user}}</td>
-    <td>受信</td><td>{{talk.t_user}}</td>
-    <td>{{talk.content}}</td>
-    <td>{{talk.pub_date}}</td></p>
-</tr>
+<textarea id="chat-log" cols="200" rows="100">  
+{% for talk in talk %} 
+送信 {{talk.f_user}} 受信 {{talk.t_user}} 時間 {{talk.pub_date}} メッセージ {{talk.content}} 
 {% endfor %}
-{% endblock %}
+</textarea>
 </p>
 
-{% block footer %}
+
 <footer>
-    <form method="POST" novalidate>
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">送信</button>
+    <form>
+        
+    <input id="chat-message-input" type="text" size="100"/><br/>
+    <input id="chat-message-submit" type="button" value="Send"/>
     </form>
 </footer>
+{% block script %}
+{{ f_user.id|json_script:'f_user' }}
+{{ t_user.id|json_script:'t_user' }}
+{{ f_user.username|json_script:'f_user_name' }}
+{{ t_user.username|json_script:'t_user_name' }}
+{{ t_user.id|json_script:'t_user' }}
+{{ pub_date|json_script:'pub_date' }}
+{{ id|json_script:'id'}}
+<script type='text/javascript'>
+    const id = JSON.parse(document.getElementById('id').textContent);
+    const f_user = JSON.parse(document.getElementById('f_user').textContent);
+    const t_user = JSON.parse(document.getElementById('t_user').textContent);
+    const f_user_name = JSON.parse(document.getElementById('f_user_name').textContent);
+    const t_user_name = JSON.parse(document.getElementById('t_user_name').textContent);
+    const pub_date = JSON.parse(document.getElementById('pub_date').textContent);
+    const chatSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/myapp/' + id + '/');
+    var now = new Date();
+
+    var Year = now.getFullYear();
+    var Month = now.getMonth()+1; 
+    var Date = now.getDate();
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+            document.querySelector('#chat-log').value += ('送信 ' + f_user_name + ' 受信 ' + t_user_name + ' 時間 ' + Year + '年' + Month + '月' + Date + '日' + ' メッセージ ' + data.message + '\n' + '\n');
+        };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+  
+
+    document.querySelector('#chat-message-input').focus();
+    console.log(3)
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter, return
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+
+    
+    console.log(f_user)
+    console.log(t_user)
+    document.querySelector('#chat-message-submit').onclick = function(e) {
+        const messageInputDom = document.querySelector('#chat-message-input');
+        console.log(10)
+        const message = messageInputDom.value;
+        console.log(20)
+        chatSocket.send(JSON.stringify({
+            'f_user': f_user,
+            't_user': t_user,
+            'message': message,
+        }));
+        console.log(30)
+        messageInputDom.value = '';
+    };
+        console.log(5)
+</script>
+
+{% endblock %}
+{% endblock %}
+{% block footer %}
 {% endblock %}
 
 

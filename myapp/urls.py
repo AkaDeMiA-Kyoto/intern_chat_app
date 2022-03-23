@@ -18,5 +18,5 @@ urlpatterns = [
     path('password_update/<int:pk>', views.PasswordUpdateView.as_view(), name='password_update'),
     path('password_update_complete', views.password_update_complete, name='password_update_complete'),
     path('icon_update/<int:pk>', views.IconUpdateView.as_view(), name='icon_update'),
-    path('icon_update_complete', views.icon_update_complete, name='icon_update_complete')
+    path('icon_update_complete', views.icon_update_complete, name='icon_update_complete'),
 ]

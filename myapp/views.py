@@ -7,6 +7,9 @@ from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from .models import Talk, User
 from django.db.models import Q
 from django.urls import reverse, reverse_lazy
+from django.utils.safestring import mark_safe
+from django.utils import timezone
+import json
 
 def index(request):
     return render(request, "myapp/index.html")
@@ -32,7 +35,6 @@ class FriendsView(LoginRequiredMixin, ListView):
         word = self.request.GET.get('query')
         talk_list = list()
         user_list = list()
-
         if word:
             user = User.objects.filter(username__iexact=word)            
         else:
@@ -65,6 +67,11 @@ class TalkView(LoginRequiredMixin, CreateView):
         context = super(TalkView, self).get_context_data(**kwargs)
         context['talk'] = Talk.objects.filter(Q(f_user=self.request.user, t_user__id=self.kwargs.get('id'))|Q(t_user=self.request.user, f_user__id=self.kwargs.get('id')))
         context['t_user'] = User.objects.get(id = self.kwargs.get('id'))
+        context['f_user'] = self.request.user
+        context['id'] = self.kwargs.get('id')
+        context['pub_date'] = timezone.now()
+
+
         return context
 
 class UsernameUpdateView(LoginRequiredMixin, UpdateView):
@@ -111,3 +118,5 @@ def setting(request):
     }
     return render(request, "myapp/setting.html", params)
     
+
+
