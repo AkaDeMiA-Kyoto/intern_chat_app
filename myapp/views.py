@@ -47,7 +47,7 @@ class FriendsView(LoginRequiredMixin, ListView):
                 talk.t_user.id = talk.t_user.id + self.request.user.id
                 talk_list.append(talk)
             else:
-                user.id = user.id + self.request.id
+                user.id = user.id + self.request.user.id
                 user_list.append(user)
         context['talk_list'] = talk_list
         context['user_list'] = user_list
@@ -68,6 +68,7 @@ class TalkView(LoginRequiredMixin, CreateView):
         return super(TalkView, self).form_valid(form)
     def get_context_data(self, **kwargs):
         id = self.kwargs.get('id') - self.request.user.id
+        print(id)
         context = super(TalkView, self).get_context_data(**kwargs)
         context['talk'] = Talk.objects.filter(Q(f_user=self.request.user, t_user__id=id)|Q(t_user=self.request.user, f_user__id=id))
         context['t_user'] = User.objects.get(id = id)
