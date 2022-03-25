@@ -73,7 +73,7 @@ class TalkView(LoginRequiredMixin, CreateView):
         context['talk'] = Talk.objects.filter(Q(f_user=self.request.user, t_user__id=id)|Q(t_user=self.request.user, f_user__id=id))
         context['t_user'] = User.objects.get(id = id)
         context['f_user'] = User.objects.get(id = self.request.user.id)
-        context['id'] = self.request.user.id
+        context['id'] = self.kwargs.get('id')
         context['pub_date'] = timezone.now()
 
 
