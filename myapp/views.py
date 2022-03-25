@@ -44,9 +44,11 @@ class FriendsView(LoginRequiredMixin, ListView):
             if Talk.objects.filter(Q(f_user=self.request.user, t_user=user)|Q(t_user=self.request.user, f_user=user)).exists():
                 talk = Talk.objects.filter(Q(f_user=self.request.user, t_user=user)|Q(t_user=self.request.user, f_user=user)).order_by('pub_date').reverse()[0]
                 talk.t_user = user
+                talk.t_user.id = talk.t_user.id + self.request.user.id
                 talk_list.append(talk)
             else:
-               user_list.append(user)
+                user.id = user.id + self.request.id
+                user_list.append(user)
         context['talk_list'] = talk_list
         context['user_list'] = user_list
         return context        
@@ -59,14 +61,16 @@ class TalkView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse('talk_room',kwargs={'id':self.kwargs['id']})
     def form_valid(self, form):
-        id = self.kwargs.get('id')
+
+        id = self.kwargs.get('id') - self.request.user.id
         form.instance.f_user = self.request.user
         form.instance.t_user = User.objects.get(id = id)
         return super(TalkView, self).form_valid(form)
     def get_context_data(self, **kwargs):
+        id = self.kwargs.get('id') - self.request.user.id
         context = super(TalkView, self).get_context_data(**kwargs)
-        context['talk'] = Talk.objects.filter(Q(f_user=self.request.user, t_user__id=self.kwargs.get('id'))|Q(t_user=self.request.user, f_user__id=self.kwargs.get('id')))
-        context['t_user'] = User.objects.get(id = self.kwargs.get('id'))
+        context['talk'] = Talk.objects.filter(Q(f_user=self.request.user, t_user__id=id)|Q(t_user=self.request.user, f_user__id=id))
+        context['t_user'] = User.objects.get(id = id)
         context['f_user'] = User.objects.get(id = self.request.user.id)
         context['id'] = self.request.user.id
         context['pub_date'] = timezone.now()
