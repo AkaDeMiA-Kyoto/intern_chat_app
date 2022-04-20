@@ -1,0 +1,39 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/edit.css' %}" />
+{% endblock %}
+
+{% block header %}
+    <header class="header">
+        <div class="header-container">
+            <div class='back'><a href='{% url "setting" %}' class='back-button'>＜</a></div>
+            <div class='title'>
+                ユーザー名変更
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content %}
+<form action='{% url "username_change"  %}' method='POST'>
+<div class='container'>
+    {% csrf_token %}
+    {{ form.non_foeld_errors }}
+    <div class='form'>
+        <label>ユーザー名：</label>
+        {{ form.username }}
+    </div>
+    {# エラーメッセージを表示 #}
+    {% if form.errors %}
+        {% for field in form %}
+            {% for error in field.errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+    <div><button type='submit' class='submit-button'>変更</button></div>
+</div>
+</form>
+{% endblock %}
