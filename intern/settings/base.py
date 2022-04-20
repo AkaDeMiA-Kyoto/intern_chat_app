@@ -10,10 +10,7 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-SECRET_KEY = os.getenv(
-    "SECRET_KEY",
-    "{{ secret_key }}",
-)
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = strtobool(os.getenv("DEBUG", "n"))
 
@@ -35,6 +32,7 @@ INSTALLED_APPS = [
 
     'myapp.apps.MyappConfig',
 
+    # allauth 用の設定
     'django.contrib.sites',
     'allauth',
     'allauth.account',
@@ -119,16 +117,6 @@ EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.console.Em
 
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "no-reply@example.com")
 
-# Logging
-
-SERVER_EMAIL = os.getenv("SERVER_EMAIL", DEFAULT_FROM_EMAIL)
-
-ADMINS = list(
-    zip(
-        os.getenv("ADMIN_NAMES", "").split(","),
-        os.getenv("ADMIN_EMAILS", "").split(","),
-    )
-)
 
 AUTH_USER_MODEL = 'myapp.User'
 
