@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'intern.urls'
@@ -165,6 +168,21 @@ LOGIN_REDIRECT_URL = 'myapp:profile'  # ログイン成功後の遷移先の指�
 ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'  # ログアウト成功後の遷移先の指定
  
 ACCOUNT_LOGOUT_ON_GET = True  # 確認を行わずログアウトする設定
+
+ASGI_APPLICATION = 'intern.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
 
 
 # ...

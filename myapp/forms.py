@@ -10,7 +10,8 @@ class MessageForm(forms.ModelForm):
         super().__init__(*args,**kwargs)
         self.fields["content"].widget.attrs.update({
             'class':"shadow border-gray-500 border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline",
-            'placeholder':""
+            'placeholder':"",
+            'id':'chat-message-input'
         })
 
     class Meta:

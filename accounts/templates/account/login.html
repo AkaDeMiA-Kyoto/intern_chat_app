@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="container mt-24">
-    <form method="post" action="{% url 'account_login' %}">
+    <form method="post">
         {% csrf_token %}
 
         {{form.as_p}}
@@ -17,7 +17,6 @@
             <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value}}">
         {% endif %}
         <button type="submit" class="btn btn-secondary">Submit</button>
-        <p><a href="{% url 'account_reset_password' %}">パスワード忘れましたか</a></p>
     </form>
 </div>
 {% endblock %}

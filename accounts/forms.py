@@ -32,18 +32,10 @@ class SignUpForm(SignupForm):
             'placeholder':""
         })
     
-    def signup(self, request,user):
+    def signup(self, request, user):
         user.image = self.cleaned_data['image']
         user.save()
         return user
 
     class Meta:
         model = Profile
-
-# class LoginForm(LoginForm):
-
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         for field in self.fields.values():
-#             print(field)
-#             field.widget.attrs['class'] = 'form-control'
