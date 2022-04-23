@@ -1,0 +1,60 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
+{% endblock %}
+
+{% block header_title %}友達{% endblock %}
+
+{% block content %}
+<div class="friends">
+    <!-- バックエンド追加機能・友人の検索機能 -->
+    <form class="search-form" method="GET">
+        <i class="fas fa-search"></i>
+        {{ form.keyword }}
+        <button class="friends__search-btn" name="friends_search" type="submit">検索</button>
+    </form>
+    <!-- ここまで　バックエンド追加機能・友人の検索機能 -->
+    <!-- 友達のリスト表示部分 -->
+    <ul class="friend-list">
+        <!-- 検索機能の一部 -->
+        {% if is_searched %}
+        <li class="search-text">‐‐ 検索結果 ‐‐</li>
+        {% endif %}
+        <!-- ここまで　検索機能の一部 -->
+
+        <!--
+            友達に応じて表示
+            ＞for文を回して表示
+        -->
+
+        <!--
+            最新のトークを表示するVer
+            friendsではなく、作成したtalk_listでforをまわす
+            ＞ここでどういうリストなら表示ができるかを考えてリストの項目を設計
+        -->
+        {% for friend in friends %}
+        <li class="friend-list__item">
+            <!-- それぞれが別のトーク画面に飛ぶようにリンクをはる -->
+            <a class="friend-list__link" href="{% url 'talk_room' friend.id %}">
+                <img class="friend-list__usericon" src="{{ friend.icon.url }}">
+                <div class="friend-list__username">{{ friend.username }}</div>
+                <!-- ここから最新のトークを表示する部分 -->
+                {% if friend.latest_msg_talk %}
+                <div class="friend-list__talk">
+                    <p class="friend-list__content">{{ friend.latest_msg_talk }}</p>
+                    <p class="friend-list__time">{{ friend.latest_msg_time|date:"n/j H:i" }}</p>
+                </div>
+                {% endif %}
+            </a>
+        </li>
+        {% empty %}
+        <!-- 検索機能の一部 -->
+        <li class="search-text">‐‐ 検索結果はありませんでした ‐‐</li>
+        <!-- ここまで　検索機能の一部 -->
+        {% endfor %}
+        <!-- ここまで　最新のトークを表示するVer -->
+    </ul>
+</div>
+{% endblock %}
