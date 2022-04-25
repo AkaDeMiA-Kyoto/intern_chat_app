@@ -46,10 +46,6 @@ def friends(request):
                 # 入力に対して部分一致する友達を絞り込む
                 friends = friends.filter(username__icontains=keyword)
 
-                # 入力情報を保持してテキストボックスに残すようにする
-                # （ユーザーが検索したキーワードを見られるように）
-                request.session["keyword"] = request.GET
-
                 # 検索に対してリストを作成
                 info = create_info_list(user, friends)
 
@@ -61,6 +57,8 @@ def friends(request):
                     "is_searched": True,
                 }
                 return render(request, "myapp/friends.html", context)
+
+
     
     # ここまで検索機能
 

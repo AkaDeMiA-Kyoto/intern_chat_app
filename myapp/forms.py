@@ -64,7 +64,10 @@ class FriendsSearchForm(forms.Form):
         required=False,
         widget=forms.TextInput(attrs={
             "placeholder": "ユーザー名で検索",
-            "autocomplete": "off"}),
+            "autocomplete": "off",
+            "render_value": "True",    # 検索後フォームに値を残す
+            }
+        ),
     )
 
 
