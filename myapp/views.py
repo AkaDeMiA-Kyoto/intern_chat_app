@@ -34,6 +34,7 @@ def index(request):
 def signup_view(request):
     if request.method == "GET":
         form = SignUpForm()
+        error_message = ''
     elif request.method == "POST":
         # 画像ファイルをformに入れた状態で使いたい時はformに"request.FILES"を加える。
         # request.POST だけではNoneが入る。
@@ -60,8 +61,15 @@ def signup_view(request):
                 # authenticate()が返すUserはuser.backendを持つので連携可能。
                 login(request, user)
             return redirect("/")
+        
+        else:
+            error_message = '入力内容に不備があります。'
+
+            
+
     context = {
         "form": form,
+        "error_message": error_message
     }
     return render(request, "myapp/signup.html", context)
 
@@ -143,6 +151,8 @@ def talk_room(request, user_id):
             # 保存
             form.save()
             # 更新
+            # このようなリダイレクト処理はPOSTのリクエストを初期化し、リクエストをGETに戻すことにより
+            # 万一更新処理を連打されてもPOSTのままにさせない等の用途がある
             return redirect("talk_room", user_id)
 
     # POSTでない（リダイレクトorただの更新）&POSTでも入力がない場合
