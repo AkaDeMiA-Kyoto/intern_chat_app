@@ -1,1 +1,26 @@
-LI
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/login.css' %}"/>
+  <title>チャットアプリ</title>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container__title">
+                ログイン
+            </span>
+        </div>
+    </header>
+    <form action="example.com" method="POST">
+        <label>ユーザーネーム: <input type="text"></label>        
+        <br>
+        <label>パスワード: <input type="password"></label>
+
+        <a href="{% url 'friends' %}">ログイン</a>
+    </form>
+</body>
+</html>

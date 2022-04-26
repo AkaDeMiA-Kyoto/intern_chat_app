@@ -4,18 +4,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/friends.css' %}"/>
+  <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting_icon.css' %}"/>
   <title>チャットアプリ</title>
 </head>
 <body>
     <header class="header">
         <div class="header-container">
             <span class="header-container__title">
-                友達
+                アイコン
             </span>
         </div>
     </header>
-    <p>友達表示</p>
+
+    <form action="example.com" method="POST">
+        <label>Select your new icon<input type="file"></label>        
+        <br>
+        <input type="submit" value="送信">
+    </form>
+
     <div class="footer-container">
     <footer class="footer">
         <div class="footer-container">

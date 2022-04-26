@@ -1,1 +1,47 @@
-SU
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}"/>
+  <title>チャットアプリ</title>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container__title">
+                会員登録
+            </span>
+        </div>
+    </header>
+    <form action="example.com" method="POST">
+        <table>
+            <tr>
+                <th>Username:</th> 
+                <td><input type="text"></td>        
+            </tr>
+            <tr>
+                <th>Email address:</th> 
+                <td><input type="email"></td>        
+            </tr>
+            <tr>
+                <th>Password:</th> 
+                <td><input type="password"></td>        
+            </tr>
+            <tr>
+                <th>Password confirmation:</th>
+                <td><input type="password"></td>        
+            </tr>
+            <tr>
+                <th>Img:</th> 
+                <td><input type="file"></td>
+            </tr>
+        </table>
+
+        <div id="submit_button">
+            <a href="{% url 'index' %}">submit</a>
+        </div>
+    </form>
+</body>
+</html>
