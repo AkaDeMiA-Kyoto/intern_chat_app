@@ -15,33 +15,38 @@
             </span>
         </div>
     </header>
-    <form action="example.com" method="POST">
+    <form action="{% url 'signup_view' %}" method="POST" class="signup-form">
+        {% csrf_token %}
         <table>
-            <tr>
-                <th>Username:</th> 
-                <td><input type="text"></td>        
-            </tr>
-            <tr>
-                <th>Email address:</th> 
-                <td><input type="email"></td>        
-            </tr>
-            <tr>
-                <th>Password:</th> 
-                <td><input type="password"></td>        
-            </tr>
-            <tr>
-                <th>Password confirmation:</th>
-                <td><input type="password"></td>        
-            </tr>
-            <tr>
-                <th>Img:</th> 
-                <td><input type="file"></td>
-            </tr>
+            {{ form.as_table }}
         </table>
+        <!-- <table> -->
+        <!--     <tr> -->
+        <!--         <th>Username:</th> --> 
+        <!--         <td><input type="text"></td> -->        
+        <!--     </tr> -->
+        <!--     <tr> -->
+        <!--         <th>Email address:</th> --> 
+        <!--         <td><input type="email"></td> -->        
+        <!--     </tr> -->
+        <!--     <tr> -->
+        <!--         <th>Password:</th> --> 
+        <!--         <td><input type="password"></td> -->        
+        <!--     </tr> -->
+        <!--     <tr> -->
+        <!--         <th>Password confirmation:</th> -->
+        <!--         <td><input type="password"></td> -->        
+        <!--     </tr> -->
+        <!--     <tr> -->
+        <!--         <th>Img:</th> --> 
+        <!--         <td><input type="file"></td> -->
+        <!--     </tr> -->
+        <!-- </table> -->
 
-        <div id="submit_button">
-            <a href="{% url 'index' %}">submit</a>
-        </div>
+        <!-- <div id="submit_button"> -->
+        <button type="submit" class="signup-form__submit">送信</button>
+            <!-- <a href="{% url 'index' %}">submit</a> -->
+        <!-- </div> -->
     </form>
 </body>
 </html>

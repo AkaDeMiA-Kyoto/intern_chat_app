@@ -119,3 +119,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+AUTH_USER_MODEL = "myapp.user"
+LOGIN_URL = "login_view"
+LOGIN_REDIRECT_URL = "friends"
+LOGOUT_REDIRECT_URL = "index"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass

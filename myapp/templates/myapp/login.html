@@ -15,12 +15,23 @@
             </span>
         </div>
     </header>
-    <form action="example.com" method="POST">
-        <label>ユーザーネーム: <input type="text"></label>        
-        <br>
-        <label>パスワード: <input type="password"></label>
+    <form action="{% url 'login_view' %}" method="POST" class="login-form">
+        {% csrf_token %}
+        {% if form.errors %}
+        ユーザー名とパスワードが一致しません
+        {% endif %}
+        <label for="{{ form.username.id_for_label }}">ユーザー名: </label>
+        {{ form.username }}
+        <label for="{{ form.password.id_for_label }}">パスワード: </label>
+        {{ form.password }}
 
-        <a href="{% url 'friends' %}">ログイン</a>
+        <button type="submit">送信</button>
+
+        <!-- <label>ユーザーネーム: <input type="text"></label> -->        
+        <!-- <br> -->
+        <!-- <label>パスワード: <input type="password"></label> -->
+
+        <!-- <a href="{% url 'friends' %}">ログイン</a> -->
     </form>
 </body>
 </html>

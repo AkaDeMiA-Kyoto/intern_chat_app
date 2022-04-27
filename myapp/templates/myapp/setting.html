@@ -16,23 +16,27 @@
         </div>
     </header>
     
-    <div class="button_container">
-        <div class="button">
-            <a href="{% url 'setting_username' %}">ユーザー名変更</a>
-        </div>
-        <br>
-        <div class="button">
-            <a href="{% url 'setting_mailaddress' %}">メールアドレス変更</a>
-        </div>
-        <br>
-        <div class="button">
-            <a href="{% url 'setting_icon' %}">アイコン変更</a>
-        </div>
-        <br>
-        <div class="button">
-            <a href="{% url 'setting_password' %}">パスワード変更</a>
-        </div>
-    </div>
+    <!-- <div class="button_container"> -->
+    <!--     <div class="button"> -->
+    <!--         <a href="{% url 'setting_username' %}">ユーザー名変更</a> -->
+    <!--     </div> -->
+    <!--     <br> -->
+    <!--     <div class="button"> -->
+    <!--         <a href="{% url 'setting_mailaddress' %}">メールアドレス変更</a> -->
+    <!--     </div> -->
+    <!--     <br> -->
+    <!--     <div class="button"> -->
+    <!--         <a href="{% url 'setting_icon' %}">アイコン変更</a> -->
+    <!--     </div> -->
+    <!--     <br> -->
+    <!--     <div class="button"> -->
+    <!--         <a href="{% url 'setting_password' %}">パスワード変更</a> -->
+    <!--     </div> -->
+    <!-- </div> -->
+    <a href="{% url 'setting_username' %}">ユーザー名変更</a>
+    <a href="{% url 'setting_mailaddress' %}">メールアドレス変更</a>
+    <a href="{% url 'setting_password' %}">パスワード変更</a>
+    <a href="{% url 'logout' %}">ログアウト</a>
 
     <div class="footer-container">
     <footer class="footer">

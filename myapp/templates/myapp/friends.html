@@ -15,7 +15,15 @@
             </span>
         </div>
     </header>
-    <p>友達表示</p>
+    <ul>
+        {% for friend in friends %}
+        <li>
+            <a href="{% url 'talk_room' friend.id %}">
+            {{ friend.username }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
     <div class="footer-container">
     <footer class="footer">
         <div class="footer-container">

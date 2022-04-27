@@ -16,10 +16,15 @@
         </div>
     </header>
 
-    <form action="example.com" method="POST">
-        <label>Type your new username: <input type="text"></label>        
-        <br>
-        <input type="submit" value="送信">
+    <form action="{% url 'setting_username' %}" method="POST">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <button type="submit">変更</button>
+        <!-- <label>Type your new username: <input type="text"></label> -->        
+        <!-- <br> -->
+        <!-- <input type="submit" value="送信"> -->
     </form>
 
     <div class="footer-container">
