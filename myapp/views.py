@@ -4,7 +4,8 @@ from django.contrib.auth.views import (
     PasswordChangeDoneView,
     PasswordChangeView,
 )
-from django.db.models import Q, F, OuterRef, Subquery
+from django.db.models import Q, F, OuterRef, Subquery, Max, Case, When
+from django.db.models.functions import Coalesce, Greatest
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 
@@ -30,6 +31,9 @@ def friends(request):
 
     # 最新のトークも表示するVer 上級
     # ユーザーひとりずつの最新のトークを特定する
+
+    """
+    # 少し遅いクエリ
     latest_msg = Talk.objects.filter(
         Q(talk_from=OuterRef("pk"), talk_to=user)
         | Q(talk_from=user, talk_to=OuterRef("pk"))
@@ -38,13 +42,28 @@ def friends(request):
     friends = (
         User.objects.exclude(id=user.id)
         .annotate(
-            latest_msg_pk=Subquery(latest_msg.values("pk")[:1]),
             latest_msg_talk=Subquery(latest_msg.values("talk")[:1]),
             latest_msg_time=Subquery(latest_msg.values("time")[:1]),
         )
-        .order_by(F("latest_msg_pk").desc(nulls_last=True))
+        .order_by(F("latest_msg_time").desc(nulls_last=True))
     )
-    print(friends)
+    """
+    
+    # 速いクエリ
+    friends = (
+        User.objects.exclude(id=user.id)
+        .annotate(
+            send_max=Max("talk_from__time", filter=Q(talk_from__talk_to=user)),
+            receive_max=Max("talk_to__time", filter=Q(talk_to__talk_from=user)),
+            latest_time=Greatest("send_max", "receive_max"),
+            latest_msg_time=Coalesce("latest_time", "send_max", "receive_max"),
+            latest_msg_talk=Case(
+                When(latest_msg_time=F("talk_to__time"), then=F("talk_to__talk")),
+                When(latest_msg_time=F("talk_from__time"), then=F("talk_from__talk"))
+            )
+        ).order_by(F("latest_msg_time").desc(nulls_last=True))
+    )
+
     # 検索機能あり
     form = FriendsSearchForm()
 
