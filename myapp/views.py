@@ -61,15 +61,15 @@ def signup_view(request):
                 # authenticate()が返すUserはuser.backendを持つので連携可能。
                 login(request, user)
             return redirect("/")
-        
+        # バリデーションが通らなかった時の処理を記述
         else:
-            error_message = '入力内容に不備があります。'
+            # エラー時 form.errors には エラー内容が格納されている
+            print(form.errors)
 
             
 
     context = {
         "form": form,
-        "error_message": error_message
     }
     return render(request, "myapp/signup.html", context)
 
@@ -154,6 +154,10 @@ def talk_room(request, user_id):
             # このようなリダイレクト処理はPOSTのリクエストを初期化し、リクエストをGETに戻すことにより
             # 万一更新処理を連打されてもPOSTのままにさせない等の用途がある
             return redirect("talk_room", user_id)
+        # バリデーションが通らなかった時の処理を記述
+        else:
+            # エラー時 form.errors には エラー内容が格納されている
+            print(form.errors)
 
     # POSTでない（リダイレクトorただの更新）&POSTでも入力がない場合
     return render(request, "myapp/talk_room.html", context)
@@ -182,6 +186,11 @@ def user_img_change(request):
         if form.is_valid():
             form.save()
             return redirect("user_img_change_done")
+        # バリデーションが通らなかった時の処理を記述
+        else:
+            # エラー時 form.errors には エラー内容が格納されている
+            print(form.errors)
+
     context = {
         "form": form,
     }
@@ -204,6 +213,11 @@ def mail_change(request):
         if form.is_valid():
             form.save()
             return redirect("mail_change_done")
+        # バリデーションが通らなかった時の処理を記述
+        else:
+            # エラー時 form.errors には エラー内容が格納されている
+            print(form.errors)
+
     context = {
         "form": form,
     }
@@ -226,6 +240,11 @@ def username_change(request):
         if form.is_valid():
             form.save()
             return redirect("username_change_done")
+        # バリデーションが通らなかった時の処理を記述
+        else:
+            # エラー時 form.errors には エラー内容が格納されている
+            print(form.errors)
+
     context = {
         "form": form,
     }

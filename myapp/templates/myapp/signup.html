@@ -8,7 +8,6 @@
 {% block header_title %}会員登録{% endblock %}
 
 {% block content %}
-{{ error_message }}
 {# signup処理部分 #}
 <form method="post" action="{% url 'signup' %}" enctype="multipart/form-data" class="signup-form">
     {% csrf_token %}
@@ -18,9 +17,7 @@
         {{ field }}
         {# エラーメッセージを表示 #}
         {% if field.errors %}
-          {% for error in field.errors %}
-            {{ error }}
-          {% endfor %}
+            {{ field.errors }}
         {% endif %}
     </p>
     {% endfor %}
