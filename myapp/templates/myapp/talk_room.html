@@ -22,7 +22,7 @@
 {% endblock %}
 
 {% block content %}
-    <div id="chat-log" cols="100" rows="20"></div>
+    <div id="chat-log"></div>
     {% for item in data %}
         <!-- やりとりしているメッセージの受け手がユーザー、かつ、やりとりしている送り手がトーク画面の相手 -->
         {% if item.receiver.id == user.id %}

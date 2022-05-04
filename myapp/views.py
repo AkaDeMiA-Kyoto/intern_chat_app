@@ -81,7 +81,6 @@ class UsernameUpdateDoneView(TemplateView,LoginRequiredMixin):
     template_name = 'myapp/update_username_complete.html'
 
 
-
 class UsernameUpdateView(View,LoginRequiredMixin):
 
     def get(self, request, *args, **kwargs):
@@ -166,6 +165,7 @@ class PasswordChange(LoginRequiredMixin,PasswordChangeView):
     success_url = reverse_lazy('myapp:update_password_complete')
     template_name = 'myapp/update_password.html'
     form_class = UserPasswordChangeForm
+
 
 class PasswordChangeDone(LoginRequiredMixin,PasswordChangeDoneView):
     template_name = 'myapp/update_password_complete.html'

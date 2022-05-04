@@ -10,10 +10,7 @@ class SignUpForm(SignupForm):
     image = forms.ImageField()
 
     def __init__(self,*args,**kwargs):
-        super().__init__(*args,**kwargs)
         super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            print(field)
 
         self.fields["username"].widget.attrs.update({
             'class':"shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline",

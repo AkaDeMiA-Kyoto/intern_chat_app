@@ -16,6 +16,3 @@ class LogoutView(views.LogoutView):
 
 class SignUpView(views.SignupView):
     template_name = 'account/signup.html'
-
-
-# Create your views here.
