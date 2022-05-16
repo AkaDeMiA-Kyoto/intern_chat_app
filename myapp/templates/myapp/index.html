@@ -1,14 +1,44 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
-    <head>
-        <meta charset="UTF-8">
-        <title>index</title>
-        <link rel="stylesheet" href="home.css">
-    </head>
-    <body>
-        <div class="btn">
-            <a href="" class="lo_btn"><p>ログイン</p></a><br>
-            <a href="" class="me_btn"><p>会員登録</p></a>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="" />
+    {% block extra_style %}{% endblock %}
+    <title>DeMiAインターン</title>
+</head>
+<body>
+    {% block header %}
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container__title">
+                {% block header-title %}{% endblock %}
+            </span>
         </div>
-    </body>
+    </header>
+    {% endblock %}
+
+    {% block content %}
+    {% endblock %}
+
+    {% block footer %}
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-container__item">
+                <a href="" class="footer-item__link">
+                    <span class="footer-item__icon"><img src=""></span>
+                    <span class="footer-item__text">友達</span>
+                </a>
+            </div>
+            <div class="footer-container__item">
+                <a href="" class="footer-item__link">
+                    <span class="footer-item__icon"><img src=""></span>
+                    <span class="footer-item__text">設定</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
+</body>
 </html>
