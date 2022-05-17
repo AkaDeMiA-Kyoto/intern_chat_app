@@ -23,20 +23,20 @@
     {% endblock %}
 
     {% block footer %}
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-container__item">
-                <a href="" class="footer-item__link">
-                    <span class="footer-item__text">ログイン</span>
+    <main class="start">
+        <div class="start-container">
+            <div class="start-container__item">
+                <a href="{% static 'myapp/html/login.html' %}" class="start-item__link">
+                    <span class="start-item__text">ログイン</span>
                 </a>
             </div>
-            <div class="footer-container__item">
-                <a href="" class="footer-item__link">
-                    <span class="footer-item__text">会員登録</span>
+            <div class="start-container__item">
+                <a href="{% static 'myapp/html/signup.html' %}" class="start-item__link">
+                    <span class="start-item__text">会員登録</span>
                 </a>
             </div>
         </div>
-    </footer>
+    </main>
     {% endblock %}
 </body>
 </html>

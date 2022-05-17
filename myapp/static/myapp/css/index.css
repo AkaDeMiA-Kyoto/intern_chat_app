@@ -1,9 +1,31 @@
-.footer-item__link{
+.start-item__link{
     text-decoration: none;
 }
 
-.footer-item__text{
-    font-size: 16px;
+.start-item__text{
+    font-size: 20px;
+    color: black;
     border: 1px solid gray;
+    border-radius: 16px;
+    display: block;
+    width: 120px;
+    line-height: 2;
+    text-align: center;
 }
 
+.start-container__item{
+    margin-bottom: 20px;
+    line-height: ;
+}
+
+.start-container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+html{
+    height: 100%;
+    position: relative;
+}
