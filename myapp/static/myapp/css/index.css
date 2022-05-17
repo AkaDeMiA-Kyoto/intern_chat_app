@@ -1,40 +1,6 @@
-.btn{
-    font-size: 50px;
-    position: relative;
-    font-weight: bold;
-}
-.lo_btn{
-    position: absolute;
-    top: 42%;
-    left: 50%;
-    height: auto;
-    width: auto;
-    -webkit-transform: translate(-50%, 0);
-    transform: translate(-50%, 0);
-    width: 300px;
-    text-align: center;
-    height: 100px;
+.footer-item__link{
     text-decoration: none;
-}
-.me_btn{
-    position: absolute;
-    top: 48%;
-    left: 50%;
-    height: auto;
-    width: auto;
-    -webkit-transform: translate(-50%, 0);
-    transform: translate(-50%, 0);
-    width: 300px;
-    text-align: center;
-    height: 100px;
-    text-decoration: none;
-}
-*{
-    height: 100%;
-    width: 100%;
-}
-p{
-    border: 1px solid #000;
-    border-radius: 20px;
-    color: #000;
+    font-size: 16px;
+    border: 1px solid gray;
+    
 }
