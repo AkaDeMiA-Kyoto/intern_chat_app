@@ -1,11 +1,41 @@
-.footer-item__text {
+.start-item__text {
   font-size: 8px;
   color: black;
-  padding: 8px 16px;
+  line-height: 2;
+  padding: 2px 16px;
   border: grey 1px solid;
   border-radius: 2px;
 }
 
-.footer-item__link {
+.start-item__link {
   text-decoration: none;
 }
+
+.start-container__item + .start-container__item {
+  margin-top: 2px;
+}
+
+.start-container__item {
+  text-align: center;
+}
+
+.start {
+  height: 100%;
+  position: relative;
+}
+
+.start-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+}
+
