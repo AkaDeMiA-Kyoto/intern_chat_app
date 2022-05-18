@@ -21,14 +21,16 @@
 
     {% block content %}
     <main>
-      <form action="" method="POST">
+      <form action="{ url 'signup' }" method="POST">
         {% csrf_token %}
-        {{ form.as_table }}
-        <tr><td></td>
+        <table>
+            {{ form.as_table }}
+            <tr><td></td>
             <td>
                 <input type="submit" value="submit">
             </td>
-        </tr>
+            </tr>
+        </table>
     </form>
     </main>
     {% endblock %}

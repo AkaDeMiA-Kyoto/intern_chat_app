@@ -7,7 +7,11 @@ def index(request):
     return render(request, "myapp/index.html")
 
 def signup_view(request):
-    return render(request, "myapp/signup.html")
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
+    else:
+        form = SignUpForm()
+    return render(request, "myapp/signup.html", {'form': form})
 
 def login_view(request):
     return render(request, "myapp/login.html")
