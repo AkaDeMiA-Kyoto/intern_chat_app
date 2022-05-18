@@ -1,0 +1,44 @@
+@charset "UTF-8";
+
+html {
+    height: 100%;
+    width: 100%;
+    background-color: #192a56;
+}
+
+body {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+header {
+    background-color: #fbc531;
+}
+
+main {
+    height: 100%;
+    width: 100%;
+}
+
+.friend_btn {
+    background-color: #e1b12c;
+    margin: 5px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 5px solid #718093;
+}
+
+a{
+    text-decoration: none;
+}
+.friend_btn_cover :hover {
+    background-color: #fbc531;
+}
+
+.prof_img {
+    height: 50px;
+    width: 50px;
+    border-radius: 24px;
+    border: 3px solid #f5f6fa;
+}

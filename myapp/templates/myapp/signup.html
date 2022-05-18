@@ -1,1 +1,55 @@
-SU
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}" />
+    <title>DeMiAインターン</title>
+</head>
+
+<body>
+    <header>
+        <h1>Sign Up</h1>
+    </header>
+    <main>
+        <div>会員情報を入力してください</div>
+        <div class="must">*すべて必須です。</div>
+        <form method="POST" enctype=“multipart/form-data”>
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>{{ form.username.label_tag }}</td>
+                    <td>{{ form.username }}</td>
+                </tr>
+                <tr>
+                    <td>{{ form.email.label_tag }}</td>
+                    <td>{{ form.email }}</td>
+                </tr>
+                <tr>
+                    <td>{{ form.prof_img.label_tag }}</td>
+                    <td>{{ form.prof_img }}</td>
+                </tr>
+                <tr>
+                    <td>{{ form.password1.label_tag }}</td>
+                    <td>{{ form.password1 }}</td>
+                </tr>
+                <tr>
+                    <td>{{ form.password2.label_tag }}</td>
+                    <td>{{ form.password2 }}</td>
+                </tr>
+            </table>
+            <ul>
+                {% for field in form %}
+                {% for error in field.errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+                {% endfor %}
+            </ul>
+            <button type="submit">ユーザー登録</button>
+        </form>
+    </main>
+</body>
+
+</html>

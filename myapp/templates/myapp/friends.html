@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/common.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/friends.css' %}" />
+    <title>DeMiAインターン</title>
+</head>
+
+<body>
+    <header>
+        <h1>Friends</h1>
+    </header>
+    <main>
+        {% csrf_token %}
+        {% for item in data %}
+        <a href="{% url 'talk_room' item.username %}" class = "friend_btn_cover">
+            <div class="friend_btn">
+                <span><img src="{{ item.prof_img.url }}" , alt="{{item.username}}のプロフィール画像" , class="prof_img"></span>
+                <span>{{ item.username }}</span>
+            </div>
+        </a>
+        {% endfor %}
+    </main>
+    <footer class="footer">
+        <a href="{% url 'friends' %}">
+            <div>
+                <div>
+                    <img src="{% static 'myapp/img/people-24px.svg' %}">
+                </div>
+                Friends
+            </div>
+        </a>
+        <a href="{% url 'setting' %}">
+            <div>
+                <div>
+                    <img src="{% static 'myapp/img/settings-black-18dp.svg' %}">
+                </div>
+                Settings
+            </div>
+        </a>
+    </footer>
+</body>
+
+</html>

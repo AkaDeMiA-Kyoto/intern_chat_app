@@ -1,0 +1,29 @@
+@charset "UTF-8";
+
+html {
+    height: 100%;
+    width: 100%;
+    background-color: #192a56;
+}
+
+body {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+header {
+    background-color: #487eb0;
+}
+
+main {
+    height: 100%;
+    width: 100%;
+}
+
+.prof_img {
+    height: 50px;
+    width: 50px;
+    border-radius: 25px;
+}
+
