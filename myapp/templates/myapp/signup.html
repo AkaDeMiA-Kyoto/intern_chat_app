@@ -1,1 +1,55 @@
-SU
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="" />
+    {% block extra_style %}{% endblock %}
+    <title>DeMiAインターン</title>
+</head>
+<body>
+    {% block header %}
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container__title">
+                {% block header-title %}会員登録{% endblock %}
+            </span>
+        </div>
+    </header>
+    {% endblock %}
+
+    {% block content %}
+    <main>
+      <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_table }}
+        <tr><td></td>
+            <td>
+                <input type="submit" value="submit">
+            </td>
+        </tr>
+    </form>
+    </main>
+    {% endblock %}
+
+    {% block footer %}
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-container__item">
+                <a href="" class="footer-item__link">
+                    <span class="footer-item__icon"><img src=""></span>
+                    <span class="footer-item__text"></span>
+                </a>
+            </div>
+            <div class="footer-container__item">
+                <a href="" class="footer-item__link">
+                    <span class="footer-item__icon"><img src=""></span>
+                    <span class="footer-item__text"></span>
+                </a>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
+</body>
+</html>

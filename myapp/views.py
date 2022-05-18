@@ -1,4 +1,6 @@
 from django.shortcuts import redirect, render
+from .forms import SignUpForm
+
 
 
 def index(request):
