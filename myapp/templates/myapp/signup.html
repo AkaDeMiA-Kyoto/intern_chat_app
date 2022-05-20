@@ -24,7 +24,17 @@
     {% block content %}
     <main>
         テスト<br>
-        {{ form.as_p }}
+        {% if form.errors %}
+        {{form.errors}}
+        {% endif %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
+            <button type='submit'>送信</button>
+        </form>
+
     </main>
     {% endblock %}
 
