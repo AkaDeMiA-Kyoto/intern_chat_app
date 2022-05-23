@@ -9,9 +9,15 @@ def index(request):
 def signup_view(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save
+            return redirect(to='myapp/index.html')
     else:
         form = SignUpForm()
-    return render(request, "myapp/signup.html", {'form': form})
+    params = {
+        'form': form,
+    }
+    return render(request, "myapp/signup.html", params)
 
 def login_view(request):
     return render(request, "myapp/login.html")
