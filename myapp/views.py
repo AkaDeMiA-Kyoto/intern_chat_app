@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth import login
+from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
@@ -28,6 +29,10 @@ def signup_view(request):
 def login_view(request):
     return render(request, "myapp/login.html")
 
+
+class MyLogin(LoginView):
+    template_name = "myapp/login.html"
+    
 def friends(request):
     return render(request, "myapp/friends.html")
 
