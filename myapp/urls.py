@@ -1,18 +1,14 @@
 from django.urls import path
-from django.conf import settings
-from django.conf.urls.static import static
 from . import views
 
 
 app_name = 'myapp'
 urlpatterns = [
     path('', views.index, name='index'),
-    path('signup/', views.signup_view, name='signup_view'),
-    path('login', views.MyLogin.as_view(), name='login_view'),
-    path('friends', views.friends, name='friends'),
-    path('talk_room', views.talk_room, name='talk_room'),
-    path('setting', views.setting, name='setting'),
+    path('signup/', views.signup, name='signup'),
+    path('login/', views.MyLogin.as_view(), name='login'),
+    path('logout/', views.MyLogout.as_view(), name='logout'),
+    path('friends/', views.friends, name='friends'),
+    path('talk_room/', views.talk_room, name='talk_room'),
+    path('setting/', views.setting, name='setting'),
 ]
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root=settings.MEDIA_ROOT)
