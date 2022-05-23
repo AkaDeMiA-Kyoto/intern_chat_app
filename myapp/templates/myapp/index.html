@@ -1,1 +1,43 @@
-I
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}" />
+  <title>Document</title>
+</head>
+<body>
+  {% block header %}
+  <header class="header">
+      <div class="header-container">
+          <span class="header-container__title">
+              {% block header-title %}{% endblock %}
+          </span>
+      </div>
+  </header>
+  {% endblock %}
+
+  {% block content %}
+  <main class="start">
+    <div class="start-container">
+        <div class="start-container__item">
+            <a href="{% url 'login_view' %}" class="start-item__link">
+                <span class="start-item__text">ログイン</span>
+            </a>
+        </div>
+        <div class="start-container__item">
+            <a href="{% url 'signup_view' %}" class="start-item__link">
+                <span class="start-item__text">会員登録</span>
+            </a>
+        </div>
+    </div>
+  </main>
+  {% endblock %}
+
+  {% block footer %}
+  {% endblock %}
+</body>
+</html>

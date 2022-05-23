@@ -1,11 +1,23 @@
 from django.shortcuts import redirect, render
+from .forms import SignUpForm
+
 
 
 def index(request):
     return render(request, "myapp/index.html")
 
 def signup_view(request):
-    return render(request, "myapp/signup.html")
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save
+            return redirect(to='myapp/index.html')
+    else:
+        form = SignUpForm()
+    params = {
+        'form': form,
+    }
+    return render(request, "myapp/signup.html", params)
 
 def login_view(request):
     return render(request, "myapp/login.html")
