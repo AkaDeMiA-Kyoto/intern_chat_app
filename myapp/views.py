@@ -1,8 +1,9 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.views import LoginView, LogoutView
-from .forms import SignUpForm
 from . import forms
+from .models import MyUser
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 # from django.contrib.auth import login
 # from django.http import HttpResponseRedirect
 # from django.urls import reverse_lazy
@@ -14,18 +15,20 @@ def index(request):
 
 
 def signup(request):
-    """forms.ModelFormを用いたお問い合わせ"""
+    """forms.ModelFormを用いた会員登録"""
     if request.method == 'POST':
         # フォーム送信データを受け取る
-        form = SignUpForm(request.POST, request.FILES)
+        form = forms.SignUpForm(request.POST, request.FILES)
         print(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('index')
+            post = form.save(commit=False)  # フォームの情報をコミットせずに保存（追加情報を登録するため）
+            post.pub_date = timezone.now()  # 登録日時の設定
+            post.save()
+            return redirect('myapp:index')
         else:
             print(form.errors)
     else:
-        form = SignUpForm()
+        form = forms.SignUpForm()
 
     return render(request, 'myapp/signup.html', {'form': form})
 
@@ -45,7 +48,8 @@ class MyLogout(LogoutView):
 
 @login_required
 def friends(request):
-    return render(request, "myapp/friends.html")
+    friend_list = MyUser.objects.all()
+    return render(request, "myapp/friends.html", {'friends': friend_list})
 
 
 @login_required

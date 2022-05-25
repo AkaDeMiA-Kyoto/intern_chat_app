@@ -17,6 +17,13 @@
             <span class="header-container__title">
                 {% block header-title %}{% endblock %}
             </span>
+            <span class="header-container__temp">
+                {% if not request.user.is_anonymous %}
+                ログイン中のユーザー：{{ user.username }}<br>
+                ユーザーID：{{ user.id }}<br>
+                <a href="{% url 'myapp:logout' %}">ログアウト</a>
+                {% endif %}
+            </span>
         </div>
     </header>
     {% endblock %}

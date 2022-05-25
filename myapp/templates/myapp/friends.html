@@ -1,4 +1,8 @@
 {% extends 'myapp/base.html' %}
+{% load static %}
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
+{% endblock %}
 {% block title %}
 <title>チャットアプリ | 友達一覧</title>
 {% endblock %}
@@ -6,7 +10,23 @@
 友達一覧
 {% endblock %}
 {% block content %}
-ようこそ、{{ user.username }}さん<br>
-ログイン完了です。
-<a href="{% url 'myapp:logout' %}">ログアウト</a>
+{% for friend in friends %}
+<a href="https://www.google.com/" class="friend-container">
+    <div class="friend-icon-container">
+        {% if friend.img %}
+        <img src="{{ friend.img.url }}" class="friend-icon">
+        {% else %}
+        <img src="../../../media/default/default_user.png" class="friend-icon">
+        {% endif %}
+    </div>
+    <div class="friend-content-container">
+        <div class="friend-name">
+            {{ friend.username }}
+        </div>
+        <div class="friend-content">
+            登録日時：{{ friend.pub_date }}
+        </div>
+    </div>
+</a>
+{% endfor %}
 {% endblock %}

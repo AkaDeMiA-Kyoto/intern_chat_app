@@ -36,6 +36,10 @@ body {
     color: #000;
 }
 
+.header-container__temp {
+    z-index: 10;
+}
+
 /* フッター */
 .footer {
     width: 100vw;

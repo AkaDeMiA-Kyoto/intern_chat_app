@@ -1,0 +1,34 @@
+.friend-icon {
+    width: 50px;
+    height: 50px;
+}
+
+.friend-container {
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid #9b9b9b;
+    padding: 1vh 0;
+}
+
+.friend-icon-container {
+    padding: 0 3vw;
+}
+
+.friend-content-container {
+    padding-right: 3vw;
+}
+
+.friend-name {
+    font-weight: bold;
+}
+
+.friend-content {
+    color: #9b9b9b;
+    font-size: 0.5em;
+    bottom: 0;
+}
+
+a.friend-container {
+    text-decoration: none;
+    color: black;
+}
