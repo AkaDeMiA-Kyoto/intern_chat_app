@@ -7,5 +7,5 @@ class User(AbstractUser):
     email = models.EmailField(("email"),max_length=200)
     password1 = models.CharField(("password1"),max_length=200)
     password2 = models.CharField(("password2"),max_length=200)
-    image = models.ImageField(("image"))
+    image = models.ImageField( 'アイコン画像', upload_to='media/%Y/%m/%d/', default='default/default_user.png')
 # Create your models here.

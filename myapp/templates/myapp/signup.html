@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="" />
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}" />
     {% block extra_style %}{% endblock %}
     <title>DeMiAインターン</title>
 </head>
@@ -21,11 +21,25 @@
 
     {% block content %}
     <main>
-        <form action="{% url 'signup_view' %}" method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="submit" >
-        </form>
+        <div class="form">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <table>
+                    {% for field in form %}
+                    <div class="field">
+                        <tr>
+                            <th>{{ field.label_tag }}</th>
+                            <td>{{ field }}</td>
+                        </tr>
+                    </div>
+                    {% endfor %}
+                </table>
+                <button type='submit'>送信</button>
+                {% if form.errors %}
+                {{form.errors}}
+                {% endif %}
+            </form>
+        </div>
     </main>
     {% endblock %}
 
