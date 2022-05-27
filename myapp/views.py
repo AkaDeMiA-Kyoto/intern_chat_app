@@ -4,12 +4,14 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
+from django.views import generic
 
 from .forms import SignUpForm, LoginForm, TalkForm, UsernameChangeForm, EmailChangeForm
 from .models import User, Talk
 
-def index(request):
-    return render(request, "myapp/index.html")
+class IndexView(generic.TemplateView):
+    template_name = "myapp/index.html"
+
 
 def signup_view(request):
     form = None

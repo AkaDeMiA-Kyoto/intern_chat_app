@@ -1,23 +1,8 @@
+{% extends "myapp/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
-    {% block extra_style %}{% endblock %}
-    <title>DeMiAインターン</title>
-</head>
-<body>
-    <header class="header">
-        <div class="header-container">
-            <span class="header-container__title">
-                {{ friend.username }}
-            </span>
-        </div>
-    </header>
-    <!-- <a href="{% url 'friends' %}" -->
-    <a href="">更新</a>
+{% block header-title %}{{ friend.username }}{% endblock %}
+{% block content %}
+    <a href="{% url 'talk_room' friend.id %}">更新</a>
 
     <ul>
         {% for talk in talks %}
@@ -42,4 +27,4 @@
         {{ form.message }}
         <buttond type="submit">送信</buttond>
     </form>
-</body>
+{% endblock %}
