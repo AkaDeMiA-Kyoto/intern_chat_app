@@ -1,9 +1,10 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.views import LoginView, LogoutView
 from . import forms
-from .models import MyUser
+from .models import MyUser, ChatContent
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.db.models import Q
 # from django.contrib.auth import login
 # from django.http import HttpResponseRedirect
 # from django.urls import reverse_lazy
@@ -19,7 +20,6 @@ def signup(request):
     if request.method == 'POST':
         # フォーム送信データを受け取る
         form = forms.SignUpForm(request.POST, request.FILES)
-        print(request.POST)
         if form.is_valid():
             post = form.save(commit=False)  # フォームの情報をコミットせずに保存（追加情報を登録するため）
             post.pub_date = timezone.now()  # 登録日時の設定
@@ -53,8 +53,27 @@ def friends(request):
 
 
 @login_required
-def talk_room(request):
-    return render(request, "myapp/talk_room.html")
+def talk_room(request, friend_id):
+    if request.method == 'POST':
+        form = forms.ChatForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)  # フォームの情報をコミットせずに保存（追加情報を登録するため）
+            post.pub_date = timezone.now()  # 登録日時の設定
+            post.send_to = MyUser.objects.get(pk=friend_id)  # 誰に送るか
+            post.send_from = request.user  # 誰から送るか
+            post.save()
+            return redirect('myapp:talk_room', friend_id)
+        else:
+            print(form.errors)
+    else:
+        contents = ChatContent.objects.all()  # ここを修正
+        form = forms.ChatForm()
+        context = {
+            'contents': contents,
+            'id': friend_id,
+            'form': form
+        }
+        return render(request, "myapp/talk_room.html", context)
 
 
 @login_required

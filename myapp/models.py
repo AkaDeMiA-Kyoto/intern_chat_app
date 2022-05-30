@@ -9,7 +9,7 @@ class MyUser(AbstractUser):
     # usernameとemailはすでにAbstractUserで定義済み,passwordはすでにAbstractBaseUserで定義済み
     img = models.ImageField(
         'アイコン画像', upload_to='media/%Y/%m/%d/', default='default/default_user.png')
-    pub_date = models.DateTimeField("date signed up", default=timezone.now())
+    pub_date = models.DateTimeField("date signed up", default=timezone.now)
 
 
 class ChatContent(models.Model):

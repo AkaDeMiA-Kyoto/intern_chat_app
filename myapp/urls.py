@@ -9,6 +9,6 @@ urlpatterns = [
     path('login/', views.MyLogin.as_view(), name='login'),
     path('logout/', views.MyLogout.as_view(), name='logout'),
     path('friends/', views.friends, name='friends'),
-    path('talk_room/', views.talk_room, name='talk_room'),
+    path('talk_room/<int:friend_id>/', views.talk_room, name='talk_room'),
     path('setting/', views.setting, name='setting'),
 ]

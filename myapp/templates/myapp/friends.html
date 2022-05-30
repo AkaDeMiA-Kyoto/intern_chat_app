@@ -11,7 +11,7 @@
 {% endblock %}
 {% block content %}
 {% for friend in friends %}
-<a href="https://www.google.com/" class="friend-container">
+<a href="{%url 'myapp:talk_room' friend.id %}" class="friend-container">
     <div class="friend-icon-container">
         {% if friend.img %}
         <img src="{{ friend.img.url }}" class="friend-icon">
