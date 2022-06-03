@@ -1,1 +1,21 @@
-S
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/setting.css' %}">
+{% endblock %}
+{% block title %}
+<title>チャットアプリ | 設定</title>
+{% endblock %}
+{% block header-title %}
+設定
+{% endblock %}
+{% block content %}
+<div class="buttons">
+    <div>
+        <a href="{% url 'myapp:login'%}" class="login_button">ログイン</a>
+    </div>
+    <div>
+        <a href="{% url 'myapp:signup'%}" class="signup_button">会員登録</a>
+    </div>
+</div>
+{% endblock %}

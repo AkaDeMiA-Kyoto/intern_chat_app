@@ -13,9 +13,7 @@
 .login_button {
     display: block;
     color: black;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #555;
+    border: 1px solid #555;
     border-radius: 10px;
     width: 35vw;
     margin: 0 auto 2vh;
@@ -28,9 +26,7 @@
 .signup_button {
     display: block;
     color: black;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #555;
+    border: 1px solid #555;
     border-radius: 10px;
     width: 35vw;
     margin: 0 auto;

@@ -14,18 +14,22 @@
     {% block header %}
     <header class="header">
         <div class="header-container">
-            <span class="header-container__title">
+            <div class="header-container__left">
+                {% block header_left %}
+                {% endblock %}
+            </div>
+            <div class="header-container__title">
                 {% block header-title %}{% endblock %}
-            </span>
-            <span class="header-container__temp">
-                {% if not request.user.is_anonymous %}
-                ログイン中のユーザー：{{ user.username }}<br>
-                ユーザーID：{{ user.id }}<br>
-                <a href="{% url 'myapp:logout' %}">ログアウト</a>
-                {% endif %}
-            </span>
+            </div>
+            <div class="header-container__right">
+                {% block header_right %}
+                {% endblock %}
+            </div>
         </div>
     </header>
+    <div class="top-placeholder">
+
+    </div>
     {% endblock %}
 
     {% block content %}

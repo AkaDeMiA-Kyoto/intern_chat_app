@@ -9,12 +9,23 @@ body {
 
 /* ヘッダー */
 .header {
-    width: 100vw;
+    position: fixed;
+    width: 100%;
     height: 64px;
     border-bottom: solid 1px #9b9b9b;
+    background-color: #fff;
+    top: 0;
+    left: 0;
+}
+
+.top-placeholder {
+    height: 64px;
+    width: 100%;
 }
 
 .header-container {
+    display: flex;
+    justify-content: center;
     position: relative;
     width: 90%;
     height: 100%;
@@ -23,11 +34,6 @@ body {
 }
 
 .header-container__title {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
     height: 1rem;
     line-height: 1rem;
     margin: auto;
@@ -36,16 +42,26 @@ body {
     color: #000;
 }
 
-.header-container__temp {
-    z-index: 10;
+.header-container__left {
+    width: 70px;
+    height: 100%;
+    text-align: center;
+    position: relative;
+}
+
+.header-container__right {
+    width: 70px;
+    position: relative;
 }
 
 /* フッター */
 .footer {
+    box-sizing: border-box;
     width: 100vw;
     height: 64px;
     position: fixed;
     bottom: 0;
+    background-color: #fff;
 }
 
 .footer-container {

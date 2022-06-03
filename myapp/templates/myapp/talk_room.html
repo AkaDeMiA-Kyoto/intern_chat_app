@@ -7,18 +7,64 @@
 <title>チャットアプリ | トーク</title>
 {% endblock %}
 {% block header-title %}
-トーク
+{{partner.username}}
+{% endblock %}
+{% block header_left %}
+<a href="{% url 'myapp:friends' %}" class="back-button">
+    <div class="inner-text">戻る</div>
+</a>
+{% endblock %}
+{% block header_right %}
+<a href="{% url 'myapp:talk_room' partner.id %}" class="reload-button">
+    <div class="inner-text">更新</div>
+</a>
 {% endblock %}
 {% block content %}
-ここにトーク内容が表示されるよ
-{% for content in contents %}
-{{content.chat_content}}
-{% endfor %}
-<form method="post">
-    {% csrf_token %}
-    {% for field in form %}
-    {{ field }}
+<div class="chat-content-wrapper">
+    {% for content in contents %}
+    {% if content.send_from.id == user.id %}
+    <div class="chat-content-container">
+        <div class="my-name">
+            {{content.send_from}}:
+        </div>
+        <div class="my-chat-content">
+            {{content.chat_content}}
+        </div>
+        <div class="my-chat-pub-date">
+            {{content.pub_date}}
+        </div>
+    </div>
+    {% else %}
+    <div class="chat-content-container">
+        <div class="your-name">
+            {{content.send_from}}:
+        </div>
+        <div class="your-chat-content">
+            {{content.chat_content}}
+        </div>
+        <div class="your-chat-pub-date">
+            {{content.pub_date}}
+        </div>
+    </div>
+    {% endif %}
     {% endfor %}
-    <button type='submit'>送信</button>
-</form>
+
+
+    <div class="bottom-placeholder">
+        ---テキストを送信してチャットを続けましょう---
+    </div>
+</div>
+{% endblock %}
+{% block footer %}
+<footer class="footer">
+    <div class="textbox-container">
+        <form method="post" class="text-form">
+            {% csrf_token %}
+            {% for field in form %}
+            {{ field }}
+            {% endfor %}
+            <button type='submit' class="submit-button">送信</button>
+        </form>
+    </div>
+</footer>
 {% endblock %}

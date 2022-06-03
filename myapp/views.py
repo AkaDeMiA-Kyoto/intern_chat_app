@@ -60,18 +60,20 @@ def talk_room(request, friend_id):
             post = form.save(commit=False)  # フォームの情報をコミットせずに保存（追加情報を登録するため）
             post.pub_date = timezone.now()  # 登録日時の設定
             post.send_to = MyUser.objects.get(pk=friend_id)  # 誰に送るか
-            post.send_from = request.user  # 誰から送るか
+            post.send_from = request.user  # 誰から送られるか
             post.save()
             return redirect('myapp:talk_room', friend_id)
         else:
             print(form.errors)
     else:
-        contents = ChatContent.objects.all()  # ここを修正
+        contents = ChatContent.objects.filter((Q(send_from__id=request.user.id) & Q(
+            send_to__id=friend_id)) | (Q(send_from__id=friend_id) & Q(send_to__id=request.user.id)))
         form = forms.ChatForm()
         context = {
             'contents': contents,
             'id': friend_id,
-            'form': form
+            'form': form,
+            'partner': MyUser.objects.get(pk=friend_id),
         }
         return render(request, "myapp/talk_room.html", context)
 

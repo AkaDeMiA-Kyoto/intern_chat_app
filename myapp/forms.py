@@ -23,3 +23,7 @@ class ChatForm(forms.ModelForm):
     class Meta:
         model = ChatContent
         fields = ('chat_content',)
+        widgets = {
+            # cssクラスの追加
+            'chat_content': forms.TextInput(attrs={'class': 'content-input', 'placeholder': 'ここにテキストを入力...'})
+        }
