@@ -18,6 +18,7 @@ from django.urls import include, path
 from . import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.contrib.auth import views as auth_views  # パスワード変更機能用
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('myapp.urls')),

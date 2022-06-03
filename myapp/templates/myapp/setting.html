@@ -12,10 +12,19 @@
 {% block content %}
 <div class="buttons">
     <div>
-        <a href="{% url 'myapp:login'%}" class="login_button">ログイン</a>
+        <a href="{% url 'myapp:name_change'%}" class="name-change-button">ユーザー名変更</a>
     </div>
     <div>
-        <a href="{% url 'myapp:signup'%}" class="signup_button">会員登録</a>
+        <a href="{% url 'myapp:email_change'%}" class="email-change-button">メールアドレス変更</a>
+    </div>
+    <div>
+        <a href="{% url 'myapp:password_change'%}" class="password-change-button">パスワード変更</a>
+    </div>
+    <div>
+        <a href="{% url 'myapp:icon_change'%}" class="image-change-button">アイコン変更</a>
+    </div>
+    <div>
+        <a href="{% url 'myapp:logout'%}" class="logout-button">ログアウト</a>
     </div>
 </div>
 {% endblock %}

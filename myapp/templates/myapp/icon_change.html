@@ -1,0 +1,37 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/icon_change.css' %}">
+{% endblock %}
+{% block title %}
+<title>チャットアプリ | アイコン変更</title>
+{% endblock %}
+{% block header-title %}
+アイコン変更
+{% endblock %}
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <td>現在のアイコン：</td>
+            <td>
+                {% if user.img %}
+                <img src="{{ user.img.url }}" alt="ユーザーのアイコン画像" class="current-icon">
+                {% else %}
+                <img src="../../../media/default/default_user.png" alt="ユーザーのアイコン画像" class="current-icon">
+                {% endif %}
+            </td>
+        </tr>
+        {% for field in form %}
+        <div class="field">
+            <tr>
+                <td>{{ field.label_tag }}</td>
+                <td>{{ field }}</td>
+            </tr>
+        </div>
+        {% endfor %}
+    </table>
+    <button type='submit'>変更</button>
+</form>
+{% endblock %}

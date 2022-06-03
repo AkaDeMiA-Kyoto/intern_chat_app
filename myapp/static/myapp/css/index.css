@@ -10,7 +10,7 @@
     transform: translate(-50%, -50%);
 }
 
-.login_button {
+.login-button {
     display: block;
     color: black;
     border: 1px solid #555;
@@ -23,7 +23,7 @@
     font-weight: bold;
 }
 
-.signup_button {
+.signup-button {
     display: block;
     color: black;
     border: 1px solid #555;

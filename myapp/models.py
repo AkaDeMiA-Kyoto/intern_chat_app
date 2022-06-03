@@ -19,3 +19,6 @@ class ChatContent(models.Model):
     send_from = models.ForeignKey(
         MyUser, on_delete=models.CASCADE, related_name='message_was_sent')
     chat_content = models.CharField(max_length=1000)
+
+    def __str__(self):
+        return self.chat_content
