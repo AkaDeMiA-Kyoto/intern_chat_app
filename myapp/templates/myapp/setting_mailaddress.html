@@ -1,12 +1,12 @@
 {% extends "myapp/base.html" %}
 {% load static %}
-{% block header-title %}メールアドレス{% endblock %}
+{% block header-title %}メールアドレス変更{% endblock %}
 {% block content %}
-    <form action="{% url 'setting_mailaddress' %}" method="POST">
+    <form method="POST">
         {% csrf_token %}
         <table>
             {{ form.as_table }}
         </table>
-        <button type="submit">変更</button>
+        <button type="submit" class="update_button">変更</button>
     </form>
 {% endblock %}

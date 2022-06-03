@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from django.contrib.messages import constants as messages
+from django.contrib.messages import constants as message_constants
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -38,6 +42,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',
+    'accounts.apps.AccountsConfig',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
 ]
 
 MIDDLEWARE = [
@@ -70,7 +78,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'intern.wsgi.application'
 
-
+MESSAGE_TAGS = {
+    messages.ERROR: "alert alert-danger",
+    messages.WARNING: "alert alert-warning",
+    messages.SUCCESS: "alert alert-success",
+    messages.INFO: "alert alert-info"
+}
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
@@ -104,9 +117,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ja'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tokyo'
 
 USE_I18N = True
 
@@ -119,11 +132,25 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-AUTH_USER_MODEL = "myapp.user"
-LOGIN_URL = "login_view"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+AUTH_USER_MODEL = "myapp.User"
+LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "friends"
 LOGOUT_REDIRECT_URL = "index"
-STATIC_ROOT = BASE_DIR / "staticfiles"
+
+#認証関係
+SITE_ID = 1
+AUTHENTICATION_BACKENDS = (
+        'allauth.account.auth_backends.AuthenticationBackend',
+        'django.contrib.auth.backends.ModelBackend',
+)
+
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_REQUIRED = True
+
+ACCOUNT_LOGOUT_ON_GET = True
 
 try:
     from .local_settings import *

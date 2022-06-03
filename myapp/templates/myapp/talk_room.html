@@ -1,30 +1,49 @@
 {% extends "myapp/base.html" %}
 {% load static %}
-{% block header-title %}{{ friend.username }}{% endblock %}
-{% block content %}
-    <a href="{% url 'talk_room' friend.id %}">更新</a>
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
+{% endblock %}
 
+{% block header %}
+    <header class="header">
+        <div class="header-container" id="talk_room_header">
+        <a href="{% url 'friends' %}" class="back_to_friendslist">　＜</a>
+            <span class="header-container__title">
+                {{ friend_username }}
+            </span>
+        <a href="{% url 'talk_room' friend_id %}" class="refresh_button">更新</a>
+        </div>
+    </header>
+{% endblock %}
+{% block content %}
     <ul>
         {% for talk in talks %}
         <li>
-            <p>
-            > {{ talk.sender.username }}
+            <p class="sender">
+            > {{ talk.sender }}
             </p>
-            <p>
+            <br>
+            <p class="message">
             {{ talk.message }}
             </p>
-            <p>
-                {{ talk.time|date:"m/d" }}
+            <p class="sent_time">
+                {{ talk.sent_time|date:"m/d" }}
                 <br>
-                {{ talk.time|date:"H:i" }}
+                {{ talk.sent_time|date:"H:i" }}
             </p>
         </li>
         {% endfor %}
     </ul>
 
-    <form action="{% url 'talk_room' friend.id %}" method="POST">
-        {% csrf_token %}
-        {{ form.message }}
-        <buttond type="submit">送信</buttond>
-    </form>
+{% endblock %}
+{% block footer %}
+<footer class="footer">
+    <div class="footer-container">
+        <form method="POST" class="send_text_form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="send_button">送信</button>
+        </form>
+    </div>
+</footer>
 {% endblock %}

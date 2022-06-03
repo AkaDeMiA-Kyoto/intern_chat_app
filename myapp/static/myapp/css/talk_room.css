@@ -1,0 +1,61 @@
+#talk_room_header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.back_to_friendslist{
+    font-size: 20px;
+    margin-right: auto;
+}
+
+ul{
+    list-style: none;
+    padding-left: 0px;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
+
+.send_text_form {
+    padding: 0px;
+    margin-right: auto;
+    position: relative;
+}
+
+#id_message {
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 33%;
+    margin-left: 16px;
+    width: 80%;
+}
+
+li {
+    border-bottom: 1px solid #a9a9a9;
+    position: relative;
+    height: 55px;
+}
+.sender {
+    display: block;
+    position: absolute;
+}
+
+.message {
+    display: block;
+    font-size: 13px;
+    position: absolute;
+    margin-top: 11px;
+}
+
+.sent_time {
+    font-size: 9px;
+    display: block;
+    justify-content: flex-end;
+    position: absolute;
+    right: 0;
+}
+

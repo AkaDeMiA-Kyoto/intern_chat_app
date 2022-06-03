@@ -4,13 +4,11 @@
 {% block header-title %}会員登録{% endblock %}
 
 {% block content %}
-<form action="{% url 'signup_view' %}" method="POST" class="signup-form">
+<form  method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-    </table>
-
-    <button type="submit" class="signup-form__submit">送信</button>
+        {{ form.as_p }}
+    <br>
+    <button type="submit" class="signup_button">Sign Up</button>
 </form>
 {% endblock %}
 

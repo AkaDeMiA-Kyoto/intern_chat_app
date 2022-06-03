@@ -1,10 +1,18 @@
 {% extends "myapp/base.html" %}
 {% load static %}
-{% block header-title %}アイコン{% endblock %}
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting_icon.css' %}" />
+{% endblock %}
+{% block header-title %}アイコン変更{% endblock %}
 {% block content %}
-    <form action="example.com" method="POST">
-        <label>Select your new icon<input type="file"></label>        
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <h4>現在の画像</h4>
+        <img src="media/{{ user.icon }}" class="previous_image">
         <br>
-        <input type="submit" value="送信">
+        <button type="submit" class="update_button">変更</button>
     </form>
 {% endblock %}

@@ -1,129 +1,129 @@
-from django.contrib import auth
-from django.contrib.auth import views as auth_views
-from django.shortcuts import redirect, render, get_object_or_404
+from django.contrib.auth.views import (
+        LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView
+        )
 from django.db.models import Q
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views import generic
-
-from .forms import SignUpForm, LoginForm, TalkForm, UsernameChangeForm, EmailChangeForm
+from django.views.generic import (
+        TemplateView, CreateView, ListView, UpdateView
+        )
+from .forms import (
+        SignupForm, LoginForm, TalkRoomForm, UpdateUsernameForm, UpdateMailaddressForm, UpdateIconForm
+        )
 from .models import User, Talk
 
-class IndexView(generic.TemplateView):
+class IndexView(TemplateView):
     template_name = "myapp/index.html"
 
+class SignupView(CreateView):
+    template_name = "myapp/signup.html"
+    form_class = SignupForm
 
-def signup_view(request):
-    form = None
-    if request.method == "GET":
-        form = SignUpForm()
-    elif request.method == "POST":
-        form = SignUpForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-
-            username = form.cleaned_data["username"]
-            password = form.cleaned_data["password1"]
-
-            user = auth.authenticate(username=username, password=password)
-
-            if user:
-                auth.login(request, user)
-            return redirect("index")
-    context = {"form": form}
-    return render(request, "myapp/signup.html", context)
-
-class LoginView(auth_views.LoginView):
-    authentication_form = LoginForm
+class LoginView(LoginView):
     template_name = "myapp/login.html"
+    authentication_form = LoginForm
 
-@login_required
-def friends(request):
-    friends = User.objects.exclude(id=request.user.id)
-    context = {"friends": friends}
-    print(friends)
-    return render(request, "myapp/friends.html", context)
-
-@login_required
-def talk_room(request, user_id):
-    form = None
-    friend = get_object_or_404(User, id=user_id)
-
-    talks = Talk.objects.filter(
-        Q(sender=request.user, receiver=friend)
-        |   Q(sender=friend, receiver=request.user)
-    ).order_by("time")
-
-    if request.method == "GET":
-        form = TalkForm()
-    elif request.method == "POST":
-        form = TalkForm(request.POST)
-        if form.is_valid():
-            new_talk = form.save(commit=False)
-            new_talk.sender = request.user
-            new_talk.receiver = friend
-            new_talk.save()
-            return redirect("talk_room", user_id)
-    context = {
-        "form": form,
-        "friend": friend,
-        "talks": talks,
-    }
-    return render(request, "myapp/talk_room.html", context)
-
-def setting(request):
-    return render(request, "myapp/setting.html")
-
-@login_required
-def setting_username(request):
-    form = None
-    if request.method == "GET":
-        form = UsernameChangeForm(instance=request.user)
-    elif request.method == "POST":
-        form = UsernameChangeForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect("setting_username_completed")
-    
-    context = {"form": form}
-    return render(request, "myapp/setting_username.html", context)
-
-@login_required
-def setting_mailaddress(request):
-    if request.method == "GET":
-        form = EmailChangeForm(instance=request.user)
-    elif request.method == "POST":
-        form = EmailChangeForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect("setting_mailaddress_completed")
-    
-    context = {"form": form}
-    return render(request, "myapp/setting_mailaddress.html", context)
-
-@login_required
-def setting_icon(request):
-    return render(request, "myapp/setting_icon.html")
-
-class PasswordChangeView(auth_views.PasswordChangeView):
-    template_name = "myapp/setting_password.html"
-    success_url = reverse_lazy("setting_password_completed")
-
-class PasswordChangeDoneView(auth_views.PasswordChangeDoneView):
-    template_name = "myapp/setting_password_completed.html"
-
-@login_required
-def setting_username_completed(request):
-    return render(request, "myapp/setting_username_completed.html")
-
-@login_required
-def setting_mailaddress_completed(request):
-    return render(request, "myapp/setting_mailaddress_completed.html")
-
-@login_required
-def setting_icon_completed(request):
-    return render(request, "myapp/setting_icon_completed.html")
-
-class LogoutView(auth_views.LogoutView):
+class LogoutView(LogoutView):
     pass
+
+class FriendsListView(TemplateView, LoginRequiredMixin):
+    template_name = "myapp/friends.html"
+    def get_context_data(self):
+        context = super().get_context_data()
+        friends_list = []
+        friends_dic = User.objects.all().filter(~Q(username=self.request.user)).values()
+        def return_recent_Talk_obj(friend):
+            talk_dic = Talk.objects.all().filter(
+            Q(sender = self.request.user, receiver=friend)
+            |   Q(sender=friend, receiver=self.request.user)
+            ).values()
+            return talk_dic[len(talk_dic)-1]
+
+        for i in range(len(friends_dic)):
+            friends_list.append({
+                "id": friends_dic[i]["id"],
+                "username": friends_dic[i]["username"],
+                "icon": friends_dic[i]["icon"],
+                "brief_message": return_recent_Talk_obj(friends_dic[i]["id"])["message"],
+                "last_sent": return_recent_Talk_obj(friends_dic[i]["id"])["sent_time"],
+                })
+
+        print(friends_list)
+        context["friends"] = friends_list
+
+        return context
+
+class TalkRoomView(CreateView, LoginRequiredMixin):
+    template_name = "myapp/talk_room.html"
+    form_class = TalkRoomForm
+
+    def get_success_url(self):
+        return reverse_lazy("talk_room", args=[self.kwargs['pk']])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        friend_id = self.kwargs['pk']
+        friend_username = User.objects.get(id=friend_id)
+        context["friend_id"] = friend_id
+        context["friend_username"] = friend_username
+        context["talks"] = Talk.objects.all().filter(
+            Q(sender = self.request.user, receiver=friend_username)
+            |   Q(sender=friend_username, receiver=self.request.user)
+        ).order_by("sent_time")
+        return context
+
+    def form_valid(self, form):
+        talk = form.save(commit=False)
+        talk.sender = self.request.user
+        talk.receiver = User.objects.get(id=self.kwargs['pk'])
+        talk.save()
+        return super().form_valid(form)
+
+
+#各種設定
+class SettingView(TemplateView, LoginRequiredMixin):
+    template_name = "myapp/setting.html"
+
+class UpdateUsernameView(UpdateView, LoginRequiredMixin):
+    template_name ="myapp/setting_username.html"
+    model = User
+    form_class = UpdateUsernameForm
+    success_url = reverse_lazy("username_updated")
+
+    def get_object(self):
+        return self.request.user
+
+class UpdateMailaddressView(UpdateView, LoginRequiredMixin):
+    template_name ="myapp/setting_mailaddress.html"
+    model = User
+    form_class = UpdateMailaddressForm
+    success_url = reverse_lazy("mailaddress_updated")
+
+    def get_object(self):
+        return self.request.user
+
+class UpdateIconView(UpdateView, LoginRequiredMixin):
+    template_name ="myapp/setting_icon.html"
+    model = User
+    form_class = UpdateIconForm
+    success_url = reverse_lazy("icon_updated")
+
+    def get_object(self):
+        return self.request.user
+
+class UpdatePasswordView(PasswordChangeView, LoginRequiredMixin):
+    template_name = "myapp/setting_password.html"
+    success_url = reverse_lazy("password_updated")
+
+#設定完了
+class UpdateUsernameCompletedView(TemplateView, LoginRequiredMixin):
+    template_name = "myapp/setting_username_completed.html"
+
+class UpdateMailaddressCompletedView(TemplateView, LoginRequiredMixin):
+    template_name = "myapp/setting_mailaddress_completed.html"
+
+class UpdateIconCompletedView(TemplateView, LoginRequiredMixin):
+    template_name = "myapp/setting_icon_completed.html"
+
+class UpdatePasswordCompletedView(PasswordChangeDoneView, LoginRequiredMixin):
+    template_name = "myapp/setting_password_completed.html"

@@ -3,16 +3,10 @@
 
 {% block header-title %}ログイン{% endblock %}
 {% block content %}
-    <form action="{% url 'login_view' %}" method="POST" class="login-form">
+    <form method="POST" class="login_form">
         {% csrf_token %}
-        {% if form.errors %}
-        ユーザー名とパスワードが一致しません
-        {% endif %}
-        <label for="{{ form.username.id_for_label }}">ユーザー名: </label>
-        {{ form.username }}
-        <label for="{{ form.password.id_for_label }}">パスワード: </label>
-        {{ form.password }}
-        <button type="submit">送信</button>
+            {{ form.as_p }}
+        <button type="submit" class="login_button">ログイン</button>
     </form>
 {% endblock %}
 

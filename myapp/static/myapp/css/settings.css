@@ -1,7 +1,6 @@
 html, body {
     height: 100%;
 }
-
 body {
     display: flex;
     flex-direction: column;
@@ -11,17 +10,16 @@ body {
 
 .button {
     display: inline-block;
-    border: 1px solid #a9a9a9;
-    padding: 4px 30px;
-    border-radius: 8px;
+    width: 80px;
+    border: 1px solid;
+    padding: 0px 50px;
+    border-radius: 5px;
     text-align: center;
 }
 
 
 a {
     color: black;
-    font-size: 14px;
-    font-family: "メイリオ", Arial;
     text-decoration: none;
 }
 
