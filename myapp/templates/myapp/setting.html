@@ -10,21 +10,21 @@
 設定
 {% endblock %}
 {% block content %}
-<div class="buttons">
+<div class="buttons-container">
     <div>
-        <a href="{% url 'myapp:name_change'%}" class="name-change-button">ユーザー名変更</a>
+        <a href="{% url 'myapp:name_change'%}" class="button45">ユーザー名変更</a>
     </div>
     <div>
-        <a href="{% url 'myapp:email_change'%}" class="email-change-button">メールアドレス変更</a>
+        <a href="{% url 'myapp:email_change'%}" class="button45">メールアドレス変更</a>
     </div>
     <div>
-        <a href="{% url 'myapp:password_change'%}" class="password-change-button">パスワード変更</a>
+        <a href="{% url 'myapp:password_change'%}" class="button45">パスワード変更</a>
     </div>
     <div>
-        <a href="{% url 'myapp:icon_change'%}" class="image-change-button">アイコン変更</a>
+        <a href="{% url 'myapp:icon_change'%}" class="button45">アイコン変更</a>
     </div>
     <div>
-        <a href="{% url 'myapp:logout'%}" class="logout-button">ログアウト</a>
+        <a href="{% url 'myapp:logout'%}" class="button45">ログアウト</a>
     </div>
 </div>
 {% endblock %}

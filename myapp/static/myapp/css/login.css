@@ -1,33 +1,22 @@
-form {
-    margin: 5vh auto 0;
+* {
+    box-sizing: border-box;
+}
+
+.form-container {
+    margin: 7vh auto 0;
 }
 
 table {
     margin: 0 auto;
+    padding: 0 5vh;
 }
 
-th {
-    padding: 1vh;
+td {
+    padding: 1vh 0;
     text-align: left;
     font-weight: normal;
 }
 
 input {
-    width: 90%;
-}
-
-button {
-    display: block;
-    color: black;
-    background-color: white;
-    border-width: 1px;
-    border-style: solid;
-    border-color: #555;
-    border-radius: 10px;
-    width: 35vw;
-    margin: 5vh auto 0;
-    padding: 2vh 0;
-    text-align: center;
-    text-decoration: none;
-    font-weight: bold;
+    width: 100%;
 }

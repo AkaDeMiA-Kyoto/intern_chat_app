@@ -6,28 +6,31 @@
 {% block title %}
 <title>チャットアプリ | 会員登録</title>
 {% endblock %}
+{% block header_left %}
+<a href="{% url 'myapp:index' %}" class="back-button">
+    <div class="inner-text">戻る</div>
+</a>
+{% endblock %}
 {% block header-title %}
 会員登録
 {% endblock %}
 {% block content %}
 <main>
-    <div class="form">
+    <div class="form-container">
         {% if form.errors %}
         {{form.errors}}
         {% endif %}
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" class="signup-form">
             {% csrf_token %}
-            <table>
+            <table class="signup-table">
                 {% for field in form %}
-                <div class="field">
-                    <tr>
-                        <th>{{ field.label_tag }}</th>
-                        <td>{{ field }}</td>
-                    </tr>
-                </div>
+                <tr>
+                    <td>{{ field.label }}：</td>
+                    <td>{{ field }}</td>
+                </tr>
                 {% endfor %}
             </table>
-            <button type='submit'>送信</button>
+            <button type='submit' class="button35">送信</button>
         </form>
     </div>
 </main>

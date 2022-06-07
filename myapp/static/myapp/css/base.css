@@ -108,3 +108,73 @@ body {
     font-size: 0.8rem;
     color: #000;
 }
+
+.button35 {
+    display: block;
+    color: black;
+    border: 1px solid #555;
+    border-radius: 10px;
+    background-color: white;
+    width: 35vw;
+    margin: 5vh auto;
+    padding: 2vh 2vw;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.button35:hover {
+    background-color: black;
+    border: 1px solid black;
+    color: white;
+}
+
+.button45 {
+    display: block;
+    color: black;
+    border: 1px solid #555;
+    border-radius: 10px;
+    background-color: white;
+    width: 45vw;
+    margin: 2vh auto;
+    padding: 2vh 2vw;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.button45:hover {
+    background-color: black;
+    border: 1px solid black;
+    color: white;
+}
+
+.back-button {
+    display: block;
+    text-decoration: none;
+    box-sizing: border-box;
+    text-align: center;
+    position: absolute;
+    border: 1px solid #555;
+    border-radius: 10px;
+    width: 100%;
+    height: 43px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #000;
+}
+
+.back-button:hover {
+    background-color: black;
+    border: 1px solid black;
+    color: white;
+}
+
+.inner-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

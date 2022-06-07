@@ -10,28 +10,6 @@
     transform: translate(-50%, -50%);
 }
 
-.login-button {
-    display: block;
-    color: black;
-    border: 1px solid #555;
-    border-radius: 10px;
-    width: 35vw;
-    margin: 0 auto 2vh;
-    padding: 2vh 0;
-    text-align: center;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.signup-button {
-    display: block;
-    color: black;
-    border: 1px solid #555;
-    border-radius: 10px;
-    width: 35vw;
-    margin: 0 auto;
-    padding: 2vh 0;
-    text-align: center;
-    text-decoration: none;
-    font-weight: bold;
+.button35 {
+    margin: 2vh auto;
 }

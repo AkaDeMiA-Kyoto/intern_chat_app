@@ -6,26 +6,30 @@
 {% block title %}
 <title>チャットアプリ | 名前変更</title>
 {% endblock %}
+{% block header_left %}
+<a href="{% url 'myapp:setting' %}" class="back-button">
+    <div class="inner-text">戻る</div>
+</a>
+{% endblock %}
 {% block header-title %}
 ユーザー名変更
 {% endblock %}
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    <table>
-        <tr>
-            <td>現在のユーザー名：</td>
-            <td>{{ user.username }}</td>
-        </tr>
-        {% for field in form %}
-        <div class="field">
+<div class="form-container">
+    <form method="post" class="username-change-form">
+        {% csrf_token %}
+        <table class="username-change-table">
             <tr>
-                <td>{{ field.label_tag }}</td>
-                <td>{{ field }}</td>
+                <td>現在のユーザー名：</td>
+                <td>{{ user.username }}</td>
             </tr>
-        </div>
-        {% endfor %}
-    </table>
-    <button type='submit'>変更</button>
-</form>
+            <tr>
+                <td>{{ form.username.label }}：</td>
+                <td>{{ form.username }}</td>
+            </tr>
+        </table>
+        {{ form.errors }}
+        <button type='submit' class="button35">変更</button>
+    </form>
+</div>
 {% endblock %}

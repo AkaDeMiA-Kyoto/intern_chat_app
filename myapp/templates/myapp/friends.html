@@ -10,23 +10,28 @@
 友達一覧
 {% endblock %}
 {% block content %}
-{% for friend in friends %}
-<a href="{%url 'myapp:talk_room' friend.id %}" class="friend-container">
-    <div class="friend-icon-container">
-        {% if friend.img %}
-        <img src="{{ friend.img.url }}" class="friend-icon">
-        {% else %}
-        <img src="../../../media/default/default_user.png" class="friend-icon">
-        {% endif %}
-    </div>
-    <div class="friend-content-container">
-        <div class="friend-name">
-            {{ friend.username }}
+<div class="friend-container-wrapper">
+    {% for friend in friends %}
+    <a href="{%url 'myapp:talk_room' friend.id %}" class="friend-container">
+        <div class="friend-icon-container">
+            {% if friend.img %}
+            <img src="{{ friend.img.url }}" class="friend-icon">
+            {% else %}
+            <img src="../../../media/default/default_user.png" class="friend-icon">
+            {% endif %}
         </div>
-        <div class="friend-content">
-            登録日時：{{ friend.pub_date }}
+        <div class="friend-content-container">
+            <div class="friend-name">
+                {{ friend.username }}
+            </div>
+            <div class="friend-content">
+                登録日時：{{ friend.pub_date }}
+            </div>
         </div>
-    </div>
-</a>
-{% endfor %}
+    </a>
+    {% endfor %}
+</div>
+<div class="bottom-placeholder">
+    （これ以上登録済みのユーザーはいません）
+</div>
 {% endblock %}

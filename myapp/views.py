@@ -82,6 +82,7 @@ def setting(request):
 
 class PasswordChange(LoginRequiredMixin, PasswordChangeView):
     """パスワード変更ビュー"""
+    form_class = forms.MyPasswordChangeForm
     success_url = reverse_lazy('myapp:password_change_done')
     template_name = 'myapp/password_change.html'
 
@@ -108,7 +109,7 @@ def name_change(request):
         else:
             print('error')
             context = {
-                'form': forms.NameChangeForm()
+                'form': form
             }
     else:
         context = {
@@ -127,9 +128,8 @@ def email_change(request):
             user_obj.save()
             return redirect('myapp:setting')
         else:
-            print('error')
             context = {
-                'form': forms.EmailChangeForm()
+                'form': form
             }
     else:
         context = {
@@ -150,7 +150,7 @@ def icon_change(request):
         else:
             print('error')
             context = {
-                'form': forms.IconChangeForm()
+                'form': form
             }
     else:
         context = {

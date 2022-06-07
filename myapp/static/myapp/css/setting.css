@@ -2,75 +2,10 @@
     box-sizing: border-box;
 }
 
-.buttons {
+.buttons-container {
     position: absolute;
     top: 50%;
     left: 50%;
     margin: auto 0;
     transform: translate(-50%, -50%);
-}
-
-.name-change-button {
-    display: block;
-    color: black;
-    border: 1px solid #555;
-    border-radius: 10px;
-    width: 45vw;
-    margin: 0 auto 2vh;
-    padding: 2vh 0;
-    text-align: center;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.email-change-button {
-    display: block;
-    color: black;
-    border: 1px solid #555;
-    border-radius: 10px;
-    width: 45vw;
-    margin: 0 auto 2vh;
-    padding: 2vh 0;
-    text-align: center;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.password-change-button {
-    display: block;
-    color: black;
-    border: 1px solid #555;
-    border-radius: 10px;
-    width: 45vw;
-    margin: 0 auto 2vh;
-    padding: 2vh 0;
-    text-align: center;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.image-change-button {
-    display: block;
-    color: black;
-    border: 1px solid #555;
-    border-radius: 10px;
-    width: 45vw;
-    margin: 0 auto 2vh;
-    padding: 2vh 0;
-    text-align: center;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.logout-button {
-    display: block;
-    color: black;
-    border: 1px solid #555;
-    border-radius: 10px;
-    width: 45vw;
-    margin: 0 auto;
-    padding: 2vh 0;
-    text-align: center;
-    text-decoration: none;
-    font-weight: bold;
 }

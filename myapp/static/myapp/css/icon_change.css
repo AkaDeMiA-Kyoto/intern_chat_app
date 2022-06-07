@@ -1,0 +1,25 @@
+* {
+    box-sizing: border-box;
+}
+
+.form-container {
+    display: block;
+    margin: 7vh auto 0;
+}
+
+.icon-change-table {
+    margin: 0 auto;
+    padding: 0 5vw;
+}
+
+.current-icon {
+    display: block;
+    width: 150px;
+    height: 150px;
+    margin: auto;
+    object-fit: contain;
+}
+
+td {
+    padding: 1vh 0;
+}

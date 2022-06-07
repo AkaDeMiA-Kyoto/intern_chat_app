@@ -6,32 +6,36 @@
 {% block title %}
 <title>チャットアプリ | アイコン変更</title>
 {% endblock %}
+{% block header_left %}
+<a href="{% url 'myapp:setting' %}" class="back-button">
+    <div class="inner-text">戻る</div>
+</a>
+{% endblock %}
 {% block header-title %}
 アイコン変更
 {% endblock %}
 {% block content %}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <table>
-        <tr>
-            <td>現在のアイコン：</td>
-            <td>
-                {% if user.img %}
-                <img src="{{ user.img.url }}" alt="ユーザーのアイコン画像" class="current-icon">
-                {% else %}
-                <img src="../../../media/default/default_user.png" alt="ユーザーのアイコン画像" class="current-icon">
-                {% endif %}
-            </td>
-        </tr>
-        {% for field in form %}
-        <div class="field">
+<div class="form-container">
+    <form method="post" enctype="multipart/form-data" class="icon-change-form">
+        {% csrf_token %}
+        <table class="icon-change-table">
             <tr>
-                <td>{{ field.label_tag }}</td>
-                <td>{{ field }}</td>
+                <td>現在のアイコン：</td>
+                <td>
+                    {% if user.img %}
+                    <img src="{{ user.img.url }}" alt="ユーザーのアイコン画像" class="current-icon">
+                    {% else %}
+                    <img src="../../../media/default/default_user.png" alt="ユーザーのアイコン画像" class="current-icon">
+                    {% endif %}
+                </td>
             </tr>
-        </div>
-        {% endfor %}
-    </table>
-    <button type='submit'>変更</button>
-</form>
+            <tr>
+                <td>{{ form.img.label }}：</td>
+                <td>{{ form.img }}</td>
+            </tr>
+        </table>
+        {{ form.errors }}
+        <button type='submit' class="button35">変更</button>
+    </form>
+</div>
 {% endblock %}
