@@ -45,7 +45,7 @@ class MyLogout(LogoutView):
 
 @login_required
 def friends(request):
-    friend_list = MyUser.objects.all()
+    friend_list = MyUser.objects.all().order_by('pub_date')
     return render(request, "myapp/friends.html", {'friends': friend_list})
 
 
