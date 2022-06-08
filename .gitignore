@@ -276,3 +276,12 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/django,python,windows,macos,linux
+
+# 仮想環境
+.venv/
+
+# ローカル設定
+local_settings.py
+
+# 静的ファイル
+staticfiles/

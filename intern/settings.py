@@ -132,3 +132,5 @@ MEDIA_URL = '/media/'
 LOGIN_URL = 'myapp:login'            # ログイン時
 LOGIN_REDIRECT_URL = 'myapp:friends'   # ログイン後
 LOGOUT_REDIRECT_URL = 'myapp:index'  # ログアウト後
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
