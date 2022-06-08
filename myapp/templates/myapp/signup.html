@@ -1,1 +1,25 @@
-SU
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Chat_app</title>
+        <link rel="stylesheet" href="{% static 'myapp/css/signup.css' %}">
+    </head>
+
+    <body>
+        <form method="post" action="{% url 'signup' %}" enctype="multipart/form-data" class="signup-form">
+            {% csrf_token %}
+            {% for field in form %}
+            <p>
+                {{ field.label_tag }}
+                {{ field }}
+                {# エラーメッセージを表示 #}
+                {% if field.errors %}
+                    {{ field.errors }}
+                {% endif %}
+            </p>
+            {% endfor %}
+            <button type="submit" class="signup-form__submit">Sign Up</button>
+        </form>
+    </body>
+</html>

@@ -18,3 +18,4 @@ def talk_room(request):
 
 def setting(request):
     return render(request, "myapp/setting.html")
+
