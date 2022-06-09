@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/common.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
+    <title>DeMiAインターン</title>
+</head>
+
+<body>
+    <header>
+        <h1>Settings</h1>
+    </header>
+    <main>
+        <div>
+            {{ title }}
+        </div>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div>
+                <span class="err">{{ form.non_field_errors }}</span>
+                {% for f in form %}
+                <div>{{ f.label_tag }}
+                    {{ f }}
+                    <span class="err">{{ f.errors }}</span>
+                </div>
+                {% endfor %}
+                
+
+                <div class="buttons">
+                    <div class="button back">
+                        <a href="{% url 'setting' %}">戻る</a>
+                    </div>
+                    <button class="button submit", type="submit">
+                        確定
+                    </button>
+                </div>
+            </div>
+        </form>
+    </main>
+</body>
+
+</html>

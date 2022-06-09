@@ -6,6 +6,10 @@ header {
     color: #f5f6fa;
 }
 
+a {
+    text-decoration: none;
+}
+
 .footer {
     position: fixed;
     bottom: 0;

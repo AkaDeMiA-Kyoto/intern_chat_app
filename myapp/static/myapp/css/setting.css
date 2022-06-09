@@ -21,9 +21,46 @@ main {
     width: 100%;
 }
 
-.prof_img {
-    height: 50px;
-    width: 50px;
-    border-radius: 25px;
+.changeProfBtn{
+    text-decoration: none;
+    color:#2f3640;
+    background-color: #f5f6fa;
+    border-radius: 10px;
+    padding: 0 10px;
+    text-align: center;
+    margin: 3px auto;
 }
 
+.logoutbtn {
+    text-decoration: none;
+    color:#f5f6fa;
+    background-color: #e84118;
+    border-radius: 10px;
+    padding: 0 10px;
+    text-align: center;
+    margin: 3px auto;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.button {
+    text-decoration: none;
+    text-align: center;
+    height: 30px;
+    width: 100px;
+}
+
+.back {
+    background-color: #e84118;
+}
+
+form {
+    color:#f5f6fa
+}
+
+form .err {
+    color: #c23616;
+}

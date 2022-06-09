@@ -6,17 +6,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/common.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/friends.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
     <title>DeMiAインターン</title>
 </head>
 
 <body>
     <header>
+        <a href="{% url 'friends' %}"><h2 class = "btn">戻る</h2></a>
         <h1>{{ name }}</h1>
+        <a href="{% url 'talk_room' self %}"><h2 class="btn">更新</h2></a>
     </header>
     <main>
+        <div class="space"></div>
+        {% for item in msg %}
+        {% if item.sender != user.id %}
+        <div>
+            <table class="received">
+                <tr>
+                    <td>
+                        <img src="{{ theirImg }}" , alt="自分のプロフィール画像" , class="prof_img">
+                    </td>
+                    <td class="msg">
+                        <p>{{ item.content }}</p>
+                    </td>
+                    <td class="time">
+                        <div>
+                            {{ item.createdTime | date:'H:i'}}<br>
+                            {{ item.createdTime | date:'Y/m/d'}}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        {% else %}
+        <div>
+            <table class="sent">
+                <tr>
+                    <td class="time">
+                        <div>
+                            {{ item.createdTime | date:'H:i'}}<br>
+                            {{ item.createdTime | date:'Y/m/d'}}
+                        </div>
+                    </td>
+                    <td class="msg">
+                        <p>{{ item.content }}</p>
+                    </td>
+                    <td>
+                        <img src="{{ myImg }}" , alt="相手のプロフィール画像" , class="prof_img">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        {% endif %}
+        {% endfor %}
+        <div class="space"></div>
     </main>
     <footer class="footer">
+        <form method="POST">
+            {% csrf_token %}
+            <span class="field">
+                {{ form.content }}
+            </span>
+            <button type="submit">送信</button>
+        </form>
     </footer>
 </body>
 

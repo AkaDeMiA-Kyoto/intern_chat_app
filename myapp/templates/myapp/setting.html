@@ -1,4 +1,4 @@
-S{% load static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -15,6 +15,18 @@ S{% load static %}
         <h1>Settings</h1>
     </header>
     <main>
+        <div class="changeProfBtn">
+            <a href="{% url 'changeUserName' %}">ユーザー名変更</a>
+        </div>
+        <div class="changeProfBtn">
+            <a href="{% url 'changeUserName' %}">パスワード変更</a>
+        </div>
+        <div class="changeProfBtn">
+            <a href="{% url 'changeImage' %}">プロフィール画像変更</a>
+        </div>
+        <div class="logoutbtn">
+            <a href="{% url 'logout' %}">ログアウト</a>
+        </div>
     </main>
     <footer class="footer">
         <a href="{% url 'friends' %}">

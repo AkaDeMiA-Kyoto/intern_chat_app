@@ -8,7 +8,7 @@ class CustomUser(AbstractUser):
     prof_img=models.ImageField(upload_to='',blank=True,null=True)
 
 class CustomMessage(models.Model):
-    sender=models.TextField()
-    receiver=models.TextField()
+    sender=models.IntegerField()
+    receiver=models.IntegerField()
     content=models.TextField()
     createdTime=models.DateTimeField()

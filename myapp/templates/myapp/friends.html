@@ -17,13 +17,16 @@
     <main>
         {% csrf_token %}
         {% for item in data %}
-        <a href="{% url 'talk_room' item.username %}" class = "friend_btn_cover">
+        {% if item.id != user.id %}
+        <a href="{% url 'talk_room' item.id %}" class = "friend_btn_cover">
             <div class="friend_btn">
-                <span><img src="{{ item.prof_img.url }}" , alt="{{item.username}}のプロフィール画像" , class="prof_img"></span>
+                <span><img src="{{ item.prof_img_url }}" , alt="{{item.username}}のプロフィール画像" , class="prof_img"></span>
                 <span>{{ item.username }}</span>
             </div>
         </a>
+        {% endif %}
         {% endfor %}
+        <div class="BottomSpace"></div>
     </main>
     <footer class="footer">
         <a href="{% url 'friends' %}">

@@ -15,11 +15,31 @@
     </header>
     <main>
         <div>会員情報を入力してください</div>
-        <form action={% url 'login_view' %} method="POST">
+        <form method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
+            {{ form.non_field_errors }}
+            {% for field in form %}
+            <div>
+                {{ field }}
+                {{ field.errors }}
+            </div>
+            {% endfor %}
             <button type="submit">ログイン</button>
+            <ul>
+
+            </ul>
         </form>
+        <div>
+            <h3>現在のユーザ</h3>
+            <span>name: {{ user.username }}</span>
+            {% if user.is_superuser %}
+            <div> SuperUserです。 </div>
+            {% endif %}
+            {% if user.is_authenticated %}
+            <div> ログイン済み </div>
+            {% endif %}
+        </div>
+
     </main>
 </body>
 
