@@ -3,11 +3,14 @@
     <head>
         <meta charset="UTF-8">
         <title>Chat_app</title>
-        <link rel="stylesheet" href="{% static 'myapp/css/signup.css' %}">
+        <link rel="stylesheet" href="static/myapp/css/signup.css">
     </head>
 
     <body>
-        <form method="post" action="{% url 'signup' %}" enctype="multipart/form-data" class="signup-form">
+        
+        {% block header_title %}会員登録{% endblock %}
+        {% block content %}
+        <form method="post" action="{url 'signup'}" enctype="multipart/form-data" class="signup-form">
             {% csrf_token %}
             {% for field in form %}
             <p>
@@ -19,7 +22,10 @@
                 {% endif %}
             </p>
             {% endfor %}
-            <button type="submit" class="signup-form__submit">Sign Up</button>
+            <a href={% url 'index' %} class="signup-form__submit">会員登録</a>
         </form>
+        {% endblock %}
+
+        {% block footer %}{% endblock %}
     </body>
 </html>
