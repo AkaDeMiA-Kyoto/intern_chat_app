@@ -62,7 +62,6 @@ def talk_room(request,talkee):
         sender=request.user.id,receiver=talkee,
         createdTime=timezone.now().isoformat())
         msg.save()
-    crntUser=request.user.username
     msgraw=CustomMessage.objects.filter(
         Q(sender=myid)|Q(receiver=myid)
     ).filter(
