@@ -1,1 +1,53 @@
-TR
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block extra_style %}<link rel="stylesheet" href="../../static/myapp/css/talk_room.css">{% endblock %}
+    {% block header-title %}
+        <a href = "/friends">フレンド</a>
+
+        {{Partner.username}}
+
+        <a href = "">更新</a>
+
+    {% endblock %}
+    {% block content %}
+    {% for TalkContent in Contents %}
+    {% if TalkContent.send.id == user.id %}
+        <content class = "me_box">
+            <img class="friend_icon" src={{Self.image.url}}>
+            <div class = "me">
+                {{ user.username }}
+                {{ TalkContent.sentence }}
+                {{ TalkContent.date }}
+            </div>
+        </content>
+        <br>
+    {% else %}
+        <content class = "partner_box">    
+            <img class="friend_icon" src={{Partner.image.url}}> 
+            <div class = "partner">
+                {{ Partner.username }}
+                {{ TalkContent.sentence }}
+                {{ TalkContent.date }}
+            </div>
+        </content>
+        <br>
+
+    {% endif %}
+    {% endfor %}
+
+    {% endblock %}
+    {% block footer %}
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-container__item">
+                <form  method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <p>
+                    {{ form.as_p }}
+                    <button type="submit">送信</button>       
+                    </p>
+                </form>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}

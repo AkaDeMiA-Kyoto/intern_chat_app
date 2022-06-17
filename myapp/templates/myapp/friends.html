@@ -1,0 +1,35 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+<html lang="en">
+
+{% block extra_style %}<link rel="stylesheet" href="../../static/myapp/css/friends.css">{% endblock %}
+{% block header-title %}フレンド{% endblock %}
+<body>
+    <header>
+        フレンド
+    </header>
+    {% block content %}
+    {% for Customuser in friend_list %}
+    <br>
+    <ul>
+        <table>
+            <tr>
+                {% if Customuser.image %}
+                <td><img class="friend_icon" src={{Customuser.image.url}}></td>
+                {% else %}
+                <td><img class="friend_icon" src="../../../media/media/未設定.png"></td>
+                {% endif %}
+                <td><a href= "{% url 'talk_room' Customuser.id %}">{{Customuser.username}}</a></td>
+            </tr>
+        </table>
+    </ul>
+    <br>
+    
+    {% endfor %}
+    {% endblock %}
+    <footer>
+        <a class="friend_link" href = "">友達</a>
+        <a class="setting_link" href = "setting">設定</a>
+    </footer>
+</body>
+</html>

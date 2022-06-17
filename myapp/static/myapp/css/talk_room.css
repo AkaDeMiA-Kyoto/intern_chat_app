@@ -1,0 +1,30 @@
+.me {
+    background-color: lightgreen;
+    width: 900px;
+    border-radius: 10px;
+    width:fit-content
+}
+
+.partner {
+    display: flex;
+    background-color: grey;
+    width:fit-content
+}
+
+.me_box {
+    display: flex;
+    flex-direction: row-reverse;
+    
+}
+
+.friend_icon {
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    background-color: #9adce6;
+  }
+
+.partner_box {
+    display: flex;
+    
+}

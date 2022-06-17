@@ -9,8 +9,9 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
+from pickle import FALSE
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -122,3 +123,24 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL="myapp.CustomUser"
+
+LOGIN_URL = 'http://127.0.0.1:8000/' 
+LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/friends'
+
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_URL = '/media/'
+
+#APPEND_SLASH = FALSE
+
+#STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')] 
+
+#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass

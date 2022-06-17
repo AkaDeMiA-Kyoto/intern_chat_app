@@ -1,0 +1,12 @@
+{% extends 'myapp/base.html' %}
+    {% block header-title %}
+      ユーザ名変更
+    {% endblock %}
+{% csrf_token %}
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">変更</button>
+</form>
+{% endblock %}

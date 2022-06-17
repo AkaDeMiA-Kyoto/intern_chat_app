@@ -1,0 +1,24 @@
+.aa {
+    width: 250px;
+    font-size: 30px;
+    display: block;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    padding: 0.5em 1em;
+    color: #333;
+    font-size: 18px;
+    font-weight: 700;
+    border-color: black;
+    border-style: solid;
+    background-color: #ffffff;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    position: relative;               
+    top: 50%;             
+    margin-left: auto;
+    margin-right: auto;          
+    transform: translate(0, -50%)
+    
+}
