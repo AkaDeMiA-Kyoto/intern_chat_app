@@ -7,9 +7,6 @@ from django.utils import timezone
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-# from django.contrib.auth import login
-# from django.http import HttpResponseRedirect
-# from django.views.generic.edit import CreateView
 
 
 def index(request):
