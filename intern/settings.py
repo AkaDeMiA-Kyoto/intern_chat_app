@@ -144,3 +144,5 @@ try:
     from .local_settings import *
 except ImportError:
     pass
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' 

@@ -9,8 +9,8 @@
     <form  method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <p>
-        {{ form.as_p }}
-        <button type="submit">登録</button>       
+            {{ form.as_p }}
+            <button type="submit">登録</button>       
         </p>
     </form>
 </html>

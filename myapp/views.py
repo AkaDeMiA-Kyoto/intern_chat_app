@@ -5,17 +5,18 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse , HttpResponseRedirect
 from django.contrib.auth import login
 from django.urls import reverse_lazy
-from django.views import View
+from django.views import View , generic
 from django.views.generic.edit import CreateView
 from django.views.generic import FormView
 from django import forms
 from . import forms 
 from myapp.models import CustomUser, TalkContent
-from .forms import LoginForm, SignUpForm, UsernameChangeForm ,EmailChangeForm,IconChangeForm
+from .forms import LoginForm, SignUpForm, UsernameChangeForm ,EmailChangeForm,IconChangeForm,InquiryForm
 from django.contrib.auth.views import LoginView ,LogoutView ,PasswordChangeView
 from django.utils import timezone
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def index(request):
     return render(request, "myapp/index.html")
@@ -26,8 +27,14 @@ class Login (LoginView):
 
 def friends(request):
     friend_list = CustomUser.objects.all()#exclude(request.user)#excludeで自分消す
-   
     return render(request, "myapp/friends.html",context={'friend_list':friend_list})
+
+# class Friendslist(generic.ListView,LoginRequiredMixin):
+#     model =CustomUser
+#     template_name  = 'myapp/friends.html'
+#     def get_queryset(self):
+#         friends_list = CustomUser.objects.exclude(id =self.request.user.id)
+#         return friends_list
 
 def talk_room(request, Customuser_id):
     if request.method == "POST":
@@ -135,3 +142,12 @@ class IconChange(View):
         else:
             context["form"] = form
             return redirect("setting")
+
+class InquiryView(generic.FormView):
+    template_name = "myapp/inquiry.html"
+    form_class = InquiryForm
+    success_url = reverse_lazy('friends')
+
+    def form_valid(self, form) :
+        form.send_email()
+        return super().form_valid(form)
