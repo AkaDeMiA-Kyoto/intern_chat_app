@@ -3,7 +3,7 @@
 {% block header-title %}アイコン変更{% endblock %}
 
 {% block content %}
-<form method="post" action="{% url 'user_img_change' %}">
+<form method="post" action="{% url 'user_img_change' %}" enctype="multipart/form-data">
     <table>
         {% for field in form %}
         <tr>
