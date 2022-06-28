@@ -58,6 +58,11 @@
     font-size: 1.2rem;
     width: calc(100% - 4rem - 8px);
     margin: 0 0 0 auto;
+    color: #000;
+}
+
+a {
+    text-decoration: none;
 }
 
 /* LINEのようにユーザーの最後のやりとりを表示できるようにしてみる */
