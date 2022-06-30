@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,19 +11,20 @@
         
         {% block header_title %}会員登録{% endblock %}
         {% block content %}
-        <form method="post" action="{url 'signup'}" enctype="multipart/form-data" class="signup-form">
+        <form method="post"  enctype="multipart/form-data" class="signup-form">
             {% csrf_token %}
             {% for field in form %}
             <p>
-                {{ field.label_tag }}
-                {{ field }}
-                {# エラーメッセージを表示 #}
+                {{field.label_tag}}
+                {{field}}
                 {% if field.errors %}
-                    {{ field.errors }}
+                    {{field.errors}}
                 {% endif %}
             </p>
-            {% endfor %}
-            <a href={% url 'index' %} class="signup-form__submit">会員登録</a>
+            {% endfor%}
+            
+            
+            <button type="submit" class='signup-form__submit'>ユーザー登録</button>{% comment %} a hrefだとバリデーションがうまくいかなかった{% endcomment %}
         </form>
         {% endblock %}
 

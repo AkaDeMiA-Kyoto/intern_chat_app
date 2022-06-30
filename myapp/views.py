@@ -1,6 +1,9 @@
 from django.shortcuts import redirect, render
-from .forms import SignUpForm
+from .forms import SignUpForm, LoginForm
 from django.contrib.auth import authenticate, get_user_model, login
+from . import forms
+from django.contrib.auth.views import LoginView
+
 
 User= get_user_model()
 
@@ -8,6 +11,7 @@ def index(request):
     return render(request, "myapp/index.html")
 
 def signup_view(request):
+    
     if request.method == "GET":
         form = SignUpForm()
         error_message = ''
@@ -49,8 +53,10 @@ def signup_view(request):
     }
     return render(request, "myapp/signup.html", context)
 
-def login_view(request):
-    return render(request, "myapp/login.html")
+
+class Login(LoginView):
+    form_class: LoginForm
+    template_name ='myapp/login.html'
 
 def friends(request):
     return render(request, "myapp/friends.html")
