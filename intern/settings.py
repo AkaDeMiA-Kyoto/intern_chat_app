@@ -133,6 +133,8 @@ LOGOUT_REDIRECT_URL=''
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 try:
     from .local_settings import *
 except ImportError:pass
