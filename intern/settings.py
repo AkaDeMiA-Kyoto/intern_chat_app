@@ -9,9 +9,11 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+from asyncio.constants import ACCEPT_RETRY_DELAY
 import os
 from pathlib import Path
-from pickle import FALSE
+from pickle import FALSE, TRUE
+from telnetlib import AUTHENTICATION
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +30,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,6 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 ]
 
 MIDDLEWARE = [
@@ -81,8 +86,16 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'chatappdb',
+#         'USER': 'pei128',
+#         'PASSWORD': 'OS1428krss',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -126,8 +139,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL="myapp.CustomUser"
 
-LOGIN_URL = 'http://127.0.0.1:8000/' 
-LOGIN_REDIRECT_URL = 'http://127.0.0.1:8000/friends'
+LOGIN_URL = '{% myapp:login %}' 
+LOGIN_REDIRECT_URL = '{% myapp:friends %}' 
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
@@ -145,4 +158,29 @@ try:
 except ImportError:
     pass
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS =(
+    'allauth.account.auth_backends.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USERNAME_METHOD = FALSE
+
+ACCOUNT_EMAIL_VERIFICATION = 'mendatory'
+ACCOUNT_EMAIL_REQUIRED = TRUE
+
+ACCOUNT_LOGOUT_REDIRECT_URL = 'index'
+
+ACCOUNT_LOGOUT_ON_GET = TRUE
+
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
+
+DEFAULT_FROM_EMAIL = 'fomalhaut0128s@icloud.com'
+
+ACCOUNT_FORMS = {
+    'signup': 'myapp.forms.SignUpForm',
+}

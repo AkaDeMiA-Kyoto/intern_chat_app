@@ -8,7 +8,9 @@ from django.utils import timezone
 
 # Create your models here.
 class CustomUser (AbstractUser):
-    image = models.ImageField(verbose_name="プロフィール画像",upload_to = "media/" ,default='default/default_user.png')
+    image = models.ImageField(verbose_name="プロフィール画像",upload_to = "media/" ,default='default/default_user.png', blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
 
 class TalkContent (models.Model):
     date = models.DateTimeField("date_sent",default=timezone.now)
