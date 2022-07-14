@@ -12,9 +12,13 @@
 
 <body>
     <header>
+        {% if isValidUrl %}
         <a href="{% url 'friends' %}"><h2 class = "btn">戻る</h2></a>
         <h1>{{ name }}</h1>
         <a href="{% url 'talk_room' self %}"><h2 class="btn">更新</h2></a>
+        {% else %}
+        <h1>無効なURL</h1>
+        {% endif %}
     </header>
     <main>
         <div class="space"></div>
@@ -24,7 +28,7 @@
             <table class="received">
                 <tr>
                     <td>
-                        <img src="{{ theirImg }}" , alt="自分のプロフィール画像" , class="prof_img">
+                        <img src="{{ theirImg }}" , alt="相手のプロフィール画像" , class="prof_img">
                     </td>
                     <td class="msg">
                         <p>{{ item.content }}</p>
@@ -52,7 +56,7 @@
                         <p>{{ item.content }}</p>
                     </td>
                     <td>
-                        <img src="{{ myImg }}" , alt="相手のプロフィール画像" , class="prof_img">
+                        <img src="{{ myImg }}" , alt="自分のプロフィール画像" , class="prof_img">
                     </td>
                 </tr>
             </table>
@@ -62,6 +66,7 @@
         <div class="space"></div>
     </main>
     <footer class="footer">
+        {% if isValidUrl %}
         <form method="POST">
             {% csrf_token %}
             <span class="field">
@@ -69,6 +74,13 @@
             </span>
             <button type="submit">送信</button>
         </form>
+        {% else %}
+        <div>
+            <div>無効なURLです。メッセージの送信はできません。</div>
+            <a href="{% url 'friends' %}"><h2 class = "btn">戻る</h2></a>
+        </div>
+        
+        {% endif %}
     </footer>
 </body>
 

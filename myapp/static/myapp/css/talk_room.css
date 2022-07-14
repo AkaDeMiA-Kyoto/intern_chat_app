@@ -70,3 +70,8 @@ header .btn{
     display: flex;
     justify-content:center;
 }
+
+footer .btn{
+    text-decoration: none;
+    text-align: center;
+}

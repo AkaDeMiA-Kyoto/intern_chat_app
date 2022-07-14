@@ -28,6 +28,9 @@ class LoginForm(AuthenticationForm):
 class MessageForm(forms.Form):
     content=forms.CharField(label='content',max_length=144)
 
+class SearchForm(forms.Form):
+    content=forms.CharField(label='content',max_length=144,required=False)
+
 class ProfImageForm(forms.ModelForm):
     #content=forms.ImageField(label='content')
     class Meta:

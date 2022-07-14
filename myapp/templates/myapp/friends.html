@@ -16,6 +16,15 @@
     </header>
     <main>
         {% csrf_token %}
+
+        <form method="POST" class="search_form">
+            {% csrf_token %}
+            <span class="field">
+                {{ form.content }}
+            </span>
+            <span><button type="submit">検索</button></span>
+        </form>
+        {% if hasData %}
         {% for item in data %}
         {% if item.id != user.id %}
         <a href="{% url 'talk_room' item.id %}" class = "friend_btn_cover">
@@ -26,6 +35,12 @@
         </a>
         {% endif %}
         {% endfor %}
+        {% else %}
+        <div class="NoFriendFoundMsg">
+            お探しのフレンドはこのアプリを使っていないようです。
+        </div>
+        {% endif %}
+        
         <div class="BottomSpace"></div>
     </main>
     <footer class="footer">

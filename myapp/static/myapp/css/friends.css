@@ -21,6 +21,26 @@ main {
     width: 100%;
 }
 
+.search_form {
+    background-color: #dcdde1;
+    width: 100%;
+    margin: 0;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+}
+
+.search_form span {
+    margin-left: 10px;
+}
+
+.NoFriendFoundMsg {
+    color: #dcdde1;
+    text-align: center;
+    font-size: large;
+    margin-top:50px;
+}
+
 .friend_btn {
     background-color: #e1b12c;
     margin: 5px;
@@ -29,9 +49,10 @@ main {
     border: 5px solid #718093;
 }
 
-a{
+a {
     text-decoration: none;
 }
+
 .friend_btn_cover :hover {
     background-color: #fbc531;
 }

@@ -2,7 +2,7 @@ from genericpath import exists
 from multiprocessing.sharedctypes import Value
 from django.dispatch import receiver
 from django.shortcuts import redirect, render
-from .forms import SignUpForm, LoginForm, MessageForm,ProfImageForm,UserNameForm
+from .forms import SearchForm, SignUpForm, LoginForm, MessageForm,ProfImageForm,UserNameForm
 from django.contrib.auth.views import LoginView,LogoutView,PasswordChangeView,PasswordChangeDoneView
 from django.urls import reverse_lazy
 from .models import CustomUser,CustomMessage
@@ -32,6 +32,10 @@ def signup_view(request):
 
 def friends(request):
     data=CustomUser.objects.all()
+    form = SearchForm(request.POST)
+    if (request.method=='POST' and request.POST['content']!=""):
+        searchName=request.POST['content']
+        data=data.filter(username__contains=searchName)
     myid=request.user.id
     myMsg=CustomMessage.objects.filter(Q(sender=myid)|Q(receiver=myid)).order_by(F('createdTime'))
     print(myMsg.count())
@@ -48,14 +52,19 @@ def friends(request):
             'prof_img_url':friend.prof_img.url,
             'order':friend.date_joined+datetime.timedelta(weeks=-20000)})
     friends.sort(key=lambda x: x['order'],reverse=True)
+    hasData= data.count() > 0
     params={
+        'form':form,
+        'hasData':hasData,
         'data':friends,
     }
     return render(request, "myapp/friends.html",params)
 
 def talk_room(request,talkee):
+    if(CustomUser.objects.filter(id=talkee).last()==None):
+        return render(request, "myapp/talk_room.html",{'isValidUrl':False})
     mform=MessageForm()
-    name=CustomUser.objects.get(id=talkee)
+    pagetitle=CustomUser.objects.get(id=talkee)
     myid=request.user.id
     if request.method == 'POST':
         msg=CustomMessage(content=request.POST['content'],
@@ -68,8 +77,9 @@ def talk_room(request,talkee):
         Q(sender=talkee)|Q(receiver=talkee)
     ).order_by("createdTime")
     dic={
+        'isValidUrl':True,
         'self':talkee,
-        'name':name,
+        'name':pagetitle,
         'form':mform,
         'msg':msgraw,
         'myImg':CustomUser.objects.get(id=myid).prof_img.url,
