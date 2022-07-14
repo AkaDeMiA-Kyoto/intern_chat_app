@@ -41,6 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',
+    'accounts.apps.AccountsConfig',
+    'allauth',
+    'django.contrib.sites',
+    'allauth.account'
 ]
 
 MIDDLEWARE = [
@@ -134,6 +138,29 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# allauth用設定
+SITE_ID=1
+AUTHENTICATION_BACKENDS = (
+    'allauth.accounts.auth_backends.AuthentcatoinBackend',
+    'django.contrib.auth.backends.ModelBackend'
+)
+
+ACCOUNT_AUTHENTICATION_METHOD='email'
+ACCOUNT_USERNAME_REQUIRED=False
+
+ACCOUNT_EMAIL_VERIFICATION ='mandatory'
+ACCOUNT_EMAIL_REQUIRED=True
+
+LOGIN_REDIRECT_URL='myapp:friends'
+LOGOUT_REDIRECT_URL = 'myapp:index'
+
+ACCOUNT_LOGOUT_ON_GET=True
+
+ACCOUNT_EMAIL_SUBJECT_PREFIX=''
+
+DEFAULT_FROM_URL = 'admin@example.com'
+
 
 try:
     from .local_settings import *
