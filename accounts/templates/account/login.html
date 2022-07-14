@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/login.css' %}" />
+    <title>DeMiAインターン</title>
+</head>
+
+<body>
+    <header>
+        <h1>Log In</h1>
+    </header>
+    <main>
+        <div>会員情報を入力してください</div>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">ログイン</button>
+            <ul>
+
+            </ul>
+        </form>
+        <div>
+            <h3>現在のユーザ</h3>
+            <span>name: {{ user.username }}</span>
+            {% if user.is_superuser %}
+            <div> SuperUserです。 </div>
+            {% endif %}
+            {% if user.is_authenticated %}
+            <div> ログイン済み </div>
+            {% endif %}
+        </div>
+
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}" />
+    <title>DeMiAインターン</title>
+</head>
+
+<body>
+    <header>
+        <h1>Sign Up</h1>
+    </header>
+    <main>
+        <div>会員情報を入力してください</div>
+        <div class="must">*すべて必須です。</div>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">ユーザー登録</button>
+        </form>
+    </main>
+</body>
+
+</html>

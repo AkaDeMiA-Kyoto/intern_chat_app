@@ -142,7 +142,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # allauth用設定
 SITE_ID=1
 AUTHENTICATION_BACKENDS = (
-    'allauth.accounts.auth_backends.AuthentcatoinBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend'
 )
 
@@ -159,7 +159,7 @@ ACCOUNT_LOGOUT_ON_GET=True
 
 ACCOUNT_EMAIL_SUBJECT_PREFIX=''
 
-DEFAULT_FROM_URL = 'admin@example.com'
+DEFAULT_FROM_URL = 'waspsishf@gmail.com'
 
 
 try:
