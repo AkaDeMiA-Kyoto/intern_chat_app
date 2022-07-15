@@ -159,7 +159,7 @@ ACCOUNT_LOGOUT_ON_GET=True
 
 ACCOUNT_EMAIL_SUBJECT_PREFIX=''
 
-DEFAULT_FROM_URL = 'waspsishf@gmail.com'
+DEFAULT_FROM_URL = 'waspsishf@outlook.com'
 
 
 try:
