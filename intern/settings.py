@@ -159,7 +159,13 @@ ACCOUNT_LOGOUT_ON_GET=True
 
 ACCOUNT_EMAIL_SUBJECT_PREFIX=''
 
-DEFAULT_FROM_URL = 'waspsishf@outlook.com'
+DEFAULT_FROM_URL = 'takumitakamiyadevbot@gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER =  'takumitakamiyadevbot@gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_PASSWORD = 'gkhdbxeaeayhumuy'
+EMAIL_USE_TLS = True
+
 
 
 try:
