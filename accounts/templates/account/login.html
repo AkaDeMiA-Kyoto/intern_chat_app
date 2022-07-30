@@ -1,0 +1,13 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block header-title %}ログイン{% endblock %}
+{% block content %}
+    <form method="POST" class="login_form">
+        {% csrf_token %}
+            {{ form.as_p }}
+        <button type="submit" class="login_button">ログイン</button>
+    </form>
+{% endblock %}
+
+{% block footer %}{% endblock %}

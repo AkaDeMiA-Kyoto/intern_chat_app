@@ -1,0 +1,15 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block header-title %}会員登録{% endblock %}
+
+{% block content %}
+<form  method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+        {{ form.as_p }}
+    <br>
+    <button type="submit" class="signup_button">Sign Up</button>
+</form>
+{% endblock %}
+
+{% block footer %}{% endblock %}
