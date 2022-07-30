@@ -9,23 +9,33 @@ from django.views.generic import TemplateView
 from .models import CustomUser, TalkContent
 from django.contrib.auth.forms import AuthenticationForm
 from django import forms
+from django.utils.translation import gettext_lazy as _
 from django.core.mail import EmailMessage
+from allauth.account.forms import LoginForm,PasswordField
+from allauth.account import app_settings
+from allauth.account.app_settings import AuthenticationMethod
 
 class SignUpForm(UserCreationForm):
-  
+    password2 = forms.CharField(
+        label=_("Password confirmation"),
+        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+        strip=False,
+        help_text=_("Enter the same password as before, for verification."),
+    )
     class Meta:
         model = CustomUser
-        # fields = ("username","password1","password2","email","image")
         fields = ("username","password1","password2","email","image")
 
+    def __init__(self, *args, **kw): 
+        super().__init__(*args, **kw)
+        self.fields['username'].label = 'username'
+        self.fields['email'].label = 'E-mail'
+        self.fields['password1'].label = 'Password'
+        self.fields['password2'].label = 'Password(confirm)'
+        self.fields['image'].label = 'icon'
 
 
-class LoginForm (AuthenticationForm):
-    def __init__(self, *args,**kwargs) :
-        super().__init__( *args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs['class'] = 'form-control'
-            field.widget.attrs['placeholder'] = field.label
+        
 
 class TalkForm(forms.ModelForm):
     class Meta:
@@ -90,3 +100,28 @@ class InquiryForm (forms.Form):
 
         message = EmailMessage(subject = subject,body = message,from_email=from_email,to=to_list,cc=cc_list)
         message.send()
+
+
+# class LoginForm (AuthenticationForm):
+#     def __init__(self, *args,**kwargs) :
+#         super().__init__( *args, **kwargs)
+#         for field in self.fields.values():
+#             field.widget.attrs['class'] = 'form-control'
+#             field.widget.attrs['placeholder'] = field.label
+
+
+
+# class LoginForm (LoginForm):
+#     password = PasswordField(label=_("パスワード"), autocomplete="current-password")
+#     def __init__(self, *args, **kwargs):
+#         self.request = kwargs.pop("request", None)
+#         super(LoginForm, self).__init__(*args, **kwargs)
+#         if app_settings.AUTHENTICATION_METHOD == AuthenticationMethod.EMAIL:
+#             login_widget = forms.TextInput(
+#                 attrs={
+#                     "type": "email",
+#                     "placeholder": _("E-mail"),
+#                     "autocomplete": "email",
+#                 }
+#             )
+#             login_field = forms.EmailField(label=_("メールアドレス"), widget=login_widget)

@@ -37,6 +37,7 @@ body{
 .footer{
     width: 100vw;
     height: 64px;
+    background-color: white;
 }
 .footer-container{
     display: flex;

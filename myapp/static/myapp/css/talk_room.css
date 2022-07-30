@@ -6,8 +6,9 @@
 }
 
 .partner {
-    display: flex;
-    background-color: grey;
+    background-color: lightgray;
+    width: 900px;
+    border-radius: 10px;
     width:fit-content
 }
 

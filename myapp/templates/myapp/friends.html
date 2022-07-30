@@ -5,27 +5,46 @@
 {% block extra_style %}<link rel="stylesheet" href="../../static/myapp/css/friends.css">{% endblock %}
 {% block header-title %}フレンド{% endblock %}
 <body>
-    <header>
-        フレンド
-    </header>
     {% block content %}
-    {% for Customuser in friend_list %}
-    <br>
-    <ul>
+    <header>
+        <form class="search" action="" method="get">
+            <input name="query" value="{{ request.GET.query }}" type="text">
+            <button type="submit">検索</button>
+        </form>
+    {{ TalkContent.send }}
+    </header>
+    {% if talk.send == CustomUser_id %}
+    {% for CustomUser in customuser_list %}
+    <ul class="parent">
         <table>
-            <tr>
-                {% if Customuser.image %}
-                <td><img class="friend_icon" src={{Customuser.image.url}}></td>
+            <tr class = "content"> 
+                {% if CustomUser.image %}
+                <td><img class="friend_icon" src={{CustomUser.image.url}}></td>
                 {% else %}
-                <td><img class="friend_icon" src="../../../media/media/未設定.png"></td>
+                <td><img class="friend_icon" src="..//..//..//media//media/未設定.png"></td>
                 {% endif %}
-                <td><a href= "{% url 'talk_room' Customuser.id %}">{{Customuser.username}}</a></td>
+                <td class="name"><a href= "{% url 'myapp:talk_room' CustomUser.id %}">{{CustomUser.username}}</a></td>
+                {% if CustomUser.latest_msg_talk %}
+                    <td class="item">{{ CustomUser.latest_msg_talk }}</td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+                {% if CustomUser.latest_msg_date %}
+                    <td class="item">{{ CustomUser.latest_msg_date }}</td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+
+                
             </tr>
         </table>
     </ul>
-    <br>
+
     
     {% endfor %}
+    {% else %}
+    k
+    {% endif %}
     {% endblock %}
     <footer>
         <a class="friend_link" href = "">友達</a>

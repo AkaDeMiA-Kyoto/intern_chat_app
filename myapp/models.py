@@ -3,12 +3,11 @@ from socket import send_fds
 from weakref import WeakMethod
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.forms import DateField
 from django.utils import timezone
 
 # Create your models here.
 class CustomUser (AbstractUser):
-    image = models.ImageField(verbose_name="プロフィール画像",upload_to = "media/" ,default='default/default_user.png', blank=True, null=True)
+    image = models.ImageField(verbose_name="プロフィール画像",upload_to = "media/" ,default='..//media//media/未設定.png', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 

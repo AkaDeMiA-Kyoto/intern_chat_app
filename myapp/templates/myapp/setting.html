@@ -7,14 +7,13 @@
 <body>
     <br>
     <br>
+    <a href="{% url 'myapp:username_change' %}" class="aa">ユーザ名変更</a>
     <br>
-    <a href="{% url 'username_change' %}" class="aa">ユーザ名変更</a>
+    <a href="{% url 'myapp:adress_change' %}"class="aa">メールアドレス変更</a>
     <br>
-    <a href="{% url 'adress_change' %}"class="aa">メールアドレス変更</a>
+    <a href="{% url 'myapp:icon_change' %}"class="aa">アイコン変更</a>
     <br>
-    <a href="{% url 'icon_change' %}"class="aa">アイコン変更</a>
-    <br>
-    <a href="{% url 'passwordchange' %}"class="aa">パスワード変更</a>
+    <a href="{% url 'myapp:passwordchange' %}"class="aa">パスワード変更</a>
     <br>
     <a href="{% url 'account_logout' %}"class="aa">ログアウト</a>
 </body>

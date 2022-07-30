@@ -80,22 +80,22 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'chatappdb',
-#         'USER': 'pei128',
-#         'PASSWORD': 'OS1428krss',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'myapp',
+        'USER': 'pei128',
+        'PASSWORD': 'OS1428krss',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -139,8 +139,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL="myapp.CustomUser"
 
-LOGIN_URL = '{% myapp:login %}' 
-LOGIN_REDIRECT_URL = '{% myapp:friends %}' 
+LOGIN_URL = "account_login" 
+#login
+LOGIN_REDIRECT_URL = "myapp:friends"
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
@@ -170,11 +171,11 @@ AUTHENTICATION_BACKENDS =(
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_METHOD = FALSE
 
-ACCOUNT_EMAIL_VERIFICATION = 'mendatory'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_REQUIRED = TRUE
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = LOGIN_REDIRECT_URL
 
-ACCOUNT_LOGOUT_REDIRECT_URL = 'index'
-
+ACCOUNT_LOGOUT_REDIRECT_URL = 'myapp:index'
 ACCOUNT_LOGOUT_ON_GET = TRUE
 
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
@@ -183,4 +184,5 @@ DEFAULT_FROM_EMAIL = 'fomalhaut0128s@icloud.com'
 
 ACCOUNT_FORMS = {
     'signup': 'myapp.forms.SignUpForm',
+    #'login': 'myapp.forms.LoginForm',
 }
