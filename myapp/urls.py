@@ -18,5 +18,5 @@ urlpatterns = [
     path('username_change',views.UsernameChange.as_view(),name='username_change'),
     path('icon_change',views.IconChange.as_view(),name='icon_change'),
     path('adress_change',views.AdressChange.as_view(),name='adress_change'),
-    path('inquiry',views.InquiryView.as_view(),name="inquiry"),
+    # path('inquiry',views.InquiryView.as_view(),name="inquiry"),
 ]

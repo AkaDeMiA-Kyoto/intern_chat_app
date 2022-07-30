@@ -12,7 +12,8 @@ from django import forms
 from requests import request
 from . import forms 
 from myapp.models import CustomUser, TalkContent
-from .forms import LoginForm, SignUpForm, UsernameChangeForm ,EmailChangeForm,IconChangeForm,InquiryForm
+from .forms import LoginForm, SignUpForm, UsernameChangeForm ,EmailChangeForm,IconChangeForm
+# InquiryForm
 from django.contrib.auth.views import LoginView ,LogoutView ,PasswordChangeView
 from django.utils import timezone
 from django.db.models import Q
@@ -113,7 +114,7 @@ class Signup(CreateView):
     model = CustomUser
     template_name = 'myapp/signup.html'
     success_url = reverse_lazy('index')
-#.order_by('date_joined'),
+
 
 class Logout(LogoutView):
     template_name = 'index.html'
@@ -189,11 +190,11 @@ class IconChange(View):
             context["form"] = form
             return redirect("setting")
 
-class InquiryView(generic.FormView):
-    template_name = "myapp/inquiry.html"
-    form_class = InquiryForm
-    success_url = reverse_lazy('friends')
+# class InquiryView(generic.FormView):
+#     template_name = "myapp/inquiry.html"
+#     form_class = InquiryForm
+#     success_url = reverse_lazy('friends')
 
-    def form_valid(self, form) :
-        form.send_email()
-        return super().form_valid(form)
+#     def form_valid(self, form) :
+#         form.send_email()
+#         return super().form_valid(form)
