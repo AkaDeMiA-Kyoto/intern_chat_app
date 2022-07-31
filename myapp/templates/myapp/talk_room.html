@@ -41,8 +41,8 @@
     <div class="footer-container">
         <form method="POST" class="send_text_form">
             {% csrf_token %}
-            {{ form.as_p }}
             <button type="submit" class="send_button">送信</button>
+            {{ form.as_p }}
         </form>
     </div>
 </footer>

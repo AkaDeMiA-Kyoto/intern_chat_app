@@ -1,3 +1,5 @@
+import re
+
 from django.contrib.auth.views import (
         LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView
         )
@@ -26,10 +28,11 @@ class LoginView(LoginView):
 class LogoutView(LogoutView):
     pass
 
-class FriendsListView(TemplateView, LoginRequiredMixin):
+class FriendsListView(LoginRequiredMixin, TemplateView):
     template_name = "myapp/friends.html"
-    def get_context_data(self):
-        context = super().get_context_data()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        username = self.request.GET.get('username')
         friends_list = []
         friends_dic = User.objects.all().filter(~Q(username=self.request.user)).values()
         def return_recent_Talk_obj(friend):
@@ -37,23 +40,34 @@ class FriendsListView(TemplateView, LoginRequiredMixin):
             Q(sender = self.request.user, receiver=friend)
             |   Q(sender=friend, receiver=self.request.user)
             ).values()
-            return talk_dic[len(talk_dic)-1]
+            if len(talk_dic) != 0:
+                return talk_dic[len(talk_dic)-1]
+            else:
+                return False
 
-        for i in range(len(friends_dic)):
-            friends_list.append({
-                "id": friends_dic[i]["id"],
-                "username": friends_dic[i]["username"],
-                "icon": friends_dic[i]["icon"],
-                "brief_message": return_recent_Talk_obj(friends_dic[i]["id"])["message"],
-                "last_sent": return_recent_Talk_obj(friends_dic[i]["id"])["sent_time"],
-                })
+        for friend_dic in friends_dic:
+            if username == None or re.search(username, friend_dic["username"]):
+                try:
+                    friends_list.append({
+                        "id": friend_dic["id"],
+                        "username": friend_dic["username"],
+                        "icon": friend_dic["icon"],
+                        "brief_message": return_recent_Talk_obj(friend_dic["id"])["message"],
+                        "last_sent": return_recent_Talk_obj(friend_dic["id"])["sent_time"],
+                        })
+                except TypeError:
+                    friends_list.append({
+                        "id": friend_dic["id"],
+                        "username": friend_dic["username"],
+                        "icon": friend_dic["icon"],
+                        "brief_message": "",
+                        "last_sent": "",
+                        })
 
-        print(friends_list)
         context["friends"] = friends_list
-
         return context
 
-class TalkRoomView(CreateView, LoginRequiredMixin):
+class TalkRoomView(LoginRequiredMixin, CreateView):
     template_name = "myapp/talk_room.html"
     form_class = TalkRoomForm
 
@@ -81,10 +95,10 @@ class TalkRoomView(CreateView, LoginRequiredMixin):
 
 
 #各種設定
-class SettingView(TemplateView, LoginRequiredMixin):
+class SettingView(LoginRequiredMixin, TemplateView):
     template_name = "myapp/setting.html"
 
-class UpdateUsernameView(UpdateView, LoginRequiredMixin):
+class UpdateUsernameView(LoginRequiredMixin, UpdateView):
     template_name ="myapp/setting_username.html"
     model = User
     form_class = UpdateUsernameForm
@@ -93,7 +107,7 @@ class UpdateUsernameView(UpdateView, LoginRequiredMixin):
     def get_object(self):
         return self.request.user
 
-class UpdateMailaddressView(UpdateView, LoginRequiredMixin):
+class UpdateMailaddressView(LoginRequiredMixin, UpdateView):
     template_name ="myapp/setting_mailaddress.html"
     model = User
     form_class = UpdateMailaddressForm
@@ -102,7 +116,7 @@ class UpdateMailaddressView(UpdateView, LoginRequiredMixin):
     def get_object(self):
         return self.request.user
 
-class UpdateIconView(UpdateView, LoginRequiredMixin):
+class UpdateIconView(LoginRequiredMixin, UpdateView):
     template_name ="myapp/setting_icon.html"
     model = User
     form_class = UpdateIconForm
@@ -111,19 +125,19 @@ class UpdateIconView(UpdateView, LoginRequiredMixin):
     def get_object(self):
         return self.request.user
 
-class UpdatePasswordView(PasswordChangeView, LoginRequiredMixin):
+class UpdatePasswordView(LoginRequiredMixin, PasswordChangeView):
     template_name = "myapp/setting_password.html"
     success_url = reverse_lazy("password_updated")
 
 #設定完了
-class UpdateUsernameCompletedView(TemplateView, LoginRequiredMixin):
+class UpdateUsernameCompletedView(LoginRequiredMixin, TemplateView):
     template_name = "myapp/setting_username_completed.html"
 
-class UpdateMailaddressCompletedView(TemplateView, LoginRequiredMixin):
+class UpdateMailaddressCompletedView(LoginRequiredMixin, TemplateView):
     template_name = "myapp/setting_mailaddress_completed.html"
 
-class UpdateIconCompletedView(TemplateView, LoginRequiredMixin):
+class UpdateIconCompletedView(LoginRequiredMixin, TemplateView):
     template_name = "myapp/setting_icon_completed.html"
 
-class UpdatePasswordCompletedView(PasswordChangeDoneView, LoginRequiredMixin):
+class UpdatePasswordCompletedView(LoginRequiredMixin, PasswordChangeDoneView):
     template_name = "myapp/setting_password_completed.html"

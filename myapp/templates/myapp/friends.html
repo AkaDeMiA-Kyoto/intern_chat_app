@@ -5,10 +5,13 @@
 {% endblock %}
 {% block header-title %}友達{% endblock %}
 {% block content %}
+<form action="/friends" method="get" class="search_username_form">
+    <input type="text" name="username" placeholder="ユーザー名を検索" class="search_username">
+</form>
     <ul>
         {% for friend in friends %}
         <li class="friend_information">
-            <a href="{% url 'talk_room' friend.id %}">
+            <a href="{% url 'talk_room' friend.id %}" class="friend_link">
                 <img src="media/{{ friend.icon }}" class="profile_img">
                 <div class="friend_name">
                     <p class="friend_name_text">{{ friend.username }}</p>

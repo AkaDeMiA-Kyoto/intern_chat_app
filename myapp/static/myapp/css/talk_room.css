@@ -7,38 +7,34 @@
 .back_to_friendslist{
     font-size: 20px;
     margin-right: auto;
+    width: 15%;
+    z-index: 2000;
+}
+
+.refresh_button {
+    background: transparent;
+    display: inline-block;
+    border: 1px solid #a9a9a9;
+    padding: 5px 10px;
+    border-radius: 11px;
+    text-align: center;
+    margin: 11px;
+    z-index: 2000;
 }
 
 ul{
     list-style: none;
     padding-left: 0px;
-}
-
-a {
-    color: black;
-    text-decoration: none;
-}
-
-.send_text_form {
-    padding: 0px;
-    margin-right: auto;
-    position: relative;
-}
-
-#id_message {
-    display: inline-block;
-    position: absolute;
-    left: 0;
-    top: 33%;
-    margin-left: 16px;
-    width: 80%;
+    margin-top: 5px;
 }
 
 li {
     border-bottom: 1px solid #a9a9a9;
     position: relative;
     height: 55px;
+    z-index: 0;
 }
+
 .sender {
     display: block;
     position: absolute;
@@ -59,3 +55,32 @@ li {
     right: 0;
 }
 
+a {
+    color: black;
+    text-decoration: none;
+}
+
+.send_text_form {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 8px;
+}
+
+.send_text_form > p {
+    flex-grow: 1;
+    padding-right: 8px;
+}
+
+#id_message {
+    width: 100%
+}
+
+.send_button {
+    background: transparent;
+    border: 1px solid #a9a9a9;
+    padding: 2px 8px;
+    border-radius: 15px;
+    text-align: center;
+}

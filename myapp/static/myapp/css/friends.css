@@ -1,3 +1,12 @@
+.search_username_form {
+    position: fixed;
+    top: 80px;
+    padding:0;
+
+}
+.search_username {
+    width: 93%;
+}
 .profile_img {
     height: 50px;
     width: 50px;
@@ -5,11 +14,13 @@
 }
 
 ul{
+    position:relative;
+    top: 35px;
     list-style: none;
     padding-left: 0px;
     padding-top: 0px;
+    margin-top: 5px;
 }
-
 
 a {
     color: black;
@@ -18,12 +29,16 @@ a {
     text-align: left;
 }
 
+.friend_link {
+    width: 100%;
+}
+
 .friend_information {
     position: relative;
     padding-left: 8px;
     padding-top: 7px;
-    border-bottom: 1px solid #a9a9a9;
     padding-bottom: 8px;
+    border-bottom: 1px solid #a9a9a9;
 }
 
 .friend_name {
@@ -51,3 +66,4 @@ a {
     top: 10px;
     right: 5px;
 }
+

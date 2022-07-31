@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'allauth',
     'allauth.account',
+    'allauth.socialaccount',
 ]
 
 MIDDLEWARE = [
@@ -136,9 +137,19 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 AUTH_USER_MODEL = "myapp.User"
-LOGIN_URL = "login"
-LOGIN_REDIRECT_URL = "friends"
+LOGIN_URL = "account_login"
 LOGOUT_REDIRECT_URL = "index"
+
+
+#emailの設定
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+DEFAULT_FROM_EMAIL =os.environ["gmail_account"]
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER =os.environ["gmail_account"]
+EMAIL_HOST_PASSWORD = os.environ["gmail_password"]
+EMAIL_USE_TLS = True
+ACCOUNT_EMAIL_SUBJECT_PREFIX = '[AkaDeMiA]'
 
 #認証関係
 SITE_ID = 1
@@ -146,11 +157,13 @@ AUTHENTICATION_BACKENDS = (
         'allauth.account.auth_backends.AuthenticationBackend',
         'django.contrib.auth.backends.ModelBackend',
 )
-
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_AUTHENTICATION_METHOD='email'
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_EMAIL_REQUIRED = True
-
+LOGIN_REDIRECT_URL = "friends"
+ACCOUNT_LOGOUT_REDIRECT_URL = "index"
 ACCOUNT_LOGOUT_ON_GET = True
+
 
 try:
     from .local_settings import *
