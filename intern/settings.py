@@ -166,48 +166,6 @@ EMAIL_PORT = 587
 EMAIL_HOST_PASSWORD = 'gkhdbxeaeayhumuy'
 EMAIL_USE_TLS = True
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "standard": {
-            "format": "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
-            "datefmt": "%d/%b/%Y %H:%M:%S",
-        },
-    },
-    "filters": {
-        "require_debug_false": {
-            "()": "django.utils.log.RequireDebugFalse",
-        },
-    },
-    "handlers": {
-        "null": {
-            "level": "DEBUG",
-            "class": "logging.NullHandler",
-        },
-        "file": {
-            "level": "INFO",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": "/var/log/[project_name]/debug.log",  # パスは環境に合わせて、ファイルは作る
-            "maxBytes": 1024 * 1024 * 512,
-            "backupCount": 10,
-            "formatter": "standard",
-        },
-        "console": {"level": "INFO", "class": "logging.StreamHandler", "formatter": "standard"},
-        "mail_admins": {
-            "level": "ERROR",
-            "class": "django.utils.log.AdminEmailHandler",
-            "include_html": True,
-            "filters": ["require_debug_false"],
-        },
-    },
-    "loggers": {
-        "django.security.DisallowedHost": {"handlers": ["null"], "propagate": False},
-        "django": {"handlers": ["file", "console", "mail_admins"], "level": "DEBUG", "propagate": True,},
-        "main": {"handlers": ["file", "console", "mail_admins"], "level": "DEBUG", "propagate": True,},
-    },
-}
-
 try:
     from .local_settings import *
 except ImportError:pass
