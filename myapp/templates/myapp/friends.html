@@ -6,7 +6,7 @@
 {% block header-title %}友達{% endblock %}
 {% block content %}
 <form action="/friends" method="get" class="search_username_form">
-    <input type="text" name="username" placeholder="ユーザー名を検索" class="search_username">
+    <input type="text" name="search_keyword" placeholder="ユーザーを検索" class="search_username">
 </form>
     <ul>
         {% for friend in friends %}
@@ -17,7 +17,7 @@
                     <p class="friend_name_text">{{ friend.username }}</p>
                 </div>
                 <div class="friend_message">
-                    <p class="friend_message_text">{{ friend.brief_message }}</p>
+                    <p class="friend_message_text">{{ friend.brief_message| truncatechars:20}}</p>
                 </div>
                 <div class="friend_time">
                     {{ friend.last_sent|date:"m/d" }}

@@ -1,11 +1,15 @@
 .search_username_form {
     position: fixed;
-    top: 80px;
-    padding:0;
+    top: 73.5px;
+    padding:5px 0px;
+    background-color:white;
+    z-index: 1000;
 
 }
 .search_username {
     width: 93%;
+    background-color:white;
+    z-index: 1000;
 }
 .profile_img {
     height: 50px;
@@ -20,6 +24,8 @@ ul{
     padding-left: 0px;
     padding-top: 0px;
     margin-top: 5px;
+    z-index: 0;
+    background-color: white;
 }
 
 a {

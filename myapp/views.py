@@ -32,7 +32,7 @@ class FriendsListView(LoginRequiredMixin, TemplateView):
     template_name = "myapp/friends.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        username = self.request.GET.get('username')
+        search_keyword = self.request.GET.get('search_keyword')
         friends_list = []
         friends_dic = User.objects.all().filter(~Q(username=self.request.user)).values()
         def return_recent_Talk_obj(friend):
@@ -46,7 +46,9 @@ class FriendsListView(LoginRequiredMixin, TemplateView):
                 return False
 
         for friend_dic in friends_dic:
-            if username == None or re.search(username, friend_dic["username"]):
+            if (search_keyword == None 
+                or re.search(search_keyword, friend_dic["username"]) 
+                or re.search(search_keyword, friend_dic["email"])):
                 try:
                     friends_list.append({
                         "id": friend_dic["id"],

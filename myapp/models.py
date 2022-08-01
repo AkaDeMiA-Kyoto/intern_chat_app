@@ -29,8 +29,8 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=50, unique=True)
-    email = models.EmailField(max_length=50, unique=True)
+    username = models.CharField(max_length=15, unique=True)
+    email = models.EmailField(max_length=20, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     icon = models.ImageField(default="default_profile_img.jpeg")
@@ -44,7 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return reverse_lazy('index')
 
 class Talk(models.Model):
-    message = models.CharField(max_length=500)
+    message = models.CharField(max_length=35)
     sender = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="sent_talk"
     )
