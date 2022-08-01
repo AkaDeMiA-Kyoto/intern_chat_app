@@ -42,14 +42,21 @@ def friends(request):
     friends=[]
     for friend in data:
         lastMsg=myMsg.filter(Q(sender=friend.id)|Q(receiver=friend.id)).last()
+
+        #画像URL、なければ置き換え
+        prof_img_url="myapp/img/nullImage"
+        if (friend.prof_img):
+            print(friend.prof_img)
+            prof_img_url=friend.prof_img.url
+        
         if lastMsg!=None:
             print(friend.username+' had no msg with the user')
             friends.append({'id':friend.id,'username':friend.username,
-            'prof_img_url':friend.prof_img.url,'order':lastMsg.createdTime})
+            'prof_img_url':prof_img_url,'order':lastMsg.createdTime})
         else:
             print(friend.username)
             friends.append({'id':friend.id,'username':friend.username,
-            'prof_img_url':friend.prof_img.url,
+            'prof_img_url':prof_img_url,
             'order':friend.date_joined+datetime.timedelta(weeks=-20000)})
     friends.sort(key=lambda x: x['order'],reverse=True)
     hasData= data.count() > 0
