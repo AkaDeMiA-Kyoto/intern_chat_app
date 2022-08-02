@@ -17,12 +17,12 @@
                     <p class="friend_name_text">{{ friend.username }}</p>
                 </div>
                 <div class="friend_message">
-                    <p class="friend_message_text">{{ friend.brief_message| truncatechars:20}}</p>
+                    <p class="friend_message_text">{{ friend.message | truncatechars:20}}</p>
                 </div>
                 <div class="friend_time">
-                    {{ friend.last_sent|date:"m/d" }}
+                    {{ friend.sent_time|date:"m/d" }}
                     <br>
-                    {{ friend.last_sent|date:"H:i" }}
+                    {{ friend.sent_time|date:"H:i" }}
                 </div>
             </a>
         </li>

@@ -44,12 +44,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         return reverse_lazy('index')
 
 class Talk(models.Model):
-    message = models.CharField(max_length=35)
+    message = models.CharField(max_length=35, default="")
     sender = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="sent_talk"
+        User, on_delete=models.CASCADE, related_name="sent_talk", default=""
     )
     receiver = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="received_talk"
+        User, on_delete=models.CASCADE, related_name="received_talk", default=""
     )
     sent_time = models.DateTimeField(auto_now_add=True)
 

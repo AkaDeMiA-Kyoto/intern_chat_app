@@ -47,7 +47,7 @@ def create_users(n):
 
 if __name__ == "__main__":
     print("creating users ...", end="")
-    create_users(10)
+    create_users(100)
     print("done")
 
 

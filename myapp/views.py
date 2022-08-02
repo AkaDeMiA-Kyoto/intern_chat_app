@@ -4,6 +4,7 @@ from django.contrib.auth.views import (
         LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView
         )
 from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -33,40 +34,42 @@ class FriendsListView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         search_keyword = self.request.GET.get('search_keyword')
-        friends_list = []
-        friends_dic = User.objects.all().filter(~Q(username=self.request.user)).values()
-        def return_recent_Talk_obj(friend):
-            talk_dic = Talk.objects.all().filter(
-            Q(sender = self.request.user, receiver=friend)
-            |   Q(sender=friend, receiver=self.request.user)
-            ).values()
-            if len(talk_dic) != 0:
-                return talk_dic[len(talk_dic)-1]
-            else:
-                return False
 
-        for friend_dic in friends_dic:
-            if (search_keyword == None 
-                or re.search(search_keyword, friend_dic["username"]) 
-                or re.search(search_keyword, friend_dic["email"])):
-                try:
-                    friends_list.append({
-                        "id": friend_dic["id"],
-                        "username": friend_dic["username"],
-                        "icon": friend_dic["icon"],
-                        "brief_message": return_recent_Talk_obj(friend_dic["id"])["message"],
-                        "last_sent": return_recent_Talk_obj(friend_dic["id"])["sent_time"],
-                        })
-                except TypeError:
-                    friends_list.append({
-                        "id": friend_dic["id"],
-                        "username": friend_dic["username"],
-                        "icon": friend_dic["icon"],
-                        "brief_message": "",
-                        "last_sent": "",
-                        })
+        friends = User.objects.all().filter(~Q(username=self.request.user))
+        talks = Talk.objects.all().order_by("-sent_time").values()
 
-        context["friends"] = friends_list
+        friends_dic = []
+        for friend in friends:
+        #     # 検索キーワードが指定されていてそれが何にも合致していなければ飛ばす
+            if (search_keyword == None or 
+                    re.search(search_keyword, friend.username) or 
+                    re.search(search_keyword, friend.email)):
+                    talk_found = False
+                    for talk in talks:
+                        if ((talk["sender_id"] == self.request.user.id and 
+                            talk["receiver_id"] == friend.id) or
+                            (talk["sender_id"] == friend.id and 
+                                talk["receiver_id"] == self.request.user.id)):
+                            friends_dic.append({
+                                "id": friend.id,
+                                "username": friend.username,
+                                "icon": friend.icon,
+                                "message": talk["message"],
+                                "sent_time": talk["sent_time"],
+                                })
+                            talk_found = True
+                            break
+                    if not talk_found:
+                        friends_dic.append({
+                            "id": friend.id,
+                            "username": friend.username,
+                            "icon": friend.icon,
+                            "message":"",
+                            "sent_time": "",
+                            })
+
+
+        context["friends"] = friends_dic
         return context
 
 class TalkRoomView(LoginRequiredMixin, CreateView):
@@ -82,7 +85,8 @@ class TalkRoomView(LoginRequiredMixin, CreateView):
         friend_username = User.objects.get(id=friend_id)
         context["friend_id"] = friend_id
         context["friend_username"] = friend_username
-        context["talks"] = Talk.objects.all().filter(
+        # N+1問題解消
+        context["talks"] = Talk.objects.select_related().all().filter(
             Q(sender = self.request.user, receiver=friend_username)
             |   Q(sender=friend_username, receiver=self.request.user)
         ).order_by("sent_time")
