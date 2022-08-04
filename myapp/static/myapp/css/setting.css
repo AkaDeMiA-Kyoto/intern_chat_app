@@ -26,9 +26,11 @@ main {
     color:#2f3640;
     background-color: #f5f6fa;
     border-radius: 10px;
-    padding: 0 10px;
+    padding: 10px 10px;
     text-align: center;
     margin: 3px auto;
+    margin-top: 40px;
+    width : 300px;
 }
 
 .logoutbtn {
@@ -36,9 +38,11 @@ main {
     color:#f5f6fa;
     background-color: #e84118;
     border-radius: 10px;
-    padding: 0 10px;
+    padding: 10px 10px;
     text-align: center;
     margin: 3px auto;
+    margin-top: 40px;
+    width:300px;
 }
 
 .buttons {
