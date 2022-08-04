@@ -1,7 +1,8 @@
 from django.urls import path,include
 from . import views
 from django.conf import settings
-from django.conf.urls.static import static
+from django.conf.urls.static import static,url
+from django.views.static import serve
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -14,4 +15,5 @@ urlpatterns = [
     path('setting/image',views.changeProfImg, name='changeImage'),
     path('setting/username',views.changeUserName, name='changeUserName'),
     path('logout',views.Logout.as_view(),name='logout'),
+    url(r'^media/(?P.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ] + static(settings.MEDIA_URL,document_root = settings.MEDIA_ROOT)

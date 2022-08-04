@@ -133,6 +133,7 @@ LOGIN_URL = ''
 LOGIN_REDIRECT_URL='friends'
 LOGOUT_REDIRECT_URL=''
 
+#画像ファイル用設定
 if DEBUG:
     MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 else:
