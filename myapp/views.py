@@ -68,29 +68,44 @@ def friends(request):
     return render(request, "myapp/friends.html",params)
 
 def talk_room(request,talkee):
+    #存在しないIDのページにアクセスした場合
     if(CustomUser.objects.filter(id=talkee).last()==None):
         return render(request, "myapp/talk_room.html",{'isValidUrl':False})
+
+    #フォーム、タイトル、ID、画像登録
     mform=MessageForm()
     pagetitle=CustomUser.objects.get(id=talkee)
     myid=request.user.id
+    myImg="myapp/img/nullImage"
+    if (CustomUser.objects.get(id=myid).prof_img):
+        myImg=CustomUser.objects.get(id=myid).prof_img.url
+    theirImg="myapp/img/nullImage"
+    if (CustomUser.objects.get(id=talkee).prof_img):
+        theirImg=CustomUser.objects.get(id=talkee).prof_img.url
+
+    #メッセージ送信
     if request.method == 'POST':
         msg=CustomMessage(content=request.POST['content'],
         sender=request.user.id,receiver=talkee,
         createdTime=timezone.now().isoformat())
         msg.save()
+    
+    #メッセージ取得、ソート
     msgraw=CustomMessage.objects.filter(
         Q(sender=myid)|Q(receiver=myid)
     ).filter(
         Q(sender=talkee)|Q(receiver=talkee)
     ).order_by("createdTime")
+
+    #表示
     dic={
         'isValidUrl':True,
         'self':talkee,
         'name':pagetitle,
         'form':mform,
         'msg':msgraw,
-        'myImg':CustomUser.objects.get(id=myid).prof_img.url,
-        'theirImg':CustomUser.objects.get(id=talkee).prof_img.url
+        'myImg':myImg,
+        'theirImg':theirImg
     }
     return render(request, "myapp/talk_room.html",dic)
 
