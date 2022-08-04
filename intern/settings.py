@@ -133,8 +133,10 @@ LOGIN_URL = ''
 LOGIN_REDIRECT_URL='friends'
 LOGOUT_REDIRECT_URL=''
 
-
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+if DEBUG:
+    MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+else:
+    MEDIA_ROOT = f'/var/www/{BASE_DIR.name}/media'
 MEDIA_URL = '/media/'
 
 STATIC_ROOT = BASE_DIR / "static"
