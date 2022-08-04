@@ -1,0 +1,55 @@
+html{
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+body{
+    margin: 0;
+}
+
+/* ヘッダー */
+.header{
+    width: 100vw;
+    height: 64px;
+    border-bottom: solid 1px #9b9b9b;
+    background-color: rgb(125, 184, 164);
+
+}
+.header-container{
+    position: relative;
+    width: 90%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.header-container__title{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1rem;
+    line-height: 1rem;
+    margin: auto;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #000;
+}
+
+
+.submit{
+    width: 170px;
+    line-height: 2;
+    height: 40px;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    background: white;
+    margin: auto;
+    display: block;
+}
+#id_username, #id_email, #id_password1, #id_password2{
+    margin: auto;
+    display: block;
+}
+#id_img{
+    transform: translateX(29%);
+}

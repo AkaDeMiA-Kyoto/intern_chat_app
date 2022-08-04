@@ -1,0 +1,17 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+
+{% block extra_style %}
+{% endblock %}
+
+
+{% block header-title %}メールアドレス変更{% endblock %}
+
+
+{% block content %}
+変更完了！！
+
+<a href="{% url 'index' %}" class="return" >ホームへ戻る</a>
+{% endblock %}
+

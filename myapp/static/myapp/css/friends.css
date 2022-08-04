@@ -1,0 +1,30 @@
+.icon{
+    width: 50px;
+    height: 50px;
+    transform:translateY(-50px) ;
+    border-radius: 50%;
+    border: 3px solid #000;
+}
+
+
+.header{
+    background-color: rgb(125, 184, 164);
+}
+
+.name{
+    font-size: 20px;
+    
+    color: black;
+    padding-left: 30px;
+}
+
+.friend-space{
+    border-bottom: 1px #bbb solid;
+    display: flex;
+    height: 80px;
+}
+
+.btn{
+    width: 100%;
+    text-decoration: none;
+}

@@ -1,1 +1,33 @@
-TR
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
+{% endblock %}
+
+{% block header-title %}
+<a href="{% url 'friends' %}" id="return">＜</a>
+<div class="name">{{ friend.username }}</div>
+<a href="{% url 'talk_room' friend.id %}" class="re">更新</a>
+{% endblock %}
+
+{% block content %}
+{% for data in data %}
+<li class="message">
+    <p class="talkname">＞{{ data.talk_from }}</p>
+    <p class="content">{{ data.content }}</p>
+    <p class="time">{{ data.talk_at|date:"m/d" }}          {{ data.talk_at|date:"H:i" }}</p>
+</li>
+{% endfor %}
+
+{% endblock %}
+
+{% block footer %}
+
+<form class="talk_form" method="POST">
+    {% csrf_token %}
+    {{ form.content }}
+    <button class="send-btn" type="submit">送信</button>
+</form>
+
+{% endblock %}

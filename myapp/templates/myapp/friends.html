@@ -1,0 +1,21 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/friends.css' %}" />
+{% endblock %}
+
+{% block header-title %}友達{% endblock %}
+
+{% block content %}
+    {% for item in data %}
+        {% if item.img %}
+        <div class="friend-space">
+            <a href="{% url 'talk_room' item.pk %}" class="btn">
+                <p class="name" style='margin-left: 50px;'>{{item.username}}</p>
+                <img src= '{{item.img.url}}' class="icon">
+            </a>
+        </div>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
