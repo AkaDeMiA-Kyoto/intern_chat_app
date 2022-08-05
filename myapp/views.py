@@ -33,9 +33,14 @@ def signup_view(request):
 def friends(request):
     data=CustomUser.objects.all()
     form = SearchForm(request.POST)
+    hasFormContent=False
     if (request.method=='POST' and request.POST['content']!=""):
-        searchName=request.POST['content']
-        data=data.filter(username__contains=searchName)
+        if "btn_reset" in request.POST:
+            form = SearchForm()
+        elif request.POST['content']!="":
+            searchName=request.POST['content']
+            hasFormContent=True
+            data=data.filter(username__contains=searchName)
     myid=request.user.id
     myMsg=CustomMessage.objects.filter(Q(sender=myid)|Q(receiver=myid)).order_by(F('createdTime'))
     print(myMsg.count())
@@ -64,6 +69,7 @@ def friends(request):
         'form':form,
         'hasData':hasData,
         'data':friends,
+        'hasFormContent':hasFormContent,
     }
     return render(request, "myapp/friends.html",params)
 

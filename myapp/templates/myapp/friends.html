@@ -23,6 +23,9 @@
                 {{ form.content }}
             </span>
             <span><button type="submit">検索</button></span>
+            {% if hasFormContent %}
+            <span><button type="submit" name="btn_reset">クリア</button></span>
+            {% endif %}
         </form>
         {% if hasData %}
         {% for item in data %}
