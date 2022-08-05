@@ -29,17 +29,6 @@
 
             </ul>
         </form>
-        <div>
-            <h3>現在のユーザ</h3>
-            <span>name: {{ user.username }}</span>
-            {% if user.is_superuser %}
-            <div> SuperUserです。 </div>
-            {% endif %}
-            {% if user.is_authenticated %}
-            <div> ログイン済み </div>
-            {% endif %}
-        </div>
-
     </main>
 </body>
 

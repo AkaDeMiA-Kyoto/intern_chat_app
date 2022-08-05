@@ -36,14 +36,18 @@ def friends(request):
     hasFormContent=False
     if (request.method=='POST' and request.POST['content']!=""):
         if "btn_reset" in request.POST:
+            #フォームクリアボタンの処理。
             form = SearchForm()
         elif request.POST['content']!="":
+            #検索処理
             searchName=request.POST['content']
             hasFormContent=True
             data=data.filter(username__contains=searchName)
+    
+    #最新メッセージの日時でソート
     myid=request.user.id
     myMsg=CustomMessage.objects.filter(Q(sender=myid)|Q(receiver=myid)).order_by(F('createdTime'))
-    print(myMsg.count())
+    #print(myMsg.count())
     friends=[]
     for friend in data:
         lastMsg=myMsg.filter(Q(sender=friend.id)|Q(receiver=friend.id)).last()
@@ -64,6 +68,7 @@ def friends(request):
             'prof_img_url':prof_img_url,
             'order':friend.date_joined+datetime.timedelta(weeks=-20000)})
     friends.sort(key=lambda x: x['order'],reverse=True)
+    
     hasData= data.count() > 0
     params={
         'form':form,
