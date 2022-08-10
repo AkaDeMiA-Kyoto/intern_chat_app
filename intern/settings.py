@@ -117,7 +117,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -133,7 +133,7 @@ LOGIN_URL = 'myapp:login'            # ログイン時
 LOGIN_REDIRECT_URL = 'myapp:friends'   # ログイン後
 LOGOUT_REDIRECT_URL = 'myapp:index'  # ログアウト後
 
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 try:
     from .local_settings import *
