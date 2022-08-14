@@ -45,12 +45,13 @@ def friends(request):
             data=data.filter(username__contains=searchName)
     
     #最新メッセージの日時でソート
-    myid=request.user.id
-    myMsg=CustomMessage.objects.filter(Q(sender=myid)|Q(receiver=myid)).order_by(F('createdTime'))
+    #myMsg=CustomMessage.objects.filter(Q(primeUser=request.user)).order_by(F('createdTime'))
+    myMsg=request.user.msg.all().order_by(F('createdTime'))
     #print(myMsg.count())
     friends=[]
     for friend in data:
-        lastMsg=myMsg.filter(Q(sender=friend.id)|Q(receiver=friend.id)).last()
+        #直近のメッセージ取得
+        lastMsg=myMsg.filter(Q(subUser=friend)).last()
 
         #画像URL、なければ置き換え
         prof_img_url="myapp/img/nullImage"
@@ -83,36 +84,40 @@ def talk_room(request,talkee):
     if(CustomUser.objects.filter(id=talkee).last()==None):
         return render(request, "myapp/talk_room.html",{'isValidUrl':False})
 
-    #フォーム、タイトル、ID、画像登録
+    #フォーム、ID、画像登録
     mform=MessageForm()
-    pagetitle=CustomUser.objects.get(id=talkee)
-    myid=request.user.id
     myImg="myapp/img/nullImage"
-    if (CustomUser.objects.get(id=myid).prof_img):
-        myImg=CustomUser.objects.get(id=myid).prof_img.url
+    if(request.user.prof_img):
+        myImg=request.user.prof_img.url
+    #if (CustomUser.objects.get(id=myid).prof_img):
+    #    myImg=CustomUser.objects.get(id=myid).prof_img.url
     theirImg="myapp/img/nullImage"
-    if (CustomUser.objects.get(id=talkee).prof_img):
-        theirImg=CustomUser.objects.get(id=talkee).prof_img.url
+    them=CustomUser.objects.get(id=talkee)
+    if (them.prof_img):
+        theirImg=them.prof_img.url
 
     #メッセージ送信
     if request.method == 'POST':
-        msg=CustomMessage(content=request.POST['content'],
-        sender=request.user.id,receiver=talkee,
-        createdTime=timezone.now().isoformat())
+        msgTime=timezone.now().isoformat()
+        msgContent=request.POST['content']
+        msg=CustomMessage(content=msgContent,
+        primeUser=request.user,subUser=them,
+        isReceipt=False,createdTime=msgTime)
         msg.save()
+        dummyMsg=CustomMessage(content=msgContent,
+        primeUser=them,subUser=request.user,
+        isReceipt=True,createdTime=msgTime)
+        dummyMsg.save()
     
     #メッセージ取得、ソート
-    msgraw=CustomMessage.objects.filter(
-        Q(sender=myid)|Q(receiver=myid)
-    ).filter(
-        Q(sender=talkee)|Q(receiver=talkee)
-    ).order_by("createdTime")
+    #msgraw=CustomMessage.objects.filter(Q(primeUser=request.user)).order_by("createdTime")
+    msgraw=request.user.msg.all()
 
     #表示
     dic={
         'isValidUrl':True,
         'self':talkee,
-        'name':pagetitle,
+        'name':them.username,
         'form':mform,
         'msg':msgraw,
         'myImg':myImg,

@@ -23,7 +23,7 @@
     <main>
         <div class="space"></div>
         {% for item in msg %}
-        {% if item.sender != user.id %}
+        {% if item.isReceipt %}
         <div>
             <table class="received">
                 <tr>
