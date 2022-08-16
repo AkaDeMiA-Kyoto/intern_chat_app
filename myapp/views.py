@@ -9,6 +9,7 @@ from .models import CustomUser,CustomMessage
 from django.utils import timezone
 from django.db.models import Q,Case,When,F,Exists
 import datetime
+from django.conf import settings
 
 def index(request):
     return render(request, "myapp/index.html")
@@ -44,31 +45,34 @@ def friends(request):
             hasFormContent=True
             data=data.filter(username__contains=searchName)
     
-    #最新メッセージの日時でソート
-    #myMsg=CustomMessage.objects.filter(Q(primeUser=request.user)).order_by(F('createdTime'))
+    #メッセージ取得、ソート
     myMsg=request.user.msg.all().order_by(F('createdTime'))
-    #print(myMsg.count())
+
+    #表示順
+    print("Making friendOrder . . . ",end="")
+    friendOrder={}
+    for friend in data:
+        friendOrder[friend.id]=friend.date_joined+datetime.timedelta(weeks=-20000)
+    for msg in myMsg:
+        friendOrder[msg.subUser.id]=msg.createdTime
+    print("Done!")
+    
+    #テンプレートに渡す用
+    print("Making Friends . . . ",end="")
     friends=[]
     for friend in data:
-        #直近のメッセージ取得
-        lastMsg=myMsg.filter(Q(subUser=friend)).last()
-
         #画像URL、なければ置き換え
-        prof_img_url="myapp/img/nullImage"
+        prof_img_url="media/null_img.png"
         if (friend.prof_img):
-            print(friend.prof_img)
             prof_img_url=friend.prof_img.url
         
-        if lastMsg!=None:
-            print(friend.username+' had no msg with the user')
-            friends.append({'id':friend.id,'username':friend.username,
-            'prof_img_url':prof_img_url,'order':lastMsg.createdTime})
-        else:
-            print(friend.username)
-            friends.append({'id':friend.id,'username':friend.username,
+        #リストに追加
+        friends.append({'id':friend.id,'username':friend.username,
             'prof_img_url':prof_img_url,
-            'order':friend.date_joined+datetime.timedelta(weeks=-20000)})
+            'order':friendOrder[friend.id]})
+    print("Sorting . . . ",end="")
     friends.sort(key=lambda x: x['order'],reverse=True)
+    print("Done!")
     
     hasData= data.count() > 0
     params={
@@ -77,6 +81,9 @@ def friends(request):
         'data':friends,
         'hasFormContent':hasFormContent,
     }
+    print("Rendering . . . ")
+    print(request.META.get('REMOTE_ADDR'))
+    print(settings.DEBUG and request.META.get("REMOTE_ADDR") in settings.INTERNAL_IPS)
     return render(request, "myapp/friends.html",params)
 
 def talk_room(request,talkee):
@@ -111,8 +118,7 @@ def talk_room(request,talkee):
     
     #メッセージ取得、ソート
     #msgraw=CustomMessage.objects.filter(Q(primeUser=request.user)).order_by("createdTime")
-    msgraw=request.user.msg.all()
-
+    msgraw=request.user.msg.filter(Q(subUser=them))
     #表示
     dic={
         'isValidUrl':True,
