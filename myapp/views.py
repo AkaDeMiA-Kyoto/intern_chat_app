@@ -1,18 +1,20 @@
+import datetime
+
+from django.conf import settings
+from django.contrib.auth.views import LoginView, LogoutView
+from django.db.models import F, Q
 from django.shortcuts import redirect, render
+from django.utils import timezone
+
 from .forms import (
-    SearchForm,
-    SignUpForm,
     LoginForm,
     MessageForm,
     ProfImageForm,
+    SearchForm,
+    SignUpForm,
     UserNameForm,
 )
-from django.contrib.auth.views import LoginView, LogoutView
-from .models import CustomUser, CustomMessage
-from django.utils import timezone
-from django.db.models import Q, F
-import datetime
-from django.conf import settings
+from .models import CustomMessage, CustomUser
 
 
 def index(request):
@@ -58,13 +60,15 @@ def friends(request):
     for friend in data:
         friendOrder[friend.id] = friend.date_joined + datetime.timedelta(weeks=-20000)
     for msg in myMsg:
-        friendOrder[msg.subUser.id] = msg.createdTime
+        friendOrder[msg.subUser_id] = msg.createdTime
     print("Done!")
 
     # テンプレートに渡す用
     print("Making Friends . . . ", end="")
     friends = []
     for friend in data:
+        if friend.id == request.user.id:
+            continue
         # 画像URL、なければ置き換え
         prof_img_url = "media/null_img.png"
         if friend.prof_img:
@@ -98,7 +102,7 @@ def friends(request):
 
 def talk_room(request, talkee):
     # 存在しないIDのページにアクセスした場合
-    if CustomUser.objects.filter(id=talkee).last() is None:
+    if CustomUser.objects.filter(id=talkee).first() is None:
         return render(request, "myapp/talk_room.html", {"isValidUrl": False})
 
     # フォーム、ID、画像登録

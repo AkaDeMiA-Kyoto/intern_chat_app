@@ -6,7 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/common.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/friends.css' %}" />
+    <link rel="stylesheet" type="text/css"
+        href="{% static 'myapp/css/friends.css' %}" />
     <title>DeMiAインターン</title>
 </head>
 
@@ -29,21 +30,20 @@
         </form>
         {% if hasData %}
         {% for item in data %}
-        {% if item.id != user.id %}
-        <a href="{% url 'talk_room' item.id %}" class = "friend_btn_cover">
+        <a href="{% url 'talk_room' item.id %}" class="friend_btn_cover">
             <div class="friend_btn">
-                <span><img src="{{ item.prof_img_url }}" , alt="{{item.username}}のプロフィール画像" , class="prof_img"></span>
+                <span><img src="{{ item.prof_img_url }}" ,
+                        alt="{{item.username}}のプロフィール画像" , class="prof_img"></span>
                 <span>{{ item.username }}</span>
             </div>
         </a>
-        {% endif %}
         {% endfor %}
         {% else %}
         <div class="NoFriendFoundMsg">
             お探しのフレンドはこのアプリを使っていないようです。
         </div>
         {% endif %}
-        
+
         <div class="BottomSpace"></div>
     </main>
     <footer class="footer">
