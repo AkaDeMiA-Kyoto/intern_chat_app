@@ -1,0 +1,9 @@
+header {
+    background-color: rgb(236, 236, 236);
+    font-size: 25px;
+    font-weight: 550;
+    text-align: center;
+    border-bottom: 2px solid rgb(169, 167, 167);
+    padding: 10px;
+    margin-bottom: 40px; 
+}

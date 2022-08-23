@@ -1,0 +1,40 @@
+header {
+    background-color: rgb(236, 236, 236);
+    font-size: 25px;
+    font-weight: 550;
+    text-align: center;
+    border-bottom: 2px solid rgb(169, 167, 167);
+    padding: 10px;
+    margin-bottom: 40px;
+
+}
+input {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    
+}
+.item_input {
+    position: absolute;
+     
+    width:35%;
+    height: 20px;
+    
+}
+.button {
+    position:absolute;
+    border-radius: 15px;
+    border: 2px solid rgb(169, 167, 167);
+    text-align: center;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    background-color: white;
+    margin-top: 40px;
+    font-size: 18px;
+   
+}
+.form_label {
+    padding-left: 31%; 
+}

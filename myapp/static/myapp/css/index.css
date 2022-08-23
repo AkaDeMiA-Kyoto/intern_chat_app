@@ -1,0 +1,26 @@
+.item_icon {
+    display: inline-block;
+    position: relative;
+    border: 1px solid rgb(169, 167, 167);
+    border-radius: 10px; 
+    font-size: 20px;
+    color: black;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.outline {
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    
+}
+
+    
+
+
+
+
+
+  
+ 

@@ -1,1 +1,30 @@
-SU
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width initial-scale=1.0">
+        <title>signup</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}" />
+    </head>
+    <body>
+        <header class="item_parent">会員登録</header>
+        <div class="item_form">
+            <form action="{% url 'index' %}" method="POST">
+            {% csrf_token %}
+                <label class="form_label">Username:<br><input class="item_input" type="text"></label>
+                <br>
+                <label class="form_label">Email address:<br><input class="item_input" type="email"></label>
+                <br>
+                <label class="form_label">Password:<br><input class="item_input" type="text"></label>
+                <br>
+                <label class="form_label">Password confirmation:<br><input class="item_input" type="text"></label>
+                <br>
+                <label class="form_label">Img:<br><input class="item_file" type="file">
+                <br>
+                <input type="submit" value="submit" class="button">
+            </form>
+        </div>
+    </body>
+</html>

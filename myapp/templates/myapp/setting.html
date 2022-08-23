@@ -1,1 +1,30 @@
-S
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width initial-scale=1.0">
+        <title>setting</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
+    </head>
+    <body>
+        <header>設定</header>
+        <div class="item_container">
+            <a href="{% url '' " class="item_link">
+                <div class="item_icon">ユーザ名変更</div>
+            </a>
+            <a href="{% url ''" class="item_link">
+                <div class="item_icon">メールアドレス<br>変更</div>
+            </a>
+            <a href="{% url ''" class="item_link">
+                <div class="item_icon">アイコン変更</div>
+            </a>
+            <a href="{% url ''" class="item_link">
+                <div class="item_icon">パスワード変更</div>
+            </a>
+            <a href="{% url 'index'" class="item_link">
+                <div class="item_icon">ログアウト</div>
+            </a>
+        </div>
+    </body>
+</html>

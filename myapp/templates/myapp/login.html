@@ -1,1 +1,29 @@
-LI
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width initial-scale=1.0">
+        <title>setting</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/login.css' %}" />
+    </head>
+    <body>
+        <header>
+        <!--ここからヘッダー-->
+            ログイン
+        <!--ヘッダー終わり-->
+        </header>
+        
+        <div class="item_container">
+            <form action="{% url 'friends' %}" method="POST">
+            {% csrf_token %}
+                <div>
+                    <label class="item_label">ユーザーネーム:<input type="text"></label>
+                </div>
+                    <br>
+                <div>
+                    <label class="item_label">パスワード:<input type="text"></label>
+                </div>
+                <input class="button" value="ログイン" type="submit">
+            </form>
+        </div>
