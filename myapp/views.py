@@ -46,10 +46,14 @@ def friends(request):
             # フォームクリアボタンの処理。
             form = SearchForm()
         elif request.POST["content"] != "":
-            # 検索処理
             searchName = request.POST["content"]
             hasFormContent = True
-            data = data.filter(username__contains=searchName)
+            if request.POST["searchOption"] == "0":
+                # ユーザー名での検索処理(部分一致を許す)
+                data = data.filter(username__contains=searchName)
+            elif request.POST["searchOption"] == "1":
+                # メールアドレスでの検索処理(完全一致のみ)
+                data = data.filter(email=searchName)
 
     # メッセージ取得、ソート
     myMsg = request.user.msg.all().order_by(F("createdTime"))
