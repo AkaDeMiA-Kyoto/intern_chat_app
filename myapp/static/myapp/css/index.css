@@ -1,0 +1,18 @@
+.index_button{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.button{
+    display: block;
+    color: black;
+    background-color: grey;
+    border: solid 1px black;
+    border-radius: 10px;
+    padding: 2% 0%;
+    margin: 1rem auto;
+    width: 30%;
+    text-align: center;
+}

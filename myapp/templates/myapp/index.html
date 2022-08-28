@@ -1,9 +1,11 @@
-{% extends 'myapp/base.html' %}
+{% extends "myapp/base.html" %}
 {% load static %}
-{% block extra_style %}<link ref="styleheet" href="{% static 'myapp/css/index.css' %}">{% endblock %}
+{% block extra_style %}<link rel="stylesheet" href="{% static 'myapp/css/index.css' %}">{% endblock %}
 {% block header_title %}インデックス{% endblock %}
 {% block content %}
-<a href="{% url 'login' %}">ログイン</a>
-<a href="{% url 'signup' %}">会員登録</a>
+<div class="index_buttons">
+    <a href="{% url 'login' %}" class="button">ログイン</a>
+    <a href="{% url 'signup' %}" class="button">会員登録</a>
+</div>
 {% endblock %}
 {% block footer %}{% endblock %}
