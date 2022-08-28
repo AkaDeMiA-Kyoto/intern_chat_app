@@ -25,7 +25,7 @@
                 {% endif %}
                 <td class="name"><a href= "{% url 'myapp:talk_room' CustomUser.id %}">{{CustomUser.username}}</a></td>
                 {% if CustomUser.latest_msg_talk %}
-                    <td class="item">{{ CustomUser.latest_msg_talk }}</td>
+                    <td class="item">{{ CustomUser.latest_msg_talk | truncatechars:15}}</td>
                 {% else %}
                     <td></td>
                 {% endif %}

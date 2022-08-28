@@ -1,5 +1,4 @@
 .content {
-
     flex-direction: row;
     height: 120px;
     display: flex;
@@ -7,7 +6,7 @@
     justify-content: space-between;
     align-items: center;
     margin: 0 auto;
-    width: 500px;
+    width: 800px;
     font-size: 18px;
     font-weight: 700;
     position: relative;               
@@ -15,7 +14,7 @@
     margin-left: auto;
     margin-right: auto;          
     border-style: solid;
-    transform: translateY(0%) translateX(50%);
+    transform: translateY(0%) translateX(0%);
 }
 
 .friend_icon {
