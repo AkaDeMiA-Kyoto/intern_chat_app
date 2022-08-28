@@ -13,18 +13,13 @@ from requests import request
 from . import forms 
 from myapp.models import CustomUser, TalkContent
 from .forms import LoginForm, SignUpForm, UsernameChangeForm ,EmailChangeForm,IconChangeForm
-# InquiryForm
 from django.contrib.auth.views import LoginView ,LogoutView ,PasswordChangeView
 from django.utils import timezone
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import OuterRef, Subquery,F
-# from django.views.generic import FormView
-# from django.http import HttpResponse , HttpResponseRedirect
-# from django.contrib.auth import login
-# from datetime import datetime
-# from urllib import request
+
 
 
 def index(request):
@@ -83,7 +78,7 @@ class Friendslist(generic.ListView,LoginRequiredMixin):
 
     
 
-def talk_room(request, Customuser_id):
+def talk_room(request,Customuser_id):
     if request.method == "POST":
         form = forms.TalkForm(request.POST)
         if form.is_valid():
@@ -92,19 +87,23 @@ def talk_room(request, Customuser_id):
             post.send = request.user
             post.receive = CustomUser.objects.get(pk=Customuser_id)
             post.save()
-
+    # msg = TalkContent.objects.filter(
+    #     Q(send_id=OuterRef("pk"), receive_id=request.user)
+    #     | Q(send_id=request.user, receive_id=OuterRef("pk"))
+    #     ).order_by("-date")
+        
     context={
         'Contents':TalkContent.objects.filter(
             (Q(receive_id = Customuser_id) &
             Q(send_id = request.user.id)) | (Q(send_id = Customuser_id) &
             Q(receive_id = request.user.id))
-        ).order_by("date"),
+        ).select_related('send').order_by("date"),
         'form':forms.TalkForm(),
         'Partner':CustomUser.objects.get(pk=Customuser_id),
-        'Self':CustomUser.objects.get(pk=request.user.id)
+        # 'Self':CustomUser.objects.get(pk=request.user.id)
     }
     return render(request, "myapp/talk_room.html", context)
-    
+
 
 def setting(request):
     return render(request, "myapp/setting.html")
@@ -190,11 +189,3 @@ class IconChange(View):
             context["form"] = form
             return redirect("setting")
 
-# class InquiryView(generic.FormView):
-#     template_name = "myapp/inquiry.html"
-#     form_class = InquiryForm
-#     success_url = reverse_lazy('friends')
-
-#     def form_valid(self, form) :
-#         form.send_email()
-#         return super().form_valid(form)

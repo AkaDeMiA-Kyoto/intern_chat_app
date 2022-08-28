@@ -13,11 +13,10 @@
     {% for TalkContent in Contents %}
     {% if TalkContent.send.id == user.id %}
         <content class = "me_box">
-            <img class="friend_icon" src={{Self.image.url}}>
+            <img class="friend_icon" src={{user.image.url}}>
             <div class = "me">
-                <!-- {{ user.username }} -->
+                {{ user.username }}
                 {{ TalkContent.sentence }}
-                <br>
                 {{ TalkContent.date }}
             </div>
         </content>
@@ -26,9 +25,8 @@
         <content class = "partner_box">    
             <img class="friend_icon" src={{Partner.image.url}}> 
             <div class = "partner">
-                <!-- {{ Partner.username }} -->
+                {{ Partner.username }}
                 {{ TalkContent.sentence }}
-                <br>
                 {{ TalkContent.date }}
             </div>
         </content>

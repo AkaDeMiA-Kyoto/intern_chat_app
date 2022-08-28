@@ -75,6 +75,9 @@ class IconChangeForm(UsernameChangeForm):
         CustomUser.objects.filter(image=Image, is_active=False).delete()
         return Image
 
+
+
+
 # class InquiryForm (forms.Form):
 #     name = forms.CharField(label='お名前',max_length=30)
 #     email = forms.EmailField(label='メアド')
