@@ -1,0 +1,10 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block extra_style %}<link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">{% endblock %}
+{% block header_title %}会員登録{% endblock %}
+{% block content %}
+<div>
+    {{user}}
+</div>
+{% endblock %}
+{% block footer %}{% endblock %}
