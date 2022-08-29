@@ -1,10 +1,18 @@
 {% extends 'myapp/base.html' %}
 {% load static %}
 {% block extra_style %}<link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">{% endblock %}
-{% block header_title %}会員登録{% endblock %}
+{% block header_title %}友達{% endblock %}
 {% block content %}
-<div>
-    {{user}}
+<div class="friends">
+    <ul class="friend_list">
+    {% for friend in data %}
+        <a class="freind_list_item_link" href="{% url 'talkroom' friend.id %}">
+        <li class="friend_list_item">
+            {% if friend.icon %} <img class="friend_list_icon" src="{{friend.icon.url}}"> {% endif %}
+            <div class="friend_list_username">{{friend.username}}</div>
+        </li>
+        </a>
+    {% endfor %}
+    </ul>
 </div>
 {% endblock %}
-{% block footer %}{% endblock %}

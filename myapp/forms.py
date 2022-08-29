@@ -11,3 +11,6 @@ class LoginForm(AuthenticationForm):
     class Meta:
         model = CustomUser
         fields = ['username','password']
+
+class FriendSearchForm(forms.Form):
+    find = forms.CharField(label='Find',required=False)

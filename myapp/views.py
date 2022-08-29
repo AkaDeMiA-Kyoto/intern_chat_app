@@ -2,8 +2,9 @@ from importlib.resources import contents
 from multiprocessing import context
 from django.shortcuts import redirect, render
 from .models import CustomUser
-from .forms import SignUpForm,LoginForm
+from .forms import FriendSearchForm, SignUpForm,LoginForm
 from django.contrib.auth.views import LoginView
+from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 
@@ -34,12 +35,22 @@ class login_view(LoginView):
 
 @login_required
 def friends(request):
+    user = request.user
     context = {
-        'user' : request.user
+        'user' : request.user,
+        'data' : CustomUser.objects.exclude(
+            Q(id = user.id) | Q(id = 1)
+        ),
+        'form' : FriendSearchForm()
     }
+    if request.method == 'POST':
+        context['data'] = CustomUser.objects.filter(username__iconstrains=request.POST['find']).exclude(
+            Q(id = user.id) | Q(id = 1)
+        )
+        context['form'] = FriendSearchForm(request.POST)
     return render(request, "myapp/friends.html",context)
 
-def talk_room(request):
+def talk_room(request,id):
     return render(request, "myapp/talk_room.html")
 
 def setting(request):
