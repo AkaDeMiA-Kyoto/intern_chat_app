@@ -1,1 +1,26 @@
-TR
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block extra_style %}<link rel="stylesheet" href="{% static 'myapp/css/talk_room.css' %}">{% endblock %}
+{% block header_title %}{{friend_name}}{% endblock %}
+{% block content %}
+<div class="chatborad">
+    {% for chat in data %}
+    {% if chat.chat_from.id == id %} 
+    <div class="aitenochat">{{chat.chat}}</div>
+    {% else %}
+    <div class="mychat">{{chat.chat}}</div> 
+    {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}
+{% block footer %}
+<footer class="footer">
+    <div class="footer-container">
+        <form class="submitform" action="{% url 'talkroom' id %}" method="post">
+            {% csrf_token %}
+            {{form}}
+            <input class="submitbutton" type="submit" value="send">
+        </form>
+    </div>
+</footer>
+{% endblock %}

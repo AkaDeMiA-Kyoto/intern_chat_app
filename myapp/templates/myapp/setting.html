@@ -1,1 +1,14 @@
-S
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block extra_style %}<link rel="stylesheet" href="{% static 'myapp/css/setting.css' %}">{% endblock %}
+
+{% block header_title %}設定{% endblock %}
+
+{% block content %}
+<div class="menus">
+    <div class="logout">
+        <a href="{% url 'logout' %}">ログアウト</a>
+        <a href="{% url 'update' %}">登録情報更新</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,7 +1,21 @@
 {% extends 'myapp/base.html' %}
 {% load static %}
 {% block extra_style %}<link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">{% endblock %}
-{% block header_title %}友達{% endblock %}
+
+{% block header %}
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container__title">
+                <form class="friendsearchform" action="{% url 'friends' %}" method="post">
+                    {% csrf_token %}
+                    {{form}}
+                    <input type="submit" value="検索">
+                </form>
+            </span>
+        </div>
+    </header>
+{% endblock %}
+
 {% block content %}
 <div class="friends">
     <ul class="friend_list">

@@ -1,0 +1,23 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block extra_style %}<link rel="stylesheet" href="{% static 'myapp/css/update.css' %}">{% endblock %}
+{% block header_title %}登録情報更新{% endblock %}
+{% block content %}
+<div class="update">
+    {{msg}}
+    <table>
+        <form action="{% url 'update' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form.as_table}}
+            <tr><td></td><td><input class="submit_button" type="submit" value="click"></td></tr>
+            {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                 {% endfor %}
+            {% endif %}
+        </form>
+    </table>
+</div>
+{% endblock %}

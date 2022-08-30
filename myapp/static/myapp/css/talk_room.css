@@ -1,0 +1,16 @@
+.chatboard {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.mychat {
+    width: 10%;
+    background-color: aquamarine;
+    border: solid 1px black;
+}
+
+.aitenochat {
+    width: 10%;
+    border: solid 1px black;
+}
