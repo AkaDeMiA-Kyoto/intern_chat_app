@@ -1,6 +1,5 @@
-from dataclasses import field
 from django import forms
-from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm,AuthenticationForm,PasswordChangeForm
 from .models import CustomUser,Chat
 
 class SignUpForm(UserCreationForm):
@@ -24,4 +23,10 @@ class ChatSendForm(forms.ModelForm):
 class UpDateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ['username','email','icon','password',]
+        fields = ['username','email','icon',]
+
+class MyPasswordChangeForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'

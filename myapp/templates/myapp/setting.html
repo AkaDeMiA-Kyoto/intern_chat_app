@@ -6,9 +6,8 @@
 
 {% block content %}
 <div class="menus">
-    <div class="logout">
-        <a href="{% url 'logout' %}">ログアウト</a>
-        <a href="{% url 'update' %}">登録情報更新</a>
-    </div>
+    <a class="menu_item" href="{% url 'logout' %}">ログアウト</a>
+    <a class="menu_item" href="{% url 'update' %}">登録情報更新</a>
+    <a class="menu_item" href="{% url 'passwordchange' %}">パスワード変更</a>
 </div>
 {% endblock %}

@@ -10,4 +10,5 @@ urlpatterns = [
     path('talk_room/<int:id>', views.talk_room, name='talkroom'),
     path('setting', views.setting, name='setting'),
     path('update', views.update, name='update'),
+    path('passwordchange', views.PasswordChangeView.as_view(), name='passwordchange'),
 ]

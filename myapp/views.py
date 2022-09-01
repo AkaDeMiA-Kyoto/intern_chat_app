@@ -1,8 +1,8 @@
-from multiprocessing import context
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from .models import CustomUser,Chat
-from .forms import FriendSearchForm, SignUpForm,LoginForm,ChatSendForm,UpDateForm
-from django.contrib.auth.views import LoginView,LogoutView
+from .forms import FriendSearchForm, SignUpForm,LoginForm,ChatSendForm,UpDateForm,MyPasswordChangeForm
+from django.contrib.auth.views import LoginView,LogoutView,PasswordChangeView
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -90,3 +90,9 @@ def update(request):
         else:
             context['msg'] = 'Bad'
     return render(request, 'myapp/update.html',context)
+
+class PasswordChange(PasswordChangeView):
+    """パスワード変更ビュー"""
+    form_class = MyPasswordChangeForm
+    success_url = reverse_lazy('setting')
+    template_name = 'myapp/passwordchange.html'
