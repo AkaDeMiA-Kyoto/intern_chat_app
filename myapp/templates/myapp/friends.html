@@ -10,25 +10,34 @@
 {% endblock %}
 
 {% block content %}
-<div class="friends">
-    <ul class="friend-list">
-        {% for friend, talk, time in info %}
-        <a href="{% url 'talk_room' friend.id %}">
-            <li class="friend-list__item">
-                <img class="friend-list__usericon" src="{{friend.image.url}}">
-                <div class="friend-list__username">{{friend.username}}</div>
-                
-            {% if talk %}
-            <div class="friend-list__talk">
-                <p class="friend-list__content">{{talk}}</p>
-                <p class="friend-list__time">{{time|date:"n/j H:i"}}</p>
-            </div>
-            {% endif %}
-            </li>
-        </a>
-        {% empty %}
-        {% endfor %}
-    </ul>
+<div class="div-container">
+    <div class="search">
+        <form action="" method="GET">
+            <input type="text" name="keyword">
+            <button type="submit">検索</button>
+        </form>
+    </div>
+    <div class="friends">
+        <ul class="friend-list">
+            {% for friend, talk, time in info %}
+            <a href="{% url 'talk_room' friend.id %}">
+                <li class="friend-list__item">
+                    <img class="friend-list__usericon" src="{{friend.image.url}}">
+                    <div class="friend-list__username">{{friend.username}}</div>
+                    
+                {% if talk %}
+                <div class="friend-list__talk">
+                    <p class="friend-list__content">{{talk}}</p>
+                    <p class="friend-list__time">{{time|date:"n/j H:i"}}</p>
+                </div>
+                {% endif %}
+                </li>
+            </a>
+            {% empty %}
+                <p>検索結果はありません</p>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 {% endblock %}
 

@@ -1,6 +1,14 @@
+.div-container {
+    padding: 65px 0 0;
+}
+
+.search {
+    text-align: right;
+}
+
 /* headerを避ける */
 .friends {
-    padding: 64px 0;
+    padding: 0;
 }
 
 /* バックエンド追加機能 */
@@ -9,6 +17,10 @@
     padding: 0;
     margin: 0;
     height: calc(100vh - 128px);
+}
+
+.friend-list p {
+    text-align: center;
 }
 
 /*
