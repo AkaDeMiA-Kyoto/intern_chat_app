@@ -1,6 +1,9 @@
 import datetime
+from cmath import log
 
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.db.models import F, Q
 from django.shortcuts import redirect, render
@@ -37,6 +40,7 @@ def signup_view(request):
     return render(request, "myapp/signup.html", {"form": form})
 
 
+@login_required
 def friends(request):
     data = CustomUser.objects.all()
     form = SearchForm(request.POST)
@@ -97,6 +101,7 @@ def friends(request):
     return render(request, "myapp/friends.html", params)
 
 
+@login_required
 def talk_room(request, talkee):
     # 存在しないIDのページにアクセスした場合
     if CustomUser.objects.filter(id=talkee).first() is None:
@@ -151,10 +156,12 @@ def talk_room(request, talkee):
     return render(request, "myapp/talk_room.html", dic)
 
 
+@login_required
 def setting(request):
     return render(request, "myapp/setting.html")
 
 
+@login_required
 def changeUserName(request):
     form = UserNameForm(request.POST)
     err = ""
@@ -169,6 +176,7 @@ def changeUserName(request):
     return render(request, "myapp/simpleform.html", dic)
 
 
+@login_required
 def changeProfImg(request):
     form = ProfImageForm(request.FILES)
     err = ""
@@ -190,5 +198,5 @@ class MyLoginView(LoginView):
     template_name = "myapp/login.html"
 
 
-class Logout(LogoutView):
+class Logout(LogoutView, LoginRequiredMixin):
     template_name = "myapp/logout.html"
