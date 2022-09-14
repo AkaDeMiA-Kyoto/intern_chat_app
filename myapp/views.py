@@ -1,7 +1,5 @@
 import datetime
-from cmath import log
 
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
@@ -141,8 +139,7 @@ def talk_room(request, talkee):
         dummyMsg.save()
 
     # メッセージ取得、ソート
-    # msgraw=CustomMessage.objects.filter(Q(primeUser=request.user)).order_by("createdTime")
-    msgraw = request.user.msg.filter(Q(subUser=them))
+    msgraw = request.user.msg.filter(Q(subUser=them)).order_by(F("createdTime"))
     # 表示
     dic = {
         "isValidUrl": True,
