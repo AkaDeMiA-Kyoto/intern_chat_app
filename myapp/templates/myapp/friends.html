@@ -33,20 +33,26 @@
         {% for item in data %}
         <a href="{% url 'talk_room' item.id %}" class="friend_btn_cover">
             <div class="friend_btn">
-                <span><img src="{{ item.prof_img_url }}" ,
-                        alt="{{item.username}}のプロフィール画像" , class="prof_img"></span>
+                <span>
+                    {% if item.prof_img_url != None %}
+                    <img src="{{ item.prof_img_url }}" ,
+                        alt="{{item.username}}のプロフィール画像" , class="prof_img">
+                    {% else %}
+                    <img src="{% static 'myapp/img/null_img.png' %}" , alt="{{item.username}はプロフィール画像を登録していません" , class="prof_img">
+                    {% endif %}
+                </span>
                 <span>{{ item.username }}</span>
             </div>
         </a>
         {% endfor %}
         {% else %}
-        <div class="NoFriendFoundMsg">
-            お探しのフレンドはこのアプリを使っていないようです。
-            メールアドレスで検索している場合、アドレスが完全に一致していなければ表示されません。
-        </div>
-        {% endif %}
+        <div class=" NoFriendFoundMsg">
+                    お探しのフレンドはこのアプリを使っていないようです。
+                    メールアドレスで検索している場合、アドレスが完全に一致していなければ表示されません。
+            </div>
+            {% endif %}
 
-        <div class="BottomSpace"></div>
+            <div class="BottomSpace"></div>
     </main>
     <footer class="footer">
         <a href="{% url 'friends' %}">

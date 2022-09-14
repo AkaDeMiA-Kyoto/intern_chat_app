@@ -59,22 +59,20 @@ def friends(request):
     myMsg = request.user.msg.all().order_by(F("createdTime"))
 
     # 表示順
-    print("Making friendOrder . . . ", end="")
     friendOrder = {}
     for friend in data:
         friendOrder[friend.id] = friend.date_joined + datetime.timedelta(weeks=-20000)
     for msg in myMsg:
         friendOrder[msg.subUser_id] = msg.createdTime
-    print("Done!")
 
     # テンプレートに渡す用
-    print("Making Friends . . . ", end="")
     friends = []
     for friend in data:
         if friend.id == request.user.id:
             continue
         # 画像URL、なければ置き換え
-        prof_img_url = "media/null_img.png"
+        # prof_img_url = "media/null_img.png"
+        prof_img_url = None
         if friend.prof_img:
             prof_img_url = friend.prof_img.url
 
@@ -87,9 +85,7 @@ def friends(request):
                 "order": friendOrder[friend.id],
             }
         )
-    print("Sorting . . . ", end="")
     friends.sort(key=lambda x: x["order"], reverse=True)
-    print("Done!")
 
     hasData = data.count() > 0
     params = {
@@ -98,9 +94,6 @@ def friends(request):
         "data": friends,
         "hasFormContent": hasFormContent,
     }
-    print("Rendering . . . ")
-    print(request.META.get("REMOTE_ADDR"))
-    print(settings.DEBUG and request.META.get("REMOTE_ADDR") in settings.INTERNAL_IPS)
     return render(request, "myapp/friends.html", params)
 
 
