@@ -43,7 +43,7 @@ def friends(request):
         'data' : CustomUser.objects.exclude(
             Q(id = user.id) | Q(id = 1)
         ),
-        'form' : FriendSearchForm()
+        'form' : FriendSearchForm(),
     }
     if request.method == 'POST':
         context['data'] = CustomUser.objects.filter(username__icontains=request.POST['find']).exclude(

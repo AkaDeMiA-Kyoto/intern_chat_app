@@ -1,0 +1,15 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block extra_style %}<link rel="stylesheet" href="{% static 'myapp/css/signup.css' %}">{% endblock %}
+{% block header_title %}メール認証{% endblock %}
+{% block contents %}
+<div class="container">
+    <div class="row">
+        <div class="my-div-style">
+            <h1>メールアドレスを確認してください</h1>
+            確認のメールを送信しました。<br>メールに記載されたリンクをクリックして、ユーザー登録を完了させてください。<br>数分待っても確認のメールが届かない場合はご連絡ください。
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block footer %}{% endblock %}

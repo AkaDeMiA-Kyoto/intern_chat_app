@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+from operator import truediv
 from pathlib import Path
 import os
 
@@ -39,7 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',
-    'diary',
+    'accounts.apps.AccountsConfig',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
 ]
 
 MIDDLEWARE = [
@@ -118,7 +122,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -129,10 +133,49 @@ AUTH_USER_MODEL = "myapp.CustomUser"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-LOGIN_URL = 'login'
+LOGIN_URL = 'accounts/login/'
 LOGIN_REDIRECT_URL = 'friends'
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = (
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USERNAME_REQUIRED = False 
+
+ACCOUNT_EMAIL_VARIFICATION = 'mandatory'
+ACCOUNT_EMAIL_REQUIRED = True
+
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
+
+ACCOUNT_FROM_EMAIL = 'admin@example.com'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'renhajiyama@gmail.com'
+EMAIL_HOST_PASSWORD = 'gmailのパスワード'
+EMAIL_USE_TLS = True
+
+#allauth accounts/signupのformを変更
+ACCOUNT_FORMS = {
+    'signup': 'myapp.forms.SignUpForm',
+    #'login': 'accounts.forms.CustomLoginForm',
+    #'reset_password': 'accounts.forms.CustomResetPasswordForm',
+    #'reset_password_from_key': 'accounts.forms.CustomResetPasswordKeyForm',
+    #'change_password': 'accounts.forms.CustomChangePasswordForm',
+    #'add_email': 'accounts.forms.CustomAddEmailForm',
+    #'set_password': 'accounts.forms.CustomSetPasswordForm',
+}
 
 try:
     from .local_settings import *
