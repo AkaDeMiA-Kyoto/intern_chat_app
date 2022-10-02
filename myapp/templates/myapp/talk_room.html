@@ -1,11 +1,9 @@
 {% extends 'myapp/base.html' %}
 {% load static %}
-{% block extra_style %}
+{% block extra_styles %}
 <link rel="stylesheet" href="{% static 'myapp/css/talk_room.css' %}">
 {% endblock %}
-{% block title %}
-<title>チャットアプリ | トーク</title>
-{% endblock %}
+{% block title %}トーク{% endblock %}
 {% block header-title %}
 {{partner.username}}
 {% endblock %}

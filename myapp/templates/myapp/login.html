@@ -1,11 +1,9 @@
 {% extends 'myapp/base.html'%}
 {% load static %}
-{% block extra_style %}
+{% block extra_styles %}
 <link rel="stylesheet" href="{% static 'myapp/css/login.css' %}">
 {% endblock %}
-{% block title %}
-<title>チャットアプリ | ログイン</title>
-{% endblock %}
+{% block title %}ログイン{% endblock %}
 {% block header_left %}
 <a href="{% url 'myapp:index' %}" class="back-button">
     <div class="inner-text">戻る</div>

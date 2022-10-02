@@ -74,7 +74,8 @@ pytestdebug.log
 *.mo
 
 # Django stuff:
-media/
+media/*
+!media/default/
 
 # Flask stuff:
 instance/

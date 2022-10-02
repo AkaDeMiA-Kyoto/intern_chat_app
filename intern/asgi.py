@@ -10,7 +10,8 @@ https://docs.djangoproject.com/en/4.0/howto/deployment/asgi/
 import os
 
 from django.core.asgi import get_asgi_application
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'intern.settings')
+from dotenv import load_dotenv
+load_dotenv()
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'intern.settings.base')
 
 application = get_asgi_application()

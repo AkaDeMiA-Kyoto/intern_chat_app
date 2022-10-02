@@ -1,10 +1,10 @@
 {% extends 'myapp/base.html' %}
 {% load static %}
-{% block extra_style %}
+{% block extra_styles %}
 <link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
 {% endblock %}
 {% block title %}
-<title>チャットアプリ | 友達一覧</title>
+友達一覧
 {% endblock %}
 {% block header-title %}
 友達一覧
@@ -25,7 +25,7 @@
                 {{ friend.username }}
             </div>
             <div class="friend-content">
-                登録日時：{{ friend.pub_date }}
+                {{ friend.pub_date|date:"Y年m月d日" }}からチャットアプリを利用しています
             </div>
         </div>
     </a>

@@ -1,11 +1,9 @@
 {% extends 'myapp/base.html' %}
 {% load static %}
-{% block extra_style %}
+{% block extra_styles %}
 <link rel="stylesheet" href="{% static 'myapp/css/setting.css' %}">
 {% endblock %}
-{% block title %}
-<title>チャットアプリ | 設定</title>
-{% endblock %}
+{% block title %}設定{% endblock %}
 {% block header-title %}
 設定
 {% endblock %}
