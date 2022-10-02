@@ -1,0 +1,25 @@
+{% extends 'myapp/base.html'%}
+{% block title %}会員登録確定{% endblock %}
+{% block header_left %}
+<a href="{% url 'myapp:index' %}" class="back-button">
+    <div class="inner-text">戻る</div>
+</a>
+{% endblock %}
+{% block header-title %}会員登録確定{% endblock %}
+{% block content %}
+<div class="form-container">
+    {% if confirmation %}
+        <p>ユーザー登録を確定するには、以下のボタンを押してください。</p>
+
+        <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+            {% csrf_token %}
+            <button class="button35" type="submit">確定</button>
+        </form>
+    {% else %}
+        {% url 'account_email' as email_url %}
+        <p>リンクの有効期限が切れています。<a href="{{ email_url }}">再申請</a></p>
+    {% endif %}
+</div>
+{% endblock %}
+{% block footer %}
+{% endblock %}

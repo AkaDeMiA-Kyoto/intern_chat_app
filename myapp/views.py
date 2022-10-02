@@ -16,24 +16,6 @@ def index(request):
     return render(request, "myapp/index.html")
 
 
-def signup(request):
-    """forms.ModelFormを用いた会員登録"""
-    if request.method == 'POST':
-        # フォーム送信データを受け取る
-        form = forms.SignUpForm(request.POST, request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)  # フォームの情報をコミットせずに保存（追加情報を登録するため）
-            post.pub_date = timezone.now()  # 登録日時の設定
-            post.save()
-            return redirect('myapp:index')
-        else:
-            print(form.errors)
-    else:
-        form = forms.SignUpForm()
-
-    return render(request, 'myapp/signup.html', {'form': form})
-
-
 @login_required
 def friends(request):
     friend_list = MyUser.objects.all().order_by('pub_date')

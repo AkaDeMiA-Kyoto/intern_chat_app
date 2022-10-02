@@ -16,17 +16,14 @@
         {% if form.errors %}
         {{form.errors}}
         {% endif %}
-        <form method="post" enctype="multipart/form-data" class="signup-form">
+        <form method="post" action="" class="signup-form">
             {% csrf_token %}
-            <table class="signup-table">
-                {% for field in form %}
-                <tr>
-                    <td>{{ field.label }}：</td>
-                    <td>{{ field }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            <button type='submit' class="button35">送信</button>
+            {{ form.as_p }}
+
+            {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+            {% endif %}
+            <button type='submit' class="button35">登録</button>
         </form>
     </div>
 </main>
