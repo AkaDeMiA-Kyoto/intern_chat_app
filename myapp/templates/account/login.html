@@ -1,6 +1,6 @@
 {% extends 'myapp/base.html'%}
 {% load static %}
-{% block extra_styles %}
+{% block extra-styles %}
 <link rel="stylesheet" href="{% static 'myapp/css/login.css' %}">
 {% endblock %}
 {% block title %}ログイン{% endblock %}
@@ -9,27 +9,16 @@
     <div class="inner-text">戻る</div>
 </a>
 {% endblock %}
-{% block header-title %}
-ログイン
-{% endblock %}
+{% block header-title %}ログイン{% endblock %}
 {% block content %}
 <div class="form-container">
     {% if form.errors %}
+    <p class="error-notification">以下のエラー箇所を修正してください。</p>
     {{ form.errors }}
     {% endif %}
-    <form action="" method="POST">
+    <form action="" method="post">
         {% csrf_token %}
-        <table>
-            {% for field in form %}
-            <div class="field">
-                <tr>
-                    <td>{{ field.label_tag }}</td>
-                    <td>{{ field }}</td>
-                </tr>
-                {{ field.errors }}
-            </div>
-            {% endfor %}
-        </table>
+        {{ form.as_table }}
         <button type="submit" class="button35">ログイン</button>
     </form>
 </div>

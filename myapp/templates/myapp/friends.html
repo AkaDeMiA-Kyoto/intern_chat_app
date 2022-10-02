@@ -1,14 +1,12 @@
 {% extends 'myapp/base.html' %}
 {% load static %}
-{% block extra_styles %}
+{% block extra-styles %}
 <link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
 {% endblock %}
 {% block title %}
 友達一覧
 {% endblock %}
-{% block header-title %}
-友達一覧
-{% endblock %}
+{% block header-title %}友達一覧{% endblock %}
 {% block content %}
 <div class="friend-container-wrapper">
     {% for friend in friends %}

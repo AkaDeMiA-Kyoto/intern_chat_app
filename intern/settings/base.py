@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
-from . import utils
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,9 +23,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = utils.strtobool(os.getenv('DEBUG', 'true'))
 
 ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS')]
 
@@ -40,7 +36,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'myapp',
+    'myapp.apps.MyappConfig',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
 ]
 
 MIDDLEWARE = [
@@ -72,17 +71,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'intern.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 
 # Password validation
@@ -132,7 +120,34 @@ AUTH_USER_MODEL = 'myapp.MyUser'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-LOGIN_URL = 'myapp:login'            # ログイン時
-LOGIN_REDIRECT_URL = 'myapp:friends'   # ログイン後
-LOGOUT_REDIRECT_URL = 'myapp:index'  # ログアウト後
+# django-allauthで利用するdjango.contrib.sitesを使うためにサイト識別用IDを設定
+SITE_ID = 1
 
+AUTHENTICATION_BACKENDS = (
+    # 一般ユーザー用(メールアドレス認証)
+    'allauth.account.auth_backends.AuthenticationBackend',
+    # 管理サイト用(ユーザー名認証)
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+# メールアドレス認証に変更する設定
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USERNAME_REQUIRED = False
+
+# サインアップにメールアドレス確認をはさむよう設定
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_REQUIRED = True
+
+# ログイン・ログアウト後の遷移先を設定
+# LOGIN_URLはデフォルトでaccounts/login/になっている
+LOGIN_REDIRECT_URL = 'myapp:friends'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'myapp:index'
+
+# ログアウトリンクのクリック一発でログアウトする設定
+ACCOUNT_LOGOUT_ON_GET = True
+
+# django-allauthが送信するメールの件名に自動付与される接頭辞をブランクにする設定
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
+
+# デフォルトのメール送信元を設定
+DEFAULT_FROM_EMAIL = os.getenv('FROM_EMAIL')

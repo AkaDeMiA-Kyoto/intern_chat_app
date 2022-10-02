@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView
+from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from . import forms
 from .models import MyUser, ChatContent
 from django.contrib.auth.decorators import login_required
@@ -10,6 +10,9 @@ from django.urls import reverse_lazy
 
 
 def index(request):
+    # すでにログイン済みのユーザーがインデックスに訪れた場合、リダイレクトさせる
+    if request.user.is_authenticated:
+        return redirect('myapp:friends')
     return render(request, "myapp/index.html")
 
 
@@ -29,15 +32,6 @@ def signup(request):
         form = forms.SignUpForm()
 
     return render(request, 'myapp/signup.html', {'form': form})
-
-
-class MyLogin(LoginView):
-    form_class = forms.LoginForm
-    template_name = "myapp/login.html"
-
-
-class MyLogout(LogoutView):
-    template_name = "myapp/index.html"
 
 
 @login_required
