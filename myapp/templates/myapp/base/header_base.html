@@ -1,0 +1,30 @@
+{% extends 'myapp/base/base.html' %}
+{% load static %}
+{% block extra-styles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'myapp/css/base/header.css' %}">
+{% endblock %}
+{% block header %}
+<header class="header">
+    <div class="header-wrapper">
+        <div class="header-container">
+            <div class="header-container__left">
+                {% block header_left %}
+                {% endblock %}
+            </div>
+            <div class="header-container__title">
+                {% block header-title %}{% endblock %}
+            </div>
+            <div class="header-container__right">
+                {% block header_right %}
+                {% endblock %}
+            </div>
+        </div>
+        <div class="additional-header">
+            {% block additional-header %}
+            {% endblock %}
+        </div>
+    </div>
+</header>
+<div class="top-placeholder"></div>
+{% endblock %}

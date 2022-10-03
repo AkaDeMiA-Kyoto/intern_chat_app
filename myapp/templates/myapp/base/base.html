@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base/base.css' %}" />
+    {% block extra-styles %}{% endblock %}
+    <title>{% block title %}{% endblock %} | チャットアプリ</title>
+</head>
+
+<body>
+    {% block header %}
+    <!-- header_base, またはheader_nav_baseを継承時にここにヘッダーが表示される -->
+    {% endblock %}
+    <div class="wrapper">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    {% block footer %}
+    <!-- header_nav_baseを継承時にここにフッターが表示される -->
+    {% endblock %}
+</body>
+
+</html>

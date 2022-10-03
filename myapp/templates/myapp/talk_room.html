@@ -1,7 +1,9 @@
-{% extends 'myapp/base.html' %}
+{% extends 'myapp/base/header_base.html' %}
 {% load static %}
 {% block extra-styles %}
+{{ block.super }}
 <link rel="stylesheet" href="{% static 'myapp/css/talk_room.css' %}">
+<link rel="stylesheet" href="{% static 'myapp/css/base/footer.css' %}">
 {% endblock %}
 {% block title %}トーク{% endblock %}
 {% block header-title %}
