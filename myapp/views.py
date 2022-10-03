@@ -18,8 +18,15 @@ def index(request):
 
 @login_required
 def friends(request):
-    friend_list = MyUser.objects.all().order_by('pub_date')
-    return render(request, "myapp/friends.html", {'friends': friend_list})
+    if 'name' in request.GET:
+        name = request.GET.get('name')
+        friend_list = MyUser.objects.filter(username__contains=name).order_by('pub_date')
+        bottom_message = '（条件に当てはまるユーザーは以上です）'
+    else:
+        name = ''
+        friend_list = MyUser.objects.all().order_by('pub_date')
+        bottom_message = '（これ以上登録済みのユーザーはいません）'
+    return render(request, "myapp/friends.html", {'friends': friend_list, 'name': name, 'bottom_message': bottom_message})
 
 
 @login_required
@@ -80,7 +87,7 @@ def email_change(request):
         if form.is_valid():
             new_email = form.cleaned_data["email"]
             address = EmailAddress.objects.create(user=request.user, email=new_email, primary=False)
-            address.save()
+            address.save()  # allauthのメールアドレスモデルに登録（MyUserモデルに反映するのは確認後）
             return redirect('myapp:setting')
         else:
             context = {

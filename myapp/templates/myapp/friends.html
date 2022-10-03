@@ -7,6 +7,18 @@
 {% endblock %}
 {% block title %}友達一覧{% endblock %}
 {% block header-title %}友達一覧{% endblock %}
+{% block additional-header %}
+<form method="get" action="">
+<div class="form-container">
+    <div class="input-container">
+        <input name="name" type="text" placeholder="ユーザー名を指定して検索..." value="{{ name }}">
+    </div>
+    <div class="search-button-container">
+        <button type="submit" class="search-button">検索</button>
+    </div>
+</div>
+</form>
+{% endblock %}
 {% block content %}
 <div class="friends-container">
     {% for friend in friends %}
@@ -27,6 +39,6 @@
     {% endfor %}
 </div>
 <div class="bottom-placeholder">
-    （これ以上登録済みのユーザーはいません）
+    {{ bottom_message }}
 </div>
 {% endblock %}

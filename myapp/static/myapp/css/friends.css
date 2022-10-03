@@ -1,3 +1,51 @@
+.form-container {
+    display: flex;
+    height: 50px;
+    padding: 0 8px 8px 8px;
+}
+
+.input-container {
+    width: calc(100% - 100px);
+    height: 100%;
+    position: relative;
+    margin-right: 7px;
+}
+
+.input-container input {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    padding-left: 10px;
+}
+
+.search-button-container {
+    position: relative;
+    width: 100px;
+    height: 100%;
+}
+
+.search-button-container .search-button {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid black;
+    border-radius: 6px;
+}
+
+.top-placeholder {
+    height: 114px;
+}
+
+
 .friends-container {
     display: flex;
     flex-wrap: wrap;

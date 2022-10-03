@@ -4,7 +4,6 @@ from django.dispatch import receiver
 
 @receiver(email_confirmed)
 def email_confirmed_(request, email_address, **kwargs):
-    print(f'メールアドレス「{email_address.email}」は確認されました')
     user = email_address.user
     old_email = EmailAddress.objects.filter(user=user).exclude(email=email_address.email)
     if old_email.exists():
