@@ -36,8 +36,7 @@ def talk_room(request, friend_id):
         else:
             print(form.errors)  # 要修正
     else:
-        contents = ChatContent.objects.filter((Q(send_from__id=request.user.id) & Q(
-            send_to__id=friend_id)) | (Q(send_from__id=friend_id) & Q(send_to__id=request.user.id))).order_by('pub_date')
+        contents = ChatContent.objects.filter((Q(send_from__id=request.user.id) & Q(send_to__id=friend_id)) | (Q(send_from__id=friend_id) & Q(send_to__id=request.user.id))).order_by('pub_date')
         form = forms.ChatForm()
         context = {
             'contents': contents,

@@ -1,5 +1,6 @@
 {% extends 'myapp/base/header_nav_base.html' %}
 {% load static %}
+{% load get_latest_message %}
 {% block extra-styles %}
 {{ block.super }}
 <link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
@@ -15,10 +16,11 @@
         </div>
         <div class="friend-content-container">
             <div class="friend-name">
-                {{ friend.username }}
+                {{ friend.username }}{% if friend.pk == user.pk %}（あなた）{% endif %}
             </div>
             <div class="friend-content">
-                {{ friend.pub_date|date:"Y年m月d日" }}からチャットアプリを利用しています
+                {{ friend.pub_date|date:"Y年m月d日" }}からチャットアプリを利用しています<br>
+                {{ friend.pk|get_latest_message:user.pk }}
             </div>
         </div>
     </a>
