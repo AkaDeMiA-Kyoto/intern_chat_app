@@ -6,7 +6,7 @@ from django.contrib.auth.views import LoginView,LogoutView,PasswordChangeView
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def index(request):
     return render(request, "myapp/index.html")
@@ -45,11 +45,37 @@ def friends(request):
         ),
         'form' : FriendSearchForm(),
     }
+    
+    info = []
+    for user_i in context['data']:
+        tmp = Chat.objects.filter(
+            Q(chat_to = user, chat_from = user_i) | Q(chat_to = user_i, chat_from = user)
+        ).order_by('pub_date').last()
+
+        if tmp:
+            info.append([user_i,tmp.chat])
+        else:
+            info.append([user_i,''])
+    context['data'] = info
+
     if request.method == 'POST':
-        context['data'] = CustomUser.objects.filter(username__icontains=request.POST['find']).exclude(
+        context['data'] = CustomUser.objects.filter(
+            Q(username__icontains=request.POST['find']) | 
+            Q(email__icontains=request.POST['find'])
+        ).exclude(
             Q(id = user.id) | Q(id = 1)
         )
         context['form'] = FriendSearchForm(request.POST)
+        info = []
+        for user_i in context['data']:
+            tmp = Chat.objects.filter(
+                Q(chat_to = user, chat_from = user_i) | Q(chat_to = user_i, chat_from = user)
+            ).order_by('pub_date').last()
+            if tmp:
+                info.append([user_i,tmp.chat])
+            else:
+                info.append([user_i,''])
+        context['data'] = info
     return render(request, "myapp/friends.html",context)
 
 def talk_room(request,id):

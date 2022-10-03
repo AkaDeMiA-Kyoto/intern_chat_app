@@ -19,12 +19,16 @@
 {% block content %}
 <div class="friends">
     <ul class="friend_list">
-    {% for friend in data %}
+    {% for friend,chat in data %}
         <a class="freind_list_item_link" href="{% url 'talkroom' friend.id %}">
         <li class="friend_list_item">
             {% if friend.icon %} <img class="friend_list_icon" src="{{friend.icon.url}}"> {% endif %}
-            <div class="friend_list_username">{{friend.username}}</div>
+            <div class="friend_list_username">{{friend.username}}</div> 
+            {{frirend.username}}
+            {{chat}}
         </li>
+        <!--<p>{{frirend.username}}</p>
+        <p>{{chat}}</p>-->
         </a>
     {% endfor %}
     </ul>

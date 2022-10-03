@@ -40,10 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',
+
     'accounts.apps.AccountsConfig',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
+
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+     'debug_toolbar.middleware.DebugToolbarMiddleware',  # 追加
 ]
 
 ROOT_URLCONF = 'intern.urls'
@@ -175,6 +180,13 @@ ACCOUNT_FORMS = {
     #'change_password': 'accounts.forms.CustomChangePasswordForm',
     #'add_email': 'accounts.forms.CustomAddEmailForm',
     #'set_password': 'accounts.forms.CustomSetPasswordForm',
+}
+
+# 追加
+INTERNAL_IPS = ['127.0.0.1']
+# 追加
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK" : lambda request: True,
 }
 
 try:
