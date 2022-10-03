@@ -9,7 +9,7 @@ AWS_SES_ACCESS_KEY_ID = os.getenv('AWS_SES_ACCESS_KEY_ID')
 AWS_SES_SECRET_ACCESS_KEY = os.getenv('AWS_SES_SECRET_ACCESS_KEY')
 EMAIL_BACKEND = 'django_ses.SESBackend'
 
-INSTALLED_APPS += ['django-ses']
+INSTALLED_APPS += ['django_ses']
 
 # 本番環境のデータベース設定
 DATABASES = {
