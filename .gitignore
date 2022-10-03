@@ -282,3 +282,6 @@ $RECYCLE.BIN/
 
 # 静的ファイル
 staticfiles/
+
+# ダンプファイル
+*.json
