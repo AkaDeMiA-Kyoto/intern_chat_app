@@ -9,6 +9,6 @@ urlpatterns = [
     path('talk_room/<int:friend_id>/', views.talk_room, name='talk_room'),
     path('setting/', views.setting, name='setting'),
     path('name_change/', views.name_change, name='name_change'),
-    path('email_add/', views.email_add, name='email_add'),
+    path('email_change/', views.email_change, name='email_change'),
     path('icon_change/', views.icon_change, name='icon_change'),
 ]

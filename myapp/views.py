@@ -1,5 +1,4 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from . import forms
 from .models import MyUser, ChatContent
 from django.contrib.auth.decorators import login_required
@@ -7,6 +6,7 @@ from django.utils import timezone
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
+from allauth.account.models import EmailAddress
 
 
 def index(request):
@@ -51,7 +51,7 @@ def talk_room(request, friend_id):
 def setting(request):
     return render(request, "myapp/setting.html")
 
-
+@login_required
 def name_change(request):
     if request.method == 'POST':
         form = forms.NameChangeForm(request.POST)
@@ -73,14 +73,14 @@ def name_change(request):
     return render(request, "myapp/name_change.html", context)
 
 
-def email_add(request):
+@login_required
+def email_change(request):
     if request.method == 'POST':
         form = forms.EmailChangeForm(request.POST)
         if form.is_valid():
             new_email = form.cleaned_data["email"]
-            user_obj = MyUser.objects.get(pk=request.user.id)
-            user_obj.email = new_email
-            user_obj.save()
+            address = EmailAddress.objects.create(user=request.user, email=new_email, primary=False)
+            address.save()
             return redirect('myapp:setting')
         else:
             context = {
@@ -90,9 +90,10 @@ def email_add(request):
         context = {
             'form': forms.EmailChangeForm()
         }
-    return render(request, "myapp/email_add.html", context)
+    return render(request, "myapp/email_change.html", context)
 
 
+@login_required
 def icon_change(request):
     if request.method == 'POST':
         form = forms.IconChangeForm(request.POST, request.FILES)

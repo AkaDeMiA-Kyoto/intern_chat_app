@@ -44,6 +44,10 @@
     color: #9b9b9b;
     font-size: 0.5em;
     bottom: 0;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
 }
 
 .bottom-placeholder {
