@@ -1,7 +1,8 @@
-{% extends 'myapp/base/base.html' %}
+{% extends 'myapp/base/header_base.html' %}
 {% load static %}
 {% block extra-styles %}
-<link rel="stylesheet" href="{% static 'myapp/css/name_change.css' %}">
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'myapp/css/base/form.css' %}">
 {% endblock %}
 {% block title %}名前変更{% endblock %}
 {% block header_left %}
@@ -12,19 +13,22 @@
 {% block header-title %}ユーザー名変更{% endblock %}
 {% block content %}
 <div class="form-container">
-    <form method="post" class="username-change-form">
+    {% if form.errors %}
+    <p class="error-notification">以下のエラー箇所を修正してください。</p>
+    {{form.errors}}
+    {% endif %}
+    <form method="post" class="username-change-form" autocomplete="off" action="">
         {% csrf_token %}
-        <table class="username-change-table">
-            <tr>
-                <td>現在のユーザー名：</td>
-                <td>{{ user.username }}</td>
-            </tr>
-            <tr>
-                <td>{{ form.username.label }}：</td>
-                <td>{{ form.username }}</td>
-            </tr>
-        </table>
-        {{ form.errors }}
+        <div class="field-container">
+            <label>現在のユーザー名</label>
+            <div class="field">{{ user.username }}</div>
+        </div>
+        {% for field in form %}
+        <div class="field-container">
+            <label for="id_{{ field.name }}">{{ field.label }}</label>
+            <div class="field">{{ field }}</div>
+        </div>
+        {% endfor %}
         <button type='submit' class="button35">変更</button>
     </form>
 </div>

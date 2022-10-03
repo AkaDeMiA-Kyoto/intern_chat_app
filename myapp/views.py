@@ -53,23 +53,6 @@ def setting(request):
     return render(request, "myapp/setting.html")
 
 
-class PasswordChange(LoginRequiredMixin, PasswordChangeView):
-    """パスワード変更ビュー"""
-    form_class = forms.MyPasswordChangeForm
-    success_url = reverse_lazy('myapp:password_change_done')
-    template_name = 'myapp/password_change.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)  # 継承元のメソッドCALL
-        context["form_name"] = "password_change"
-        return context
-
-
-class PasswordChangeDone(LoginRequiredMixin, PasswordChangeDoneView):
-    """パスワード変更完了"""
-    template_name = 'myapp/password_change_done.html'
-
-
 def name_change(request):
     if request.method == 'POST':
         form = forms.NameChangeForm(request.POST)
@@ -91,7 +74,7 @@ def name_change(request):
     return render(request, "myapp/name_change.html", context)
 
 
-def email_change(request):
+def email_add(request):
     if request.method == 'POST':
         form = forms.EmailChangeForm(request.POST)
         if form.is_valid():
@@ -108,7 +91,7 @@ def email_change(request):
         context = {
             'form': forms.EmailChangeForm()
         }
-    return render(request, "myapp/email_change.html", context)
+    return render(request, "myapp/email_add.html", context)
 
 
 def icon_change(request):

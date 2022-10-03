@@ -7,15 +7,11 @@
 {% block title %}友達一覧{% endblock %}
 {% block header-title %}友達一覧{% endblock %}
 {% block content %}
-<div class="friend-container-wrapper">
+<div class="friends-container">
     {% for friend in friends %}
     <a href="{%url 'myapp:talk_room' friend.id %}" class="friend-container">
         <div class="friend-icon-container">
-            {% if friend.img %}
             <img src="{{ friend.img.url }}" class="friend-icon">
-            {% else %}
-            <img src="../../../media/default/default_user.png" class="friend-icon">
-            {% endif %}
         </div>
         <div class="friend-content-container">
             <div class="friend-name">

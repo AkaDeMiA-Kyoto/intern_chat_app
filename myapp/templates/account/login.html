@@ -1,7 +1,8 @@
-{% extends 'myapp/base/base.html'%}
+{% extends 'myapp/base/header_base.html'%}
 {% load static %}
 {% block extra-styles %}
-<link rel="stylesheet" href="{% static 'myapp/css/login.css' %}">
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'myapp/css/base/form.css' %}">
 {% endblock %}
 {% block title %}ログイン{% endblock %}
 {% block header_left %}
@@ -18,7 +19,12 @@
     {% endif %}
     <form action="" method="post">
         {% csrf_token %}
-        {{ form.as_table }}
+        {% for field in form %}
+        <div class="field-container">
+            <label for="id_{{ field.name }}">{{ field.label }}</label>
+            <div class="field">{{ field }}</div>
+        </div>
+        {% endfor %}
         <button type="submit" class="button35">ログイン</button>
     </form>
 </div>

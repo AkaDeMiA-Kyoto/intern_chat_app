@@ -1,6 +1,7 @@
-{% extends 'myapp/base/base.html' %}
+{% extends 'myapp/base/header_nav_base.html' %}
 {% load static %}
 {% block extra-styles %}
+{{ block.super }}
 <link rel="stylesheet" href="{% static 'myapp/css/setting.css' %}">
 {% endblock %}
 {% block title %}設定{% endblock %}
@@ -8,16 +9,16 @@
 {% block content %}
 <div class="buttons-container">
     <div>
-        <a href="{% url 'myapp:name_change'%}" class="button45">ユーザー名変更</a>
+        <a href="{% url 'myapp:name_change' %}" class="button45">ユーザー名変更</a>
     </div>
     <div>
-        <a href="{% url 'myapp:email_change'%}" class="button45">メールアドレス変更</a>
+        <a href="{% url 'myapp:email_add' %}" class="button45">メールアドレス追加</a>
     </div>
     <div>
-        <a href="{% url 'myapp:password_change'%}" class="button45">パスワード変更</a>
+        <a href="{% url 'account_change_password' %}" class="button45">パスワード変更</a>
     </div>
     <div>
-        <a href="{% url 'myapp:icon_change'%}" class="button45">アイコン変更</a>
+        <a href="{% url 'myapp:icon_change' %}" class="button45">アイコン変更</a>
     </div>
     <div>
         <a href="{% url 'account_logout' %}" class="button45">ログアウト</a>

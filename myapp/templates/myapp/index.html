@@ -1,25 +1,17 @@
+{% extends 'myapp/base/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'myapp/css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'myapp/css/index.css' %}">
-    <title>トップページ | チャットアプリ</title>
-</head>
-
-<body>
-    <div class="buttons">
-        <div>
-            <a href="{% url 'account_login' %}" class="button35">ログイン</a>
-        </div>
-        <div>
-            <a href="{% url 'account_signup' %}" class="button35">会員登録</a>
-        </div>
+{% block extra-styles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'myapp/css/index.css' %}">
+{% endblock %}
+{% block title %}トップページ{% endblock %}
+{% block content %}
+<div class="buttons">
+    <div>
+        <a href="{% url 'account_login' %}" class="button35">ログイン</a>
     </div>
-</body>
-
-</html>
+    <div>
+        <a href="{% url 'account_signup' %}" class="button35">会員登録</a>
+    </div>
+</div>
+{% endblock %}

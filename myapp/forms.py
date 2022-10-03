@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import PasswordChangeForm
+from allauth.account.forms import ChangePasswordForm
 from .models import MyUser, ChatContent
 from django import forms
 
@@ -40,17 +40,17 @@ class EmailChangeForm(forms.ModelForm):
         }
 
 
-class MyPasswordChangeForm(PasswordChangeForm):
-    """パスワード変更フォームのオーバーライド"""
+class MyPasswordChangeForm(ChangePasswordForm):
+    """allauthのパスワード変更フォームのオーバーライド"""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['old_password'].label = "現在のパスワード"
-        self.fields['old_password'].widget.attrs['placeholder'] = "パスワードを入力..."
-        self.fields['new_password1'].label = "新しいパスワード"
-        self.fields['new_password1'].widget.attrs['placeholder'] = "新規パスワード..."
-        self.fields['new_password2'].label = "新しいパスワード（確認）"
-        self.fields['new_password2'].widget.attrs['placeholder'] = "再度入力してください..."
+        self.fields['oldpassword'].label = "現在のパスワード"
+        self.fields['oldpassword'].widget.attrs['placeholder'] = "パスワードを入力..."
+        self.fields['password1'].label = "新しいパスワード"
+        self.fields['password1'].widget.attrs['placeholder'] = "新規パスワード..."
+        self.fields['password2'].label = "新しいパスワード（確認）"
+        self.fields['password2'].widget.attrs['placeholder'] = "再度入力してください..."
 
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
