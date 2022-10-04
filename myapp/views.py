@@ -3,7 +3,8 @@ from django.urls import reverse_lazy
 from .models import CustomUser,Chat
 from .forms import FriendSearchForm, SignUpForm,LoginForm,ChatSendForm,UpDateForm,MyPasswordChangeForm
 from django.contrib.auth.views import LoginView,LogoutView,PasswordChangeView
-from django.db.models import Q
+from django.db.models import Q, F, OuterRef, Subquery, Max, Case, When
+from django.db.models.functions import Coalesce, Greatest
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -46,7 +47,7 @@ def friends(request):
         'form' : FriendSearchForm(),
     }
     
-    info = []
+    '''info = []
     for user_i in context['data']:
         tmp = Chat.objects.filter(
             Q(chat_to = user, chat_from = user_i) | Q(chat_to = user_i, chat_from = user)
@@ -56,7 +57,21 @@ def friends(request):
             info.append([user_i,tmp.chat])
         else:
             info.append([user_i,''])
-    context['data'] = info
+    
+    '''
+    context['data'] = set(
+        CustomUser.objects.exclude(id=user.id)
+        .annotate(
+            send_max=Max("chat_from__pub_date", filter=Q(chat_from__chat_to=user)),
+            receive_max=Max("chat_to__pub_date", filter=Q(chat_to__chat_from=user)),
+            latest_time=Greatest("send_max", "receive_max"),
+            latest_msg_time=Coalesce("latest_time", "send_max", "receive_max"),
+            latest_msg_talk=Case(
+                When(latest_msg_time=F("chat_to__pub_date"), then=F("chat_to__chat")),
+                When(latest_msg_time=F("chat_from__pub_date"), then=F("chat_from__chat"))
+            )
+        ).order_by(F("latest_msg_time").desc(nulls_last=True))
+    )
 
     if request.method == 'POST':
         context['data'] = CustomUser.objects.filter(
@@ -66,7 +81,7 @@ def friends(request):
             Q(id = user.id) | Q(id = 1)
         )
         context['form'] = FriendSearchForm(request.POST)
-        info = []
+        '''info = []
         for user_i in context['data']:
             tmp = Chat.objects.filter(
                 Q(chat_to = user, chat_from = user_i) | Q(chat_to = user_i, chat_from = user)
@@ -75,7 +90,22 @@ def friends(request):
                 info.append([user_i,tmp.chat])
             else:
                 info.append([user_i,''])
-        context['data'] = info
+        '''
+        context['data'] = set(
+            CustomUser.objects.filter(
+                Q(username__icontains=request.POST['find']) | 
+                Q(email__icontains=request.POST['find'])
+            ).annotate(
+                send_max=Max("chat_from__pub_date", filter=Q(chat_from__chat_to=user)),
+                receive_max=Max("chat_to__pub_date", filter=Q(chat_to__chat_from=user)),
+                latest_time=Greatest("send_max", "receive_max"),
+                latest_msg_time=Coalesce("latest_time", "send_max", "receive_max"),
+                latest_msg_talk=Case(
+                    When(latest_msg_time=F("chat_to__pub_date"), then=F("chat_to__chat")),
+                    When(latest_msg_time=F("chat_from__pub_date"), then=F("chat_from__chat"))
+                )
+            ).order_by(F("latest_msg_time").desc(nulls_last=True))
+        )
     return render(request, "myapp/friends.html",context)
 
 def talk_room(request,id):
