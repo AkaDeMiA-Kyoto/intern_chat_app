@@ -7,5 +7,5 @@ def index(request):
 def login(request):
     return render(request, "chat/login.html")
 
-def signup(signup):
-    return render(request, "chat/signup")
+def signup(request):
+    return render(request, "chat/signup.html")
