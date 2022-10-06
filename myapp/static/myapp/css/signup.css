@@ -53,3 +53,8 @@ body{
 #id_img{
     transform: translateX(29%);
 }
+
+
+.helptext{
+    display: none;
+}

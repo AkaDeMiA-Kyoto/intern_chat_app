@@ -1,0 +1,25 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/login.css' %}" />
+{% endblock %}
+
+
+{% block header-title %}ログイン画面{% endblock %}
+
+{% block content %}
+<body>
+    {% if form.errors  %}
+    <div>ユーザー名, パスワードが一致しません．</div>
+    {% endif %}
+    <form method="POST" action="" class="form">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type = "submit" class="form_sub">ログイン</button>
+    </form>
+</body>
+{% endblock %}
+
+

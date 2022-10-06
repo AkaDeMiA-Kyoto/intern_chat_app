@@ -28,3 +28,39 @@
     width: 100%;
     text-decoration: none;
 }
+
+
+label{
+    display: none;
+}
+
+.find_form{
+    border-bottom: #000 1px solid;
+    height: 16px;
+}
+
+
+
+.send-btn{
+    float: right;
+    transform: translateY(-210%) translateX(-100%);
+    border-radius: 6px;
+    border: #bbb solid 1px;
+}
+
+input{
+    width: 70%;
+    transform: translateY(-50%) translateX(10%);
+}
+
+.talk{
+    font-size: 95%;
+    transform: translateY(-485%) translateX(20%);
+    color: rgba(0, 0, 0, 0.704);
+}
+
+.time{
+    font-size: 85%;
+    transform: translateY(-670%) translateX(85%);
+    color: rgba(0, 0, 0, 0.704);
+}

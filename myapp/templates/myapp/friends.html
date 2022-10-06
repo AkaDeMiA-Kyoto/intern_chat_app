@@ -8,12 +8,25 @@
 {% block header-title %}友達{% endblock %}
 
 {% block content %}
-    {% for item in data %}
-        {% if item.img %}
+
+    <form class="find_form" method="GET" action=''>
+        <input name="query" type="text">
+        <button class="send-btn" type="submit">検索</button>
+    </form>
+
+    {% for friend, talk, time in talk %}
+        {% if friend.img %}
         <div class="friend-space">
-            <a href="{% url 'talk_room' item.pk %}" class="btn">
-                <p class="name" style='margin-left: 50px;'>{{item.username}}</p>
-                <img src= '{{item.img.url}}' class="icon">
+            <a href="{% url 'talk_room' friend.pk %}" class="btn">
+                <p class="name" style='margin-left: 50px;'>{{friend.username}}</p>
+                <img src= '{{friend.img.url}}' class="icon">
+                
+                {%if talk%}
+                <div class = 'friend_talk'>
+                    <p class='talk'>{{talk}}</p>
+                    <p class='time'>{{time|date:'n/j H:i'}}</p>
+                </div> 
+                {%endif%}
             </a>
         </div>
         {% endif %}

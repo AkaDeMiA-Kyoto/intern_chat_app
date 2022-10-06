@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django import forms
 from .models import CustomUser, Talk
+from allauth.account.forms import SignupForm as AllAuthSignupForm
 
 class SignUpForm(UserCreationForm):
     class Meta:
@@ -12,8 +13,18 @@ class SignUpForm(UserCreationForm):
         self.fields['password1'].help_text = None
         self.fields['password2'].help_text = None
 
-class LoginForm(AuthenticationForm):
+class CustomSignupForm(AllAuthSignupForm):
+    img = forms.ImageField(required=True)
 
+    class Meta:
+        model = CustomUser
+
+    def signup(self, request, user):
+        user.img = self.cleaned_data['img']
+        user.save()
+        return user
+
+class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['username'].widget.attrs['class'] = 'form-control'

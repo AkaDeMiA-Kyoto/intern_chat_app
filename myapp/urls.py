@@ -1,16 +1,18 @@
 from xml.dom.minidom import Document
 from django.conf import settings
-from django.urls import path
+from django.urls import path, include
 from . import views
-from .views import Login, Signup, PasswordChange, Logout
+from .views import PasswordChange, Logout#, Login, Signup 
 from django.conf.urls.static import static
+
+import debug_toolbar
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('signup', Signup.as_view, name='signup_view'),
-    path('login', Login.as_view, name='login_view'),
+    #path('signup', Signup.as_view(), name='signup_view'),
+    #path('login', Login.as_view(), name='login_view'),
     path('friends', views.friends, name='friends'),
-    path('talk_room', views.talk_room, name='talk_room'),
+    path('talk_room/<int:pk>', views.talk_room, name='talk_room'),
     path('setting', views.setting, name='setting'),
     path("pass_change", PasswordChange.as_view(), name="pass_change"),
     path("pass_change_done", views.pass_change_done, name="pass_change_done"),    

@@ -3,27 +3,56 @@ from importlib.resources import contents
 from django.shortcuts import redirect, render, get_object_or_404
 
 from myapp.models import CustomUser, Talk
+from myapp.utils import create_latest_talk
 from .forms import NameChangeForm, SignUpForm, LoginForm, TalkForm, PasswordChangingForm, NameChangeForm, MailChangeForm, IconChangeForm
-from django.views.generic.edit import CreateView
-from django.contrib.auth.views import LoginView,  PasswordChangeView, PasswordChangeDoneView, LogoutView
+#from django.views.generic.edit import CreateView
+from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView, LogoutView #LoginView,  
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.db.models import Q
+from .utils import create_latest_talk
 
 from allauth.account.views import ConfirmEmailView
 
 def index(request):
     return render(request, "myapp/index.html")
 
+#@login_required
+#def friends(request):
+
+    if request.method == 'POST':
+        form = FindForm(request.POST)
+        find = request.POST['find']
+        data = CustomUser.objects.filter(username__contains=find)
+
+    else:
+        data = CustomUser.objects.all()
+    #.values('img', 'username')
+        params = {
+            'data' : data
+        }
+        
+    return render(request, "myapp/friends.html", params)
+    
 @login_required
 def friends(request):
-    data = CustomUser.objects.all()
-    #.values('img', 'username')
+
+    user = request.user
+
+    talk = create_latest_talk(user)
+
+    find = request.GET.get("query")
+
+    if find:
+        friend = friend.filter(username__contains=find)
+        talk = create_latest_talk(user)
+
     params = {
-        'data' : data
+        'talk' : talk,
     }
     return render(request, "myapp/friends.html", params)
+
 
 
 @login_required
@@ -55,13 +84,13 @@ def setting(request):
     return render(request, "myapp/setting.html")
 
 
-class Signup(CreateView):
+#class Signup(CreateView):
     form_class = SignUpForm
     template_name = "myapp/signup.html" 
     success_url = reverse_lazy('index')
 
 
-class Login(LoginView):
+#class Login(LoginView):
     form_class = LoginForm
     template_name = 'myapp/login.html'
 

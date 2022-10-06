@@ -1,0 +1,60 @@
+html{
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+body{
+    margin: 0;
+}
+
+/* ヘッダー */
+.header{
+    width: 100vw;
+    height: 64px;
+    border-bottom: solid 1px #9b9b9b;
+    background-color: rgb(125, 184, 164);
+
+}
+.header-container{
+    position: relative;
+    width: 90%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.header-container__title{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1rem;
+    line-height: 1rem;
+    margin: auto;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #000;
+}
+
+.form{
+    padding-top: 20px;
+}
+.form_name, .form_pass{
+    text-align: center;
+    display: block;
+}
+.form_sub{
+    margin: auto;
+    display: block;
+    margin-top: 10px;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    background: white;
+    border-color: #cfcfcf;
+    width: 128px;
+    height: 40px;
+}
+
+p{
+    display: block;
+    text-align: center;
+}
