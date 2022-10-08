@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 
 
 def index(request):
-    return render(request, "myapp/index.html")
+    return render(request, "myapp/base2.html")
 
 def signup_view(request):
     return render(request, "myapp/signup.html")

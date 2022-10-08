@@ -3,16 +3,17 @@
 }
 
 html{
-    /* height: 100%; */
+    height: 100%;
     font-size: 16px;
     font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
-    /* height: 100%; */
-    /* height: 100vh; */
+    height: 100%;
     margin: 0 auto;
     width: 500px;
+
+    position: relative;
     /* padding: 80px 30px; */
     border-width: 0 3px;
     border-color: black;
@@ -26,9 +27,12 @@ body {
 /* ヘッダー */
 header{
     position: fixed;
-    width: 100%;
+    margin: 0 auto;
+    width: 495px;
     height: 64px;
-    border-bottom: solid 3px black;
+    background-color: azure;
+    /* border-bottom: solid 3px black; */
+    border-bottom: solid 1px #9b9b9b;
     box-sizing: border-box;
 }
 
@@ -67,17 +71,22 @@ header{
     align-items: center;
 }
 
+
 /* フッター */
-footer {
+/* footer {
     width: 100%;
     height: 64px;
     border-top: solid 3px black;
-}
+
+    下に固定
+    position: absolute;
+    bottom: 0;
+} */
 /* .footer{
     width: 100vw;
     height: 64px;
 } */
-.footer-container{
+/* .footer-container{
     display: flex;
     position: fixed;
     bottom: 0;
@@ -85,8 +94,8 @@ footer {
     height: 64px;
     text-align: center;
     border-top: solid 1px #9b9b9b;
-}
-.footer-container__item{
+} */
+/* .footer-container__item{
     display: flex;
     position: relative;
     width: 50%;
@@ -94,22 +103,22 @@ footer {
     align-items: center;
     text-decoration: none;
     color: #9b9b9b;
-}
-.footer-item__link{
+} */
+/* .footer-item__link{
     width: 90%;
     height: 100%;
     margin: auto;
     text-decoration: none;
-}
-.footer-item__icon{
+} */
+/* .footer-item__icon{
     display: block;
     position: absolute;
     top: 35%;
     left: 50%;
     transform: translate(-50%, -50%);
     line-height: 1.2rem;
-}
-.footer-item__text{
+} */
+/* .footer-item__text{
     position: absolute;
     top: 70%;
     left: 50%;
@@ -117,4 +126,13 @@ footer {
     line-height: 0.8rem;
     font-size: 0.8rem;
     color: #000;
+} */
+
+footer{
+    position: absolute;/*←絶対位置*/
+    bottom: 0; /*下に固定*/
+    width: 100%;
+    background-color: #ffffffbb;
+    color: #fff;
+    text-align: center;
 }

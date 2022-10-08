@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base2.css' %}" />
+    <title>DeMiAインターン</title>
+</head>
+<body>
+<div class = "content">
+    <header class="header">
+        <div class="header-container">
+            <div class="header-container__title">
+                ヘッダー
+            </div>
+        </div>
+    </header>
+    
+    <section>
+        <div class = "main-container">
+            <main>
+                <div class = "main-inner">
+                    <p>
+                        メイン
+                    </p>
+                    <p>
+                        メイン
+                    </p>
+                    <p>
+                        メイン
+                    </p>
+                    <p>
+                        メイン
+                    </p>
+                    <p>
+                        メイン
+                    </p>
+                    <p>
+                        メイン
+                    </p>
+                    <p>
+                        メイン
+                    </p>
+                    <p>
+                        メイン
+                    </p>
+                    <p>
+                        メイン
+                    </p>
+                    <p>
+                        メイン
+                    </p>
+                    <p>
+                        メイン
+                    </p>
+                    <p>
+                        メイン
+                    </p>
+                    <p>
+                        メイン
+                    </p>
+                    <p>
+                        メイン
+                    </p>
+                    
+                </div>
+            </main>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class = "nav">
+
+                <ul class = "navbar">
+                    <li><a href="{% url 'friends' %}" class="footer-item__link">
+                        <img src="{% static 'myapp/img/people-24px.svg' %}">
+                    </a></li>
+                    <li><a href="{% url 'setting' %}" class="footer-item__link">
+                        <img src="{% static 'myapp/img/settings-black-18dp.svg' %}">
+                    </a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</div>
+</body>
+</html>
