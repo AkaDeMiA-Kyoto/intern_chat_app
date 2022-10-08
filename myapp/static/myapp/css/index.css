@@ -16,7 +16,7 @@ body {
     margin: 0;
 }
 
-.content, .header-container, .footer-container{
+.content, .header-container {
     width: 500px;
     margin: 0 auto;
     border-left: solid black 3px;
@@ -45,48 +45,6 @@ header {
     left: 50%;
     transform: translateY(-50%) translateX(-50%);
 }
-
-footer {
-    height: 90px;
-    width: 100%;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-}
-
-.footer-container {
-    height: 100%;
-    background-color: #CCC;
-    border-top: solid #333 1px;
-}
-
-.nav, .navbar {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-.navbar {
-    display: flex;
-    flex-flow: row;
-    list-style-type: none;
-    justify-content: space-around;
-    align-items: center;
-}
-
-.navbar a {
-    display: block;
-    padding: 12px 24px;
-}
-
-.navbar li a:hover {
-	background-color: #999;
-}
-
-.navbar img {
-    height: 40px;
-}
-
 
 main {
     padding: 110px 10px;
