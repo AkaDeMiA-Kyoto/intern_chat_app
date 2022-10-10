@@ -9,21 +9,24 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ozyl(r!*=wht$a7^pp+wp=zg5g96yg5wz!7fwe$gq63874z9##'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -36,6 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',
+
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
 ]
 
 
@@ -80,16 +87,6 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'chatapp_db',
-        'USER': 'fumikifujiwara',
-        'PASSWORD': 'fumiki0115',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
 
 
 # Password validation
@@ -114,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'ja'
 
 TIME_ZONE = 'Asia/Tokyo'
 
@@ -139,11 +136,61 @@ AUTH_USER_MODEL = 'myapp.User'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-LOGIN_URL = 'login'
+# ログイン・ログアウト後の遷移先を設定
 LOGIN_REDIRECT_URL = '/friends'
 LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = 'account_login'
 
+STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# email送信設定
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "no-reply@example.com")
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = True
+
+# django_allauth設定
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = (
+    'allauth.account.auth_backends.AuthenticationBackend',
+    # 一般ユーザ用メールアドレス認証（メールアドレス）
+    'django.contrib.auth.backends.ModelBackend'
+    # 管理サイト用（ユーザ名認証）
+)
+
+# メールアドレス認証に変更する設定
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = True
+
+# サインアップにメールアドレス確認を挟むように設定
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
+# ログアウトリンクのクリック一発でログアウトする設定
+ACCOUNT_lOGOUT_ON_GET = True
+# メールアドレスでの確認後即時ログイン
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+
+# django-allauthが送信するメールの件名に自動付与される接頭辞をブランクに
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
+ACCOUNT_MAX_EMAIL_ADDRESSES = 2
+
+# allauthのフォームカスタマイズ
+ACCOUNT_FORMS = {
+    'login': 'myapp.forms.MyLoginForm',
+    'signup': 'myapp.forms.MySignUpForm',
+    'reset_password_from_key': 'myapp.forms.MyResetPasswordKeyForm',
+    # 'reset_password': 'allauth.account.forms.ResetPasswordForm',
+    'reset_password': 'myapp.forms.MyResetPasswordForm',
+}
+
+#signupformからの情報をusermodelに保存するのに必要
+ACCOUNT_ADAPTER = 'myapp.adapter.AccountAdapter'
 
 try:
     from .local_settings import *

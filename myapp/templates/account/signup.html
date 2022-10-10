@@ -1,0 +1,50 @@
+{% extends 'account/base.html' %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/signup.css' %}">
+{% endblock %}
+
+
+{% block header-title %}会員登録{% endblock %}
+
+{% block content %}
+<form method="post" action="{% url 'account_signup' %}" enctype='multipart/form-d% ata'>
+    <div class="container">
+        {{ form.non_field_errors }}
+        {% csrf_token %}
+        <div class="signup-error-message">
+            {% for field in form %}
+                {{field.errors}}
+            {% endfor %}
+        </div>
+        <div class="form">
+            {{form.username}}
+        </div>
+        <div class="form">
+            {{form.email}}
+        </div>
+        <div class="form">
+            {{form.password1}}
+        </div>
+        <div class="form">
+            {{form.password2}}
+        </div>
+        <div class="form" id="image_form">
+            <!-- <label for="id_image">ファイルを選択
+                <p>選択されていません</p>
+            </label> -->
+            {{form.image}}
+        </div>
+        <p>画像(png)を入力してください</p>
+        
+        {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+        {% endif %}
+    
+        <button type="submit" class="submit">登録</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block footer%}{% endblock %}

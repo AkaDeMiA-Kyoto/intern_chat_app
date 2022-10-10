@@ -1,17 +1,20 @@
 {% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/username_change.css' %}">
+{% endblock %}
 
 {% block header-title %}ユーザー名{% endblock %}
 
 {% block content %}
 <form method="post" action="{% url 'username_change' %}">
-    <table>
+    <div class="form">
         {% for field in form %}
-        <tr>
-            <td>{{ field.label_tag }}</td>
-            <td>{{ field }}</td>
-        </tr>
+            {{ field.label_tag }}
+            {{ field }}
         {% endfor %}
-    </table>
+    </div>
     {% csrf_token %}
     <button type="submit">変更</button>
     {# エラーメッセージを表示 #}

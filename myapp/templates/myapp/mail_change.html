@@ -1,18 +1,21 @@
 {% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/mail_change.css' %}">
+{% endblock %}
 
 {% block header-title %}メール{% endblock %}
 
 {% block content %}
 <form method="post" action="{% url 'mail_change' %}">
     {% csrf_token %}
-    <table>
+    <div class="form">
         {% for field in form %}
-        <tr>
-            <td>{{ field.label_tag }}</td>
-            <td>{{ field }}</td>
-        </tr>
+            {{ field.label_tag }}
+            {{ field }}
         {% endfor %}
-    </table>
+    </div>
     <button type="submit">変更</button>
     {# エラーメッセージを表示 #}
     {% if form.errors %}

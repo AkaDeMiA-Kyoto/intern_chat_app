@@ -1,0 +1,28 @@
+p {
+    margin: 30px auto;
+    width: 30vw;
+    height: 4vh;
+    line-height: 4vh;
+    text-align: center;
+    user-select: none;
+}
+
+a {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    color: white;
+    background-color: #d3d3d3;
+}
+
+button {
+    display: block;
+    width: 30vw;
+    height: 4vh;
+    margin: 30px auto 0;
+}

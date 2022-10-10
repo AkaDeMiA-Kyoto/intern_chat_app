@@ -1,19 +1,47 @@
-.signup-form {
-    height: calc(96vh - 64px);
+.signup-error-message {
+    width: 100vw;
+    height: 1rem;
     margin-top: 4vh;
-    padding: 0 4vw;
     text-align: center;
 }
 
-.signup-form__submit {
-    display: block;
-    width: 30%;
+.form-control {
     text-align: center;
-    margin: 1rem auto;
-    padding: 2% 0%;
+    width: 30vw;
+    height: 4vh;
+    line-height: 4vh;
+    border: green 1px solid;
     border-radius: 10px;
-    border: solid 1px #9b9b9b;
-    font-size: 1rem;
-    color: #000;
-    background-color: #fff;
 }
+
+.form {
+    text-align: center;
+    padding: 30px 0 0 0;
+    margin: 0 auto;
+}
+
+p {
+    width: 100vw;
+    text-align: center;
+}
+
+button {
+    display: block;
+    width: 30vw;
+    height: 4vh;
+    margin: 30px auto 0;
+}
+
+/* label {
+    display: inline-block;
+    color: #a9a9a9;
+    font-size: 14px;
+    width: 30vw;
+    height: 4vh;
+    line-height: 4vh;
+    margin: 0 auto;
+    border: green 1px solid;
+    border-radius: 10px;
+} */
+
+

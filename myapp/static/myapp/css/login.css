@@ -12,7 +12,51 @@
     padding: 0 4vw;
 }
 
-.login-form__username {
+.form {
+    text-align: center;
+    padding: 30px 0 0 0;
+    margin: 0 auto;
+}
+
+.form-control {
+    text-align: center;
+    width: 30vw;
+    height: 4vh;
+    line-height: 4vh;
+    border: green 1px solid;
+    border-radius: 10px;
+}
+
+button {
+    display: block;
+    width: 30vw;
+    height: 4vh;
+    margin: 30px auto 0;
+}
+
+p {
+    margin: 30px auto;
+    width: 30vw;
+    height: 4vh;
+    line-height: 4vh;
+    text-align: center;
+    user-select: none;
+}
+
+a {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    color: white;
+    background-color: #d3d3d3;
+}
+
+/* .login-form__username {
     text-align: center;
 }
 
@@ -31,4 +75,4 @@
     font-size: 1rem;
     color: #000;
     background-color: #fff;
-}
+} */

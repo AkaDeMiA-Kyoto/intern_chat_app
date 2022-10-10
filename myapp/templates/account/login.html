@@ -1,0 +1,43 @@
+{% extends "account/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/login.css' %}">
+{% endblock %}
+
+{% block header-title %}
+ログイン
+{% endblock %}
+
+{% block content %}
+<form action="{% url 'account_login' %}" method="post" enctype="multipart/form-data" class="login-form">
+    {{ form.non_field_errors }}
+    {% csrf_token %}
+
+    {% for field in form %}
+        {% if field != form.remember %}
+            <div class="form">
+                {{field}}
+            </div>
+        {% endif %}
+    {% endfor %}
+
+    {% if form.errors %}
+        <div class="login-error-message">
+            <span>メールアドレス、パスワードが一致しません</span>
+        </div>
+    {% endif %}
+
+    {% if redirect_field_value %}
+        <input type='hidden' name='{{ redirect_field_name }}' value='{{redirect_field_value}}' />
+    {% endif %}
+
+    <button type="submit" class="submit">ログイン</button>
+
+    <p><a href="{% url 'account_reset_password' %}">パスワードを忘れた方はこちら</a></p>
+    <p><a href="{% url 'account_signup' %}">登録していない方はこちら</a></p>
+</form>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

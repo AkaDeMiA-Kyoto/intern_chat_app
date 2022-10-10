@@ -2,7 +2,7 @@ import operator
 
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
-from .forms import ImageSettingForm, LoginForm, SignUpForm, TalkForm, PasswordChangeForm, MailSettingForm, UserNameSettingForm
+from .forms import ImageSettingForm, LoginForm, TalkForm, PasswordChangeForm, MailSettingForm, UserNameSettingForm
 from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView
 from django.contrib.auth.decorators import login_required
@@ -28,25 +28,25 @@ def index(request):
 #     return(request, 'myapp/friends.html', params)
 
 
-def signup(request):
-    if request.method == "POST":
-        form = SignUpForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect("index")
-    else:
-        form = SignUpForm()
-    params = {
-        'form': form,
-    }
-    return render(request, "myapp/signup.html", params)
+# def signup(request):
+#     if request.method == "POST":
+#         form = SignUpForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             form.save()
+#             return redirect("index")
+#     else:
+#         form = SignUpForm()
+#     params = {
+#         'form': form,
+#     }
+#     return render(request, "myapp/signup.html", params)
 
-class Login(LoginView):
-    authentication_form = LoginForm
-    template_name = "myapp/login.html"
+# class Login(LoginView):
+#     authentication_form = LoginForm
+#     template_name = "myapp/login.html"
 
-class Logout(LogoutView):
-    template_name = "myapp/index.html"
+# class Logout(LogoutView):
+#     template_name = "myapp/index.html"
 
 @login_required
 def friends(request):
