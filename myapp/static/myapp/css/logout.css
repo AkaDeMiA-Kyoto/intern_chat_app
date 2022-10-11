@@ -1,0 +1,15 @@
+button {
+    display: block;
+    width: 30vw;
+    height: 4vh;
+    margin: 30px auto 0;
+}
+
+p {
+    margin: 30px auto;
+    width: 30vw;
+    height: 4vh;
+    line-height: 4vh;
+    text-align: center;
+    user-select: none;
+}
