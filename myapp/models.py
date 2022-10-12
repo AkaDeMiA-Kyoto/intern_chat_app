@@ -17,7 +17,7 @@ class ChatContent(models.Model):
         verbose_name='チャット内容'
         verbose_name_plural = 'チャット内容'
     
-    pub_date = models.DateTimeField("date sent")
+    pub_date = models.DateTimeField("date sent", null=False, default=timezone.now)
     send_to = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='message_sent')
     send_from = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='message_was_sent')
     chat_content = models.CharField(max_length=1000)
