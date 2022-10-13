@@ -20,7 +20,8 @@ def index(request):
 def friends(request):
     if 'name' in request.GET:
         name = request.GET.get('name')
-        friend_list = MyUser.objects.prefetch_related('message_sent', 'message_was_sent').filter(username__contains=name).order_by('pub_date')
+        # ユーザー名またはメールアドレスで部分一致検索をかける
+        friend_list = MyUser.objects.prefetch_related('message_sent', 'message_was_sent').filter(Q(username__contains=name) | Q(email__contains=name)).order_by('pub_date')
         bottom_message = '（条件に当てはまるユーザーは以上です）'
     else:
         name = ''
