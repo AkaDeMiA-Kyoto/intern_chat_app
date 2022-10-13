@@ -3,10 +3,10 @@ from . import forms
 from .models import MyUser, ChatContent
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from django.db.models import Q, F, Subquery, OuterRef
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
+from django.db.models import Q, Subquery, OuterRef
 from allauth.account.models import EmailAddress
+# from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.urls import reverse_lazy
 
 
 def index(request):
@@ -34,7 +34,12 @@ def friends(request):
     # OuterRefを使うことで、Subqueryの外側であるfriend_listのフィールドにアクセスできる
     # annotateは新しいクエリセットを返してくるので、受け取る必要がある
     friend_list = friend_list.annotate(latest_message=Subquery(latest_chat_content.values('chat_content')[:1]))  # [:1]とすることでもし会話がなくてもエラー(list index out of range)にならないようにする
-    return render(request, "myapp/friends.html", {'friends': friend_list, 'name': name, 'bottom_message': bottom_message})
+    context = {
+        'friends': friend_list,
+        'name': name,
+        'bottom_message': bottom_message,
+    }
+    return render(request, "myapp/friends.html", context)
 
 
 @login_required
@@ -65,6 +70,7 @@ def talk_room(request, friend_id):
 def setting(request):
     return render(request, "myapp/setting.html")
 
+
 @login_required
 def name_change(request):
     if request.method == 'POST':
@@ -75,14 +81,11 @@ def name_change(request):
             user_obj.username = new_name
             user_obj.save()
             return redirect('myapp:setting')
-        else:
-            context = {
-                'form': form
-            }
     else:
-        context = {
-            'form': forms.NameChangeForm()
-        }
+        form = forms.NameChangeForm()  # postでない（すなわちget）の場合はからのフォームを作って渡す
+    context = {
+        'form': form,
+    }
     return render(request, "myapp/name_change.html", context)
 
 
@@ -92,17 +95,14 @@ def email_change(request):
         form = forms.EmailChangeForm(request.POST)
         if form.is_valid():
             new_email = form.cleaned_data["email"]
-            address = EmailAddress.objects.create(user=request.user, email=new_email, primary=False)
-            address.save()  # allauthのメールアドレスモデルに登録（MyUserモデルに反映するのは確認後）
+            EmailAddress.objects.create(user=request.user, email=new_email, primary=False)
+            # allauthのメールアドレスモデルに登録（MyUserモデルに反映するのは確認後）
             return redirect('myapp:setting')
-        else:
-            context = {
-                'form': form
-            }
     else:
-        context = {
-            'form': forms.EmailChangeForm()
-        }
+        form = forms.EmailChangeForm()
+    context = {
+        'form': form,
+    }
     return render(request, "myapp/email_change.html", context)
 
 
@@ -116,12 +116,9 @@ def icon_change(request):
             user_obj.img = new_img
             user_obj.save()
             return redirect('myapp:setting')
-        else:
-            context = {
-                'form': form
-            }
     else:
-        context = {
-            'form': forms.IconChangeForm()
-        }
+        form = forms.IconChangeForm()
+    context = {
+        'form': form,
+    }
     return render(request, "myapp/icon_change.html", context)

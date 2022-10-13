@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 
-# Create your models here.
-
 
 class MyUser(AbstractUser):
     # usernameとemailはすでにAbstractUserで定義済み,passwordはすでにAbstractBaseUserで定義済み
@@ -18,7 +16,7 @@ class ChatContent(models.Model):
         verbose_name_plural = 'チャット内容'
     
     pub_date = models.DateTimeField("date sent", null=False, default=timezone.now)
-    send_to = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='message_sent')
+    send_to = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='message_sent')  # MyUser側からの参照を行う際にchatcontent_setではどちらのことかわからないのでrelated_nameを設定する
     send_from = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name='message_was_sent')
     chat_content = models.CharField(max_length=1000)
 
