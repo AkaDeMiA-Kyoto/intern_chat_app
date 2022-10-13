@@ -285,3 +285,6 @@ staticfiles/
 
 # ダンプファイル
 *.json
+
+# マイグレーションファイル
+migrations/
