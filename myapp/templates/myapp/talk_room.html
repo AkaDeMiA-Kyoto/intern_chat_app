@@ -31,7 +31,7 @@
             {{content.chat_content}}
         </div>
         <div class="my-chat-pub-date">
-            {{content.pub_date}}
+            {{content.pub_date|date:'Y/m/j f'}}
         </div>
     </div>
     {% else %}
@@ -43,7 +43,7 @@
             {{content.chat_content}}
         </div>
         <div class="your-chat-pub-date">
-            {{content.pub_date}}
+            {{content.pub_date|date:'Y/m/j f'}}
         </div>
     </div>
     {% endif %}

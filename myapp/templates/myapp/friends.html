@@ -1,6 +1,5 @@
 {% extends 'myapp/base/header_nav_base.html' %}
 {% load static %}
-{% load get_latest_message %}
 {% block extra-styles %}
 {{ block.super }}
 <link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
@@ -32,7 +31,9 @@
             </div>
             <div class="friend-content">
                 {{ friend.pub_date|date:"Y年m月d日" }}からチャットアプリを利用しています<br>
-                {{ friend.pk|get_latest_message:user.pk }}
+                {% if friend.latest_message %}
+                {{ friend.latest_message }}
+                {% endif %}
             </div>
         </div>
     </a>

@@ -1,7 +1,9 @@
 .form-container {
     display: flex;
     height: 50px;
-    padding: 0 8px 8px 8px;
+    width: 90%;
+    margin: auto;
+    padding-bottom: 10px;
 }
 
 .input-container {

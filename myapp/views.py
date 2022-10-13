@@ -3,7 +3,7 @@ from . import forms
 from .models import MyUser, ChatContent
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import Q, F, Subquery, OuterRef
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from allauth.account.models import EmailAddress
@@ -20,12 +20,19 @@ def index(request):
 def friends(request):
     if 'name' in request.GET:
         name = request.GET.get('name')
-        friend_list = MyUser.objects.filter(username__contains=name).order_by('pub_date')
+        friend_list = MyUser.objects.prefetch_related('message_sent', 'message_was_sent').filter(username__contains=name).order_by('pub_date')
         bottom_message = '（条件に当てはまるユーザーは以上です）'
     else:
         name = ''
-        friend_list = MyUser.objects.all().order_by('pub_date')
+        # N+1問題を回避するため、あらかじめそのユーザーが送信したメッセージを取得しておく
+        friend_list = MyUser.objects.prefetch_related('message_sent', 'message_was_sent').all().order_by('pub_date')
         bottom_message = '（これ以上登録済みのユーザーはいません）'
+    # 最新のトークデータを取得する部分をannotateにより実装
+    id1 = request.user.id
+    latest_chat_content = ChatContent.objects.filter(Q(send_from__id=id1, send_to__id=OuterRef('pk')) | Q(send_from__id=OuterRef('pk'), send_to__id=id1)).order_by('-pub_date')
+    # OuterRefを使うことで、Subqueryの外側であるfriend_listのフィールドにアクセスできる
+    # annotateは新しいクエリセットを返してくるので、受け取る必要がある
+    friend_list = friend_list.annotate(latest_message=Subquery(latest_chat_content.values('chat_content')[:1]))  # [:1]とすることでもし会話がなくてもエラー(list index out of range)にならないようにする
     return render(request, "myapp/friends.html", {'friends': friend_list, 'name': name, 'bottom_message': bottom_message})
 
 
@@ -43,7 +50,8 @@ def talk_room(request, friend_id):
         else:
             print(form.errors)  # 要修正
     else:
-        contents = ChatContent.objects.filter((Q(send_from__id=request.user.id) & Q(send_to__id=friend_id)) | (Q(send_from__id=friend_id) & Q(send_to__id=request.user.id))).order_by('pub_date')
+        # select_relatedしておくことで、テンプレートでfor文を回すたびに送信者名などを取得するクエリが発行されないようにする
+        contents = ChatContent.objects.select_related('send_from', 'send_to').filter(Q(send_from__id=request.user.id, send_to__id=friend_id) | Q(send_from__id=friend_id, send_to__id=request.user.id)).order_by('pub_date')
         form = forms.ChatForm()
         context = {
             'contents': contents,

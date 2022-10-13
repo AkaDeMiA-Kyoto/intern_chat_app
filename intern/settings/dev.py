@@ -6,6 +6,14 @@ DEBUG = True
 # 開発環境ではコンソールに表示
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+# デバッグツールバーを導入
+INSTALLED_APPS += ['debug_toolbar']
+MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+INTERNAL_IPS = ['127.0.0.1']
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK" : lambda request: True,
+}
+
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -26,7 +34,7 @@ LOGGING = {
         # Djangoが利用するロガー
         'django': {
             'handlers': ['console'],
-            'level': 'INFO',
+            'level': 'DEBUG',  # 発行するクエリを見れるようにする
         },
         # myappアプリケーションが利用するロガー
         'myapp': {
