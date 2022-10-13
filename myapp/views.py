@@ -48,8 +48,6 @@ def talk_room(request, friend_id):
             post.send_from = request.user  # 誰から送られるか
             post.save()
             return redirect('myapp:talk_room', friend_id)
-        else:
-            print(form.errors)  # 要修正
     else:
         # select_relatedしておくことで、テンプレートでfor文を回すたびに送信者名などを取得するクエリが発行されないようにする
         contents = ChatContent.objects.select_related('send_from', 'send_to').filter(Q(send_from__id=request.user.id, send_to__id=friend_id) | Q(send_from__id=friend_id, send_to__id=request.user.id)).order_by('pub_date')
@@ -78,7 +76,6 @@ def name_change(request):
             user_obj.save()
             return redirect('myapp:setting')
         else:
-            print('error')
             context = {
                 'form': form
             }
@@ -120,7 +117,6 @@ def icon_change(request):
             user_obj.save()
             return redirect('myapp:setting')
         else:
-            print('error')
             context = {
                 'form': form
             }

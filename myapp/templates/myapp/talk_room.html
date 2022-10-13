@@ -7,7 +7,7 @@
 {% endblock %}
 {% block title %}トーク{% endblock %}
 {% block header-title %}
-{{partner.username}}
+{{partner.username}}{% if partner.pk == user.pk %}（あなた）{% endif %}
 {% endblock %}
 {% block header_left %}
 <a href="{% url 'myapp:friends' %}" class="back-button">

@@ -34,7 +34,7 @@ LOGGING = {
         # Djangoが利用するロガー
         'django': {
             'handlers': ['console'],
-            'level': 'DEBUG',  # 発行するクエリを見れるようにする
+            'level': 'INFO',
         },
         # myappアプリケーションが利用するロガー
         'myapp': {
