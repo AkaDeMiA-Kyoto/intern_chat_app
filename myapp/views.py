@@ -95,8 +95,9 @@ def email_change(request):
         form = forms.EmailChangeForm(request.POST)
         if form.is_valid():
             new_email = form.cleaned_data["email"]
-            EmailAddress.objects.create(user=request.user, email=new_email, primary=False)
-            # allauthのメールアドレスモデルに登録（MyUserモデルに反映するのは確認後）
+            # allauthのメールアドレスモデルに初回のみ登録（MyUserモデルに反映するのは確認後）
+            if not new_email in EmailAddress.objects.values_list('email', flat=True):
+                EmailAddress.objects.create(user=request.user, email=new_email, primary=False)
             return redirect('myapp:setting')
     else:
         form = forms.EmailChangeForm()

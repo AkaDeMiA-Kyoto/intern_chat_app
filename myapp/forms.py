@@ -1,6 +1,7 @@
 from allauth.account.forms import ChangePasswordForm
 from .models import MyUser, ChatContent
 from django import forms
+from django.core.exceptions import ValidationError
 
 
 class ChatForm(forms.ModelForm):
@@ -38,6 +39,12 @@ class EmailChangeForm(forms.ModelForm):
         labels = {
             'email': '新しいメールアドレス'
         }
+    
+    def clean_email(self):
+        # emailに現在のemailと同じものを指定したときにバリデーションエラーを送出する
+        if self.cleaned_data['email'] in MyUser.objects.values_list('email', flat=True):
+            raise ValidationError('このメールアドレスはすでに使用されています。')
+        return self.cleaned_data['email']
 
 
 class MyPasswordChangeForm(ChangePasswordForm):
