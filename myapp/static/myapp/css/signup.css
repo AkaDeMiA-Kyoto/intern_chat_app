@@ -1,8 +1,11 @@
 .signup-error-message {
     width: 100vw;
-    height: 1rem;
     margin-top: 4vh;
     text-align: center;
+}
+
+.signup-error-message ul {
+    list-style: none;
 }
 
 .form-control {
@@ -32,16 +35,6 @@ button {
     margin: 30px auto 0;
 }
 
-/* label {
-    display: inline-block;
-    color: #a9a9a9;
-    font-size: 14px;
-    width: 30vw;
-    height: 4vh;
-    line-height: 4vh;
-    margin: 0 auto;
-    border: green 1px solid;
-    border-radius: 10px;
-} */
+
 
 

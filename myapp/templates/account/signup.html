@@ -9,7 +9,7 @@
 {% block header-title %}会員登録{% endblock %}
 
 {% block content %}
-<form method="post" action="{% url 'account_signup' %}" enctype='multipart/form-d% ata'>
+<form method="post" action="{% url 'account_signup' %}" enctype='multipart/form-data'>
     <div class="container">
         {{ form.non_field_errors }}
         {% csrf_token %}
@@ -31,9 +31,6 @@
             {{form.password2}}
         </div>
         <div class="form" id="image_form">
-            <!-- <label for="id_image">ファイルを選択
-                <p>選択されていません</p>
-            </label> -->
             {{form.image}}
         </div>
         <p>画像(png)を入力してください</p>

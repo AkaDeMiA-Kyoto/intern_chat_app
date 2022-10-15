@@ -8,7 +8,7 @@ class User(AbstractUser):
     email = models.EmailField(("email"),max_length=200)
     password1 = models.CharField(("password1"),max_length=200)
     password2 = models.CharField(("password2"),max_length=200)
-    image = models.ImageField( 'アイコン画像', upload_to='media/', default='default/light.png')
+    image = models.ImageField( 'アイコン画像', upload_to='media/', default='default/light.png', blank=True)
     pub_data = models.DateTimeField("date signed up", default=timezone.now)
 
 class Talk(models.Model):
