@@ -154,4 +154,4 @@ ACCOUNT_FORMS = {
 }
 
 # デフォルトのメール送信元を設定
-DEFAULT_FROM_EMAIL = os.getenv('FROM_EMAIL')
+DEFAULT_FROM_EMAIL = os.getenv('FROM_EMAIL', 'info@kanyamo.com')
