@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}">
-    <title>DeMiAインターン</title>
+    <title>会員登録</title>
 </head>
 <body>
 <div class = "content">
@@ -22,13 +22,12 @@
             <main>
                 <div class = "main-inner">
                     以下の情報を入力して、会員登録をしてください。
-                    <form>
+                    <form method="post" enctype="multipart/form-data">
                         <div class = "form-element"><label>ユーザーネーム</label><div class = "input"><input type = "text"></div></div>
                         <div class = "form-element"><label>メールアドレス</label><div class = "input"><input type = "email"></div></div>
                         <div class = "form-element"><label>パスワード</label><div class = "input"><input type = "password"></div></div>
                         <div class = "form-element"><label>パスワード（確認）</label><div class = "input"><input type = "password"></div></div>
-                        <div class = "form-element"></div>
-                        <div class = "form-element"></div>
+                        <div class = "form-element"><label>アイコン</label><div class = "input"><input type = "file" accept="image/*"></div></div>
                         <div class = "submit"><input type = "submit"></div>
                     </form>
                 </div>
