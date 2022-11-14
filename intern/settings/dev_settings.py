@@ -1,6 +1,10 @@
 import os
 
+from dotenv import load_dotenv
+
 from .base_settings import *
+
+load_dotenv(".env")
 
 DEBUG = os.getenv("DEBUG")
 
