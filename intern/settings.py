@@ -10,17 +10,19 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
-from pathlib import Path
-from pickle import TRUE
 import environ
+from pathlib import Path
 
 
-if os.path.isfile('.env'): # .envファイルが存在しない時にもエラーが発生しないようにする
-    env = environ.Env(DEBUG=(bool, False),)
-    environ.Env.read_env('.env')
+# if os.path.isfile('.env'): # .envファイルが存在しない時にもエラーが発生しないようにする
+#     env = environ.Env(DEBUG=(bool, False),)
+#     environ.Env.read_env('.env')
 
-    DEBUG = env('DEBUG')
-    ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+#     DEBUG = env('DEBUG')
+#     ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+
+DEBUG = True
+ALLOWED_HOSTS = ["35.73.231.32"]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
