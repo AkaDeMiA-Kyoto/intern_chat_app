@@ -14,15 +14,13 @@ import environ
 from pathlib import Path
 
 
-# if os.path.isfile('.env'): # .envファイルが存在しない時にもエラーが発生しないようにする
-#     env = environ.Env(DEBUG=(bool, False),)
-#     environ.Env.read_env('.env')
+if os.path.isfile('.env'): # .envファイルが存在しない時にもエラーが発生しないようにする
+    env = environ.Env(DEBUG=(bool, False),)
+    environ.Env.read_env('.env')
 
-#     DEBUG = env('DEBUG')
-#     ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+    DEBUG = env('DEBUG')
+    ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
-DEBUG = True
-ALLOWED_HOSTS = ["35.73.231.32"]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,12 +31,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-ozyl(r!*=wht$a7^pp+wp=zg5g96yg5wz!7fwe$gq63874z9##'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
