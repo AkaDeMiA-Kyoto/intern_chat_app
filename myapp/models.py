@@ -6,6 +6,11 @@ class CustomUser(AbstractUser):
     email = models.EmailField('メールアドレス' ,null=True)
     image = models.ImageField('アイコン',null=True)
     username = models.CharField(max_length=20,null=True)
+
+    EMAIL_FIELD = 'email'
+    USERNAME_FIELD = 'email'
+
+    REQUIRED_FIELDS = []
     
 class Talk(models.Model):
     talk_from = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name='talk_from')
