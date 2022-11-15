@@ -25,8 +25,8 @@ if os.path.isfile('.env'): # .envファイルが存在しない時にもエラ�
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# DEBUG = True
-# ALLOWED_HOSTS = ['35.73.231.32']
+DEBUG = True
+ALLOWED_HOSTS = ['35.73.231.32']
 
 
 # Quick-start development settings - unsuitable for production
