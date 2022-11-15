@@ -13,9 +13,12 @@ import os
 from pathlib import Path
 from pickle import TRUE
 import environ
-if os.path.isfile('.env'):
-    env = environ.Env(DEBUG=(bool,False),)
-    environ.Env.read.env('.env')
+
+
+if os.path.isfile('.env'): # .envファイルが存在しない時にもエラーが発生しないようにする
+    env = environ.Env(DEBUG=(bool, False),)
+    environ.Env.read_env('.env')
+
     DEBUG = env('DEBUG')
     ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
