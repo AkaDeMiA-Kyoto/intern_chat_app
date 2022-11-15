@@ -1,0 +1,28 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
+{% endblock %}
+{% block header_title %}友達{% endblock %}
+{% block content %}
+
+<div class="friends">
+    <ul class="friend-list">
+        {% for friends in friends_list %}
+        <a class="friend-list__link" href="{% url 'talk_room' friends.id  %}">
+            {% if p.image %}
+            <img class="friend-list__usericon" src="{{ friends.image.url }}">
+            {% endif %}
+            <div class="friend-list__username">{{ friends.username }}</div>
+        {% endfor %}
+    </ul>
+   
+</div>
+<form method="GET" action="{% url 'friends' %}">
+    <input type="text" name="keyword">
+    <button type="submit">検索</button>
+</form>
+
+{% endblock %}
+
+    

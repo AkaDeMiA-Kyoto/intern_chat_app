@@ -12,17 +12,15 @@
     </div>
     
     {% endif %}
-    <form method="POST" action="{% url 'login_view' %}">
+    <form method="POST" action="{% url 'account_login' %}">
       {% csrf_token %}
       <div class="login-form__username">
-      <label>email</label>
-      {{ form.email }}
-      {{ form.email.errors }}
+   
+      {{ form.as_p }}
       </div>
       <div class="login-form__password">
-      <label>パスワード</label>
-      {{ form.password }}
-      {{ form.password.errors }}
+      
+      
       </div>
       <button type = "submit" class="login-form__submit">ログイン</button>
     </form>

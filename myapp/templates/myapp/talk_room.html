@@ -1,1 +1,31 @@
-TR
+{% extends "myapp/base.html" %}
+{% load static %}
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/talk_room.css' %}">
+{% endblock %}
+{% block header_title %}{{friend.username}}{% endblock %}
+{% block talk_room %}
+<a href="{% url 'friends' %}" class="talk_room__back-btn">
+    <i class="fas fa-angle-left"></i>
+</a>
+<a href="" class="talk_room__reload">更新</a>
+{% endblock %}
+{% block content %}
+<div class="talk_room">
+    <ul class="chatboard" id="chatboard">   
+    {% for talk in talk %}
+    <li class="chatboard__content chatboard__content--{% if talk.talk_from == user %}user{% else %}friend{% endif %}">
+        <p class="chatboard__name">＞{{ talk.talk_from }}</p>
+        <p class="chatboard__text">{{ talk.talk_chat }}</p>  
+    </li>
+    {% endfor %}
+    </ul>
+    <form method="POST" class="talk_room__sendbox">
+        {% csrf_token %}
+        {{form.talk_chat}}
+        <button type="submit" class="talk_room__sendbox-btn">送信</button>
+    </form>
+</div>
+{% endblock %}
+{% block footer %}{% endblock %}
+
