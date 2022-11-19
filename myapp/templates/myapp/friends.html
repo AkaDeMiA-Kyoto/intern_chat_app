@@ -13,8 +13,13 @@
 <div class="div-container">
     <div class="search">
         <form action="" method="GET">
-            <input type="text" name="keyword">
-            <button type="submit">検索</button>
+            {% csrf_token %}
+            <div>
+                {{form}}
+            </div>
+            <div>
+                <button type="submit" name="friend_search">検索</button>
+            </div>
         </form>
     </div>
     <div class="friends">

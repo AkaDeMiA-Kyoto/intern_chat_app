@@ -59,6 +59,12 @@ class ImageSettingForm(forms.ModelForm):
         model = User
         fields = ('image',)
 
+class FriendSearch(forms.Form):
+    keyword = forms.CharField(
+        label='検索',
+        required=False,
+    )
+
 
 # allauthのログインフォーム
 class MyLoginForm(LoginForm):

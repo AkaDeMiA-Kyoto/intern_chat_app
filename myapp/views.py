@@ -2,11 +2,11 @@ import operator
 
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
-from .forms import ImageSettingForm, LoginForm, TalkForm, PasswordChangeForm, MailSettingForm, UserNameSettingForm
+from .forms import ImageSettingForm, LoginForm, TalkForm, PasswordChangeForm, MailSettingForm, UserNameSettingForm, FriendSearch
 from django.contrib.auth import authenticate, login, get_user_model
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, Subquery, OuterRef, F, Max, Case, When
 from .models import User
 from django.contrib import messages
 
@@ -52,66 +52,93 @@ def index(request):
 def friends(request):
     user = request.user
     # requestの中にuserのattributeが存在し、ログインしている使用者を特定するインスタンスが存在
-    friends = User.objects.exclude(id=user.id)
 
-    keyword = request.GET.get('keyword')
-    friend_searched = User.objects.filter(username=keyword)
+    # friends = User.objects.exclude(id=user.id)
 
+    info = []
+    info_have_message = []
+    info_have_no_message = []
 
-    if keyword:
-        info = []
-        info_have_message = []
-        info_have_no_message = []
-        friends = friends.filter(username=keyword)
-        for friend in friends:
-            latest_message = Talk.objects.filter(
-                Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-            ).order_by('time').last()
+    form = FriendSearch()
 
-            if latest_message:
-                info_have_message.append([friend, latest_message.talk, latest_message.time])
-            else:
-                info_have_no_message.append([friend, None, None])
+    latest_message = Talk.objects.filter(
+        Q(talk_from=OuterRef("pk"), talk_to=user)
+        | Q(talk_from=user, talk_to=OuterRef("pk"))
+    ).order_by("-time")
 
+    friends = (
+        User.objects.exclude(id=user.id)
+        .annotate(
+            latest_msg_talk=Subquery(latest_message.values("talk")[:1]),
+            latest_msg_time=Subquery(latest_message.values("time")[:1]),
+        )
+        .order_by(F("latest_msg_time").desc(nulls_last=True)))
 
-        info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
-        # info_have_messageの三番目の要素を基準にして、info_have_messageを降順に並べ替える
+    for friend in friends:
+        # latest_message = Talk.objects.filter(
+        #     Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
+        # ).order_by('time').last()
 
-        info.extend(info_have_message)
-        info.extend(info_have_no_message)
-        # infoリストにinfo_have_messageリストを追加
-        # infoリストにinfo_have_no_messageリストを追加
-    else:
-        info = []
-        info_have_message = []
-        info_have_no_message = []
-
-        for friend in friends:
-            latest_message = Talk.objects.filter(
-                Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-            ).order_by('time').last()
-
-            if latest_message:
-                info_have_message.append([friend, latest_message.talk, latest_message.time])
-            else:
-                info_have_no_message.append([friend, None, None])
+        if friend.latest_msg_talk:
+            info_have_message.append([friend, friend.latest_msg_talk, friend.latest_msg_time])
+        else:
+            info_have_no_message.append([friend, None, None])
 
 
-        info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
-        # info_have_messageの三番目の要素を基準にして、info_have_messageを降順に並べ替える
+    info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
+    # info_have_messageの三番目の要素を基準にして、info_have_messageを降順に並べ替える
 
-        info.extend(info_have_message)
-        info.extend(info_have_no_message)
-        # infoリストにinfo_have_messageリストを追加
-        # infoリストにinfo_have_no_messageリストを追加
-
+    info.extend(info_have_message)
+    info.extend(info_have_no_message)
+    # infoリストにinfo_have_messageリストを追加
+    # infoリストにinfo_have_no_messageリストを追加
     
 
+    if request.method == "GET" and 'friend_search' in request.GET:
+        form = FriendSearch(request.GET)
+        if form.is_valid():
+            keyword = form.cleaned_data.get("keyword")
+            if keyword:
+
+                info = []
+                info_have_message = []
+                info_have_no_message = []
+
+                friends = friends.filter(
+                    Q(username__icontains = keyword)
+                    | Q(email__icontains = keyword))
+                
+                
+                for friend in friends:
+                    # latest_message = Talk.objects.filter(
+                    #     Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
+                    # ).order_by('time').last()
+
+                    if friend.latest_msg_talk:
+                        info_have_message.append([friend, friend.latest_msg_talk, friend.latest_msg_time])
+                    else:
+                        info_have_no_message.append([friend, None, None])
+
+                info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
+                # info_have_messageの三番目の要素を基準にして、info_have_messageを降順に並べ替える
+
+                info.extend(info_have_message)
+                info.extend(info_have_no_message)
+                # infoリストにinfo_have_messageリストを追加
+                # infoリストにinfo_have_no_messageリストを追加
+
+                content = {
+                            "info": info,
+                            "form": form,
+                                            }
+                return render(request, "myapp/friends.html", content)
 
     content = {
         "info": info,
+        "form": form,
     }
     return render(request, "myapp/friends.html", content)
+
 
 @login_required
 def talk_room(request, user_id):
