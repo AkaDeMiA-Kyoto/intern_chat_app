@@ -1,0 +1,10 @@
+*{
+    font-family: "Rounded-L M+ 1c bold";
+}
+.chatbox{
+    width: 100%;
+    background-color: black;
+    border-color: blue;
+    border: 1px;
+    
+}

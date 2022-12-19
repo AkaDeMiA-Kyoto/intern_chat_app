@@ -1,1 +1,28 @@
-LI
+{% extends 'myapp/base.html' %}
+{% load static %}
+<head>
+    {% block title %}
+    <title>ログイン</title>
+    {% endblock %}
+    {% block link %}
+    <link rel="shortcut icon" href="{% static 'myapp/img/wow.png' %}"> 
+    <link rel="stylesheet" href="{% static 'myapp/css/signup.css' %}" >
+    {% endblock %}
+</head>
+<body>
+    <header>
+        {% block header-title %} ログイン {% endblock %}
+    </header>  
+        {% block content %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="sub">登録</button>
+        </form>
+
+        {% endblock %}
+        <footer>
+            {% block footer %} {% endblock %}
+        </footer>
+</body>
+</html>

@@ -1,1 +1,36 @@
-TR
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block title %}
+    <title>トークルーム</title>
+{% endblock %}
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/talk_room.css' %}" >
+{% endblock %}
+
+{% block content %}
+<div>
+    {{ friend.username }}
+</div>
+<div>
+    {% if chat_contents %}
+    <table>
+        {% for chat_content in chat_contents %}
+        <tr class="{% if chat_content.send_to == friend %}left{% else %}right{% endif %}">
+            <td>
+                {{ chat_content }}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</div>
+<footer>
+    <div class="chatbox">
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="content">
+            <button type="submit">送信</button>
+        </form>
+    </div>
+</footer>
+{% endblock %}

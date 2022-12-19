@@ -1,1 +1,38 @@
-S
+{% extends 'myapp/base.html' %}
+{% load static %}
+<head>
+    {% block title %}
+    <title>設定</title>
+    {% endblock %}
+    {% block link %}
+    <link rel="stylesheet" href="{% static 'myapp/css/setting.css' %}" >
+    {% endblock %}
+</head>
+<body>
+    <header>
+        {% block header-title %} 設定 {% endblock %}
+    </header>  
+        {% block content %}
+        <div class = "buttons">
+            <div class = "sto">
+                <a href="http://127.0.0.1:8000/friends" class="sub">ユーザー名変更</a>
+            </div>
+            <div class = "sto">
+                <a href="http://127.0.0.1:8000/login" class="sub">メールアドレス変更</a>
+            </div>
+            <div class = "sto">
+                <a href="http://127.0.0.1:8000/login" class="sub">アイコン変更</a>
+            </div>
+            <div class = "sto">
+                <a href="http://127.0.0.1:8000/login" class="sub">パスワード変更</a>
+            </div>
+            <div class = "sto">
+                <a href="http://127.0.0.1:8000/index" class="sub">ログアウト</a>
+            </div>
+        </div>
+        {% endblock %}
+        <footer>
+            {% block footer %} {% endblock %}
+        </footer>
+</body>
+</html>

@@ -1,0 +1,32 @@
+*{
+    font-family: 'Rounded-L M+ 1c bold';
+}
+header{
+    background-color: rgb(236, 233, 233);
+}
+.footer-container__item{
+    background-color: rgb(236, 233, 233);
+}
+.usericon{
+    height: 40px ;
+    aspect-ratio: 1;
+}
+a {
+    text-decoration: none;
+    color: black;
+    font-size: 20px;
+    text-align: center;
+}
+hr{
+    size: 1;
+}
+table{
+    border-bottom: 1px solid black;
+    width: 100%;
+}
+.image{
+    width: 40px;
+}
+.username{
+    padding-top: 0px;
+}

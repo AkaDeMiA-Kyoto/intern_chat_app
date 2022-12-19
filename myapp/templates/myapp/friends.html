@@ -1,0 +1,28 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block title %}
+<title>トークルーム</title>
+{% endblock %}
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}" >
+{% endblock %}
+{% block content %}
+{% for friend in friends %}
+<div>
+    <table>
+        <tr>
+            <td class="image">
+                <img src="{{ friend.img.url }}" alt="アイコン" class="usericon">
+            </td>
+            <td class="username">
+                <a href="{% url 'talk_room' username=friend.username %}">
+                        {{ friend.username }}          
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+{% endfor %}
+{% endblock %}
+
+{% block header-title %} 友達 {% endblock %}
