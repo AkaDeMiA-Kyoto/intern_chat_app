@@ -1,4 +1,5 @@
 from django.shortcuts import redirect, render
+from .models import CustomUser
 
 
 def index(request):
@@ -18,3 +19,7 @@ def talk_room(request):
 
 def setting(request):
     return render(request, "myapp/setting.html")
+
+def register(request):
+    CustomUser.objects.create(username=request.POST['username'], email=request.POST['email'], password=request.POST['password'], icon_image=request.FILES['image'])
+    return redirect('index')

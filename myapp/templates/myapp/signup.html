@@ -20,6 +20,16 @@
     {% endblock %}
 
     {% block content %}
+    <form action="{%url 'register' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %} 
+        <label>Username<input type="text" name="username"></label>
+        <label>Email Address<input type="text" name="email"></label>
+        <label>Password<input type="password" name="password"></label>
+        <label>Password Confirmation<input type="password"></label>
+        <label>Img<input type="file" name="image"></label>
+        <label>submit<input type="submit"></label>
+
+    </form>
     {% endblock %}
 
     {% block footer %}

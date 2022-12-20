@@ -8,4 +8,5 @@ urlpatterns = [
     path('friends', views.friends, name='friends'),
     path('talk_room', views.talk_room, name='talk_room'),
     path('setting', views.setting, name='setting'),
+    path('register', views.register, name='register'),
 ]
