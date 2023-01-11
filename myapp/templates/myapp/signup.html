@@ -13,42 +13,24 @@
     <header class="header">
         <div class="header-container">
             <span class="header-container__title">
-                {% block header-title %}{% endblock %}
+                {% block header-title %}会員登録{% endblock %}
             </span>
         </div>
     </header>
     {% endblock %}
 
     {% block content %}
-    <form action="{%url 'register' %}" method="POST" enctype="multipart/form-data">
-        {% csrf_token %} 
-        <label>Username<input type="text" name="username"></label>
-        <label>Email Address<input type="text" name="email"></label>
-        <label>Password<input type="password" name="password"></label>
-        <label>Password Confirmation<input type="password"></label>
-        <label>Img<input type="file" name="image"></label>
-        <label>submit<input type="submit"></label>
-
-    </form>
-    {% endblock %}
-
-    {% block footer %}
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-container__item">
-                <a href="{% url 'friends' %}" class="footer-item__link">
-                    <span class="footer-item__icon"><img src="{% static 'myapp/img/people-24px.svg' %}"></span>
-                    <span class="footer-item__text">友達</span>
-                </a>
-            </div>
-            <div class="footer-container__item">
-                <a href="{% url 'setting' %}" class="footer-item__link">
-                    <span class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></span>
-                    <span class="footer-item__text">設定</span>
-                </a>
-            </div>
-        </div>
-    </footer>
+    <div class="main">
+        <form action="{%url 'register' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-element"><label for="user-name">Username</label><span class="input"><input type="text" id="user-name" name="username"></span></div>
+            <div class="form-element"><label for="email-address">Email Address</label><span class="input"><input type="text" id="email-address" name="email"></span></div>
+            <div class="form-element" for="password"><label>Password</label><span class="input"><input type="password" id="password" name="password"></span></div>
+            <div class="form-element"><label for="password-confirmation">Password Confirmation</label><span class="input"><input type="password" id="password-confirmation"></span></div>
+            <div class="form-element"><label for="img">Img</label><span class="input"><input type="file" id="img" name="image"></span></div>
+            <div class="form-submit"><input type="submit" value="submit" id="submit"></div>
+        </form>
+    </div>
     {% endblock %}
 </body>
 </html>

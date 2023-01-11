@@ -8,9 +8,9 @@ body{
     height: 100%;
 }
 
-/* ヘッダー
+/* ヘッダー */
 .header{
-    width: 100vw;
+    width: 100%;
     height: 64px;
     border-bottom: solid 1px #9b9b9b;
 }
@@ -35,49 +35,23 @@ body{
     color: #000;
 }
 
-/* フッター */
-/* .footer{
-    width: 100vw;
-    height: 64px;
+
+.main{
+    margin: 30px auto;
 }
-.footer-container{
+
+/* form */
+.form-element{
+    margin: 10px 0;
+    width: 400px;
     display: flex;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 64px;
+}
+.input{
+    display: inline-block;
+    width: 200px;
+    margin: 0 0 0 auto;
+}
+.form-submit{
+    margin: 20px auto;
     text-align: center;
-    border-top: solid 1px #9b9b9b;
 }
-.footer-container__item{
-    display: flex;
-    position: relative;
-    width: 50%;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    color: #9b9b9b;
-}
-.footer-item__link{
-    width: 90%;
-    height: 100%;
-    margin: auto;
-    text-decoration: none;
-}
-.footer-item__icon{
-    display: block;
-    position: absolute;
-    top: 35%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    line-height: 1.2rem;
-}
-.footer-item__text{
-    position: absolute;
-    top: 70%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    line-height: 0.8rem;
-    font-size: 0.8rem;
-    color: #000;
-} */
