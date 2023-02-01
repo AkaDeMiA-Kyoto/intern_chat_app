@@ -1,1 +1,46 @@
-LI
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/login.css' %}" />
+    {% block extra_style %}{% endblock %}
+    <title>ログイン</title>
+</head>
+<body>
+    {% block header %}
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container__title">
+                {% block header-title %}ログイン{% endblock %}
+            </span>
+        </div>
+    </header>
+    {% endblock %}
+
+    {% block content %}
+    <div class="main">
+    </div>
+    {% endblock %}
+</body>
+<form action="" method="POST">
+    {% csrf_token %}
+    {% for error in form.non_field_errors %}
+    <p>{{ error }}</p>
+    {% endfor %}
+
+    {% for field in form %}
+    <p>{{ field.label }}：{{ field }}</p>
+    {% endfor %}
+
+    <p><button type="submit">ログイン</button></p>
+  </form>
+</html>
+
+<!-- 参考
+https://www.techpit.jp/courses/27/curriculums/28/sections/241/parts/835
+
+https://www.techpit.jp/courses/27/curriculums/28/sections/241/parts/835
+
+https://qiita.com/onishi_820/items/c69ebb6a4e34da0f34d4 -->

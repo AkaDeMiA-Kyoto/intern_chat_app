@@ -1,7 +1,7 @@
-
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
+from django.contrib.auth.forms import AuthenticationForm
 
 class SingupForm(forms.Form):
     username = forms.CharField(
@@ -39,15 +39,8 @@ class SingupForm(forms.Form):
         password_confirmation = cleaced_data.get('password_confirmation')
         if password != password_confirmation:
             print('Error code:not right password')
-            raise forms.ValidationError(_('password-confirmation is not same as password'), code='not right password')
-
-
+            raise forms.ValidationError(_('password-confirmation is not same as password'), code='not right password')  
         
-
-    # def check_password(self):
-    #     if self.cleaned_data['password_confirmation'] != self.cleaned_data['password']:
-    #         raise ValidationError('password different')
-
     # バリデーション
     # メールの形式ではない文字がemailフィールドに入力された時 →　完了
     # パスワードと確認に差異が見られた時 →　完了
@@ -56,4 +49,11 @@ class SingupForm(forms.Form):
 
     # 参考
     # https://itc.tokyo/django/form-validation/
+
+class LoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].label = 'ユーザーネーム'
+        self.fields['password'].label = 'パスワード'
+
             
