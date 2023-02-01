@@ -1,0 +1,46 @@
+html{
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+
+    height: 100%;
+}
+body{
+    margin: 0 auto;
+    width: 800px;
+    height: 100%;
+}
+
+.main{
+    height: 100%;
+    position: relative;
+}
+
+/* 角丸ボタン→https://magazine.techacademy.jp/magazine/12905 */
+.custom_button{
+    width: 150px;
+
+    margin: 50px auto;
+    color:black;
+    text-align:center;
+    display:block;
+    padding:5px 0 5px;
+    background:#e9e9e9;
+    border-radius: 10px;
+}
+
+.no_underline {
+    text-decoration: none; /* 下線を消す */
+}
+
+.buttons {
+    /* 上下左右中央寄せ→https://www.sejuku.net/blog/55523 */
+    position: absolute;          /* 位置指定 */
+    top: 50%;                    /* 親要素の半分下にずらす */
+    left: 50%;                   /* 親要素の半分右にずらす */
+    transform: translateY(-50%) translateX(-50%);    /* 要素自体の半分、上と左にずらす */
+}
+
+/* bodyを画面いっぱいにする↓ */
+/* https://csshtml.work/height100vh/#:~:text=%E9%AB%98%E3%81%95%E3%82%92%E7%94%BB%E9%9D%A2%E3%81%84%E3%81%A3%E3%81%B1%E3%81%84%E3%81%AB%E3%81%97%E3%81%9F%E3%81%84%E8%A6%81%E7%B4%A0%E3%81%AE%E5%85%88%E7%A5%96,100%25%E3%80%8D%E3%81%AB%E3%81%97%E3%81%BE%E3%81%97%E3%82%87%E3%81%86%E3%80%82 */
+
+
