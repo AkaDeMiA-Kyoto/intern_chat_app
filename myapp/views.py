@@ -1,33 +1,11 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
-from .forms import LoginForm
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 from django.contrib.auth.hashers import make_password
-
-
-def index(request):
-    return render(request, "myapp/index.html")
-
-def signup_view(request):
-    return render(request, "myapp/signup.html")
-
-def login_view(request):
-    return render(request, "myapp/login.html")
-
-def friends(request):
-    return render(request, "myapp/friends.html")
-
-def talk_room(request):
-    return render(request, "myapp/talk_room.html")
-
-def setting(request):
-    return render(request, "myapp/setting.html")
-from django.shortcuts import redirect, render
 from .models import CustomUser
 from . import forms
-from .forms import SingupForm
-
+from .forms import SingupForm, LoginForm
 
 def index(request):
     return render(request, "myapp/index.html")
@@ -38,12 +16,6 @@ def signup_view(request):
 
 def login_view(request):
     return render(request, "myapp/login.html")
-
-def friends(request):
-    return render(request, "myapp/friends.html")
-
-def talk_room(request):
-    return render(request, "myapp/talk_room.html")
 
 def setting(request):
     return render(request, "myapp/setting.html")
@@ -82,3 +54,33 @@ class Login(LoginView):
 
 class Friends(LoginRequiredMixin, TemplateView):
     template_name = 'myapp/friends.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["user"] = self.request.user
+        print(self.request.user)
+        print(self.request.user.id)
+        print(self.request.user.pk)
+        context["friends"] = CustomUser.objects.all()
+        return context
+
+def talk_room(request, user_id, friend_id):
+    user = get_object_or_404(CustomUser, pk=user_id)
+    friend = get_object_or_404(CustomUser, pk=friend_id)
+    context = {'user': user, 'friend' : friend}
+    return render(request, "myapp/talk_room.html", context)
+
+
+# class Friends(LoginRequiredMixin, ListView):
+#     template_name = 'myapp/friends.html'
+#     model = CustomUser
+
+# def friends(request, pk):
+#     user = CustomUser.objects.get(pk=pk)
+#     friends = CustomUser.objects.all()
+#     context = {'user':user, 'friends': friends}
+#     return render(request, "myapp/friends.html", context)
+
+# class Talk_room(LoginRequiredMixin, TemplateView):
+#     template_name = 'myapp/talk_room.html'
+    

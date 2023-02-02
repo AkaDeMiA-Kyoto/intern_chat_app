@@ -1,1 +1,29 @@
-TR
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
+    {% block extra_style %}{% endblock %}
+    <title>トークルーム</title>
+</head>
+<body>
+    {% block header %}
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container__title">
+                {% block header-title %}トークルーム{% endblock %}
+            </span>
+        </div>
+    </header>
+    {% endblock %}
+
+    {% block content %}
+    <div class="main">
+        <p>あなたは{{ user.username }}</p>
+        <p>相手は{{ friend.username }}</p>
+    </div>
+    {% endblock %}
+</body>
+</html>
