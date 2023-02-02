@@ -57,12 +57,15 @@ class Friends(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["user"] = self.request.user
-        print(self.request.user)
-        print(self.request.user.id)
-        print(self.request.user.pk)
-        context["friends"] = CustomUser.objects.all()
+        user = self.request.user
+        context["user"] = user
+        friends = CustomUser.objects.exclude(id=1).exclude(id=user.id)
+        context["friends"] = friends
         return context
+
+    # 参考
+
+    # https://office54.net/python/django/orm-database-operate
 
 def talk_room(request, user_id, friend_id):
     user = get_object_or_404(CustomUser, pk=user_id)
