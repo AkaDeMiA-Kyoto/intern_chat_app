@@ -56,4 +56,32 @@ class LoginForm(AuthenticationForm):
         self.fields['username'].label = 'ユーザーネーム'
         self.fields['password'].label = 'パスワード'
 
+class MessageForm(forms.Form):
+    talk_room_id = forms.CharField(
+        max_length=100,
+        widget=forms.HiddenInput()
+        )
+    user_name = forms.CharField(
+        max_length=100,
+        widget= forms.HiddenInput()
+    )
+    friend_name = forms.CharField(
+        max_length=100,
+        widget= forms.HiddenInput()
+    )
+    content = forms.CharField(
+        max_length=1000,
+        required=True,
+        )
+    
+# class TestForm(forms.Form):
+#     content = forms.CharField(
+#         max_length=1000,
+#         required=True,
+#         )
+#     test_content = forms.CharField(
+#         max_length=100,
+#         widget= forms.HiddenInput()
+#     )
+
             

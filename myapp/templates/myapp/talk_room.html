@@ -23,6 +23,19 @@
     <div class="main">
         <p>あなたは{{ user.username }}</p>
         <p>相手は{{ friend.username }}</p>
+        <p>このトークルームは、{{ user1.username }}と{{ user2.username }}のトークルーム</p>
+
+        <form action="{%url 'myapp:send_message' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+                <!-- {% if not field.is_hidden %}
+                <p>{{ field }}</p>
+                {% endif %} 
+                hiddenのものも表示しなければ、値を取得できない --> 
+                {{ field }}
+            {% endfor %}
+            <div class="form-submit"><input type="submit" value="送信" id="submit"></div>
+        </form>
     </div>
     {% endblock %}
 </body>
