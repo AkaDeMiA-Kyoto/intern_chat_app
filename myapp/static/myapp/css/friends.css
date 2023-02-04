@@ -7,12 +7,18 @@ body{
     width: 800px;
     height: 100%;
 }
+.container{
+    position: relative;
+    min-height: 100vh;
+    padding-bottom: 64px; /* フッター分 */
+}
 
 /* ヘッダー */
 .header{
     width: 100%;
     height: 64px;
-    border-bottom: solid 1px #9b9b9b;
+    border-bottom: solid 1px black;
+    background-color: #cccccc;
 }
 .header-container{
     position: relative;
@@ -35,7 +41,134 @@ body{
     color: #000;
 }
 
-
+/* main */
 .main{
-    margin: 30px auto;
+    margin: 0px auto;
 }
+
+.friends {
+    display: flex;
+    flex-direction: column;
+}
+
+.friend {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    height: 100px;
+    border-bottom: solid 1px black;
+}
+
+.friend_link {
+    text-decoration: none;
+    color: black;
+}
+
+.friend_link:hover {
+    background-color: aquamarine;
+}
+
+/* 参考
+コピペで簡単！背景色や文字色をマウスオーバーでふわっと切り変える方法 https://beginners-high.com/css-hover-change/ */
+
+.user_icon_box {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user_icon {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: solid 3px black;
+}
+
+/* bodyのwidthは800px */
+
+.friend_inf {
+    width: 720px;
+    display: flex;
+    flex-direction: column;
+}
+
+.friend_name {
+    display: flex;
+    align-items: center;
+    height: 40%;
+    vertical-align: middle;
+    font-weight: bold;
+}
+
+.message_inf {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 60%;
+}
+
+.message_content {
+    width: 80%;
+    height: 100%;
+}
+
+.message_date {
+    height: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.message_date_item {
+    margin-bottom: 10px;
+    margin-right: 10px;
+    color: gray;
+}
+
+/* 参考
+
+[CSSのみ] 画像トリミングのサンプルまとめ。角丸・丸い円・縮小…自由自在に切り抜き！ | KodoCode https://kodocode.net/design-css-trim-image/ */
+
+/* フッター */
+.footer{
+    width: 100%;
+    height: 64px;
+    border-top: solid 1px black;
+    background-color: #cccccc;
+    position: absolute;
+    bottom: 0;
+
+}
+.footer-container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+.footer-container__item {
+    display: flex;
+    width: 50%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.footer-item__link{
+    width: 100%;
+    text-decoration: none;
+}
+.footer-item__text {
+    font-size: 0.8rem;
+    color: #000;
+} 
+
+
+/* 参考
+
+CSSでfooterを固定する方法３つを解説！【初心者向け】 https://webukatu.com/wordpress/blog/11208/ 
+【CSS display:flex】フレックスボックスの使い方 https://webst8.com/blog/css-flex/
+CSSでdiv,文字,画像を右下寄せする方法3選 https://csshtml.work/right-bottom/#:~:text=position%3Aabsolute%E3%81%A7%E5%8F%B3%E4%B8%8B%E5%AF%84%E3%81%9B,-position%3Aabsolute%E3%81%AF&text=%E3%80%8Cright%3A%200%E3%80%8D%E3%81%A7%E5%8F%B3%E5%AF%84%E3%81%9B,%E5%8F%B3%E4%B8%8B%E5%AF%84%E3%81%9B%E3%81%A8%E3%81%AA%E3%82%8A%E3%81%BE%E3%81%99%E3%80%82&text=%E5%8F%B3%E4%B8%8B%E3%81%8B%E3%82%89%E5%B0%91%E3%81%97%E9%9B%A2%E3%81%97%E3%81%9F%E3%81%84%E3%81%A8%E3%81%8D%E3%81%AF%E3%80%81right%E3%81%A8,margin%E3%82%92%E6%8C%87%E5%AE%9A%E3%81%97%E3%81%BE%E3%81%97%E3%82%87%E3%81%86%E3%80%82
+*/

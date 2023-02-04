@@ -24,6 +24,13 @@
         <p>あなたは{{ user.username }}</p>
         <p>相手は{{ friend.username }}</p>
         <p>このトークルームは、{{ user1.username }}と{{ user2.username }}のトークルーム</p>
+        {% for message in messages %}
+            {% if message.speaker_name == user.username %}
+                <p>{{ user.username }}→{{ friend.username }}のメッセージ　{{ message.content }}　({{ message.date }})</p>
+            {% elif message.speaker_name == friend.username %}
+                <p>{{ friend.username }}→{{ user.username }}のメッセージ　{{ message.content }}　({{ message.date }})</p>
+            {% endif %}
+        {% endfor %}
 
         <form action="{%url 'myapp:send_message' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}

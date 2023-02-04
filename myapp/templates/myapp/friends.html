@@ -9,6 +9,7 @@
     <title>友達</title>
 </head>
 <body>
+    <div class="container">
     {% block header %}
     <header class="header">
         <div class="header-container">
@@ -21,16 +22,50 @@
 
     {% block content %}
     <div class="main">
-        <p>あなたは、{{ user.username }}</p>
-        {% for friend in friends %}
-        <ul>
-            <li><a href="{% url 'myapp:talk_room' user.id friend.id %}">{{ friend.username }}</a></li>
-            <li>{{ friend.icon_image }}</li>
-        </ul>
-        <p><img src = "{{ MEDIA_URL }}{{ friend.icon_image }}" width=200px></p>
-        {% endfor %}
+        <!-- <p>あなたは、{{ user.username }}</p> -->
+        <div class="friends">
+            {% for friend_dicts in friends_dicts %}
+            {% with friend_dicts.friend as friend %}
+            
+            <a href="{% url 'myapp:talk_room' user.id friend.id %}" class="friend_link">
+            <div class="friend">
+            <div class="user_icon_box"><img src = "{{ MEDIA_URL }}{{ friend.icon_image }}" class="user_icon"></div>
+            <div class="friend_inf">
+                <div class="friend_name"><div class="friend_name_str">{{ friend.username }}</div></div>
+                <div class="message_inf">
+                {% if friend_dicts.is_sent_message %}
+                <div class="message_content">{{ friend_dicts.latest_message_content }}</div>
+                <div class="message_date"><div class="message_date_item">{{ friend_dicts.latest_message_date|date:"H:i" }}</div></div>
+                {% endif %}
+                </div>
+            </div>
+            </div>
+            </a>
+            {% endwith %}
+            {% endfor %}
+        </div>
     </div>
     {% endblock %}
+
+    {% block footer %}
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-container__item">
+                <a href="{% url 'myapp:friends' %}" class="footer-item__link">
+                    <div class="footer-item__icon"><img class="footer_icon" src="{% static 'myapp/img/people-24px.svg' %}"></div>
+                    <div class="footer-item__text">友達</div>
+                </a>
+            </div>
+            <div class="footer-container__item">
+                <a href="{% url 'myapp:setting' %}" class="footer-item__link">
+                    <div class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></div>
+                    <div class="footer-item__text">設定</div>
+                </a>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
+    </div>
 </body>
 </html>
 
@@ -40,4 +75,7 @@ https://daeudaeu.com/django-login-class/#settingspy
 
 https://qiita.com/j54854/items/1f0560142e39d888251c
 
-https://django.baby/django-how-to-specify-url-at-template/ -->
+https://django.baby/django-how-to-specify-url-at-template/
+
+Djangoの組み込み日付(date),時間(time),現在時刻(now)を使って時刻を利用する https://www.nblog09.com/w/2019/05/08/django-time/
+-->
