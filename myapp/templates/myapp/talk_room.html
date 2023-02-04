@@ -6,44 +6,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
     {% block extra_style %}{% endblock %}
-    <title>トークルーム</title>
+    <title>{{ friend.username }}</title>
 </head>
 <body>
+    <div class="container">
     {% block header %}
     <header class="header">
         <div class="header-container">
-            <span class="header-container__title">
-                {% block header-title %}トークルーム{% endblock %}
-            </span>
+            <div class="header-container__back_container"><a href="{% url 'myapp:friends' %}" class="back"><div class="header-container__back">＜</div></a></div>
+            <div class="header-container__title">
+                {% block header-title %}{{ friend.username }}{% endblock %}
+            </div>
+            <div class="header-container__update_container"><a href="{% url 'myapp:talk_room' user.id friend.id %}" class="update"><div class="header-container__update">更新</div></a></div>
         </div>
     </header>
     {% endblock %}
 
+    <div class="body_container">
     {% block content %}
     <div class="main">
-        <p>あなたは{{ user.username }}</p>
-        <p>相手は{{ friend.username }}</p>
-        <p>このトークルームは、{{ user1.username }}と{{ user2.username }}のトークルーム</p>
+        <div class="messages">
         {% for message in messages %}
-            {% if message.speaker_name == user.username %}
-                <p>{{ user.username }}→{{ friend.username }}のメッセージ　{{ message.content }}　({{ message.date }})</p>
-            {% elif message.speaker_name == friend.username %}
-                <p>{{ friend.username }}→{{ user.username }}のメッセージ　{{ message.content }}　({{ message.date }})</p>
-            {% endif %}
+        <div class="message_inf_container">
+            <div class="from_to_inf">
+                {% if message.speaker_name == user.username %}
+                {{ user.username }}→{{ friend.username }}
+                {% elif message.speaker_name == friend.username %}
+                {{ friend.username }}→{{ user.username }}
+                {% endif %}
+            </div>
+            <div class="message_content_and_date_container">
+            <div class="message_container">{{ message.content }}</div>
+            <div class="message_date_container">
+                <div class="message_day">{{ message.date|date:"m/d" }}</div>
+                <div class="message_time">{{ message.date|date:"H:i" }}</div>
+            </div>
+            </div>
+        </div>
         {% endfor %}
-
-        <form action="{%url 'myapp:send_message' %}" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {% for field in form %}
-                <!-- {% if not field.is_hidden %}
-                <p>{{ field }}</p>
-                {% endif %} 
-                hiddenのものも表示しなければ、値を取得できない --> 
-                {{ field }}
-            {% endfor %}
-            <div class="form-submit"><input type="submit" value="送信" id="submit"></div>
-        </form>
+        </div>
     </div>
     {% endblock %}
+    </div>
+
+    <!-- 参考
+    Djangoの組み込み日付(date),時間(time),現在時刻(now)を使って時刻を利用する https://www.nblog09.com/w/2019/05/08/django-time/ -->
+    {% block footer %}
+    <footer class="footer">
+        <div class="footer-container">
+            <form action="{%url 'myapp:send_message' %}" method="POST" enctype="multipart/form-data" class="form_container">
+            <div class="message_form">
+                {% csrf_token %}
+                {% for field in form %}
+                    <!-- {% if not field.is_hidden %}
+                    <p>{{ field }}</p>
+                    {% endif %} 
+                    hiddenのものも表示しなければ、値を取得できない --> 
+                    {% if field.is_hidden %}
+                    {{ field }}
+                    {% else %}
+                    <div class="form">{{ field }}</div>
+                    {% endif %}
+                {% endfor %}
+                <div class="form-submit"><input type="submit" value="送信" id="submit" class="submit"></div>
+            </div>
+            </form>
+        </div>
+    </footer>
+    {% endblock %}
+    </div>
 </body>
 </html>
+
+<!-- <div class="footer-container__item">
+    <a href="{% url 'myapp:friends' %}" class="footer-item__link">
+        <div class="footer-item__icon"><img class="footer_icon" src="{% static 'myapp/img/people-24px.svg' %}"></div>
+        <div class="footer-item__text">友達</div>
+    </a>
+</div>
+<div class="footer-container__item">
+    <a href="{% url 'myapp:setting' %}" class="footer-item__link">
+        <div class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></div>
+        <div class="footer-item__text">設定</div>
+    </a>
+</div> -->

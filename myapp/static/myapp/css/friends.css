@@ -7,18 +7,32 @@ body{
     width: 800px;
     height: 100%;
 }
-.container{
+/* .container{
     position: relative;
     min-height: 100vh;
+    padding-bottom: 64px; 
+} */
+
+.container{
+    width: 100%;
+    position: relative;
+    min-height: 100vh;
+}
+.body_container {
+    width: 100%;
+    position: relative;
+    padding-top: 64px; /* ヘッダー分 */
     padding-bottom: 64px; /* フッター分 */
 }
 
 /* ヘッダー */
 .header{
-    width: 100%;
+    width: 800px;
     height: 64px;
     border-bottom: solid 1px black;
     background-color: #cccccc;
+    position: fixed;
+    z-index: 50;
 }
 .header-container{
     position: relative;
@@ -135,11 +149,13 @@ body{
 
 /* フッター */
 .footer{
-    width: 100%;
+    /* width: 100%; */
+    width: 800px;
     height: 64px;
     border-top: solid 1px black;
     background-color: #cccccc;
-    position: absolute;
+    /* position: absolute; */
+    position: fixed;
     bottom: 0;
 
 }

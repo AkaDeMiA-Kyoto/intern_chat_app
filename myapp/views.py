@@ -84,7 +84,7 @@ class Friends(LoginRequiredMixin, TemplateView):
                         message_friends.append({'friend':friend, 'latest_message_date':room.latest_message_date, 'latest_message_content':room.latest_message_content})
                     else:
                         non_message_friends.append({'friend':friend, 'id':friend.id})
-                        break
+                    break
             if not is_room_exist: # トークルームがなければ、
                 non_message_friends.append({'friend':friend, 'id':friend.id})
         # リストの順番を整える
