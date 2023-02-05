@@ -2,6 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.hashers import check_password
 
 class SingupForm(forms.Form):
     username = forms.CharField(
@@ -48,7 +49,7 @@ class SingupForm(forms.Form):
     # パスワードが8文字未満の時　→　完了
 
     # 参考
-    # https://itc.tokyo/django/form-validation/
+    # 【保存版】Djangoフォームでバリデーションを実装する方法 https://itc.tokyo/django/form-validation/
 
 class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
@@ -61,11 +62,11 @@ class MessageForm(forms.Form):
         max_length=100,
         widget=forms.HiddenInput()
         )
-    user_name = forms.CharField(
+    user_id = forms.CharField(
         max_length=100,
         widget= forms.HiddenInput()
     )
-    friend_name = forms.CharField(
+    friend_id = forms.CharField(
         max_length=100,
         widget= forms.HiddenInput()
     )
@@ -73,15 +74,109 @@ class MessageForm(forms.Form):
         max_length=1000,
         required=True,
         )
-    
-# class TestForm(forms.Form):
-#     content = forms.CharField(
-#         max_length=1000,
-#         required=True,
-#         )
-#     test_content = forms.CharField(
-#         max_length=100,
-#         widget= forms.HiddenInput()
-#     )
 
+class NameChangeForm(forms.Form):
+    # 入力してもらう確認用パスワード
+    current_password = forms.CharField(
+        label='Current password',
+        widget=forms.PasswordInput(),
+        min_length=8,
+        required=True
+    )
+
+    changed_inf = forms.CharField(
+    max_length=100,
+    widget= forms.HiddenInput(),
+    initial='name'
+    )
+
+    new_username = forms.CharField(
+    label='New username',
+    required=True,
+    )
+
+    # 正しいパスワード
+    old_password_data = forms.CharField(
+        widget=forms.HiddenInput(),
+        min_length=8,
+        required=True
+    )
+
+    # passwordが正しいか確認する
+    def clean(self):
+        cleaced_data = super().clean()
+        if not check_password(cleaced_data.get('current_password'), cleaced_data.get('old_password_data')):
+            print('Error code:not right password')
+            raise forms.ValidationError(_('current_password is wrong'), code='not right password')  
+
+
+class EmailChangeForm(forms.Form):
+    current_password = forms.CharField(
+        label='Current password',
+        widget=forms.PasswordInput(),
+        min_length=8,
+        required=True
+    )
+
+    changed_inf = forms.CharField(
+    max_length=100,
+    widget= forms.HiddenInput(),
+    initial='email'
+    )
+
+    new_email = forms.EmailField(
+        label='New Email Address',
+        required=True
+    )
+
+    # 正しいパスワード
+    old_password_data = forms.CharField(
+        widget=forms.HiddenInput(),
+        min_length=8,
+        required=True
+    )
+
+    # passwordが正しいか確認する
+    def clean(self):
+        cleaced_data = super().clean()
+        if not check_password(cleaced_data.get('current_password'), cleaced_data.get('old_password_data')):
+            print('Error code:not right password')
+            raise forms.ValidationError(_('current_password is wrong'), code='not right password')  
+
+class IconChangeForm(forms.Form):
+    current_password = forms.CharField(
+        label='Current password',
+        widget=forms.PasswordInput(),
+        min_length=8,
+        required=True
+    )
+
+    changed_inf = forms.CharField(
+    max_length=100,
+    widget= forms.HiddenInput(),
+    initial='icon'
+    )
+
+    new_image = forms.ImageField(
+        label='New image',
+        required=False
+    )
+
+    # 正しいパスワード
+    old_password_data = forms.CharField(
+        widget=forms.HiddenInput(),
+        min_length=8,
+        required=True
+    )
+
+    # passwordが正しいか確認する
+    def clean(self):
+        cleaced_data = super().clean()
+        if not check_password(cleaced_data.get('current_password'), cleaced_data.get('old_password_data')):
+            print('Error code:not right password')
+            raise forms.ValidationError(_('current_password is wrong'), code='not right password')  
+
+
+# 参考
+# 【Django】Formに初期値を設定 4つの方法をまとめました https://itc.tokyo/django/form-with-initial-value/
             

@@ -29,9 +29,9 @@
         {% for message in messages %}
         <div class="message_inf_container">
             <div class="from_to_inf">
-                {% if message.speaker_name == user.username %}
+                {% if message.speaker_id|stringformat:"s" == user.id|stringformat:"s" %}
                 {{ user.username }}→{{ friend.username }}
-                {% elif message.speaker_name == friend.username %}
+                {% elif message.speaker_id|stringformat:"s" == friend.id|stringformat:"s" %}
                 {{ friend.username }}→{{ user.username }}
                 {% endif %}
             </div>
@@ -50,7 +50,8 @@
     </div>
 
     <!-- 参考
-    Djangoの組み込み日付(date),時間(time),現在時刻(now)を使って時刻を利用する https://www.nblog09.com/w/2019/05/08/django-time/ -->
+    Djangoの組み込み日付(date),時間(time),現在時刻(now)を使って時刻を利用する https://www.nblog09.com/w/2019/05/08/django-time/
+    テンプレート 文字列でif分岐する方法 https://chuna.tech/blog/web-application/Django/django-template-if-string/ -->
     {% block footer %}
     <footer class="footer">
         <div class="footer-container">
@@ -58,10 +59,6 @@
             <div class="message_form">
                 {% csrf_token %}
                 {% for field in form %}
-                    <!-- {% if not field.is_hidden %}
-                    <p>{{ field }}</p>
-                    {% endif %} 
-                    hiddenのものも表示しなければ、値を取得できない --> 
                     {% if field.is_hidden %}
                     {{ field }}
                     {% else %}

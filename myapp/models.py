@@ -14,7 +14,8 @@ class TalkRoomModel(models.Model): #ある二人の会話のトークルーム
     
 class MessageModel(models.Model):
     talk_room = models.ForeignKey(TalkRoomModel, on_delete=models.CASCADE)
-    speaker_name = models.CharField(max_length=10) 
+    # speaker_name = models.CharField(max_length=10) 
+    speaker_id = models.CharField(max_length=10) 
     content = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
 

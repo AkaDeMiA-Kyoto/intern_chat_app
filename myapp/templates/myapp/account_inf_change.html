@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/account_inf_change.css' %}" />
     {% block extra_style %}{% endblock %}
-    <title>設定</title>
+    <title>{{ change_inf }}</title>
 </head>
 <body>
     <div class="container">
@@ -14,7 +14,7 @@
     <header class="header">
         <div class="header-container">
             <span class="header-container__title">
-                {% block header-title %}設定{% endblock %}
+                {% block header-title %}{{ change_inf }}{% endblock %}
             </span>
         </div>
     </header>
@@ -23,14 +23,32 @@
     <div class="body_container">
     {% block content %}
     <div class="main">
-    <div class="settings">
-       <a href="{% url 'myapp:name_change' %}" class="setting_link"><div class="setting">ユーザー名<br>変更</div></a>
-       <a href="{% url 'myapp:email_change' %}" class="setting_link"><div class="setting">メールアドレス<br>変更</div></a>
-       <a href="{% url 'myapp:icon_change' %}" class="setting_link"><div class="setting">アイコン変更</div></a>
-       <a href="{% url 'myapp:password_change' %}" class="setting_link"><div class="setting">パスワード変更</div></a>
-       <a href="{% url 'myapp:logout' %}" class="setting_link"><div class="setting">ログアウト</div></a>
-    </div>
+        {% if answer.errors %}
+        <ul>
+            {% for error in answer.non_field_errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
 
+        <form action="{%url 'myapp:inf_change_done' %}" method="POST" enctype="multipart/form-data">
+            <!-- {{ form.non_field_errors }} -->
+            {% for field in form %}
+            <div class="form-group">
+                {% if not field.is_hidden %}
+                <label class="col-6" for="{{ field.id_for_label }}">{{ field.label_tag }}</label>
+                {% endif %}
+                {{ field }}
+                <!-- {{ field.errors }} -->
+            </div>
+            {% endfor %}
+            {% csrf_token %}
+            <div class="form-group row">
+              <div class="col-sm">
+                <button type="submit" class="btn btn-primary btn-block">送信</button>
+              </div>
+            </div>
+        </form>
     </div>
     {% endblock %}
     </div>
