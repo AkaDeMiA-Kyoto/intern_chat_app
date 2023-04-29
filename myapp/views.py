@@ -1,6 +1,9 @@
 from django.shortcuts import redirect, render
 
 
+def setting(request):
+    return render(request, "myapp/base.html") #新しく追加したやつ
+
 def index(request):
     return render(request, "myapp/index.html")
 
@@ -18,3 +21,5 @@ def talk_room(request):
 
 def setting(request):
     return render(request, "myapp/setting.html")
+
+
