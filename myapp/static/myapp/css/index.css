@@ -1,9 +1,12 @@
-body {
-    position: relative;
+.buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
 }
 
 .button {
-    position: absolute;
     display: block;
     width: 100px;
     padding: 15px;
@@ -13,4 +16,5 @@ body {
     text-decoration: none;
     text-align: center;
     border: 1px solid black;
+    border-radius: 10px;
 }
