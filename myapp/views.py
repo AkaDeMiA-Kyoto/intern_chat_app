@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-
+from .forms import SignUpForm
 
 def setting(request):
     return render(request, "myapp/base.html") #新しく追加したやつ
@@ -8,7 +8,11 @@ def index(request):
     return render(request, "myapp/index.html")
 
 def signup_view(request):
-    return render(request, "myapp/signup.html")
+    form = SignUpForm()
+    context = {
+        "form": form,
+    }
+    return render(request, "myapp/signup.html", context)
 
 def login_view(request):
     return render(request, "myapp/login.html")

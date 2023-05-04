@@ -1,0 +1,13 @@
+.title {
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 5px solid black;
+}
+
+.label_tag {
+    display: flex;
+}
+
+.tag {
+    display: flex;
+}

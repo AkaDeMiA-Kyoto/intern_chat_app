@@ -1,1 +1,22 @@
-SU
+<!DOCTYPE html>
+{% load static %}
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <title>会員登録</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}">
+    </head>
+    <header>
+        <p class="title">会員登録</p>
+    </header>
+    <body>
+        <form method="POST" action="{% url 'signup_view' %}" enctype="multipart/form-data" >
+            {% csrf_token %}
+            {% for field in form %}  
+                <div class="label_tag">{{ field.label_tag }}</div>
+                <div class="tag">{{ field }}</div>
+            {% endfor %}
+            <button type="submit">submit</button>
+        </form>
+    </body>
+</html>
