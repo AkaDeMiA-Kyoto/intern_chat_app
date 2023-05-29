@@ -6,24 +6,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}" />
     {% block extra_style %}{% endblock %}
-    <title>チャット</title>
+    <title>Chatapp</title>
 </head>
 <body>
+    {% block header %}
     <header class="header">
         <div class="header-container">
             <span class="header-container__title">
-                <p id="title">チャットアプリ</p>
+                {% block header-title %}{% endblock %}
+                <p id="title">Chatapp</p>
             </span>
         </div>
     </header>
+    {% endblock %}
     
+    {% block content %}
     <div id="buttons">
         <a href="{% url 'login_view' %}" class="button">
-            ログイン
+            Login
         </a>
         <a href="{% url 'signup_view' %}" class="button">
-            会員登録
+            Signup
         </a>
     </div>
+    {% endblock %}
+
+    {% block footer %}
+    <footer class="footer">
+        <div class="footer-container">
+  
+        </div>
+    </footer>
+    {% endblock %}
 </body>
 </html>

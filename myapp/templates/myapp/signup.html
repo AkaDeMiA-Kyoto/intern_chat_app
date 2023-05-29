@@ -5,15 +5,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}" />
-    <title>会員登録 | チャット</title>
+    <title>Signup | Chatapp</title>
 </head>
 <body>
     <header class="header">
         <div class="header-container">
             <span class="header-container__title">
-                会員登録
+                Signup
             </span>
         </div>
     </header>
+
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+            <div class="field">
+                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}:</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <span class="helptext">{{ field.help_text }}</span>
+                {% endif %}
+                {{ field.errors }}
+            </div>
+        {% endfor %}
+        <div id="submit-button">
+            <input type="submit">
+        </div>
+    </form>
 </body>
 </html>
+
