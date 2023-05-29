@@ -1,11 +1,9 @@
-from django.forms.models import BaseModelForm
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.forms import UserCreationForm
-from django.views.generic.edit import CreateView
-from django.urls import reverse_lazy
+from django.views.generic import TemplateView
+from django.contrib.auth.views import LoginView
 from .forms import SignUpForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def index(request):
     return render(request, "myapp/index.html")
@@ -24,14 +22,17 @@ def signup_view(request):
         form = SignUpForm()
     return render(request, "myapp/signup.html", {"form": form})
 
-def login_view(request):
-    return render(request, "myapp/login.html")
+class Login(LoginView):
+    template_name = "myapp/login.html"
 
-def friends(request):
-    return render(request, "myapp/friends.html")
+class Friends(LoginRequiredMixin, TemplateView): # LoginRequiredMixin はログインを必須にするためのもの
+    template_name = "myapp/friends.html"
+    login_url = "login"
 
-def talk_room(request):
-    return render(request, "myapp/talk_room.html")
+class TalkRoom(LoginRequiredMixin, TemplateView):
+    template_name = "myapp/talk_room.html"
+    login_url = "login"
 
-def setting(request):
-    return render(request, "myapp/setting.html")
+class Setting(LoginRequiredMixin, TemplateView):
+    template_name = "myapp/setting.html"
+    login_url = "login"

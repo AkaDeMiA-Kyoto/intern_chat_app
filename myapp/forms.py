@@ -1,17 +1,17 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import CustomUser
 
 class SignUpForm(UserCreationForm):
+    
     username = forms.CharField(
-        label="Username",
         max_length=40,
-        required=True
     )
+    
     email = forms.EmailField(
-        label="Email",
         required=True
     )
+    
     password1 = forms.CharField(
         label="Password",
         widget=forms.PasswordInput(),
@@ -24,8 +24,15 @@ class SignUpForm(UserCreationForm):
     )
     image = forms.ImageField(
         label="Image",
+        required=True
     )
     
     class Meta:
         model = CustomUser
         fields = ("username", "email", "password1", "password2", "image")
+
+class LoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs): # ???
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['placeholder'] = field.label

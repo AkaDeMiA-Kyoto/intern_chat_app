@@ -11,7 +11,7 @@
     <header class="header">
         <div class="header-container">
             <span class="header-container__title">
-                Signup
+                {% block header-title %}Signup{% endblock %}
             </span>
         </div>
     </header>
@@ -33,6 +33,9 @@
             <input type="submit">
         </div>
     </form>
+    <div id="login-link">
+        <a href="{% url 'login_view' %}">Login</a>
+    </div>
 </body>
 </html>
 

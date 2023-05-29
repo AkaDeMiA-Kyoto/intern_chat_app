@@ -47,3 +47,8 @@ body{
     text-align: center;
     margin-top: 20px;
 }
+
+#login-link {
+    text-align: center;
+    margin-top: 50px;
+}
