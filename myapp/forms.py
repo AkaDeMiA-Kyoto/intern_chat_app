@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import CustomUser
+from django.forms import ModelForm, Form
+from .models import CustomUser, Message
 
 class SignUpForm(UserCreationForm):
     
@@ -36,3 +37,20 @@ class LoginForm(AuthenticationForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['placeholder'] = field.label
+
+class MessageForm(ModelForm):
+    message = forms.CharField(
+        max_length=500,
+        required=True,
+        label=""
+    )
+
+    class Meta:
+        model = Message
+        fields = ("message",)
+
+        error_messages = {
+            "message": {
+                "max_length": "Max 500 letters."
+            }
+        }

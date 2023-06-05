@@ -32,50 +32,45 @@ body{
     font-size: 1.2rem;
     color: #000;
 }
-
+.datefield {
+    text-align: center;
+}
+.messagefield {
+    display: flex;
+    width: calc(100% - 4px);
+    border: 1px black solid;
+    margin: 2px
+}
+.message {
+    word-break: break-all;
+}
 /* フッター */
 .footer{
     width: 100vw;
-    height: 64px;
+    height: 30px;
 }
 .footer-container{
-    display: flex;
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 64px;
+    height: 30px;
     text-align: center;
     border-top: solid 1px #9b9b9b;
 }
-.footer-container__item{
+.footer-buttons {
     display: flex;
-    position: relative;
-    width: 50%;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    color: #9b9b9b;
 }
-.footer-item__link{
-    width: 90%;
-    height: 100%;
-    margin: auto;
-    text-decoration: none;
+
+form {
+    height: 26px;
+    margin-bottom: 5px;
 }
-.footer-item__icon{
-    display: block;
-    position: absolute;
-    top: 35%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    line-height: 1.2rem;
+#id_message {
+    margin: 2px;
+    width: calc(100% - 70px);
+    height: 22px;
 }
-.footer-item__text{
-    position: absolute;
-    top: 70%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    line-height: 0.8rem;
-    font-size: 0.8rem;
-    color: #000;
+#sendbutton {
+    width: 45px;
+    text-align: center;
 }

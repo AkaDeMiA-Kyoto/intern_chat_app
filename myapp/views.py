@@ -2,12 +2,13 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import login, authenticate
 from django.views.generic import TemplateView
 from django.contrib.auth.views import LoginView
-from .forms import SignUpForm
+from .forms import SignUpForm, MessageForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import CustomUser, Message
 import pytz
 from .functions import get_view_date
-from django.db.models import Q
+from operator import attrgetter
+from django.views.generic.edit import FormView
 
 def index(request):
     return render(request, "myapp/index.html")
@@ -32,25 +33,68 @@ class Login(LoginView):
 class Friends(LoginRequiredMixin, TemplateView):
     template_name = "myapp/friends.html"
 
-    def get_context_data(self, **kwargs): # ?理解
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['user'] = self.request.user
         otherusers = CustomUser.objects.exclude(username=self.request.user.username)
+        friends = []
         for otheruser in otherusers:
-            if Message.objects.filter(user_from=otheruser.id) or Message.objects.filter(user_to=otheruser.id):
-                recent_talk = (Message.objects.filter(user_from=otheruser.id) | Message.objects.filter(user_to=otheruser.id)).latest("date")
-                otheruser.date = recent_talk.date.astimezone(pytz.timezone('Asia/Tokyo'))
-                otheruser.message = recent_talk.message
+            friend = Friend(otheruser.username, otheruser.id, otheruser.image)
+            recent_talks = (Message.objects.filter(user_from=self.request.user.id, user_to=friend.id) | Message.objects.filter(user_from=friend.id, user_to=self.request.user.id))
+            if recent_talks:
+                recent_talk = recent_talks.latest("time")
+                friend.date = recent_talk.time.astimezone(pytz.timezone('Asia/Tokyo'))
+                friend.message = recent_talk.message
             else:
-                otheruser.date = otheruser.date_joined.astimezone(pytz.timezone('Asia/Tokyo'))
-                otheruser.message = "You have not talked yet."
-            otheruser.view_date = get_view_date(otheruser.date)
-            otheruser.save()
-        context['users'] = otherusers.all().order_by("-date")
+                friend.date = otheruser.date_joined.astimezone(pytz.timezone('Asia/Tokyo'))
+                friend.message = "You have not talked yet."
+            friend.view_date = get_view_date(friend.date)
+            friends.append(friend)
+        context['friends'] = sorted(friends, key=attrgetter("date"), reverse=True)
         return context
 
-class TalkRoom(LoginRequiredMixin, TemplateView):
+class TalkRoom(LoginRequiredMixin, FormView):
     template_name = "myapp/talk_room.html"
+    form_class = MessageForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["slug"] = self.kwargs.get("slug")
+        id = CustomUser.objects.get(username=self.kwargs.get("slug")).id
+        messages = (Message.objects.filter(user_from=self.request.user.id, user_to=id) | Message.objects.filter(user_from=id, user_to=self.request.user.id)).order_by("time")
+        view_messages = [] # Templateに渡すためのViewMessageオブジェクトを格納するリスト
+        date = None # メッセージを送信した日付が，前のメッセージと異なるかどうかを判断する
+        for message in messages:
+            view_message = ViewMessage(message)
+            if date == view_message.time.date():
+                view_message.viewdate_or_not = False
+            else:
+                view_message.viewdate_or_not = True
+            date = view_message.time.date()
+            view_messages.append(view_message)
+        context["messages"] = view_messages
+        return context
+    
+    def form_valid(self, form):
+        if form.is_valid():
+            Message.objects.create(
+                user_from=self.request.user.id,
+                user_to=CustomUser.objects.get(username=self.kwargs.get("slug")).id,
+                message=form.cleaned_data["message"]
+            )
+        TalkRoom.success_url = "/talk_room/" + self.kwargs.get("slug")
+        return super().form_valid(form)
 
 class Setting(LoginRequiredMixin, TemplateView):
     template_name = "myapp/setting.html"
+
+class Friend:
+    def __init__(self, username, id, image):
+        self.username = username
+        self.id = id
+        self.image = image
+
+class ViewMessage: # トークルームで表示するメッセージをTemplateに渡すためのクラス
+    def __init__(self, message):
+        self.message = message.message
+        self.time = message.time.astimezone(pytz.timezone('Asia/Tokyo'))
