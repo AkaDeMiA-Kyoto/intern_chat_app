@@ -12,24 +12,43 @@
     {% block header %}
     <header class="header">
         <div class="header-container">
+            <a href="{% url 'friends' %}">
+                <span id="backbutton"><img src="{% static 'myapp/img/back.png' %}" class="header-image"></span>
+            </a>
             <span class="header-container__title">
                 {% block header-title %}
                     {{ slug }}
                 {% endblock %}
             </span>
+            <a onclick="window.location.reload(true);">
+                <span id="reloadbutton"><img src="{% static 'myapp/img/reload.png' %}" class="header-image"></span>
+            </a>
         </div>
     </header>
     {% endblock %}
 
     {% block content %}
+    <div id="header-space"></div> <!--header分の余白-->
     {% for message in messages %}
         {% if message.viewdate_or_not %} {# メッセージを送信した日付が変わるごとに日付を表示する #}
             <div class="datefield">
-                {{ message.time.date }}
+                {{ message.date }}
             </div>
         {% endif %}
         <div class="messagefield">
-            <div class="message">{{ message.message }}({{ message.time}})</div>
+            <div class="image-container">
+            {% if message.is_message_mine %}
+                <img src="/media/{{ myimage }}" class="user-image">
+            {% else %}
+                <img src="/media/{{ yourimage }}" class="user-image">
+            {% endif %}
+            </div>
+            <div class="messagefield-right">
+                <div class="username">{{ message.username }}</div>
+                <div class="message">{{ message.message }}</div>
+                <div class="time">{{ message.time }}</div>
+            </div>
+            
         </div>
     {% endfor %}
     {% endblock %}

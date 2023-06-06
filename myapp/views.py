@@ -65,14 +65,20 @@ class TalkRoom(LoginRequiredMixin, FormView):
         view_messages = [] # Templateに渡すためのViewMessageオブジェクトを格納するリスト
         date = None # メッセージを送信した日付が，前のメッセージと異なるかどうかを判断する
         for message in messages:
-            view_message = ViewMessage(message)
-            if date == view_message.time.date():
+            if message.user_from == self.request.user.id:
+                is_message_mine = True
+            else:
+                is_message_mine = False
+            view_message = ViewMessage(message, is_message_mine)
+            if date == view_message.date:
                 view_message.viewdate_or_not = False
             else:
                 view_message.viewdate_or_not = True
-            date = view_message.time.date()
+            date = view_message.date
             view_messages.append(view_message)
         context["messages"] = view_messages
+        context["myimage"] = self.request.user.image
+        context["yourimage"] = CustomUser.objects.get(id=id).image
         return context
     
     def form_valid(self, form):
@@ -95,6 +101,13 @@ class Friend:
         self.image = image
 
 class ViewMessage: # トークルームで表示するメッセージをTemplateに渡すためのクラス
-    def __init__(self, message):
+    def __init__(self, message, is_message_mine):
         self.message = message.message
-        self.time = message.time.astimezone(pytz.timezone('Asia/Tokyo'))
+        messagetime = message.time.astimezone(pytz.timezone('Asia/Tokyo'))
+        self.date = messagetime.date()
+        self.username = CustomUser.objects.get(id=message.user_from).username
+        if messagetime.minute < 10:
+            self.time = str(messagetime.hour) + ":0" + str(messagetime.minute)
+        else:
+            self.time = str(messagetime.hour) + ":" + str(messagetime.minute)
+        self.is_message_mine = is_message_mine

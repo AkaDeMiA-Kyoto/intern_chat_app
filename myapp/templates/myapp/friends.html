@@ -14,7 +14,7 @@
         <div class="header-container">
             <div class="header-container__title">
                 {% block header-title %}
-                    {{ user.username }}({{ user.id }})
+                    {{ user.username }}
                 {% endblock %}
             </div>
         </div>
@@ -26,10 +26,10 @@
     {% for friend in friends %}
         <a href="talk_room/{{ friend.username }}">
             <div class="friend-container">
-                <div class="image-container"><img src="media/{{ friend.image }}" class="user-image"></div>
+                <div class="image-container"><img src="/media/{{ friend.image }}" class="user-image"></div>
                 <div class="friend-container-right">
                     <div class="frienddetail">
-                        <div class="username-field">{{ friend.username }}({{ friend.id }})</div>
+                        <div class="username-field">{{ friend.username }}</div>
                         <div class="talk_date">{{ friend.view_date }}</div>
                     </div>
                     <div class="recentmessage">{{ friend.message }}</div>
