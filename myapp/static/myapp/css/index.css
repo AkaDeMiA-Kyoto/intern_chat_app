@@ -1,0 +1,15 @@
+*{
+    box-sizing: border-box;
+}
+p{
+    font-size: 50px;
+    text-align: center; 
+    border: 5px solid rgb(192, 189, 189); 
+    border-radius: 30px; 
+    margin-left: 35%;
+    margin-right: 35%; 
+
+}
+#log{
+    margin-top: 85%;
+}

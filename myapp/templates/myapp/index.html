@@ -1,1 +1,12 @@
-I
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8"> 
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'myapp/css/index.css' %}">
+    </head>
+    <body>
+        <p id="log"><a href="{% url 'login_view' %}">ログイン</a></p> 
+        <p id="sig"><a href="{% url 'signup_view' %}">会員登録</a></p>
+    </body>
+</html>
