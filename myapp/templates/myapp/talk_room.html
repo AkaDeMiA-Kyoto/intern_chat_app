@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
     {% block extra_style %}{% endblock %}
     <title>{{ slug }}</title>
@@ -28,8 +29,9 @@
     {% endblock %}
 
     {% block content %}
-    <div id="header-space"></div> <!--header分の余白-->
-    {% for message in messages %}
+    <div id="talkroom-field"><div id="talkroom-field-inner">
+        <div id="header-space"></div> <!--header分の余白-->
+        {% for message in messages %}
         {% if message.viewdate_or_not %} {# メッセージを送信した日付が変わるごとに日付を表示する #}
             <div class="datefield">
                 {{ message.date }}
@@ -48,9 +50,14 @@
                 <div class="message">{{ message.message }}</div>
                 <div class="time">{{ message.time }}</div>
             </div>
-            
         </div>
-    {% endfor %}
+        {% endfor %}
+        <div id="footer-space"></div> <!--footer分の余白-->
+    </div></div>
+    <script type="text/javascript">
+        const scrollerInner = document.getElementById("talkroom-field-inner");
+        scrollerInner.scrollIntoView(false);
+    </script>
     {% endblock %}
 
     {% block footer %}

@@ -9,7 +9,13 @@ urlpatterns = [
     path('login', views.Login.as_view(), name='login_view'),
     path('friends', views.Friends.as_view(), name='friends'),
     path('talk_room/<slug:slug>', views.TalkRoom.as_view(), name='talk_room'),
-    path('setting', views.Setting.as_view(), name='setting'),
+    path('setting', views.setting_view, name='setting'),
+    path('setting/username', views.setting_username_view, name='setting_username'),
+    path('setting/email', views.setting_email_view, name='setting_email'),
+    path('setting/image', views.setting_image_view, name='setting_image'),
+    path('setting/password', views.SettingPassword.as_view(), name='setting_password'),
+    path('setting/password/done', views.SettingPasswordDone.as_view(), name='setting_password_done'),
+    path('setting/logout', views.Logout.as_view(), name='logout_view')
 ]
 
 if settings.DEBUG:

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}" />
     <title>Signup | Chatapp</title>
 </head>
@@ -26,7 +27,7 @@
                 {% if field.help_text %}
                     <span class="helptext">{{ field.help_text }}</span>
                 {% endif %}
-                {{ field.errors }}
+                <div class="errors">{{ field.errors }}</div>
             </div>
         {% endfor %}
         <div id="submit-button">

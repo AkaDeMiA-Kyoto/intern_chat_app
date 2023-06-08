@@ -1,12 +1,13 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, authenticate
 from django.views.generic import TemplateView
-from django.contrib.auth.views import LoginView
-from .forms import SignUpForm, MessageForm
+from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView, LogoutView
+from .forms import SignUpForm, MessageForm, ChangeUsernameForm, ChangeEmailForm, ChangeImageForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from .models import CustomUser, Message
 import pytz
-from .functions import get_view_date
+from datetime import datetime
 from operator import attrgetter
 from django.views.generic.edit import FormView
 
@@ -91,8 +92,60 @@ class TalkRoom(LoginRequiredMixin, FormView):
         TalkRoom.success_url = "/talk_room/" + self.kwargs.get("slug")
         return super().form_valid(form)
 
-class Setting(LoginRequiredMixin, TemplateView):
-    template_name = "myapp/setting.html"
+@login_required
+def setting_view(request):
+    return render(request, "myapp/setting.html")
+
+@login_required
+def setting_username_view(request):
+    if request.method == "POST":
+        form = ChangeUsernameForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return render(request, "myapp/setting_username.html", {"completed": True})
+    else:
+        form = ChangeUsernameForm(instance=request.user)
+    return render(request, "myapp/setting_username.html", {"form": form})
+
+@login_required
+def setting_email_view(request):
+    if request.method == "POST":
+        form = ChangeEmailForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return render(request, "myapp/setting_email.html", {"completed": True})
+    else:
+        form = ChangeEmailForm(instance=request.user)
+    return render(request, "myapp/setting_email.html", {"form": form})
+
+@login_required
+def setting_image_view(request):
+    currentimage = str(request.user.image)
+    if request.method == "POST":
+        form = ChangeImageForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            if str(form.cleaned_data.get("image")) != currentimage: # 画像を選択しないまま送信して，画像が削除されてしまうのを防ぐ
+                form.save(request.user)
+            return render(request, "myapp/setting_image.html", {"completed": True, "currentimage": form.cleaned_data.get("image")})
+    else:
+        form = ChangeImageForm(instance=request.user)
+    return render(request, "myapp/setting_image.html", {"form": form, "currentimage": currentimage})
+
+class SettingPassword(LoginRequiredMixin, PasswordChangeView):
+    template_name = "myapp/setting_password.html"
+    success_url = "password/done"
+
+class SettingPasswordDone(PasswordChangeDoneView):
+    template_name = "myapp/setting_password.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["completed"] = True
+        return context
+
+class Logout(LoginRequiredMixin, LogoutView):
+    template_name = "myapp/logout.html"
+    
 
 class Friend:
     def __init__(self, username, id, image):
@@ -111,3 +164,14 @@ class ViewMessage: # トークルームで表示するメッセージをTemplate
         else:
             self.time = str(messagetime.hour) + ":" + str(messagetime.minute)
         self.is_message_mine = is_message_mine
+
+def get_view_date(time): # 引数timeが，現在と同じ日なら時刻を，違う日なら日付を返す
+    timezone = pytz.timezone('Asia/Tokyo')
+    today = datetime.now().astimezone(timezone).date()
+    if time.date() == today:
+        if time.minute < 10:
+            return str(time.hour) + ":0" + str(time.minute)
+        else:
+            return str(time.hour) + ":" + str(time.minute)
+    else:
+        return str(time.month) + "/" + str(time.day)

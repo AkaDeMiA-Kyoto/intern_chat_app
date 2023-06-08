@@ -5,30 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
     {% block extra_style %}{% endblock %}
-    <title>Chatapp</title>
+    <title>Logout</title>
 </head>
 <body>
     {% block header %}
     <header class="header">
         <div class="header-container">
             <span class="header-container__title">
-                {% block header-title %}Chatapp{% endblock %}
+                {% block header-title %}Logout{% endblock %}
             </span>
         </div>
     </header>
     {% endblock %}
-    
+
     {% block content %}
-    <div id="buttons">
-        <a href="{% url 'login_view' %}" class="button">
-            Login
-        </a>
-        <a href="{% url 'signup_view' %}" class="button">
-            Signup
-        </a>
-    </div>
+    <p id="logout-message">Logout completed.</p>
+    <div id="link-to-index"><a href="{% url 'index' %}">Go back to top page</a></div>
+    {% endblock %}
+
+    {% block footer %}
+    
     {% endblock %}
 </body>
 </html>

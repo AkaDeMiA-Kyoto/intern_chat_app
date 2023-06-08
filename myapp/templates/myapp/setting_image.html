@@ -5,40 +5,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/friends.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
     {% block extra_style %}{% endblock %}
-    <title>Friends</title>
+    <title>Setting Profile Image</title>
 </head>
 <body>
     {% block header %}
     <header class="header">
         <div class="header-container">
-            <div class="header-container__title">
-                {% block header-title %}
-                    {{ user.username }}
-                {% endblock %}
-            </div>
+            <span class="header-container__title">
+                {% block header-title %}Change profile image{% endblock %}
+            </span>
         </div>
     </header>
     {% endblock %}
 
     {% block content %}
-    <div id="header-space"></div> <!--header分の余白-->
-    {% for friend in friends %}
-        <a href="talk_room/{{ friend.username }}">
-            <div class="friend-container">
-                <div class="image-container"><img src="/media/{{ friend.image }}" class="user-image"></div>
-                <div class="friend-container-right">
-                    <div class="frienddetail">
-                        <div class="username-field">{{ friend.username }}</div>
-                        <div class="talk_date">{{ friend.view_date }}</div>
-                    </div>
-                    <div class="recentmessage">{{ friend.message }}</div>
-                </div>
+    <div class="image-container">
+        <p>Current Image</p>
+        <img src="/media/{{ currentimage }}" class="user-image">
+        <p>{{ currentimage }}</p>
+    </div>
+    {% if completed %} <!--完了画面-->
+        <div id="completed">Setting completed.</div>
+    {% else %}
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="field">
+                <label class="form-label">Image:</label>
+                <input type="file" name="image" accept="image/*" id="id_image">
+                <div class="errors">{{ form.image.errors }}</div>
             </div>
-        </a>
-    {% endfor %}
-
+            <div id="submit-button">
+                <input type="submit">
+            </div>
+        </form>
+    {% endif %}
     {% endblock %}
 
     {% block footer %}
@@ -47,7 +50,7 @@
             <div class="footer-container__item">
                 <a href="{% url 'friends' %}" class="footer-item__link">
                     <span class="footer-item__icon"><img src="{% static 'myapp/img/people-24px.svg' %}"></span>
-                    <span class="footer-item__text">Friends</span>
+                    <span class="footer-item__text">Friend</span>
                 </a>
             </div>
             <div class="footer-container__item">
