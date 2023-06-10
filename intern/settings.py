@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -130,3 +132,13 @@ AUTH_USER_MODEL = "myapp.CustomUser"
 
 LOGIN_URL = "login_view"
 LOGIN_REDIRECT_URL = "friends"
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# デプロイ環境のための設定
+if os.path.isfile('.env'): # .envファイルが存在しない時にもエラーが発生しないようにする
+    env = environ.Env(DEBUG=(bool, False),)
+    environ.Env.read_env('.env')
+
+    DEBUG = env('DEBUG')
+    ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
