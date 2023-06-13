@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import login, authenticate
 from django.views.generic import TemplateView
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView, LogoutView
-from .forms import SignUpForm, MessageForm, ChangeUsernameForm, ChangeEmailForm, ChangeImageForm
+from .forms import SignUpForm, LoginForm, MessageForm, ChangeUsernameForm, ChangeEmailForm, ChangeImageForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from .models import CustomUser, Message
@@ -21,14 +21,18 @@ def signup_view(request):
             form.save()
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password1")
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            return redirect("index")
+            user = authenticate(username=username, password=password) # 認証バックエンド属性を持ったUserを返す
+            if user != None:
+                login(request, user)
+            return redirect("/")
+        else:
+            print(form.errors)
     else:
         form = SignUpForm()
     return render(request, "myapp/signup.html", {"form": form})
 
 class Login(LoginView):
+    authentication_form = LoginForm
     template_name = "myapp/login.html"
 
 class Friends(LoginRequiredMixin, TemplateView):
@@ -60,8 +64,9 @@ class TalkRoom(LoginRequiredMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["slug"] = self.kwargs.get("slug")
-        id = CustomUser.objects.get(username=self.kwargs.get("slug")).id
+        id = self.kwargs.get("id")
+        context["id"] = id
+        context["friendname"] = CustomUser.objects.get(id=id).username
         messages = (Message.objects.filter(user_from=self.request.user.id, user_to=id) | Message.objects.filter(user_from=id, user_to=self.request.user.id)).order_by("time")
         view_messages = [] # Templateに渡すためのViewMessageオブジェクトを格納するリスト
         date = None # メッセージを送信した日付が，前のメッセージと異なるかどうかを判断する
@@ -86,10 +91,10 @@ class TalkRoom(LoginRequiredMixin, FormView):
         if form.is_valid():
             Message.objects.create(
                 user_from=self.request.user.id,
-                user_to=CustomUser.objects.get(username=self.kwargs.get("slug")).id,
+                user_to=self.kwargs.get("id"),
                 message=form.cleaned_data["message"]
             )
-        TalkRoom.success_url = "/talk_room/" + self.kwargs.get("slug")
+        TalkRoom.success_url = "/talk_room/" + str(self.kwargs.get("id"))
         return super().form_valid(form)
 
 @login_required

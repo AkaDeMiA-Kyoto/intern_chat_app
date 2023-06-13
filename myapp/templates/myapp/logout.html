@@ -1,32 +1,14 @@
+{% extends "myapp/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
-    {% block extra_style %}{% endblock %}
-    <title>Logout</title>
-</head>
-<body>
-    {% block header %}
-    <header class="header">
-        <div class="header-container">
-            <span class="header-container__title">
-                {% block header-title %}Logout{% endblock %}
-            </span>
-        </div>
-    </header>
-    {% endblock %}
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
+{% endblock %}
+{% block title %}Logout | Chatapp{% endblock %}
+{% block header-title %}Logout{% endblock %}
 
-    {% block content %}
-    <p id="logout-message">Logout completed.</p>
-    <div id="link-to-index"><a href="{% url 'index' %}">Go back to top page</a></div>
-    {% endblock %}
+{% block content %}
+<p id="logout-message">Logout completed.</p>
+<div id="link-to-index"><a href="{% url 'index' %}">Go back to top page</a></div>
+{% endblock %}
 
-    {% block footer %}
-    
-    {% endblock %}
-</body>
-</html>
+{% block footer %}{% endblock %}

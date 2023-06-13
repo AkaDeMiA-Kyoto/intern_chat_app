@@ -1,46 +1,33 @@
+{% extends "myapp/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/login.css' %}" />
-    {% block extra_style %}{% endblock %}
-    <title>Login</title>
-</head>
-<body>
-    {% block header %}
-    <header class="header">
-        <div class="header-container">
-            <span class="header-container__title">
-                {% block header-title %}Login{% endblock %}
-            </span>
-        </div>
-    </header>
-    {% endblock %}
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/login.css' %}" />
+{% endblock %}
+{% block title %}Login | Chatapp{% endblock %}
+{% block header-title %}Login{% endblock %}
 
-    {% block content %}
-    <form action="" method="POST">
-        {% csrf_token %}
-        <div class="errors">{{ form.non_field_errors }}</div>
-        {% for field in form %}
-            <div class="field">
-                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}:</label>
-                {{ field }}
-                {% if field.help_text %}
-                    <span class="helptext">{{ field.help_text }}</span>
-                {% endif %}
-                <div class="errors">{{ field.errors }}</div>
-            </div>
-        {% endfor %}
-        <div id="login-button">
-            <input type="submit" value="Login">
+{% block content %}
+<form action="" method="POST">
+    {% csrf_token %}
+    <div class="errors">{{ form.non_field_errors }}</div>
+    {% for field in form %}
+        <div class="field">
+            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}:</label>
+            {{ field }}
+            {% if field.help_text %}
+                <span class="helptext">{{ field.help_text }}</span>
+            {% endif %}
+            <div class="errors">{{ field.errors }}</div>
         </div>
-    </form>
-    {% endblock %}
-    <div id="signup-link">
-        <a href="{% url 'signup_view' %}">Signup</a>
+    {% endfor %}
+    <div id="login-button">
+        <input type="submit" value="Login">
     </div>
-</body>
-</html>
+</form>
+<div id="signup-link">
+    <a href="{% url 'signup_view' %}">Signup</a>
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}
+    

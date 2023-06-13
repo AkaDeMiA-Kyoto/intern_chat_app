@@ -1,42 +1,29 @@
+{% extends "myapp/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}" />
-    <title>Signup | Chatapp</title>
-</head>
-<body>
-    <header class="header">
-        <div class="header-container">
-            <span class="header-container__title">
-                {% block header-title %}Signup{% endblock %}
-            </span>
-        </div>
-    </header>
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}" />
+{% endblock %}
+{% block title %}Signup | Chatapp{% endblock %}
+{% block header-title %}Signup{% endblock %}
 
-    <form action="" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {% for field in form %}
-            <div class="field">
-                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}:</label>
-                {{ field }}
-                {% if field.help_text %}
-                    <span class="helptext">{{ field.help_text }}</span>
-                {% endif %}
-                <div class="errors">{{ field.errors }}</div>
-            </div>
-        {% endfor %}
-        <div id="submit-button">
-            <input type="submit">
+{% block content %}
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for field in form %}
+        <div class="field">
+            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}:</label>
+            {{ field }}
+            <div class="errors">{{ field.errors }}</div>
         </div>
-    </form>
-    <div id="login-link">
-        <a href="{% url 'login_view' %}">Login</a>
+    {% endfor %}
+    <div id="submit-button">
+        <input type="submit">
     </div>
-</body>
-</html>
+</form>
+<div id="login-link">
+    <a href="{% url 'login_view' %}">Login</a>
+</div>
+{% endblock %}
 
+{% block footer %}{% endblock %}

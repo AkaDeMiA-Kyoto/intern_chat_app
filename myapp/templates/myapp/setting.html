@@ -1,60 +1,25 @@
+{% extends "myapp/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
-    {% block extra_style %}{% endblock %}
-    <title>Setting</title>
-</head>
-<body>
-    {% block header %}
-    <header class="header">
-        <div class="header-container">
-            <span class="header-container__title">
-                {% block header-title %}Setting{% endblock %}
-            </span>
-        </div>
-    </header>
-    {% endblock %}
-
-    {% block content %}
-    <a href="{% url 'setting_username' %}">
-        <div class="link"><span class="link-text">Change username</span></div>
-    </a>
-    <a href="{% url 'setting_email' %}">
-        <div class="link"><span class="link-text">Change email address</span></div>
-    </a>
-    <a href="{% url 'setting_image' %}">
-        <div class="link"><span class="link-text">Change profile image</span></div>
-    </a>
-    <a href="{% url 'setting_password' %}">
-        <div class="link"><span class="link-text">Change password</span></div>
-    </a>
-    <a href="{% url 'logout_view' %}">
-        <div class="link"><span class="link-text">Logout</span></div>
-    </a>
-    {% endblock %}
-
-    {% block footer %}
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-container__item">
-                <a href="{% url 'friends' %}" class="footer-item__link">
-                    <span class="footer-item__icon"><img src="{% static 'myapp/img/people-24px.svg' %}"></span>
-                    <span class="footer-item__text">Friend</span>
-                </a>
-            </div>
-            <div class="footer-container__item">
-                <a href="{% url 'setting' %}" class="footer-item__link">
-                    <span class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></span>
-                    <span class="footer-item__text">Setting</span>
-                </a>
-            </div>
-        </div>
-    </footer>
-    {% endblock %}
-</body>
-</html>
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
+{% endblock %}
+{% block title %}Setting | Chatapp{% endblock %}
+{% block header-title %}Setting{% endblock %}
+    
+{% block content %}
+<a href="{% url 'setting_username' %}">
+    <div class="link"><span class="link-text">Change username</span></div>
+</a>
+<a href="{% url 'setting_email' %}">
+    <div class="link"><span class="link-text">Change email address</span></div>
+</a>
+<a href="{% url 'setting_image' %}">
+    <div class="link"><span class="link-text">Change profile image</span></div>
+</a>
+<a href="{% url 'setting_password' %}">
+    <div class="link"><span class="link-text">Change password</span></div>
+</a>
+<a href="{% url 'logout_view' %}">
+    <div class="link"><span class="link-text">Logout</span></div>
+</a>
+{% endblock %}

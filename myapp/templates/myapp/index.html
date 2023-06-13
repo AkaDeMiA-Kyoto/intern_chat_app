@@ -1,34 +1,20 @@
+{% extends "myapp/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}" />
-    {% block extra_style %}{% endblock %}
-    <title>Chatapp</title>
-</head>
-<body>
-    {% block header %}
-    <header class="header">
-        <div class="header-container">
-            <span class="header-container__title">
-                {% block header-title %}Chatapp{% endblock %}
-            </span>
-        </div>
-    </header>
-    {% endblock %}
-    
-    {% block content %}
-    <div id="buttons">
-        <a href="{% url 'login_view' %}" class="button">
-            Login
-        </a>
-        <a href="{% url 'signup_view' %}" class="button">
-            Signup
-        </a>
-    </div>
-    {% endblock %}
-</body>
-</html>
+
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/index.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div id="buttons">
+    <a href="{% url 'login_view' %}" class="button">
+        Login
+    </a>
+    <a href="{% url 'signup_view' %}" class="button">
+        Signup
+    </a>
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}
+

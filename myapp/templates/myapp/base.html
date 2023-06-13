@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
     {% block extra_style %}{% endblock %}
-    <title>DeMiAインターン</title>
+    <title>{% block title %}Chatapp{% endblock %}</title>
 </head>
 <body>
     {% block header %}
     <header class="header">
         <div class="header-container">
             <span class="header-container__title">
-                {% block header-title %}{% endblock %}
+                {% block header-title %}Chatapp{% endblock %}
             </span>
         </div>
     </header>
@@ -28,13 +28,13 @@
             <div class="footer-container__item">
                 <a href="{% url 'friends' %}" class="footer-item__link">
                     <span class="footer-item__icon"><img src="{% static 'myapp/img/people-24px.svg' %}"></span>
-                    <span class="footer-item__text">友達</span>
+                    <span class="footer-item__text">Friends</span>
                 </a>
             </div>
             <div class="footer-container__item">
                 <a href="{% url 'setting' %}" class="footer-item__link">
                     <span class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></span>
-                    <span class="footer-item__text">設定</span>
+                    <span class="footer-item__text">Setting</span>
                 </a>
             </div>
         </div>

@@ -1,61 +1,27 @@
+{% extends "myapp/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
-    {% block extra_style %}{% endblock %}
-    <title>Setting Email</title>
-</head>
-<body>
-    {% block header %}
-    <header class="header">
-        <div class="header-container">
-            <span class="header-container__title">
-                {% block header-title %}Change email{% endblock %}
-            </span>
-        </div>
-    </header>
-    {% endblock %}
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
+{% endblock %}
+{% block title %}Setting Email | Chatapp{% endblock %}
+{% block header-title %}Change email{% endblock %}
 
-    {% block content %}
-    {% if completed %} <!--完了画面-->
-        <div id="completed">Setting completed.</div>
-    {% else %}
-        <form action="" method="POST">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
-            <div class="field">
-                <label class="form-label" for="{{ field.id_for_label }}">{{ form.email.label }}:</label>
-                {{ form.email }}
-                <div class="errors">{{ form.email.errors }}</div>
-            </div>
-            <div id="submit-button">
-                <input type="submit">
-            </div>
-        </form>
-    {% endif %}
-    {% endblock %}
-
-    {% block footer %}
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-container__item">
-                <a href="{% url 'friends' %}" class="footer-item__link">
-                    <span class="footer-item__icon"><img src="{% static 'myapp/img/people-24px.svg' %}"></span>
-                    <span class="footer-item__text">Friend</span>
-                </a>
-            </div>
-            <div class="footer-container__item">
-                <a href="{% url 'setting' %}" class="footer-item__link">
-                    <span class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></span>
-                    <span class="footer-item__text">Setting</span>
-                </a>
-            </div>
+{% block content %}
+{% if completed %} <!--完了画面-->
+    <div id="completed">Setting completed.</div>
+{% else %}
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <div class="field">
+            <label class="form-label" for="{{ field.id_for_label }}">{{ form.email.label }}:</label>
+            {{ form.email }}
+            <div class="errors">{{ form.email.errors }}</div>
         </div>
-    </footer>
-    {% endblock %}
-</body>
-</html>
+        <div id="submit-button">
+            <input type="submit">
+        </div>
+    </form>
+{% endif %}
+{% endblock %}
+

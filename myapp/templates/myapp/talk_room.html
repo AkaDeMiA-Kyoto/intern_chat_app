@@ -1,76 +1,67 @@
+{% extends "myapp/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
-    {% block extra_style %}{% endblock %}
-    <title>{{ slug }}</title>
-</head>
-<body>
-    {% block header %}
-    <header class="header">
-        <div class="header-container">
-            <a href="{% url 'friends' %}">
-                <span id="backbutton"><img src="{% static 'myapp/img/back.png' %}" class="header-image"></span>
-            </a>
-            <span class="header-container__title">
-                {% block header-title %}
-                    {{ slug }}
-                {% endblock %}
-            </span>
-            <a onclick="window.location.reload(true);">
-                <span id="reloadbutton"><img src="{% static 'myapp/img/reload.png' %}" class="header-image"></span>
-            </a>
-        </div>
-    </header>
-    {% endblock %}
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
+{% endblock %}
+{% block title %}{{ friendname }} | Chatapp{% endblock %}
+    
+{% block header %}
+<header class="header">
+    <div class="header-container">
+        <a href="{% url 'friends' %}">
+            <span id="backbutton"><img src="{% static 'myapp/img/back.png' %}" class="header-image"></span>
+        </a>
+        <span class="header-container__title">
+                {{ friendname }}
+        </span>
+        <a onclick="window.location.reload(true);">
+            <span id="reloadbutton"><img src="{% static 'myapp/img/reload.png' %}" class="header-image"></span>
+        </a>
+    </div>
+</header>
+{% endblock %}
 
-    {% block content %}
-    <div id="talkroom-field"><div id="talkroom-field-inner">
-        <div id="header-space"></div> <!--header分の余白-->
-        {% for message in messages %}
-        {% if message.viewdate_or_not %} {# メッセージを送信した日付が変わるごとに日付を表示する #}
-            <div class="datefield">
-                {{ message.date }}
-            </div>
+{% block content %}
+<div id="talkroom-field"><div id="talkroom-field-inner">
+    <div id="header-space"></div> <!--header分の余白-->
+    {% for message in messages %}
+    {% if message.viewdate_or_not %} {# メッセージを送信した日付が変わるごとに日付を表示する #}
+        <div class="datefield">
+            {{ message.date }}
+        </div>
+    {% endif %}
+    <div class="messagefield">
+        <div class="image-container">
+        {% if message.is_message_mine %}
+            <img src="/media/{{ myimage }}" class="user-image">
+        {% else %}
+            <img src="/media/{{ yourimage }}" class="user-image">
         {% endif %}
-        <div class="messagefield">
-            <div class="image-container">
-            {% if message.is_message_mine %}
-                <img src="/media/{{ myimage }}" class="user-image">
-            {% else %}
-                <img src="/media/{{ yourimage }}" class="user-image">
-            {% endif %}
-            </div>
-            <div class="messagefield-right">
-                <div class="username">{{ message.username }}</div>
-                <div class="message">{{ message.message }}</div>
-                <div class="time">{{ message.time }}</div>
-            </div>
         </div>
-        {% endfor %}
-        <div id="footer-space"></div> <!--footer分の余白-->
-    </div></div>
-    <script type="text/javascript">
-        const scrollerInner = document.getElementById("talkroom-field-inner");
-        scrollerInner.scrollIntoView(false);
-    </script>
-    {% endblock %}
+        <div class="messagefield-right">
+            <div class="username">{{ message.username }}</div>
+            <div class="message">{{ message.message }}</div>
+            <div class="time">{{ message.time }}</div>
+        </div>
+    </div>
+    {% endfor %}
+    <div id="footer-space"></div> <!--footer分の余白-->
+</div></div>
+<script type="text/javascript">
+    const scrollerInner = document.getElementById("talkroom-field-inner");
+    scrollerInner.scrollIntoView(false);
+</script>
+{% endblock %}
 
-    {% block footer %}
-    <footer class="footer">
-        <div class="footer-container">
-            <form action="" method="POST">
-                {{ form.message }}
-                {{ form.message.errors }}
-                {% csrf_token %}
-                <input type="submit" value="send" id="sendbutton">
-            </form>
-        </div>
-    </footer>
-    {% endblock %}
-</body>
-</html>
+{% block footer %}
+<footer class="footer">
+    <div class="footer-container">
+        <form action="" method="POST">
+            {{ form.message }}
+            {{ form.message.errors }}
+            {% csrf_token %}
+            <input type="submit" value="send" id="sendbutton">
+        </form>
+    </div>
+</footer>
+{% endblock %}

@@ -4,36 +4,28 @@ from django.forms import ModelForm
 from .models import CustomUser, Message
 
 class SignUpForm(UserCreationForm):
-    username = forms.CharField(
-        max_length=50,
-    )
     email = forms.EmailField(
         required=True
-    )
-    password1 = forms.CharField(
-        label="Password",
-        widget=forms.PasswordInput(),
-        min_length=8
-    )
-    password2 = forms.CharField(
-        label="Password(again)",
-        widget=forms.PasswordInput(),
-        min_length=8
     )
     image = forms.ImageField(
         label="Image",
         required=True
     )
-    
+    password1 = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput()
+    )
+    password2 = forms.CharField(
+        label="Password(again)",
+        widget=forms.PasswordInput()
+    )
+
     class Meta:
         model = CustomUser
-        fields = ("username", "email", "password1", "password2", "image")
+        fields = ("username", "email", "image", "password1", "password2")
 
 class LoginForm(AuthenticationForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs['placeholder'] = field.label
+    pass
 
 class MessageForm(ModelForm):
     message = forms.CharField(
@@ -53,9 +45,6 @@ class MessageForm(ModelForm):
         }
 
 class ChangeUsernameForm(UserChangeForm):
-    username = forms.CharField(
-        max_length=50,
-    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
