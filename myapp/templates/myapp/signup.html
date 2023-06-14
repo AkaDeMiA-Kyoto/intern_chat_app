@@ -1,12 +1,21 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8"> 
-        {% load static %}
-        <link rel="stylesheet" href="{% static 'myapp/css/signup.css' %}">
-    </head>
-    <body>
-        <p id="log"><a herf="#login">ログイン</a></p> 
+{% extends 'base.html' %}
 
-    </body>
-</html>
+{% block header-title %}
+<p>会員登録</p>
+{% endblock %}
+
+    {% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <p>
+            {{ field.label_tag }}{{ field }}
+            {% for error in field.errors %}
+                <p style="color: red">{{ error }}</p>
+            {% endfor %}
+        </p>
+    {% endfor %}
+    <a href="http://127.0.0.1:8000/">submit</a>
+
+    </form>
+    {% endblock %}

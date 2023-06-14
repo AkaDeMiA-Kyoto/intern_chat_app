@@ -1,4 +1,5 @@
 from django.shortcuts import redirect, render
+from django.contrib.auth.forms import UserCreationForm
 
 
 def index(request):
@@ -8,7 +9,7 @@ def signup_view(request):
     return render(request, "myapp/signup.html")
 
 def login_view(request):
-    return render(request, "myapp/login.html")
+    return render(request, "myapp/login.htmls")
 
 def friends(request):
     return render(request, "myapp/friends.html")
