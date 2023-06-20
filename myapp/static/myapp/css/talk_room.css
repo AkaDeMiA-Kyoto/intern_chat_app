@@ -1,0 +1,16 @@
+/* .tofrom{
+    display:flex;
+} */
+.receive{
+    text-align:left;
+}
+.send{
+    text-align:right;
+}
+.column{
+    position: absolute;
+    bottom: 0px;
+}
+.back{
+    text-align:left;
+}

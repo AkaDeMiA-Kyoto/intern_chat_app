@@ -1,0 +1,28 @@
+{% extends "/Users/kashiwagiyuuki/django_project/intern_chat_app/myapp/templates/myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/user.css' %}" />
+{% endblock %}
+
+{% block header-title %}
+<div class="title">
+    ユーザー名変更
+</div>
+{% endblock %}
+
+{% block content %}
+<div class = 'user-form'>
+    <form action="{%url 'user_view' user_id%}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="更新">
+    </form>
+</div>
+{% endblock %}
+
+
+
+
+
+

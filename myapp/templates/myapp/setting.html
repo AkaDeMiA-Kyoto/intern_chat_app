@@ -1,1 +1,30 @@
-S
+{% extends "/Users/kashiwagiyuuki/django_project/intern_chat_app/myapp/templates/myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/friends.css' %}" />
+{% endblock %}
+
+{% block header-title %}
+<div class = "friends_item">設定</div>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="user-item">
+            <a href="{% url 'user_view' user_id%}">ユーザー名変更</a>
+        </div>
+        <div class="email-item">
+            <a href="{% url 'email_view' user_id%}">メールアドレス変更</a>
+        </div>
+        <div class="icon-item">
+            <a href="{% url 'icon_view' user_id%}">アイコン変更</a>
+        </div>
+        <div class="password-item">
+            <a href="{% url 'password_change' user_id%}">パスワード変更</a>
+        </div>
+        <div class="logout-item">
+            <a href="{% url 'logout' %}">ログアウト</a>
+        </div>
+    </div>
+{% endblock %}

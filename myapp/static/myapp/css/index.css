@@ -1,0 +1,19 @@
+*{
+    box-sizing:content-box;
+    font-size:30px;
+}
+.index-item{
+    text-align:center;
+    border: 1px solid black;
+    border-radius:15px;
+    /* margin-inline:400px 400px; */
+}
+.container {
+    /* margin-top:1000px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+}
+

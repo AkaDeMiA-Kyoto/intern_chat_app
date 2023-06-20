@@ -1,0 +1,149 @@
+#新しいブランチを作成した際に
+git push -u origin kashiwagiyuki
+
+＃ショートカットキー
+＃＃開発者ツールを開く
+command+shift+i
+## キャッシュの削除
+command+shift+R(google)
+command+option+E(safari)
+
+# 一回目の仮想環境の作成
+mkdir -p ~/Django_project/intern_chat_app
+cd ~/Django_project/intern_chat_app
+python3 -m venv .venv
+source .venv/bin/activate
+# 二回目以降仮想環境の作成
+cd ~/Django_project/intern_chat_app
+source .venv/bin/activate
+
+＃djangoのインストール
+pip install Django
+
+!!
+<head>の要素に<link>をつけ忘れていないか
+
+
+            <tr>
+                <th>
+                    <label class="form-item">Username:</label>
+                </th>
+                <td>
+                    <input type="text" name="username">
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label class="form-item">Email:</label>
+                </th>
+                <td>
+                    <input type="text" name="Email">
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label class="form-item">address:</label>
+                </th>
+                <td>
+                    <input type="text" name="address">
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label class="form-item">password:</label>
+                </th>
+                <td>
+                    <input type="password" name="password">
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label class="form-item">password confirmation:</label>
+                </th>
+                <td>
+                    <input type="password" name="password confirmation">
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label class="form-item">img:</label>
+                </th>
+                <td>
+                    <input type="file" name="img">
+                </td>
+            </tr>
+        <div class="body-item">
+            <a href="{% url 'index' %}">submit</a>
+        </div>
+
+class KaiinForm(forms.Form):
+    Username = forms.CharField()
+    Email = forms.EmailField()
+    address = forms.CharField() 
+    Password = forms.CharField()
+    Password_confirmation = forms.CharField()
+    img =forms.ImageField()
+
+
+#マイグレーションの実行
+python3 manage.py makemigrations
+python3 manage.py migrate
+
+UserAdmin
+
+def login_view(request):
+    if request.method == 'POST':
+        form_login= loginform(request.POST)
+        params = {"form_login":form_login}
+        if form_login.is_valid():
+            return render(request,"myapp/friends.html",{"form_login":form_login})
+        
+    else:
+        form_login = loginform()
+        
+    return render(request, "myapp/login.html",{"form_login":form_login})
+
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
+    {% block extra_style %}{% endblock %}
+    <title>DeMiAインターン</title>
+</head>
+<body>
+    {% block header %}
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container__title">
+                {% block header-title %}{% endblock %}
+            </span>
+        </div>
+    </header>
+    {% endblock %}
+
+    {% block content %}
+    {% endblock %}
+
+    {% block footer %}
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-container__item">
+                <a href="{% url 'friends' %}" class="footer-item__link">
+                    <span class="footer-item__icon"><img src="{% static 'myapp/img/people-24px.svg' %}"></span>
+                    <span class="footer-item__text">友達</span>
+                </a>
+            </div>
+            <div class="footer-container__item">
+                <a href="{% url 'setting' %}" class="footer-item__link">
+                    <span class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></span>
+                    <span class="footer-item__text">設定</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
+</body>
+</html>
+
+notification

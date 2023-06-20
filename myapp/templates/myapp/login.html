@@ -1,1 +1,22 @@
-LI
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{% static "myapp/css/login.css" %}">
+    </head>
+    <body>
+        <header>
+            <div class = login-item>
+                ログイン
+            <div>
+        </header>
+        <form action="{%url 'login_view' %}" method="POST" enctype="multipart/form-data">{%csrf_token%}
+            {{form.as_p}}    
+            {{form.errors}}
+            <button type="submit" name="login" >ログイン</button>
+        </form>
+    </body>
+</html>
+
+    

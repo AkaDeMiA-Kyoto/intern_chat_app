@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{% static "myapp/css/logout.css" %}">
+    </head>
+    <body>
+        <h1>ログアウトしました。</h1>
+        <p><a href="{% url 'index'%}">ホームへ戻る</a></p>
+    </body>
+</html>
