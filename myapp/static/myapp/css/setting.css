@@ -1,0 +1,18 @@
+
+.user-item{
+    text-align:center;
+    border: 1px solid black;
+    border-radius:15px;
+    padding: 5px;
+    margin:8px;
+}
+.container {
+    /* margin-top:1000px; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 35vh;
+    width: 40% auto;
+    
+}

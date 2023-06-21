@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+{% extends "myapp/base.html" %}
 {% load static %}
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="{% static "myapp/css/login.css" %}">
-    </head>
+
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/login.css' %}" />
+{% endblock %}
+
+{% block content %}
     <body>
         <header>
             <div class = login-item>
@@ -17,6 +18,9 @@
             <button type="submit" name="login" >ログイン</button>
         </form>
     </body>
-</html>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
 
     

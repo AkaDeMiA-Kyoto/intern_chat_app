@@ -1,13 +1,11 @@
-<!DOCTYPE html>
+{% extends "/Users/kashiwagiyuuki/django_project/intern_chat_app/myapp/templates/myapp/base.html" %}
 {% load static %}
 
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="{% static "myapp/css/logout.css" %}">
-    </head>
-    <body>
-        <h1>ログアウトしました。</h1>
-        <p><a href="{% url 'index'%}">ホームへ戻る</a></p>
-    </body>
-</html>
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/login.css' %}" />
+{% endblock %}
+
+{% block content %}
+    <h1>ログアウトしました。</h1>
+    <p><a href="{% url 'index'%}">ホームへ戻る</a></p>
+{% endblock %}

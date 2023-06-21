@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block extra_style %}
-<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/friends.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
 {% endblock %}
 
 {% block header-title %}
@@ -14,16 +14,16 @@
         <div class="user-item">
             <a href="{% url 'user_view' user_id%}">ユーザー名変更</a>
         </div>
-        <div class="email-item">
+        <div class="user-item">
             <a href="{% url 'email_view' user_id%}">メールアドレス変更</a>
         </div>
-        <div class="icon-item">
+        <div class="user-item">
             <a href="{% url 'icon_view' user_id%}">アイコン変更</a>
         </div>
-        <div class="password-item">
+        <div class="user-item">
             <a href="{% url 'password_change' user_id%}">パスワード変更</a>
         </div>
-        <div class="logout-item">
+        <div class="user-item">
             <a href="{% url 'logout' %}">ログアウト</a>
         </div>
     </div>

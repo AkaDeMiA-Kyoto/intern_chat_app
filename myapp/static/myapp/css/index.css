@@ -1,15 +1,16 @@
+@import url("intern_chat_app/myapp/static/myapp/css/base.css");
 *{
     box-sizing:content-box;
-    font-size:30px;
+    font-size:40px;
 }
 .index-item{
     text-align:center;
     border: 1px solid black;
     border-radius:15px;
-    /* margin-inline:400px 400px; */
+    padding: 5px;
+    margin:8px;
 }
-.container {
-    /* margin-top:1000px; */
+.container{
     display: flex;
     justify-content: center;
     align-items: center;

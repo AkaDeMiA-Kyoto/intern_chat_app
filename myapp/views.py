@@ -55,6 +55,8 @@ class friendslist(LoginRequiredMixin,generic.ListView):
         context["friends"] = friends # フレンドのid
         my_id = self.request.user.id
         context["my_id"]=my_id
+        talks = Talk.objects.all().order_by('time')
+        context["talks"]=talks
         return context
     
 class TalkRoom(LoginRequiredMixin,generic.FormView):

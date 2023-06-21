@@ -21,7 +21,6 @@ urlpatterns = [
     path('password/<int:pk>',views.PasswordChange.as_view(),name='password_change'),
     path('finish/',views.finish_view,name='finish_view'),
 ]
-# path('passwordchange/',views.PasswordChangeDone.as_view(),name = 'passwordchangedone'),
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

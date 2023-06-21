@@ -5,7 +5,6 @@ from django.core.validators import MinLengthValidator
 #これを書くと、止まるよ
 # Create your models here.
 class CustomUser(AbstractUser):
-    # Email_address=models.EmailField(validators=[MinLengthValidator(6)],max_length=255)
     img =models.ImageField()
 
 class Talk(models.Model):

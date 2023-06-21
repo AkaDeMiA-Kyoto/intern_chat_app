@@ -12,7 +12,7 @@
 {% block content %}
     {%for item in friends %}
         {% if item.id != my_id%}
-             <a class = " user " href = "{% url 'talk_room' item.id %}"><img class = "user_icon" src="{{item.img.url}}"><div>{{item.username}}</div></a>
+            <a class = " user " href = "{% url 'talk_room' item.id %}"><img class = "user_icon" src="{{item.img.url}}"><div>{{item.username}}</div></a>
         {% endif %}
     {% endfor %}
 {% endblock %}
