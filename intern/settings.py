@@ -9,6 +9,18 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+import os # 追加
+import environ # 追加
+from pathlib import Path
+
+# ...
+# デプロイ環境のための設定(追加)
+if os.path.isfile('.env'): # .envファイルが存在しない時にもエラーが発生しないようにする
+    env = environ.Env(DEBUG=(bool, False),)
+    environ.Env.read_env('.env')
+
+    DEBUG = env('DEBUG')
+    ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 from pathlib import Path
 
@@ -130,3 +142,4 @@ AUTH_USER_MODEL="myapp.CustomUser"
 LOGIN_URL = '/login' 
 LOGIN_REDIRECT_URL = '/friends'
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
