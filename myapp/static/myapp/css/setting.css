@@ -21,9 +21,18 @@
     display: inline-block;
 }
 
+#buttom_field {
+    text-align: center;
+}
+
 #submit-button {
     text-align: center;
     margin-top: 20px;
+}
+#reset_password_link {
+    display: block;
+    margin-top: 1rem;
+    text-decoration: underline;
 }
 .errors {
     color: red;

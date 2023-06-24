@@ -7,18 +7,15 @@
 
 .form-label {
     text-align: right;
-    width: 100px;
+    width: 180px;
     margin-right: 10px;
     display: inline-block;
 }
-
-#login-button {
+#buttom_field {
     text-align: center;
-    margin-top: 20px;
 }
-
-#signup-link {
-    text-align: center;
-    margin-top: 50px;
+.secondaryAction {
+    display: block;
+    margin-top: 1rem;
     text-decoration: underline;
 }

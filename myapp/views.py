@@ -1,8 +1,9 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
+from django.urls import reverse_lazy
 from django.contrib.auth import login, authenticate
 from django.views.generic import TemplateView
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView, LogoutView
-from .forms import SignUpForm, LoginForm, MessageForm, ChangeUsernameForm, ChangeEmailForm, ChangeImageForm
+from .forms import CustomSignupForm, MessageForm, ChangeUsernameForm, ChangeEmailForm, ChangeImageForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from .models import CustomUser, Message
@@ -13,27 +14,6 @@ from django.views.generic.edit import FormView
 
 def index(request):
     return render(request, "myapp/index.html")
-
-def signup_view(request):
-    if request.method == "POST":
-        form = SignUpForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get("username")
-            password = form.cleaned_data.get("password1")
-            user = authenticate(username=username, password=password) # 認証バックエンド属性を持ったUserを返す
-            if user != None:
-                login(request, user)
-            return redirect("/")
-        else:
-            print(form.errors)
-    else:
-        form = SignUpForm()
-    return render(request, "myapp/signup.html", {"form": form})
-
-class Login(LoginView):
-    authentication_form = LoginForm
-    template_name = "myapp/login.html"
 
 class Friends(LoginRequiredMixin, TemplateView):
     template_name = "myapp/friends.html"
@@ -65,8 +45,9 @@ class TalkRoom(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         id = self.kwargs.get("id")
+        friend = get_object_or_404(CustomUser, id=id)
         context["id"] = id
-        context["friendname"] = CustomUser.objects.get(id=id).username
+        context["friendname"] = friend.username
         messages = (Message.objects.filter(user_from=self.request.user.id, user_to=id) | Message.objects.filter(user_from=id, user_to=self.request.user.id)).order_by("time")
         view_messages = [] # Templateに渡すためのViewMessageオブジェクトを格納するリスト
         date = None # メッセージを送信した日付が，前のメッセージと異なるかどうかを判断する
@@ -84,7 +65,7 @@ class TalkRoom(LoginRequiredMixin, FormView):
             view_messages.append(view_message)
         context["messages"] = view_messages
         context["myimage"] = self.request.user.image
-        context["yourimage"] = CustomUser.objects.get(id=id).image
+        context["yourimage"] = friend.image
         return context
     
     def form_valid(self, form):
@@ -94,8 +75,10 @@ class TalkRoom(LoginRequiredMixin, FormView):
                 user_to=self.kwargs.get("id"),
                 message=form.cleaned_data["message"]
             )
-        TalkRoom.success_url = "/talk_room/" + str(self.kwargs.get("id"))
         return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse_lazy("talk_room", kwargs={"id": self.kwargs.get("id")})
 
 @login_required
 def setting_view(request):
@@ -138,8 +121,8 @@ def setting_image_view(request):
 
 class SettingPassword(LoginRequiredMixin, PasswordChangeView):
     template_name = "myapp/setting_password.html"
-    success_url = "password/done"
-
+    success_url = reverse_lazy("setting_password_done")
+    
 class SettingPasswordDone(PasswordChangeDoneView):
     template_name = "myapp/setting_password.html"
 
@@ -148,9 +131,8 @@ class SettingPasswordDone(PasswordChangeDoneView):
         context["completed"] = True
         return context
 
-class Logout(LoginRequiredMixin, LogoutView):
-    template_name = "myapp/logout.html"
-    
+def logout(request):
+    return render(request, "myapp/logout.html")
 
 class Friend:
     def __init__(self, username, id, image):

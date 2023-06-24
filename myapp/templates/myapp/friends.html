@@ -9,19 +9,24 @@
 {% endblock %}
     
 {% block content %}
-<div id="header-space"></div> <!--header分の余白-->
-{% for friend in friends %}
-    <a href="{% url 'talk_room' friend.id %}">
-        <div class="friend-container">
-            <div class="image-container"><img src="/media/{{ friend.image }}" class="user-image"></div>
-            <div class="friend-container-right">
-                <div class="frienddetail">
-                    <div class="username-field">{{ friend.username }}</div>
-                    <div class="talk_date">{{ friend.view_date }}</div>
+<ul id="friends">
+    {% for friend in friends %}
+        <li class="friends-item">
+            <a href="{% url 'talk_room' friend.id %}">
+                <div class="friend-container">
+                    <div class="image-container"><img src="/media/{{ friend.image }}" class="user-image"></div>
+                    <div class="friend-container-right">
+                        <div class="frienddetail">
+                            <div class="username-field">{{ friend.username }}</div>
+                            <div class="talk_date">{{ friend.view_date }}</div>
+                        </div>
+                        <div class="recentmessage">{{ friend.message }}</div>
+                    </div>
                 </div>
-                <div class="recentmessage">{{ friend.message }}</div>
-            </div>
-        </div>
-    </a>
-{% endfor %}
+            </a>
+        </li>
+    {% empty %}
+    <!-- for文で指定したリストが空の場合の内容を，ここに書く -->
+    {% endfor %}
+    </ul>
 {% endblock %}

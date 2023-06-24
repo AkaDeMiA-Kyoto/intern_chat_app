@@ -22,8 +22,8 @@
 {% endblock %}
 
 {% block content %}
-<div id="talkroom-field"><div id="talkroom-field-inner">
-    <div id="header-space"></div> <!--header分の余白-->
+<div id="talkroom-field">
+    <!-- <div id="header-space"></div> header分の余白 -->
     {% for message in messages %}
     {% if message.viewdate_or_not %} {# メッセージを送信した日付が変わるごとに日付を表示する #}
         <div class="datefield">
@@ -45,11 +45,13 @@
         </div>
     </div>
     {% endfor %}
-    <div id="footer-space"></div> <!--footer分の余白-->
-</div></div>
+    <!-- <div id="footer-space"></div> footer分の余白 -->
+</div>
 <script type="text/javascript">
-    const scrollerInner = document.getElementById("talkroom-field-inner");
-    scrollerInner.scrollIntoView(false);
+    document.addEventListener("DOMContentLoaded", function () {
+        const talkroom_field = document.getElementById("talkroom-field");
+        window.scroll(0, talkroom_field.scrollHeight);
+    });
 </script>
 {% endblock %}
 

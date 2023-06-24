@@ -1,76 +1,44 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 from django.forms import ModelForm
+from allauth.account.forms import SignupForm
 from .models import CustomUser, Message
 
-class SignUpForm(UserCreationForm):
-    email = forms.EmailField(
-        required=True
-    )
+class CustomSignupForm(SignupForm):
     image = forms.ImageField(
-        label="Image",
+        label="プロフィール画像",
         required=True
     )
-    password1 = forms.CharField(
-        label="Password",
-        widget=forms.PasswordInput()
-    )
-    password2 = forms.CharField(
-        label="Password(again)",
-        widget=forms.PasswordInput()
-    )
 
-    class Meta:
-        model = CustomUser
-        fields = ("username", "email", "image", "password1", "password2")
-
-class LoginForm(AuthenticationForm):
-    pass
+    def save(self, request):
+        user = super(CustomSignupForm, self).save(request)
+        user.image = request.FILES.get("image")
+        user.save()
+        return user
 
 class MessageForm(ModelForm):
-    message = forms.CharField(
-        max_length=500,
-        required=True,
-        label=""
-    )
-
     class Meta:
         model = Message
         fields = ("message",)
+        # 入力予測の表示をさせない
+        widgets = {"message": forms.TextInput(attrs={"autocomplete": "off"})}
 
-        error_messages = {
-            "message": {
-                "max_length": "Max 500 letters."
-            }
-        }
-
-class ChangeUsernameForm(UserChangeForm):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['username'].required = True
+class ChangeUsernameForm(ModelForm):
     class Meta:
         model = CustomUser
         fields = ["username"]
 
-class ChangeEmailForm(UserChangeForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['email'].required = True
+class ChangeEmailForm(ModelForm):
     class Meta:
         model = CustomUser
         fields = ["email"]
 
-class ChangeImageForm(UserChangeForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['image'].required = True
-    
+class ChangeImageForm(ModelForm):
     def save(self, user,  *args, **kwargs):
         user = CustomUser.objects.get(pk=user.id)
         if user.image:
             user.image.delete(save=False)
-        super(UserChangeForm, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
     
     class Meta:
         model = CustomUser

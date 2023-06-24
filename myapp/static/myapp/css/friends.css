@@ -3,16 +3,31 @@
     position: fixed;
     background-color: white;
 }
-
-#header-space {
-    height: 64px;
-    border-bottom: 1px #9b9b9b solid;
-}
-
 .footer-container{
     background-color: white;
 }
 
+/* #header-space {
+    height: 64px;
+    border-bottom: 1px #9b9b9b solid;
+} */
+#friends {
+    padding-top: 64px;
+    list-style: none;
+    padding-left: 0;
+}
+
+.friends-item {
+    border-bottom: 1px #9b9b9b solid;
+}
+.friends-item:first-of-type { /* first-childでリストの一番最初のアイテムだけを指定することができる */
+    border-top: 1px #9b9b9b solid;
+}
+.friend-container {
+    display: flex;
+    height: 48px;
+    margin: 2px
+}
 .image-container {
     justify-content: center;
     width: 48px;
@@ -27,12 +42,8 @@
     margin: 4px;
     border: 0.5px black solid;
 }
-.friend-container {
-    display: flex;
-    height: 48px;
-    border-bottom: 1px #9b9b9b solid;
-    margin: 2px
-}
+
+
 .friend-container-right {
     width: calc(100% - 48px);
 }

@@ -23,12 +23,7 @@
     margin-top: 22px;
     margin-bottom: 22px;
 }
-#header-space {
-    height: 64px;
-}
-#footer-space {
-    height: 30px;
-}
+
 .datefield {
     text-align: center;
     border-bottom: 1px #9b9b9b solid;
@@ -66,7 +61,9 @@
 }
 
 #talkroom-field {
-    overflow: scroll;
+    padding: 0;
+    width: 100vw;
+    padding-top: 64px;
 }
 .footer{
     width: 100vw;

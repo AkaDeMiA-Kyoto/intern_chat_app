@@ -1,0 +1,16 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block title %}ユーザー認証 | Chatapp{% endblock %}
+{% block header-title %}ユーザー認証{% endblock %}
+
+{% block content %}
+<p>
+    あなたのメールアドレスに認証用メールを送信しました。そのメール内のリンクをクリックして、認証を完了してください。メールが受信されない場合は、迷惑メールフォルダーを確認してください。
+</p>
+{% endblock %}
+
+{% block footer %}{% endblock %}
