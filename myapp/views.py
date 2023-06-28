@@ -26,7 +26,3 @@ class SignUpView(CreateView):
     template_name="myapp/signup.html"
     form_class = SignUpForm
     success_url = reverse_lazy('index')
-
-
-
-    

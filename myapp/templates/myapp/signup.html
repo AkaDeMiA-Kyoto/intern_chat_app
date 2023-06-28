@@ -1,13 +1,29 @@
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}" />
+    {% block extra_style %}{% endblock %}
+    <title>DeMiAインターン</title>
+</head>
 <body>
-    {% block header-title %}
-    <p id="head">会員登録</p>
+    {% block header %}
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container__title">
+                {% block header-title %}<p id="head">会員登録</p>{% endblock %}
+            </span>
+        </div>
+    </header>
     {% endblock %}
 
-    <div>
+    {% block content %}
+    
+    <div class="container">
         <form method="post" enctype="multipart/form-data">{% csrf_token %}
+            {{ form.non_field_errors }}
             {% for field in form %}
                 <div class="fieldwrapper">
                     {{ field.errors }}
@@ -19,4 +35,25 @@
         </form>
 
     </div>        
+    {% endblock %}
+
+    {% block footer %}
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-container__item">
+                <a href="{% url 'friends' %}" class="footer-item__link">
+                    <span class="footer-item__icon"><img src="{% static 'myapp/img/people-24px.svg' %}"></span>
+                    <span class="footer-item__text">友達</span>
+                </a>
+            </div>
+            <div class="footer-container__item">
+                <a href="{% url 'setting' %}" class="footer-item__link">
+                    <span class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></span>
+                    <span class="footer-item__text">設定</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
 </body>
+</html>
