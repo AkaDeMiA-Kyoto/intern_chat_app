@@ -1,0 +1,35 @@
+* {
+    background-color: rgb(256, 100, 100)
+}
+
+html {
+    box-sizing: border-box;
+}
+
+.login  {
+    background-color: rgb(130, 130, 244);
+    color: rgb(42, 219, 137);
+    border: 2px solid rgb(81, 78, 78);
+    font-size: 9.5vh;
+    border-radius: 2vh;
+    padding: 1vh;
+}
+
+.signup {
+    background-color: rgb(130, 130, 244);
+    color:rgb(42, 219, 137);
+    border: 2px solid rgb(81, 78, 78);
+    font-size: 9.5vh;
+    border-radius: 2vh;
+    padding: 1vh
+}
+.loglog {
+    margin-top: 40vh;
+}
+
+.sisi {
+    margin-bottom: 20vh;
+}
+div {
+    text-align: center;
+}
