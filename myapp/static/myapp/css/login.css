@@ -1,0 +1,22 @@
+body {
+    text-align: center;
+}
+
+.context {
+    margin: 15px;
+}
+
+button {
+    font-size: 20px;
+    border: 2.5px solid rgb(180, 179, 179);
+    border-radius: 15px;
+    padding: 8px 22px;
+    margin: 20px 20px 6px;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+}
+
+table {
+    text-align: left;
+}

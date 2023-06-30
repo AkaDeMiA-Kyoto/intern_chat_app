@@ -1,1 +1,50 @@
-SU
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block extra_style %}
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}" >
+{% endblock %}
+
+{% block header-title %}会員登録{% endblock %}
+
+{% block content %}
+    <div class="context">
+        <br>
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            <table class="formtable">
+                <tr>
+                    <tr>
+                        <td>Username:</td>
+                        <td>{{ form.username }}</td>
+                    </tr>
+                    <tr>
+                        <td>Email address:</td>
+                        <td>{{ form.email }}</td>
+                    </tr>
+                    <tr>
+                        <td>Password:</td>
+                        <td>{{ form.password1 }}</td>
+                    </tr>
+                    <tr>
+                        <td>Password confirmation:</td>
+                        <td>{{ form.password2 }}</td>
+                    </tr>
+                    <tr>
+                        <td>Img:</td>
+                        <td>{{ form.image }}</td>
+                    </tr>
+                </tr>
+            </table>
+            <button type='submit'>submit</button>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <p style="text-align:left;">{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+        </form>
+    </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}
