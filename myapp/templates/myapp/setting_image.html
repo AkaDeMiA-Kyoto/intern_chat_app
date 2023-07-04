@@ -3,30 +3,26 @@
 {% block extra_style %}
 <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
 {% endblock %}
-{% block title %}Setting Profile Image | Chatapp{% endblock %}
-{% block header-title %}Change profile image{% endblock %}
+{% block title %}設定 | Chatapp{% endblock %}
+{% block header-title %}プロフィール画像変更{% endblock %}
 
 {% block content %}
 <div class="image-container">
-    <p>Current Image</p>
-    <img src="/media/{{ currentimage }}" class="user-image">
-    <p>{{ currentimage }}</p>
+    <p>現在の画像</p>
+    <img src="{{ user.image.url }}" class="user-image">
+    <p>{{ user.image }}</p>
 </div>
-{% if completed %} <!--完了画面-->
-    <div id="completed">Setting completed.</div>
-{% else %}
-    <form action="" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        <div class="field">
-            <label class="form-label">Image:</label>
-            <input type="file" name="image" accept="image/*" id="id_image">
-            <div class="errors">{{ form.image.errors }}</div>
-        </div>
-        <div id="submit-button">
-            <input type="submit">
-        </div>
-    </form>
-{% endif %}
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="field">
+        <label class="form-label">画像</label>
+        <div><input type="file" name="image" accept="image/*" id="id_image"></div>
+        <div class="errors">{{ form.image.errors }}</div>
+    </div>
+    <div class="submit-button">
+        <input type="submit" value="変更">
+    </div>
+</form>
 {% endblock %}
 

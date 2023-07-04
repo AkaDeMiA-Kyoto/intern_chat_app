@@ -1,4 +1,4 @@
-.link {
+.setting_link {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -10,35 +10,21 @@
     margin-left: 10px;
 }
 
-.field {
-    margin: 5px 0 0 5px;
-}
-
-.form-label {
-    text-align: right;
-    width: 150px;
-    margin-right: 10px;
-    display: inline-block;
-}
-
-#buttom_field {
+.buttom_field {
     text-align: center;
 }
 
-#submit-button {
+.submit-button {
     text-align: center;
     margin-top: 20px;
 }
-#reset_password_link {
+.reset_password_link {
     display: block;
     margin-top: 1rem;
     text-decoration: underline;
 }
-.errors {
-    color: red;
-}
 
-#completed {
+.completed {
     text-align: center;
     margin-top: 10px;
 }
@@ -55,10 +41,24 @@
     border: 0.5px black solid;
 }
 
-#logout-message {
+.logout-message {
     text-align: center;
 }
-#link-to-index {
+.link-to-index {
     text-align: center;
     text-decoration: underline;
+}
+.login-link {
+    text-align: center;
+    margin-top: 50px;
+    text-decoration: underline;
+}
+.link {
+    text-align: center;
+    margin-top: 1rem;
+    text-decoration: underline;
+}
+
+#id_email, #id_username, #id_old_password, #id_new_password1, #id_new_password2, #id_password1, #id_password2 {
+    width: calc(100% - 30px);
 }

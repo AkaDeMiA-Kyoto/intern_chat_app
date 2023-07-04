@@ -3,23 +3,23 @@
 {% block extra_style %}
 <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
 {% endblock %}
-{% block title %}Setting | Chatapp{% endblock %}
-{% block header-title %}Setting{% endblock %}
+{% block title %}設定 | Chatapp{% endblock %}
+{% block header-title %}設定{% endblock %}
     
 {% block content %}
 <a href="{% url 'setting_username' %}">
-    <div class="link"><span class="link-text">Change username</span></div>
+    <div class="setting_link"><span class="link-text">ユーザー名変更</span></div>
 </a>
 <a href="{% url 'setting_email' %}">
-    <div class="link"><span class="link-text">Change email address</span></div>
+    <div class="setting_link"><span class="link-text">メールアドレス変更</span></div>
 </a>
 <a href="{% url 'setting_image' %}">
-    <div class="link"><span class="link-text">Change profile image</span></div>
+    <div class="setting_link"><span class="link-text">プロフィール画像変更</span></div>
 </a>
 <a href="{% url 'setting_password' %}">
-    <div class="link"><span class="link-text">Change password</span></div>
+    <div class="setting_link"><span class="link-text">パスワード変更</span></div>
 </a>
 <a href="{% url 'account_logout' %}">
-    <div class="link"><span class="link-text">Logout</span></div>
+    <div class="setting_link"><span class="link-text">ログアウト</span></div>
 </a>
 {% endblock %}

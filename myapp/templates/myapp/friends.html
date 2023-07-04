@@ -3,21 +3,31 @@
 {% block extra_style %}
 <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/friends.css' %}" />
 {% endblock %}
-{% block title %}Friends | Chatapp{% endblock %}
+{% block title %}友だち一覧 | Chatapp{% endblock %}
 {% block header-title %}
 {{ user.username }}
 {% endblock %}
-    
+
+{% block header_extra %}
+<div class="search_container">
+    <form action="" method="GET">
+        {{ form.filter }}
+        {{ form.filter.errors }}
+        <input type="submit" value="検索" class="searchbutton">
+    </form>
+</div>
+{% endblock %}
+
 {% block content %}
-<ul id="friends">
+<ul class="friends">
     {% for friend in friends %}
         <li class="friends-item">
-            <a href="{% url 'talk_room' friend.id %}">
+            <a href="{% url 'talk_room' friend.user.id %}">
                 <div class="friend-container">
-                    <div class="image-container"><img src="/media/{{ friend.image }}" class="user-image"></div>
+                    <div class="image-container"><img src="{{ friend.user.image.url }}" class="user-image"></div>
                     <div class="friend-container-right">
                         <div class="frienddetail">
-                            <div class="username-field">{{ friend.username }}</div>
+                            <div class="username-field">{{ friend.user.username }}</div>
                             <div class="talk_date">{{ friend.view_date }}</div>
                         </div>
                         <div class="recentmessage">{{ friend.message }}</div>
@@ -26,7 +36,7 @@
             </a>
         </li>
     {% empty %}
-    <!-- for文で指定したリストが空の場合の内容を，ここに書く -->
+        <p>友だちが見つかりませんでした。</p>
     {% endfor %}
     </ul>
 {% endblock %}

@@ -1,23 +1,14 @@
-.field {
-    margin: 5px 0 0 5px;
-}
-
-.form-label {
-    text-align: right;
-    width: 150px;
-    margin-right: 10px;
-    display: inline-block;
-}
-.errors {
-    color: red;
-}
-#submit-button {
+.submit-button {
     text-align: center;
     margin-top: 20px;
 }
 
-#login-link {
+.login-link {
     text-align: center;
-    margin-top: 50px;
+    margin-top: 1rem;
     text-decoration: underline;
+}
+
+#id_email, #id_username, #id_password1, #id_password2 {
+    width: calc(100% - 30px);
 }

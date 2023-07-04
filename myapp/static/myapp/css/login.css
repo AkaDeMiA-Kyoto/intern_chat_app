@@ -1,21 +1,12 @@
-.errors {
-    color: red;
-}
-.field {
-    margin: 5px 0 0 5px;
-}
-
-.form-label {
-    text-align: right;
-    width: 180px;
-    margin-right: 10px;
-    display: inline-block;
-}
-#buttom_field {
+.buttom_field {
     text-align: center;
 }
 .secondaryAction {
     display: block;
     margin-top: 1rem;
     text-decoration: underline;
+}
+
+#id_login, #id_password {
+    width: calc(100% - 30px);
 }

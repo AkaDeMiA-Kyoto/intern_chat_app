@@ -1,0 +1,14 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
+{% endblock %}
+{% block title %}ログアウト | Chatapp{% endblock %}
+{% block header-title %}ログアウト{% endblock %}
+
+{% block content %}
+<p class="logout-message">ログアウトしました。</p>
+<div class="link"><a href="{% url 'index' %}">最初のページに戻る</a></div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

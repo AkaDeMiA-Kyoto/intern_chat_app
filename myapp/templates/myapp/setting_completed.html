@@ -1,0 +1,18 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
+{% endblock %}
+{% block title %}設定 | Chatapp{% endblock %}
+{% block header-title %}{{ content }}変更{% endblock %}
+
+{% block content %}
+<div class="completed">設定が完了しました。</div>
+{% if content == "プロフィール画像" %}
+    <div class="image-container">
+        <img src="{{ user.image.url }}" class="user-image">
+        <p>{{ user.image }}</p>
+    </div>
+{% endif %}
+{% endblock %}
+

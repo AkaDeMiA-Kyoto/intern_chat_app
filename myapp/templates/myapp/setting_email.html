@@ -3,25 +3,21 @@
 {% block extra_style %}
 <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
 {% endblock %}
-{% block title %}Setting Email | Chatapp{% endblock %}
-{% block header-title %}Change email{% endblock %}
+{% block title %}設定 | Chatapp{% endblock %}
+{% block header-title %}メールアドレス変更{% endblock %}
 
 {% block content %}
-{% if completed %} <!--完了画面-->
-    <div id="completed">Setting completed.</div>
-{% else %}
-    <form action="" method="POST">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        <div class="field">
-            <label class="form-label" for="{{ field.id_for_label }}">{{ form.email.label }}:</label>
-            {{ form.email }}
-            <div class="errors">{{ form.email.errors }}</div>
-        </div>
-        <div id="submit-button">
-            <input type="submit">
-        </div>
-    </form>
-{% endif %}
+<form action="" method="POST">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="field">
+        <label class="form-label" for="{{ field.id_for_label }}">メールアドレス</label>
+        {{ form.email }}
+        <div class="errors">{{ form.email.errors }}</div>
+    </div>
+    <div class="submit-button">
+        <input type="submit" value="変更">
+    </div>
+</form>
 {% endblock %}
 

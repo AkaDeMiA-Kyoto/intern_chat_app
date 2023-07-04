@@ -12,9 +12,10 @@
     {% block header %}
     <header class="header">
         <div class="header-container">
-            <span class="header-container__title">
+            <div class="header-container__title">
                 {% block header-title %}Chatapp{% endblock %}
-            </span>
+            </div>
+            {% block header_extra %}{% endblock %}
         </div>
     </header>
     {% endblock %}
@@ -28,13 +29,13 @@
             <div class="footer-container__item">
                 <a href="{% url 'friends' %}" class="footer-item__link">
                     <span class="footer-item__icon"><img src="{% static 'myapp/img/people-24px.svg' %}"></span>
-                    <span class="footer-item__text">Friends</span>
+                    <span class="footer-item__text">友だち</span>
                 </a>
             </div>
             <div class="footer-container__item">
                 <a href="{% url 'setting' %}" class="footer-item__link">
                     <span class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></span>
-                    <span class="footer-item__text">Setting</span>
+                    <span class="footer-item__text">設定</span>
                 </a>
             </div>
         </div>

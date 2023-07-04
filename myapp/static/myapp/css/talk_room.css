@@ -6,15 +6,16 @@
     width: 100%;
     background-color: white;
 }
-#backbutton {
+.backbutton {
     margin-left: 10px;
 }
-#reloadbutton {
+.reloadbutton {
     margin-right: 10px;
 }
 .header-container__title{
     position: static;
     word-break: break-all;
+    width: calc(100% - 60px);
 }
 .header-image {
     height: 20px;
@@ -93,7 +94,7 @@ form {
     border: 1px black solid;
     border-radius: 5px;
 }
-#sendbutton {
+.sendbutton {
     width: 45px;
     height: 26px;
     text-align: center;

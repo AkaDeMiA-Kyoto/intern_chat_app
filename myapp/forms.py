@@ -1,6 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
-from django.forms import ModelForm
+from django.forms import ModelForm, Form
 from allauth.account.forms import SignupForm
 from .models import CustomUser, Message
 
@@ -19,7 +18,7 @@ class CustomSignupForm(SignupForm):
 class MessageForm(ModelForm):
     class Meta:
         model = Message
-        fields = ("message",)
+        fields = ["message"]
         # 入力予測の表示をさせない
         widgets = {"message": forms.TextInput(attrs={"autocomplete": "off"})}
 
@@ -44,4 +43,8 @@ class ChangeImageForm(ModelForm):
         model = CustomUser
         fields = ["image"]
 
-
+class FriendSearchForm(Form):
+    filter = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={"placeholder": "友だちを検索"})
+    )

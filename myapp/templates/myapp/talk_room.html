@@ -3,19 +3,19 @@
 {% block extra_style %}
 <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
 {% endblock %}
-{% block title %}{{ friendname }} | Chatapp{% endblock %}
+{% block title %}{{ friend.username }} | Chatapp{% endblock %}
     
 {% block header %}
 <header class="header">
     <div class="header-container">
         <a href="{% url 'friends' %}">
-            <span id="backbutton"><img src="{% static 'myapp/img/back.png' %}" class="header-image"></span>
+            <span class="backbutton"><img src="{% static 'myapp/img/back.png' %}" class="header-image"></span>
         </a>
         <span class="header-container__title">
-                {{ friendname }}
+                {{ friend.username }}
         </span>
         <a onclick="window.location.reload(true);">
-            <span id="reloadbutton"><img src="{% static 'myapp/img/reload.png' %}" class="header-image"></span>
+            <span class="reloadbutton"><img src="{% static 'myapp/img/reload.png' %}" class="header-image"></span>
         </a>
     </div>
 </header>
@@ -23,7 +23,6 @@
 
 {% block content %}
 <div id="talkroom-field">
-    <!-- <div id="header-space"></div> header分の余白 -->
     {% for message in messages %}
     {% if message.viewdate_or_not %} {# メッセージを送信した日付が変わるごとに日付を表示する #}
         <div class="datefield">
@@ -32,20 +31,25 @@
     {% endif %}
     <div class="messagefield">
         <div class="image-container">
-        {% if message.is_message_mine %}
-            <img src="/media/{{ myimage }}" class="user-image">
+        {% if message.message_obj.user_from == user.id %}
+            <img src="{{ user.image.url }}" class="user-image">
         {% else %}
-            <img src="/media/{{ yourimage }}" class="user-image">
+            <img src="{{ friend.image.url }}" class="user-image">
         {% endif %}
         </div>
         <div class="messagefield-right">
-            <div class="username">{{ message.username }}</div>
-            <div class="message">{{ message.message }}</div>
+            <div class="username">
+                {% if message.message_obj.user_from == user.id %}
+                    {{ user.username }}
+                {% else %}
+                    {{ friend.username }}
+                {% endif %}
+            </div>
+            <div class="message">{{ message.message_obj.message }}</div>
             <div class="time">{{ message.time }}</div>
         </div>
     </div>
     {% endfor %}
-    <!-- <div id="footer-space"></div> footer分の余白 -->
 </div>
 <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function () {
@@ -60,9 +64,8 @@
     <div class="footer-container">
         <form action="" method="POST">
             {{ form.message }}
-            {{ form.message.errors }}
             {% csrf_token %}
-            <input type="submit" value="send" id="sendbutton">
+            <input type="submit" value="送信" id="sendbutton">
         </form>
     </div>
 </footer>

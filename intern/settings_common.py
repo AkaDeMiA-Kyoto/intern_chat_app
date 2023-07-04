@@ -24,8 +24,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-ozyl(r!*=wht$a7^pp+wp=zg5g96yg5wz!7fwe$gq63874z9##'
 
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -35,6 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'imagekit',
     'myapp',
 
     'django.contrib.sites',
@@ -78,10 +77,14 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'chatapp',
+        'USER': 'app_admin',
+        'PASSWORD': 'qiaoyedaoye',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
-}
+ }
 
 
 # Password validation
@@ -133,13 +136,70 @@ LOGIN_URL = "account_login"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# デプロイ環境のための設定
-if os.path.isfile('.env'): # .envファイルが存在しない時にもエラーが発生しないようにする
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        "standard": {
+            "format": "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            "datefmt": "%d/%b/%Y %H:%M:%S",
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        "null": {
+            "level": "DEBUG",
+            "class": "logging.NullHandler",
+        },
+        "file": {
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "/var/log/intern/debug.log",
+            "maxBytes": 1024 * 1024 * 512,
+            "backupCount": 10,
+            "formatter": "standard",
+        },
+        "console": {
+            "level": "INFO", 
+            "class": "logging.StreamHandler", 
+            "formatter": "standard",
+        },
+        "mail_admins": {
+            "level": "ERROR",
+            "class": "django.utils.log.AdminEmailHandler",
+            "include_html": True,
+            "filters": ["require_debug_false"],
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'intern.myapp': {
+            'handlers': ['console', 'mail_admins'],
+            'level': 'INFO',
+            'filters': ['special']
+        }
+    }
+}
+
+if os.path.isfile('.env'):
     env = environ.Env(DEBUG=(bool, False),)
     environ.Env.read_env('.env')
 
     DEBUG = env('DEBUG')
     ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+    DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
 SITE_ID = 1
 
@@ -154,12 +214,12 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_EMAIL_REQUIRED = True
 
 LOGIN_REDIRECT_URL = "friends"
-ACCOUNT_LOGOUT_REDIRECT_URL = 'index'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'logout_completed'
 
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 
-DEFAULT_FROM_EMAIL = 'qiaoyedaoye@gmail.com'
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 ACCOUNT_FORMS = {
     'signup': 'myapp.forms.CustomSignupForm',
