@@ -83,7 +83,11 @@ DATABASES = {
         'PASSWORD': 'qiaoyedaoye',
         'HOST': 'localhost',
         'PORT': '5432',
-    }
+    },
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
  }
 
 
@@ -135,6 +139,7 @@ AUTH_USER_MODEL = "myapp.CustomUser"
 LOGIN_URL = "account_login"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+MEDIA_ROOT = BASE_DIR / "media_local"
 
 LOGGING = {
     'version': 1,
@@ -158,37 +163,43 @@ LOGGING = {
         "file": {
             "level": "INFO",
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": "/var/log/intern/debug.log",
+            "filename": os.path.join(BASE_DIR, "log/debug.log"),
             "maxBytes": 1024 * 1024 * 512,
             "backupCount": 10,
             "formatter": "standard",
         },
         "console": {
-            "level": "INFO", 
+            # "level": "INFO", 
+            "level": "DEBUG", 
             "class": "logging.StreamHandler", 
             "formatter": "standard",
         },
-        "mail_admins": {
-            "level": "ERROR",
-            "class": "django.utils.log.AdminEmailHandler",
-            "include_html": True,
-            "filters": ["require_debug_false"],
-        },
+        # "mail_admins": {
+        #     "level": "ERROR",
+        #     "class": "django.utils.log.AdminEmailHandler",
+        #     "include_html": True,
+        #     "filters": ["require_debug_false"],
+        # },
     },
     'loggers': {
         'django': {
+            # 'handlers': ['console', 'file'],
             'handlers': ['console'],
             'propagate': True,
         },
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': False,
+        'django.db.backends': { # SQL文の確認用
+            'level': 'DEBUG',
+            'handlers': ['console'],
         },
+        # 'django.request': {
+        #     'handlers': ['mail_admins'],
+        #     'level': 'ERROR',
+        #     'propagate': False,
+        # },
         'intern.myapp': {
-            'handlers': ['console', 'mail_admins'],
+            # 'handlers': ['console', 'mail_admins'],
+            'handlers': ['console'],
             'level': 'INFO',
-            'filters': ['special']
         }
     }
 }

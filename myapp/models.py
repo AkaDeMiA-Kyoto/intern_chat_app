@@ -16,7 +16,7 @@ class CustomUser(AbstractUser):
         return self.username
 
 class Message(models.Model):
-    user_from = models.IntegerField()
-    user_to = models.IntegerField()
+    user_from = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="user_from")
+    user_to = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="user_to")
     time = models.DateTimeField(auto_now_add=True)
     message = models.CharField(max_length=500) # max 500 length per one message

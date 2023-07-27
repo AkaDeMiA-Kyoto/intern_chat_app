@@ -30,7 +30,7 @@ class Friends(LoginRequiredMixin, TemplateView):
         friends = []
         for otheruser in otherusers:
             friend = {"user": otheruser}
-            recent_talks = (Message.objects.filter(user_from=self.request.user.id, user_to=otheruser.id) | Message.objects.filter(user_from=otheruser.id, user_to=self.request.user.id))
+            recent_talks = (Message.objects.filter(user_from=self.request.user, user_to=otheruser) | Message.objects.filter(user_from=otheruser, user_to=self.request.user))
             if recent_talks:
                 recent_talk = recent_talks.latest("time")
                 friend["date"] = recent_talk.time.astimezone(pytz.timezone(settings.TIME_ZONE))
@@ -62,7 +62,7 @@ class TalkRoom(LoginRequiredMixin, FormView):
 
         context["id"] = id
         context["friend"] = friend
-        messages = (Message.objects.filter(user_from=user.id, user_to=id) | Message.objects.filter(user_from=id, user_to=user.id)).order_by("time")
+        messages = (Message.objects.filter(user_from=user, user_to=friend) | Message.objects.filter(user_from=friend, user_to=user)).order_by("time")
         view_messages = [] # Templateに渡すためのview_messageを格納するリスト
         date = None # 以下のfor文で，メッセージを送信した日付が前のメッセージと異なるかどうかを判断する
         for message in messages:
@@ -81,8 +81,8 @@ class TalkRoom(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         if form.is_valid():
             Message.objects.create(
-                user_from=self.request.user.id,
-                user_to=self.kwargs.get("id"),
+                user_from=self.request.user,
+                user_to=CustomUser.objects.get(id=self.kwargs.get("id")),
                 message=form.cleaned_data["message"]
             )
         return super().form_valid(form)

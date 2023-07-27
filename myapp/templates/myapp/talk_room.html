@@ -31,7 +31,7 @@
     {% endif %}
     <div class="messagefield">
         <div class="image-container">
-        {% if message.message_obj.user_from == user.id %}
+        {% if message.message_obj.user_from == user %}
             <img src="{{ user.image.url }}" class="user-image">
         {% else %}
             <img src="{{ friend.image.url }}" class="user-image">
@@ -39,7 +39,7 @@
         </div>
         <div class="messagefield-right">
             <div class="username">
-                {% if message.message_obj.user_from == user.id %}
+                {% if message.message_obj.user_from == user %}
                     {{ user.username }}
                 {% else %}
                     {{ friend.username }}
