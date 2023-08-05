@@ -1,19 +1,27 @@
 from django import forms
 from django.forms import ModelForm, Form
+from django.core.exceptions import ValidationError
 from allauth.account.forms import SignupForm
 from .models import CustomUser, Message
 
 class CustomSignupForm(SignupForm):
     image = forms.ImageField(
         label="プロフィール画像",
-        required=True
+        required=False
     )
 
     def save(self, request):
         user = super(CustomSignupForm, self).save(request)
-        user.image = request.FILES.get("image")
+        if "image" in request.FILES:
+            user.image = request.FILES.get("image")
         user.save()
         return user
+    
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if CustomUser.objects.filter(email=email).exists():
+            raise ValidationError("このメールアドレスを使用しているユーザーがすでに存在します。", code='invalid')
+        return email
 
 class MessageForm(ModelForm):
     class Meta:
@@ -46,5 +54,5 @@ class ChangeImageForm(ModelForm):
 class FriendSearchForm(Form):
     filter = forms.CharField(
         required=False,
-        widget=forms.TextInput(attrs={"placeholder": "友だちを検索"})
+        widget=forms.TextInput(attrs={"placeholder": "ユーザー名またはメールアドレスから検索"})
     )

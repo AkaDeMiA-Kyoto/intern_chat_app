@@ -154,6 +154,9 @@ LOGGING = {
         'require_debug_true': {
             '()': 'django.utils.log.RequireDebugTrue',
         },
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
     },
     'handlers': {
         "null": {
@@ -174,31 +177,25 @@ LOGGING = {
             "class": "logging.StreamHandler", 
             "formatter": "standard",
         },
-        # "mail_admins": {
-        #     "level": "ERROR",
-        #     "class": "django.utils.log.AdminEmailHandler",
-        #     "include_html": True,
-        #     "filters": ["require_debug_false"],
-        # },
+        "mail_admins": {
+            "level": "ERROR",
+            "class": "django.utils.log.AdminEmailHandler",
+            "include_html": True,
+            "filters": ["require_debug_false"],
+        },
     },
     'loggers': {
         'django': {
-            # 'handlers': ['console', 'file'],
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
             'propagate': True,
         },
-        'django.db.backends': { # SQL文の確認用
-            'level': 'DEBUG',
-            'handlers': ['console'],
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': False,
         },
-        # 'django.request': {
-        #     'handlers': ['mail_admins'],
-        #     'level': 'ERROR',
-        #     'propagate': False,
-        # },
         'intern.myapp': {
-            # 'handlers': ['console', 'mail_admins'],
-            'handlers': ['console'],
+            'handlers': ['console', 'mail_admins'],
             'level': 'INFO',
         }
     }

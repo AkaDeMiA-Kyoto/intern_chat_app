@@ -9,13 +9,13 @@
 <header class="header">
     <div class="header-container">
         <a href="{% url 'friends' %}">
-            <span class="backbutton"><img src="{% static 'myapp/img/back.png' %}" class="header-image"></span>
+            <span class="backbutton"><img src="{% static 'myapp/img/back.svg' %}" class="header-image"></span>
         </a>
         <span class="header-container__title">
                 {{ friend.username }}
         </span>
         <a onclick="window.location.reload(true);">
-            <span class="reloadbutton"><img src="{% static 'myapp/img/reload.png' %}" class="header-image"></span>
+            <span class="reloadbutton"><img src="{% static 'myapp/img/reload.svg' %}" class="header-image"></span>
         </a>
     </div>
 </header>
@@ -31,7 +31,7 @@
     {% endif %}
     <div class="messagefield">
         <div class="image-container">
-        {% if message.message_obj.user_from == user %}
+        {% if message.user_from == user %}
             <img src="{{ user.image.url }}" class="user-image">
         {% else %}
             <img src="{{ friend.image.url }}" class="user-image">
@@ -39,13 +39,13 @@
         </div>
         <div class="messagefield-right">
             <div class="username">
-                {% if message.message_obj.user_from == user %}
+                {% if message.user_from == user %}
                     {{ user.username }}
                 {% else %}
                     {{ friend.username }}
                 {% endif %}
             </div>
-            <div class="message">{{ message.message_obj.message }}</div>
+            <div class="message">{{ message.message }}</div>
             <div class="time">{{ message.time }}</div>
         </div>
     </div>

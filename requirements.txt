@@ -15,6 +15,7 @@ django-environ==0.10.0
 django-imagekit==4.1.0
 django-stdimage==6.0.1
 executing==1.2.0
+Faker==19.2.0
 idna==3.4
 ipython==8.14.0
 jedi==0.18.2
@@ -32,6 +33,7 @@ pure-eval==0.2.2
 pycparser==2.21
 Pygments==2.15.1
 PyJWT==2.7.0
+python-dateutil==2.8.2
 python3-openid==3.2.0
 pytz==2023.3
 requests==2.31.0

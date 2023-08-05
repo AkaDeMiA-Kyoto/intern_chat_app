@@ -1,14 +1,13 @@
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
-from django.conf import settings
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q, Prefetch
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-import pytz
 from operator import itemgetter
-from datetime import datetime
 from .models import CustomUser, Message
 from .forms import MessageForm, ChangeUsernameForm, ChangeEmailForm, ChangeImageForm, FriendSearchForm
 
@@ -20,31 +19,49 @@ class Friends(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        filter = self.request.GET.get('filter') # 友だち検索機能
-        otherusers = CustomUser.objects.exclude(username=self.request.user.username)
         form = FriendSearchForm()
+        me = self.request.user
+        filter = self.request.GET.get('filter') # 友だち検索機能
+        
         if filter:
-            otherusers = otherusers.filter(username__icontains=filter)
+            otherusers = CustomUser.objects.filter(Q(username__icontains=filter) | Q(email__icontains=filter)).prefetch_related(
+                Prefetch('user_from', queryset=Message.objects.filter(user_to=me).order_by('-time')),
+                Prefetch('user_to', queryset=Message.objects.filter(user_from=me).order_by('-time'))
+            )
             form.initial["filter"] = filter
+        else:
+            otherusers = CustomUser.objects.exclude(id=me.id).prefetch_related(
+                Prefetch('user_from', queryset=Message.objects.filter(user_to=me).order_by('-time')),
+                Prefetch('user_to', queryset=Message.objects.filter(user_from=me).order_by('-time'))
+            )
+            
         context['form'] = form
         friends = []
         for otheruser in otherusers:
             friend = {"user": otheruser}
-            recent_talks = (Message.objects.filter(user_from=self.request.user, user_to=otheruser) | Message.objects.filter(user_from=otheruser, user_to=self.request.user))
-            if recent_talks:
-                recent_talk = recent_talks.latest("time")
-                friend["date"] = recent_talk.time.astimezone(pytz.timezone(settings.TIME_ZONE))
+            if otheruser.user_to.exists() or otheruser.user_from.exists():
+                if otheruser.user_to.exists() and otheruser.user_from.exists():
+                    sent = otheruser.user_to.first()
+                    received = otheruser.user_from.first()
+                    if sent.time < received.time:
+                        recent_talk = received
+                    else:
+                        recent_talk = sent
+                elif (not otheruser.user_to.exists()) and otheruser.user_from.exists():
+                    recent_talk = otheruser.user_from.first()
+                else:
+                    recent_talk = otheruser.user_to.first()
+                friend["date"] = recent_talk.time.astimezone(timezone.get_default_timezone())
                 friend["message"] = recent_talk.message
             else:
-                friend["date"] = otheruser.date_joined.astimezone(pytz.timezone(settings.TIME_ZONE))
-                friend["message"] = ""
+                friend["date"] = otheruser.date_joined.astimezone(timezone.get_default_timezone())
             friend["view_date"] = get_view_date(friend["date"])
             friends.append(friend)
         context['friends'] = sorted(friends, key=itemgetter("date"), reverse=True)
         return context
     
 def get_view_date(time): # 引数timeが，現在と同じ日なら時刻を，違う日なら日付を返す
-    today = datetime.now().astimezone(pytz.timezone(settings.TIME_ZONE)).date()
+    today = timezone.now().date()
     if time.date() == today:
         return str(time.hour) + ":" + str(time.minute).zfill(2)
     else:
@@ -62,13 +79,14 @@ class TalkRoom(LoginRequiredMixin, FormView):
 
         context["id"] = id
         context["friend"] = friend
-        messages = (Message.objects.filter(user_from=user, user_to=friend) | Message.objects.filter(user_from=friend, user_to=user)).order_by("time")
+        messages = (user.user_from.filter(user_to=friend) | user.user_to.filter(user_from=friend)).select_related("user_from").order_by("time")
         view_messages = [] # Templateに渡すためのview_messageを格納するリスト
         date = None # 以下のfor文で，メッセージを送信した日付が前のメッセージと異なるかどうかを判断する
         for message in messages:
-            time = message.time.astimezone(pytz.timezone(settings.TIME_ZONE))
+            time = message.time.astimezone(timezone.get_default_timezone())
             view_message = {
-                "message_obj": message,
+                "user_from": message.user_from,
+                "message": message.message,
                 "date": time.date(),
                 "time": str(time.hour) + ":" + str(time.minute).zfill(2),
                 "viewdate_or_not": date != time.date(), # メッセージを送信した日付が変わるごとに日付を表示する

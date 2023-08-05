@@ -15,8 +15,11 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
-class Message(models.Model):
+class Message(models.Model): # Messageという名前はDjangoフレームワークのメッセージとまぎらわしい
     user_from = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="user_from")
     user_to = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="user_to")
     time = models.DateTimeField(auto_now_add=True)
-    message = models.CharField(max_length=500) # max 500 length per one message
+    message = models.CharField(max_length=500)
+
+    def __str__(self):
+        return f'[{self.user_from}->{self.user_to}] {self.message}'

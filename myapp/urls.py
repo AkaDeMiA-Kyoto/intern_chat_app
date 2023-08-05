@@ -3,6 +3,7 @@ from django.views.static import serve
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+import debug_toolbar
 
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
@@ -16,10 +17,11 @@ urlpatterns = [
     path('setting/password', views.SettingPassword.as_view(), name='setting_password'),
     path('setting/password/done', views.SettingPasswordDone.as_view(), name='setting_password_done'),
     path('setting/logout_completed', views.LogoutDone.as_view(), name='logout_completed'),
-]
+]   
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]
 else:
     urlpatterns.append(re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}))
     urlpatterns.append(re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}))
