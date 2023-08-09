@@ -1,1 +1,21 @@
-LI
+{% extends "myapp/base.html" %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    {% block header-title %}ログイン{% endblock %}
+    {% block content %}
+    <body>
+        <form method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <div>
+                <button type="submit">ログイン</button>
+            </div>
+        </form>
+    </body>
+    {% endblock %}
+    {% block footer %}
+    {% endblock %}
+</html>

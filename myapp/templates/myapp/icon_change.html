@@ -1,0 +1,18 @@
+{% extends "myapp/base.html" %}
+
+{% block extra_style %}{% endblock %}
+
+{% block header-title %}アイコン変更{% endblock %}
+
+{% block content %}
+
+<form method="post" action="{% url 'icon_change' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% for field in form %}
+        <td>{{ field }}</td>
+    {% endfor %}
+ 
+    <button type="submit">変更</button>
+</form>
+
+{% endblock %}

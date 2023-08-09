@@ -1,8 +1,9 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="../../static/myapp/css/index.css">
+        <link rel="stylesheet" href="{% static 'myapp/css/index.css' %}">
     </head>
     <div>
     <button class="btn" onclick="location.href='./login'">ログイン</button>

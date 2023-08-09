@@ -1,1 +1,28 @@
-SU
+{% extends "myapp/base.html" %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+  
+    {% block header-title %}会員登録{% endblock %}
+  
+    {% block content %}
+        <div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form.as_p}}
+                <label>Img:</label>
+                <input type="file">
+                <div>
+                    <button type="submit">submit</button>
+                </div>
+                {{ form.errors }}
+            </form>
+        </div>
+    {% endblock %}
+    </body>
+    {% block footer %}
+    {% endblock %}
+</html>

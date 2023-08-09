@@ -1,1 +1,26 @@
-S
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+    <link rel="stylesheet" href="{% static 'myapp/css/setting.css' %}">
+{% endblock %}
+
+{% block header-title %}設定{% endblock %}
+
+{% block content%}
+<div class="btn">
+    <button onclick="location.href='./username_change'">ユーザー名変更</button>
+</div>
+<div class="btn">
+    <button onclick="location.href='./mail_change'">メールアドレス変更</button>
+</div>
+<div class="btn">
+    <button onclick="location.href='./icon_change'">アイコン変更</button>
+</div>
+<div class="btn">
+<button onclick="location.href='./password_change'">パスワード変更</button>
+</div>
+<div class="btn">
+<button onclick="location.href='./logout'">ログアウト</button>
+</div>
+{% endblock %}

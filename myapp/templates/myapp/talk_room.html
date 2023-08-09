@@ -1,1 +1,46 @@
-TR
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+    <link rel="stylesheet" href="{% static 'myapp/css/talk_room.css' %}">
+{% endblock %}
+
+
+{% block header-title %} {{ friend.username }} {% endblock %}
+{% block talk %}
+    <a href="{% url 'friends' %}" class="back_to_friend">back</a>
+    <a href="" class="talk_room_reload">更新</a>
+{% endblock %}
+ 
+{% block content %}
+    <ul>
+        {% for talk in talk %}
+            <p class="chat_name">{{ talk.talk_from }}</p>
+            <p class="chat_talk">{{ talk.talk }}</p>
+            <p class="chat_time">{{ talk.time }}</p>
+        {% endfor %}
+    </ul>    
+
+
+
+    <form method="post" class="talk_contents">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">送信</button>
+    </form> 
+
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // トークの表示を新しいものを下にしているため、最下にスクロールさせる
+    document.addEventListener("DOMContentLoaded", function () {
+        const chatboard = document.getElementById("chatboard");
+        window.scroll(0, chatboard.scrollHeight);
+    });
+</script>
+{% endblock %}
