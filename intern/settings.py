@@ -20,13 +20,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# TODO:SECRET _KEYは.env内に格納して load_env()で読み出すようにしましょう！ secret_keyは機密情報です。.envはiginoreしましょう
 SECRET_KEY = 'django-insecure-ozyl(r!*=wht$a7^pp+wp=zg5g96yg5wz!7fwe$gq63874z9##'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# TODO: デプロイ時には入れましょう！
 ALLOWED_HOSTS = []
 
+# NOTE:えらい！
 # タイムゾーンを日本に
 TIME_ZONE = 'Asia/Tokyo'
 
@@ -121,6 +124,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
+
+# NOTE: staticrootも定義しないとデプロイの時大変かも...?
 STATIC_URL = 'static/'
 
 # Default primary key field type
@@ -128,6 +133,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# NOTE:えらい！メディアルート設定してる！
 # signup form
 MEDIA_URL = '/media_local/'
 MEDIA_ROOT = BASE_DIR / 'media_local'

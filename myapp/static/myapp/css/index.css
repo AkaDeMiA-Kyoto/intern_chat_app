@@ -1,5 +1,6 @@
 /* 検索ワード：レスポンシブ対応 */
-
+/* TODO: 共通部分が多いのでbase.cssにかこう！ */
+/* NOTE: reset_cssも活用すると良い */
 *{
     font-size: 35px;
     color: white;

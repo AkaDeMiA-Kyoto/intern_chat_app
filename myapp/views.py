@@ -2,14 +2,18 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.password_validation import validate_password # 以下追記箇所(6～7行目)
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser, Talk_content
+from .models import CustomUser, TalkContent
 from .forms import myUserForm, myLoginForm, ChatInputForm, ChangeUserForm, ChangeEmailForm, ChangeIconForm, ChangePWForm
 from django.contrib.auth.views import LoginView
 from django.db.models import Q
 from PIL import Image
 
-def trimming_square(imgpath):
-    img = Image.open(imgpath)
+# NOTE: print文はデプロイ時は削除しましょう！→パフォーマンス悪化につながります。
+# NOTE:トリミングえらい。
+# NOTE:関数わけえらい。
+# NOTE: trimming_squareという名前なら、関数内でsaveなど他のことをしない。副作用のない関数を目指す。
+def trimming_square(img_path):
+    img = Image.open(img_path)
     new_size = min(img.width, img.height)
     center_x = int(img.width / 2)
     center_y = int(img.height / 2)
@@ -25,19 +29,18 @@ def index(request):
     return render(request, "myapp/index.html")
 
 def signup_view(request):
-    if request.POST:
+    if request.method=='POST':
         form = myUserForm(request.POST, request.FILES)
-
         if form.is_valid():
-            print("************VALID*********************")
             new_username = request.POST["username"]
 
-            data = form.cleaned_data
+            cleaned_data = form.cleaned_data
 
             form.save()
-            new_user = CustomUser.objects.get(username=new_username)
+            new_user = CustomUser.objects.get(username=cleaned_data.get("username"))
             picpath = new_user.image.url
             trimming_square("./"+picpath[1:]) # 正方形じゃない画像はトリミングする
+
 
             return render(request, "myapp/index.html")
 
@@ -72,33 +75,38 @@ def login_view(request):
 
 def friends(request, id):
     if id:
-        myusername = CustomUser.objects.get(id=id).username
+        my_username = CustomUser.objects.get(id=id).username
 
     if request.POST:
-        myusername = request.POST["username"]
+        my_username = request.POST["username"]
 
-    myid = CustomUser.objects.get(username=myusername).id
+    my_id = CustomUser.objects.get(username=my_username).id
 
     user_all = CustomUser.objects.all()    
     user_li = []
     for user in user_all:
-        if user.username == myusername or user.username == 'admin':
+        # NOTE:admin消しててえらい
+        if user.username == my_username or user.username == 'admin':
             continue
         
         # 最後のトークを取ってくる 
-        contents = Talk_content.objects.filter(Q(user_to=myid, user_from=user.id)|Q(user_to=user.id, user_from=myid))
+        # contents = TalkContent.objects.filter(Q(user_to=my_id, user_from=user.id)|Q(user_to=user.id, user_from=my_id))
 
-        messages = []
-        for content_ in contents:
-            if content_.chat_content == "":
-                continue
-            messages.append({"time": content_.time, "message": content_.chat_content})
-        messages = sorted(messages, key=lambda x: x['time'])
-        if len(messages) == 0:
-            lasttalk = ""
-        else:
-            lasttalk = messages[-1]['message']
+        # messages = []
+        # for content in contents:
+        #     if content.chat_content == "":
+        #         continue
+        #     messages.append({"time": content.time, "message": content.chat_content})
+        # # NOTE key使えててえらい。pythonの知識がある。
+        # messages = sorted(messages, key=lambda x: x['time'])
+        # if len(messages) == 0:
+        #     lasttalk = ""
+        # else:
+        #     lasttalk = messages[-1]['message']
 
+        # ORMで並び変える方が、pythonのメモリ上で並び替えるより早い。
+        # NOTE: 本当はDjangoORMのannotateという機能を使った方が良いが、最適化の時に学んでください。 
+        last_talk=TalkContent.objects.filter(Q(user_to=my_id, user_from=user.id)|Q(user_to=user.id, user_from=my_id)).orderby("time").last()
         user_li.append({"username": user.username, "image": user.image.url, "id": user.id, "lasttalk": lasttalk})
 
     return render(request, "myapp/friends.html", {"id": myid, "username": myusername, "friends": user_li})
@@ -121,10 +129,10 @@ def talk_room(request, id1, id2):
     contents = Talk_content.objects.filter(Q(user_to=id1, user_from=id2)|Q(user_to=id2, user_from=id1))
 
     messages = []
-    for content_ in contents:
-        if content_.chat_content == "":
+    for content in contents:
+        if content.chat_content == "":
             continue
-        messages.append({"time": content_.time, "from": CustomUser.objects.get(id=content_.user_from).username, "to": CustomUser.objects.get(id=content_.user_to).username, "message": content_.chat_content})
+        messages.append({"time": content.time, "from": CustomUser.objects.get(id=content.user_from).username, "to": CustomUser.objects.get(id=content.user_to).username, "message": content.chat_content})
     messages = sorted(messages, key=lambda x: x['time'])
 
     form = ChatInputForm()
