@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import CustomUser, Talk_content
+from .models import CustomUser, TalkContent
 
 # Register your models here.
 admin.site.register(CustomUser)
-admin.site.register(Talk_content)
+admin.site.register(TalkContent)
