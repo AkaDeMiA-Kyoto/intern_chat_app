@@ -28,9 +28,7 @@
             {% else %}
                 <a href="{% url 'talk_room' user.id %}"><img src="{% static 'people-24px.svg' %}" alt="(=ﾟωﾟ)ﾉ" width="50" height="50" class="user-icon"></a>
             {% endif %}
-            <a href="{% url 'talk_room' user.id %}">{{ user.username }}</a>
-            <!--
-                <div class="user-details">
+            <div class="user-details">
                 <a href="{% url 'talk_room' user.id %}">{{ user.username }}</a>
                 {% if user.latest_talk %}
                     <p>{{ user.latest_talk.message }}</p>
@@ -38,8 +36,7 @@
                 {% else %}
                     <p>トークはありません</p>
                 {% endif %}
-                </div>
-            -->
+            </div>
         </div>
         {% endfor %}
     </div>

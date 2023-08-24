@@ -5,7 +5,7 @@ from .models import CustomUser
 from django.urls import reverse_lazy
 from .forms import LoginForm
 from django.contrib.auth.views import LoginView
-#from .models import Talk
+from .models import Talk
 
 def index(request):
     return render(request, "myapp/index.html")
@@ -17,11 +17,11 @@ def login_view(request):
     return render(request, "myapp/login.html")
 
 def friends(request):
-    users = CustomUser.objects.all()
+    users = CustomUser.objects.prefetch_related('talks').all()
     sorted_users = users.order_by('-date_joined')
-    #for user in users:
-    #    latest_talk = user.talks.order_by('-timestamp').first()  # 最新のトークを取得
-    #    user.latest_talk = latest_talk
+    for user in users:
+        latest_talk = user.talks.order_by('-timestamp').first()  # 最新のトークを取得
+        user.latest_talk = latest_talk
     return render(request, "myapp/friends.html", {'users': users})
 
 def talk_room(request, user_id):
