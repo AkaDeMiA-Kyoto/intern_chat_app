@@ -1,1 +1,26 @@
-LI
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <link rel="stylesheet" href="{% static 'myapp/css/login.css' %}">
+</head>
+<body>
+    <form action="" method="POST">
+        {% csrf_token %}
+        {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+        <div>
+            <label for="username">ユーザー名</label>
+            <input type="text" name="username" placeholder="ユーザー名">
+        </div>
+        <div>
+            <label for="password">パスワード</label>
+            <input type="password" name="password" placeholder="パスワード">
+        </div>
+        <button type="submit">ログイン</button>
+    </form>
+</body>
+</html>

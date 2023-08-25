@@ -1,11 +1,13 @@
+from typing import Any, Dict
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
 from django.contrib.auth import login, authenticate
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
-from .forms import SignUpForm
+from .forms import SignUpForm, LoginForm
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.views import LoginView
 
 
 def index(request):
@@ -24,8 +26,9 @@ def signup_view(request):
         form = SignUpForm(request.POST, request.FILES)
     return render(request, "myapp/signup.html", {'form': form})
 
-def login_view(request):
-    return render(request, "myapp/login.html")
+class login_view(LoginView):
+    template_name = 'myapp/login.html'
+    form_class = LoginForm
 
 @login_required
 def friends(request):
