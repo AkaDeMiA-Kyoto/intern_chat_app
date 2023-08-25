@@ -1,9 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MinLengthValidator
-#from django.contrib.auth import forms as auth_forms
-#これを書くと、止まるよ
-# Create your models here.
+
 class CustomUser(AbstractUser):
     img =models.ImageField()
 
@@ -13,5 +10,4 @@ class Talk(models.Model):
     contents = models.CharField(max_length=200)
     time = models.DateTimeField(auto_now_add=True)
     
-    
-    
+

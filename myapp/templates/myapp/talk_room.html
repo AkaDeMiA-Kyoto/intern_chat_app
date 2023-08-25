@@ -7,22 +7,26 @@
 
 {% block header-title %}
 <div class = "header-item2">
-    <div class = "back"> <button type=buttom onclick="history.back()" name="back">＜</button></div><div class = "talk_item">{{friendusername}}</div>
+    <span class = "back"> <button type=buttom onclick="history.back()" name="back">＜</button></span><span class = "talk_item">{{friendusername}}</span>
+    <a class = "reload" href="{% url 'talk_room' friend_id%}">更新</a>
 </div>
     {% endblock %}
 
 {% block content %}
-    <div>
+    <div class = "contents">
         {% for talk in talks %}
             <div class = "tofrom">
-                {% comment %} {{talk.from_name}} {% endcomment %}
                 {% if talk.to_name == my_id%}
                 <div class = "receive">
-                    {{talk.contents}}
+                    <p class="con-receive">
+                        {{talk.contents}}
+                    </p>
                 </div>
                 {% else %}
                 <div class = "send">
-                    {{talk.contents}}
+                    <p class="con-send">
+                        {{talk.contents}}
+                    </p>
                 </div>
                 {% endif %}
             </div>

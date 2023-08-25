@@ -93,12 +93,8 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'chatapp',
-        'USER':'kashiwagi',
-        'PASSWORD':'0929',
-        'HOST':'localhost',
-        'PORT':'5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -149,7 +145,7 @@ MEDIA_ROOT =BASE_DIR / 'media_local'
 AUTH_USER_MODEL="myapp.CustomUser"
 
 LOGIN_URL = '/login' 
-# LOGIN_REDIRECT_URL = '/friends'
+LOGIN_REDIRECT_URL = '/friends'
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
@@ -182,5 +178,8 @@ ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 
 #デフォルトのメール送信元を設定
 DEFAULT_FROM_EMAIL = 'admin@example.com'
+
+#コンソールにメールの表示
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 

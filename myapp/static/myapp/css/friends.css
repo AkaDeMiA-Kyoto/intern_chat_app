@@ -1,17 +1,31 @@
 @import url("intern_chat_app/myapp/static/myapp/css/base.css");
 *{
-    box-sizing:content-box;
+    box-sizing:border-box;
     font-size:30px;
 }
 
 .user{
     display:flex;
-    border : 1px solid black
+    border : 1px solid black;
+    height : 50px;
 }
-
 .user_icon{
     width: 45px;
     height: 45px;
     border-radius: 50%;
 }
-
+.message{
+    display:flex;
+    margin-left:auto;
+    font-size:15px;
+}
+.time{
+    display:flex;
+    margin-left:auto;
+    font-size:10px;
+}
+.last-item{
+    display:flex;
+    flex-flow:column;
+    margin-left:auto;
+}

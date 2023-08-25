@@ -1,9 +1,19 @@
 @import url("intern_chat_app/myapp/static/myapp/css/base.css");
 
-.header-item2{
-    display:flex;
+.header{
+    position: fixed;
+    top: 0;
+    z-index: 999;
+    background-color: white;
 }
-
+.back{
+    display:fixed;
+    float:left;
+}
+.reload{
+    display:fixed;
+    float:right;
+}
 .talk_item{
     text-align:auto;
     width:40px;
@@ -12,30 +22,40 @@
 }
 
 .receive{
+    display:flex;
     text-align:left;
-    border: 1px solid black;
-    border-radius:15px;
-    padding: 5px;
-    margin:8px;
+    margin:0;
+    box-sizing: border-box;
 }
-
+.con-receive{
+    margin-right:auto;
+    border: 1px solid black;
+    border-radius:10px;
+    padding: 5px;
+    margin-top :0.5rem;
+    margin-bottom:0;
+}
 .send{
+    display:flex;
+    box-sizing: border-box;
     text-align:right;
+    margin:0;
+}
+.con-send{
+    margin-left:auto;
     border: 1px solid black;
-    border-radius:15px;
+    border-radius:10px;
     padding: 5px;
-    margin:8px;
+    margin-top :0.5rem;
+    margin-bottom:0;
 }
-
-.column{
-    position: absolute;
-    bottom: 0px;
-}
-
-.back{
-    text-align:left;
+.contents{
+    margin-top: 5rem;
+    margin-bottom: 2rem;
+    z-index: 900;
 }
 .column{
+    position:fixed;
     height: 2.4em;
     width: 100%;
     padding: 0 16px;
@@ -46,16 +66,23 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     max-width: 100%;
+    bottom: 0px;
 }
 .column:focus {
     outline: 0;
     box-shadow: 0 0 0 2px rgb(33, 150, 243) inset;
 }
+
 #content{
     max-width: 80%;
     padding-left: 1em;
     padding-right: 1em;
+    margin-bottom: 6rem;
 }
+
 footer{
-    display:absolute;
+    position: fixed;
+    bottom: 0;
+    z-index: 999;
+    background-color: white;
 }

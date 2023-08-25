@@ -10,9 +10,19 @@
 {% endblock %}
 
 {% block content %}
-    {%for item in friends %}
-        {% if item.id != my_id%}
-            <a class = " user " href = "{% url 'talk_room' item.id %}"><img class = "user_icon" src="{{item.img.url}}"><div>{{item.username}}</div></a>
-        {% endif %}
-    {% endfor %}
+    <form method="GET">
+        <label>友達の名前<input type = 'text' name="searchname"></label>
+        <button type="submit">検索</button>
+    </form>
+{%for item1, item2,item3 in friends %}
+    <a class = " user " href = "{% url 'talk_room' item1.id %}"><img class = "user_icon" src="{{item1.img.url}}"><div>{{item1.username}}</div>
+        <div class = "last-item">
+            <div class="message">{{item2}}</div>
+            <div class="time">{{item3}}</div>
+        </div>
+    </a>
+{% endfor %}
+{% for item1,item2,item3 in friends_notalks %}
+    <a class = " user " href = "{% url 'talk_room' item1.id %}"><img class = "user_icon" src="{{item1.img.url}}"><div>{{item1.username}}</div></a>
+{% endfor %}
 {% endblock %}

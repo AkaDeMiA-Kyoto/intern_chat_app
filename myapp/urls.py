@@ -1,16 +1,14 @@
-from django.urls import path,include
+from django.urls import path
 from . import views
 # from .views import index_view
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import friendslist
 from .views import TalkRoom,Logout
-from .models import CustomUser
 
 urlpatterns = [
     path('', views.index, name='index'),
     path('signup/', views.signup_view, name='signup_view'),
-    path('login/', views.CustomLoginView.as_view() , name='login_view'),
+    path('login/', views.CustomLoginView.as_view() , name='login'),
     path('friends/', views.friendslist.as_view(), name='friends'),
     path('setting/', views.Setting.as_view(), name='setting'),
     path('talk_room/<int:pk>',TalkRoom.as_view(),name ='talk_room'),   

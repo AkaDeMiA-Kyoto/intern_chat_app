@@ -12,7 +12,7 @@
                 ログイン
             <div>
         </header>
-        <form action="{%url 'login_view' %}" method="POST" enctype="multipart/form-data">{%csrf_token%}
+        <form action="{%url 'login' %}" method="POST" enctype="multipart/form-data">{%csrf_token%}
             {{form.as_p}}    
             {{form.errors}}
             <button type="submit" name="login" >ログイン</button>
