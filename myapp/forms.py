@@ -29,6 +29,8 @@ class myLoginForm(AuthenticationForm):
     class Meta:
         model = CustomUser
 
+    ##
+
 class ChatInputForm(forms.ModelForm):
     class Meta:
         model = Talk_content
