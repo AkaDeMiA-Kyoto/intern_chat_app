@@ -1,0 +1,23 @@
+{% extends 'myapp/base.html'%}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/friends.css' %}" />
+{% endblock %}
+
+{% block content %}
+{% for user in object_list %}
+    <div class="friend">
+        <a href="{% url 'talk_room' friend_id=user.id %}">
+            <div>
+                <img class="icon" src="{{user.img.url}}">
+                <span>
+                    {{user.username}}
+                </span>
+            </div>
+        </a>
+    </div>    
+    
+{% endfor %}
+
+{% endblock %}

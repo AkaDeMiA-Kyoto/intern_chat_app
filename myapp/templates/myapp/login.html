@@ -1,1 +1,10 @@
-LI
+{% extends 'myapp/base.html'%}
+
+{% block content %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+        {{form.as_p}}
+    <br>
+    <button type="submit" class="logup_button">Log in</button>
+</form>
+{% endblock %}

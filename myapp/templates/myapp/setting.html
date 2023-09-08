@@ -1,1 +1,22 @@
-S
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="main">
+    <div class="button">
+        <a href="{% url 'change_name' %}" class="change-name">ユーザー名変更</a>
+    </div>
+    <div class="button">
+        <a href="{% url 'change_address' %}" class="change-address">メールアドレス変更</a>
+    </div>
+    <div class="button">
+        <a href="{% url 'change_icon' %}" class="change-icon">アイコン変更</a>
+    </div>
+    <div class="button">
+        <a href="{% url 'change_password' %}" class="change-password">パスワード変更</a>
+    </div> 
+    <div class="button">
+        <a href="{% url 'logout_view' %}" class="logout">ログアウト</a>
+    </div>
+</div>
+{% endblock %}

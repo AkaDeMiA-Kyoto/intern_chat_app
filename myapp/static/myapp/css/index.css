@@ -1,0 +1,11 @@
+.main{
+    display:flex;
+    flex-direction:column; 
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+.button{
+    padding: 40px, auto;
+}

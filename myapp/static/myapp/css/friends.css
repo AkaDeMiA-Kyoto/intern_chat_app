@@ -1,0 +1,20 @@
+.icon{
+    width: 70px;
+    height: 70px;
+    border-radius:100%;
+    border:2px solid black;
+}
+
+
+span{
+    font-size:30px;
+    color:black;
+}
+
+a{
+    text-decoration:none;
+}
+
+.friend{
+    border-bottom:solid black 1px;
+}

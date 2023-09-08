@@ -1,1 +1,60 @@
-TR
+{% extends 'myapp/base.html'%}
+{% load static %}
+
+{% block header-title %}
+    <div class="header-name">     
+        <a href="{% url 'friends'%}" class="chevron_left">
+            <img src="{% static 'myapp/img/chevron-left.svg'%}">
+        </a>
+        <div>{{friend.username}}</div> 
+        <a href="{% url 'talk_room' friend.id %}" class="reload-icon">
+            <img src="{% static 'myapp/img/reload.png'%}" style="width: 16px;">
+        </a>
+    </div>    
+
+{% endblock %}
+
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
+{% endblock %}
+
+{% block content %}
+{% for chat in chats %}
+    {% if chat.send_from == user %}
+    <div class="message-box_me">
+        <span>
+            >>{{chat.send_from}}
+        </span>
+        <span class="time">
+            {{chat.created_at}}
+        </span> 
+        <p>
+            {{chat.content}}
+        </p>
+    </div>
+    {% else %}
+    <div class="message-box_you">
+        <span>
+            >>{{chat.send_from}}
+        </span>
+        <span class="time">
+            {{chat.created_at}}
+        </span> 
+        <p>
+            {{chat.content}}
+        </p>
+    </div>
+    {% endif %}
+{% endfor %}
+{% endblock %}
+
+{% block footer %}
+<div class="footer">
+    <form method="post" action="">
+        {% csrf_token %}
+        <input name="content" type="text">
+        <button type="submit">送信</button>
+    </form>
+</div>
+
+{% endblock %}
