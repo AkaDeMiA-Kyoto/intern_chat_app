@@ -7,8 +7,8 @@ class CustomUser(AbstractUser):
 
 class Talk_content(models.Model):
     #users = models.ForeignKey(Talk_content, on_delete=models.CASCADE)
-    user_from = models.IntegerField()
-    user_to = models.IntegerField()
+    user_from = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user_from')
+    user_to = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user_to')
 
     chat_content = models.CharField(max_length=2048)#ForeignKey(Content, on_delete=models.CASCADE)
 

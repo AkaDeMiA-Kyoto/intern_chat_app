@@ -5,10 +5,11 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import *
 from .forms import *
 from django.contrib.auth.views import LoginView
-from django.db.models import Q
+from django.db.models import Q, F, OuterRef, Subquery
 from PIL import Image
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 
 def trimming_square(imgpath):
     img = Image.open(imgpath)
@@ -67,8 +68,6 @@ def login_view(request):
             username = request.POST["username"]
             user = CustomUser.objects.get(username=username)
             login(request, form.get_user())
-            id = user.id
-            print("******", id)
             return friends(request)
 
         else:
@@ -83,34 +82,16 @@ def login_view(request):
 @login_required
 def friends(request):
     myid = request.user.id
-    if id:
-        myusername = CustomUser.objects.get(id=myid).username
+    myusername = request.user.username
 
-    if request.POST:
-        myusername = request.POST["username"]
-
-    user_all = CustomUser.objects.all()    
-    user_li = []
-    for user in user_all:
-        if user.username == myusername or user.username == 'admin':
-            continue
-        print("*** user: ", user.username)
-        # 最後のトークを取ってくる 
-        contents = Talk_content.objects.filter(Q(user_to=myid, user_from=user.id)|Q(user_to=user.id, user_from=myid))
-
-        messages = []
-        for content_ in contents:
-            if content_.chat_content == "":
-                continue
-            messages.append({"time": content_.time, "message": content_.chat_content})
-        messages = sorted(messages, key=lambda x: x['time'])
-        if len(messages) == 0:
-            lasttalk = ""
-        else:
-            lasttalk = messages[-1]['message']
-        print("image url: ",user.image)
-        trimming_square("./"+ user.image.url[1:]) # 正方形じゃない画像はトリミングする
-        user_li.append({"username": user.username, "image": user.image.url, "id": user.id, "lasttalk": lasttalk})
+    lastmsg = Talk_content.objects.filter(
+            Q(user_to=request.user, user_from=OuterRef('pk'))|Q(user_to=OuterRef('pk'), user_from=request.user)
+        ).order_by("-time")
+    user_li = list(
+        CustomUser.objects.filter(~Q(username=myusername) & ~Q(username='admin')).annotate(
+            lasttalk = Subquery(lastmsg.values('chat_content')[:1]),
+        )
+    )
 
     search_form = SearchFriendForm()
     return render(request, "myapp/friends.html", {"id": myid, "username": myusername, "friends": user_li, "search_form": search_form})
@@ -118,40 +99,22 @@ def friends(request):
 @login_required
 def search_friends(request):
     myid = request.user.id
-    myusername = CustomUser.objects.get(id=myid).username
+    myusername = request.user.username
 
     if request.POST:
         search_form = SearchFriendForm(request.POST)
 
         search_name = request.POST["username"]
         print("*****search_name : ", search_name)
-        if search_name == "":
-            return friends(request)
         
-        detected_user = CustomUser.objects.filter(username__icontains=search_name).all()
-
-        user_li = []
-        for user in detected_user:
-            print(user.username)
-            if user.username == myusername or user.username == 'admin':
-                continue
-            
-            # 最後のトークを取ってくる 
-            contents = Talk_content.objects.filter(Q(user_to=myid, user_from=user.id)|Q(user_to=user.id, user_from=myid))
-
-            messages = []
-            for content_ in contents:
-                if content_.chat_content == "":
-                    continue
-                messages.append({"time": content_.time, "message": content_.chat_content})
-            messages = sorted(messages, key=lambda x: x['time'])
-            if len(messages) == 0:
-                lasttalk = ""
-            else:
-                lasttalk = messages[-1]['message']
-            print("image url: ",user.image)
-            trimming_square("./"+ user.image.url[1:]) # 正方形じゃない画像はトリミングする
-            user_li.append({"username": user.username, "image": user.image.url, "id": user.id, "lasttalk": lasttalk})
+        lastmsg = Talk_content.objects.filter(
+            Q(user_to=request.user, user_from=OuterRef('pk'))|Q(user_to=OuterRef('pk'), user_from=request.user)
+        ).order_by("-time")
+        user_li = list(
+            CustomUser.objects.filter(Q(username__icontains=search_name)).annotate(
+                lasttalk = Subquery(lastmsg.values('chat_content')[:1]),
+            )
+        )
 
         return render(request, "myapp/friends.html", {"id": myid, "username": myusername, "friends": user_li, "search_form": search_form})
 
@@ -160,35 +123,28 @@ def search_friends(request):
 
 @login_required
 def talk_room(request, id1, id2):
-    user1 = CustomUser.objects.get(id=id1).username
-    user2 = CustomUser.objects.get(id=id2).username
+    user1 = CustomUser.objects.get(id=id1)
+    user2 = CustomUser.objects.get(id=id2)
 
     if request.POST:
         chat_content = request.POST["chat_content"]
-        new_message = ChatInputForm({"user_from": id1, "user_to": id2, "chat_content": chat_content})
+        new_message = ChatInputForm({"user_from": user1, "user_to": user2, "chat_content": chat_content})
         if new_message.is_valid():
-            print("***VALID******")
+            print("***MESSAGE VALID******")
             new_message.save()
         else:
-            print("***INAVLID***")
+            print("***MESSAGE INAVLID***")
 
-            #new_message.save()
     # talkroom 表示
-    contents = Talk_content.objects.filter(Q(user_to=id1, user_from=id2)|Q(user_to=id2, user_from=id1))
-
-    messages = []
-    for content_ in contents:
-        if content_.chat_content == "":
-            continue
-        messages.append({"time": content_.time, "from": CustomUser.objects.get(id=content_.user_from).username, "to": CustomUser.objects.get(id=content_.user_to).username, "message": content_.chat_content})
-    messages = sorted(messages, key=lambda x: x['time'])
-
+    messages= list(
+        Talk_content.objects.filter(
+            (Q(user_to=user1, user_from=user2) | Q(user_to=user2, user_from=user1)) & ~Q(chat_content="") 
+        ).order_by('time').values('time', 'user_from__username', 'user_to__username', 'chat_content') 
+    )
     form = ChatInputForm()
     data = {
-        "myusername": user1,
-        "myid": id1,
-        "your_id": id2,
-        "to_username": user2,
+        "I": user1,
+        "You": user2,
         "messages": messages,
         "form": form
     }
@@ -243,7 +199,6 @@ def setting(request, what):
     if what == 3: 
         if request.POST:
             new = request.FILES["image"]
-            print(f"************{new}****")
             form = ChangeIconForm(request.POST, request.FILES)
 
             if form.is_valid():
@@ -251,7 +206,7 @@ def setting(request, what):
                 now_user.image = new
                 now_user.save()
                 picpath = now_user.image.url
-                trimming_square("./"+picpath[1:]) # 正方形じゃない画像はトリミングする
+                # trimming_square("./"+picpath[1:]) # 正方形じゃない画像はトリミングする
                 return render(request, "myapp/change_complete.html", data | {"content": "Icon"})
             else:
               return render(request, "myapp/setting_change.html", data | {"form": form, "content": "Icon"})

@@ -9,24 +9,23 @@
 
 <header>
     <h1>
-       {{ to_username }}
+       {{ You.username }}
     </h1>
 </header>
 
 <body>
-    {% csrf_token %}  {# CSRF 対策 #} 
     
     <div class="contents">
         {% for content in messages %}
         <div class="list">
-            <div class="name" id="from"> > {{ content.from }} </div>
+            <div class="name" id="from"> > {{ content.user_from__username }} </div>
             <div class="name" id="time">{{ content.time|date:"m/d H:i" }}</div>
-            <div class="name" id="message">{{ content.message }}</div>
+            <div class="name" id="message">{{ content.chat_content }}</div>
         </div>
         {% endfor %}
     </div>
     
-    <form class="message_form" action="{% url 'talk_room' myid your_id %}" method="POST">  
+    <form class="message_form" action="{% url 'talk_room' I.id You.id %}" method="POST">  
         {% csrf_token %}  {# CSRF 対策 #} 
     
         <p class="field-container">{{form.chat_content}}</p>

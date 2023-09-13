@@ -26,18 +26,35 @@
         </form>
     </div>
 
+    {% comment %}
+    {% for user in friends %}
+    <form action="{% url 'talk_room' id user.id %}" method="GET">
         {% csrf_token %}  {# CSRF 対策 #} 
-        
-        {% for user in friends %}
-        <form action="{% url 'talk_room' id user.id %}" method="POST">
-            <div class="list">
-                <div class="icon_p"><input action="{% url 'talk_room' id user.id %}" type="image" src="{{ user.image }}" alt="go" id="icon"></div>
-                <div class="name">{{ user.username }}</div>
+        <div class="list">
+            <div class="icon_p"><input action="{% url 'talk_room' id user.id %}" type="image" src="{{ user.image.url }}" alt="go" id="icon"></div>
+            <div class="name">{{ user.username }}</div>
+            <div class="name">{{ user.lasttalk }}</div>
+        </div>
+    </form>
+    {% endfor %}
+    {% endcomment %}
+
+
+<p class="box"><a href="" id="item"></a></p>
+<img src="" alt=""><span>   </span><span></span>
+    <!-- aタグ使ってみる -->
+    {% for user in friends %}
+    <a href="{% url 'talk_room' id user.id %}">
+        <div class="list">
+            <div class="icon_p"><img src="{{ user.image.url }}" alt="go" id="icon"></div>
+            <div class="name">{{ user.username }}</div>
+            {% if user.lasttalk %}
                 <div class="name">{{ user.lasttalk }}</div>
-            </div>
-        </form>
-        {% endfor %}
-        
+            {% endif %}
+        </div>
+    </form>
+    {% endfor %}
+
     <form action="{% url 'logout' %}">
         <p class="buttons">
             <input type="submit" value="Log out" id="button2">

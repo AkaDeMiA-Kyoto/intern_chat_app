@@ -123,10 +123,13 @@ input{
 }
 
 #icon{
+    object-fit: cover;
     width: 100%;
     margin: 5px;
     border-radius: 50%;
     border: 5px solid yellow;
+    height: 80%;
+    object-fit: cover;
 }
 
 header{
@@ -198,3 +201,7 @@ footer form, footer input{
     margin-left: 0px;
     margin-right: 0px;
 } 
+
+a{
+    text-decoration: none;
+}
