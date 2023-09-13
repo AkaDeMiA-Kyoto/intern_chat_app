@@ -5,9 +5,6 @@ from django.contrib.auth.models import AbstractUser
 class CustomUser(AbstractUser):
     image = models.ImageField(upload_to=None, height_field=None, width_field=None)
 
-class Content(models.Model):
-    chat_content = models.CharField(max_length=2048)
-
 class Talk_content(models.Model):
     #users = models.ForeignKey(Talk_content, on_delete=models.CASCADE)
     user_from = models.IntegerField()

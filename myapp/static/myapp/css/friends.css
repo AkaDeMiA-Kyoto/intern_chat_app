@@ -31,6 +31,8 @@ h1{
     line-height: 70px;
     font-size: 9vw;
     text-align: center;
+    background-color: white;
+    color: brown;
 }
 
 .formdiv{
@@ -42,16 +44,20 @@ h1{
 input{
     /* ボタンデザイン：https://webparts.cman.jp/button/submit/ */
     /* サイズの単位：https://www.sejuku.net/blog/57197 */ 
-    width: 60%;   
+    width: 90%;   
     border-width: 3px;
 }
 
-.youare{
-    display: flex;
+.top{
     text-align: center;
     justify-content: center;
     width: 100%;
     margin: 90px 10px 20px 10px;
+}
+.youare{
+    text-align: center;
+    justify-content: center;
+    margin: 0px 10px 20px 10px;
 }
 
 .name{
@@ -76,12 +82,21 @@ input{
     width:100%;
 }
 
+.search_button{
+    margin-bottom: 10px;
+    display: inline-block;
+    text-align: center;
+    width:30%;
+}
+
 #button2{
     width: 35%;
-    height: 50%;
-    margin-right: 10px;
-    margin-left: 10px;
     padding: 10px;
+    vertical-align: middle;
+}
+#button1{
+    margin-right: 10px;
+    width: 90%;
     vertical-align: middle;
 }
 
@@ -120,8 +135,6 @@ header{
     width: 100%;
     padding: 0px;
     justify-content: center;
-    background-color: white;
-    color: brown;
 }
 header h1{
     width: 100%;
@@ -159,3 +172,24 @@ footer form, footer input{
     background-color: white;
     color:brown;
 }
+.message_form{
+    width: 100%;
+    height: 8%;
+    position: fixed;
+    top: 120px;
+    left: 0px;
+    display: flex;
+    justify-content: center;
+    vertical-align: middle;
+    border-style:none;
+}
+
+.field-container{
+    width: 100%;
+    height: 90%;
+    vertical-align: middle;
+    text-align: center;
+    justify-content: center;
+    margin-left: 0px;
+    margin-right: 0px;
+} 

@@ -19,7 +19,7 @@
         
     </h1>
     <div class="formdiv">
-        <form action="{% url 'setting' id what %}" method="POST" enctype="multipart/form-data">
+        <form action="{% url 'setting' what %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}  {# CSRF 対策 #} 
             
             {% for elem in form %}
@@ -46,7 +46,7 @@
                 <input type="submit" value="submit" id="button1">
             </p>
         </form>
-        <form action="{% url 'setting' id 0 %}">
+        <form action="{% url 'setting' 0 %}">
             <p class="buttons">
                 <input type="submit" value="Back" id="button2">
             </p>
@@ -57,12 +57,12 @@
 
 <footer>
     <span>
-        <form action="{% url 'friends' id %}">
+        <form action="{% url 'friends' %}">
             <input type="submit" value="Friends">
         </form>
     </span>
     <span>
-        <form action="{% url 'setting' id 0 %}">
+        <form action="{% url 'setting' 0 %}">
             <input type="submit" value="Settings">
         </form>
     </span>

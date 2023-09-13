@@ -2,11 +2,13 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.password_validation import validate_password # 以下追記箇所(6～7行目)
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser, Talk_content
-from .forms import myUserForm, myLoginForm, ChatInputForm, ChangeUserForm, ChangeEmailForm, ChangeIconForm, ChangePWForm
+from .models import *
+from .forms import *
 from django.contrib.auth.views import LoginView
 from django.db.models import Q
 from PIL import Image
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 
 def trimming_square(imgpath):
     img = Image.open(imgpath)
@@ -17,12 +19,18 @@ def trimming_square(imgpath):
     img_crop = img.crop((center_x - new_size / 2, center_y - new_size / 2, center_x + new_size / 2, center_y + new_size / 2))
     img_crop.save(imgpath)
 
-    print("******** Trimming Completed. *************")
-
 
 
 def index(request):
-    return render(request, "myapp/index.html")
+    print("user: ",request.user.username)
+    if request.user.username == '':
+        return render(request, "myapp/index.html")
+    else:
+        return friends(request)
+    
+def logout_view(request):
+    logout(request)
+    return index(request)
 
 def signup_view(request):
     if request.POST:
@@ -57,9 +65,11 @@ def login_view(request):
         if form.is_valid():
             print("************Login Sccess*********************")
             username = request.POST["username"]
-            id = CustomUser.objects.get(username=username).id
+            user = CustomUser.objects.get(username=username)
+            login(request, form.get_user())
+            id = user.id
             print("******", id)
-            return friends(request, id)
+            return friends(request)
 
         else:
             print("************Login Failed*********************")
@@ -70,21 +80,21 @@ def login_view(request):
         form = myLoginForm()
         return render(request, "myapp/login.html", {'form': form})
 
-def friends(request, id):
+@login_required
+def friends(request):
+    myid = request.user.id
     if id:
-        myusername = CustomUser.objects.get(id=id).username
+        myusername = CustomUser.objects.get(id=myid).username
 
     if request.POST:
         myusername = request.POST["username"]
-
-    myid = CustomUser.objects.get(username=myusername).id
 
     user_all = CustomUser.objects.all()    
     user_li = []
     for user in user_all:
         if user.username == myusername or user.username == 'admin':
             continue
-        
+        print("*** user: ", user.username)
         # 最後のトークを取ってくる 
         contents = Talk_content.objects.filter(Q(user_to=myid, user_from=user.id)|Q(user_to=user.id, user_from=myid))
 
@@ -98,11 +108,57 @@ def friends(request, id):
             lasttalk = ""
         else:
             lasttalk = messages[-1]['message']
-
+        print("image url: ",user.image)
+        trimming_square("./"+ user.image.url[1:]) # 正方形じゃない画像はトリミングする
         user_li.append({"username": user.username, "image": user.image.url, "id": user.id, "lasttalk": lasttalk})
 
-    return render(request, "myapp/friends.html", {"id": myid, "username": myusername, "friends": user_li})
+    search_form = SearchFriendForm()
+    return render(request, "myapp/friends.html", {"id": myid, "username": myusername, "friends": user_li, "search_form": search_form})
 
+@login_required
+def search_friends(request):
+    myid = request.user.id
+    myusername = CustomUser.objects.get(id=myid).username
+
+    if request.POST:
+        search_form = SearchFriendForm(request.POST)
+
+        search_name = request.POST["username"]
+        print("*****search_name : ", search_name)
+        if search_name == "":
+            return friends(request)
+        
+        detected_user = CustomUser.objects.filter(username__icontains=search_name).all()
+
+        user_li = []
+        for user in detected_user:
+            print(user.username)
+            if user.username == myusername or user.username == 'admin':
+                continue
+            
+            # 最後のトークを取ってくる 
+            contents = Talk_content.objects.filter(Q(user_to=myid, user_from=user.id)|Q(user_to=user.id, user_from=myid))
+
+            messages = []
+            for content_ in contents:
+                if content_.chat_content == "":
+                    continue
+                messages.append({"time": content_.time, "message": content_.chat_content})
+            messages = sorted(messages, key=lambda x: x['time'])
+            if len(messages) == 0:
+                lasttalk = ""
+            else:
+                lasttalk = messages[-1]['message']
+            print("image url: ",user.image)
+            trimming_square("./"+ user.image.url[1:]) # 正方形じゃない画像はトリミングする
+            user_li.append({"username": user.username, "image": user.image.url, "id": user.id, "lasttalk": lasttalk})
+
+        return render(request, "myapp/friends.html", {"id": myid, "username": myusername, "friends": user_li, "search_form": search_form})
+
+    return friends(request)
+
+
+@login_required
 def talk_room(request, id1, id2):
     user1 = CustomUser.objects.get(id=id1).username
     user2 = CustomUser.objects.get(id=id2).username
@@ -138,7 +194,9 @@ def talk_room(request, id1, id2):
     }
     return render(request, "myapp/talk_room.html", data)
 
-def setting(request, id, what):
+@login_required
+def setting(request, what):
+    id = request.user.id
     data = {"id": id, "what": what}
     now_user = CustomUser.objects.get(id=id)
     username = now_user.username
@@ -219,7 +277,5 @@ def setting(request, id, what):
         else:
             form = ChangePWForm(user=now_user)
             return render(request, "myapp/setting_change.html", data | {"form": form, "content": "Password"})
-
-
 
     return render(request, "myapp/setting.html", data)

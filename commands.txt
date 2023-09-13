@@ -1,24 +1,40 @@
 # 初回 push のためのコマンド
 git add .
-git commit -m 'commit message'
+git commit -m 'ForeignKeyを使いこなした'
 git push -u origin fukutani-honoka
 
 # 2回目以降 push のためのコマンド
 git add .
-git commit -m 'パスワード変更までできた！'
+git commit -m 'ForeignKeyを使いこなした'
 git push
 
 # 仮想環境に入る
 source .venv/bin/activate
+
+# モジュールの保存
+pip freeze > requirements.txt
 
 # 開発者ツール -> Ctrl + Shift + I
 # キャッシュ削除 -> Ctrl + Shift + R
 
 python3 manage.py createsuperuser
 
-python3 manage.py makemigrations
-python3 manage.py migrate
-
 python3 manage.py runserver
 
-git remote set-url origin git@github.com:fukurohoho/chatapp.git
+python manage.py dumpdata --exclude auth.permission --exclude contenttypes > dump.json
+
+git@github.com:fukurohoho/chatapp.git
+
+ssh -i  ~/.ssh/chatapp-fukutani.pem ubuntu@35.74.158.8
+
+sudo systemctl enable --now gunicorn.socket
+sudo ln -sf /etc/nginx/sites-available/chatapp /etc/nginx/sites-enabled/chatapp
+sudo systemctl restart nginx.service
+sudo systemctl restart gunicorn.service
+
+CSS を変更したら
+python manage.py collectstatic
+
+.sh ファイル作るとよい
+
+git remote set-url origin git@github.com:AkaDeMiA-Kyoto/intern_chat_app.git --push

@@ -1,21 +1,23 @@
-from .models import CustomUser, Talk_content, Content
+from .models import CustomUser, Talk_content
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from django.db import models
 from django import forms
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
+from allauth.account.forms import SignupForm
 
-class myUserForm(UserCreationForm):
-    image = models.ImageField(name="image")
+class myUserForm(SignupForm):
+    image = forms.ImageField()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.label_suffix = " "
+        print()
 
-    class Meta:
-        model = CustomUser
-        fields = ("username", "email", "password1", "password2", "image")
+    # class Meta:
+    #     model = CustomUser
+    #     fields = ("username", "email", "password1", "password2", "image")
 
 class myLoginForm(AuthenticationForm):
     error_messages = {
@@ -34,6 +36,11 @@ class ChatInputForm(forms.ModelForm):
         model = Talk_content
         # exclude = ["user_from", "user_to"]
         fields = ("user_from","user_to","chat_content",)
+
+class SearchFriendForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ("username",)
 
 class ChangeInfoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

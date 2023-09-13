@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import os 
 import environ 
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -45,6 +46,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',
+    'django.contrib.sites',    
+    'allauth',     
+    'allauth.account',     
+    'allauth.socialaccount',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'intern.urls'
@@ -62,7 +69,9 @@ ROOT_URLCONF = 'intern.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'accounts/templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -83,8 +92,14 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'db',
+        'USER': 'fukuro_hoho',
+        'PASSWORD': 'honokasanda',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -135,8 +150,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media_local/'
 MEDIA_ROOT = BASE_DIR / 'media_local'
 AUTH_USER_MODEL = "myapp.CustomUser"
-
-LOGOUT_REDIRECT_URL='/login'
+ACCOUNT_FORMS   = { "signup":"myapp.forms.myUserForm"}
 
 # デプロイ環境のための設定(追加)
 if os.path.isfile('.env'): # .envファイルが存在しない時にもエラーが発生しないようにする
@@ -145,3 +159,31 @@ if os.path.isfile('.env'): # .envファイルが存在しない時にもエラ�
 
     DEBUG = env('DEBUG')
     ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+
+# django-allauth を使うための設定
+AUTHENTICATION_BACKENDS = [ 
+  'django.contrib.auth.backends.ModelBackend',     
+  'allauth.account.auth_backends.AuthenticationBackend',
+] 
+
+SITE_ID = 1
+
+#コンソール上にユーザ登録確認メールを表示。ローカルで確認するため
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' 
+
+#django-allauthログイン時とログアウト時のリダイレクトURL
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+#ユーザ登録確認メールを送信
+ACCOUNT_EMAIL_VARIFICATION = 'mandatory'
+ACCOUNT_EMAIL_REQUIRED = True
+
+SIGNUP_REDIRECT_URL = "/accounts/confirm-email"
+LOGIN_URL = '/login'
+
+#signupformからの情報をcustomusermodelに保存するのに必要
+ACCOUNT_ADAPTER = 'myapp.adapter.AccountAdapter'
+
+LOGIN_REDIRECT_URL="/accounts/confirm-email"

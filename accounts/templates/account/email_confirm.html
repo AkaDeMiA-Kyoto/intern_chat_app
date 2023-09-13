@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat-App SignUp</title>
+    <!-- <link rel="stylesheet" href='../../static/myapp/css/signup.css'> -->
+    <link rel="stylesheet" href='{% static "myapp/css/signup.css" %}'>
+</head>
+<body>
+    <h1>
+        Email Sent
+    </h1>
+    </h1>
+    <div class="formdiv">
+        認証が完了しました
+        <form action="{% url 'index' %}">
+            <p class="buttons">
+                <input type="submit" value="Back" id="button2">
+            </p>
+        </form>
+    </div>
+</body>
+{# https://blog.narito.ninja/detail/98/ #}
+</html>
