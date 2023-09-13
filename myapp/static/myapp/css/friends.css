@@ -31,8 +31,6 @@ h1{
     line-height: 70px;
     font-size: 9vw;
     text-align: center;
-    background-color: white;
-    color: brown;
 }
 
 .formdiv{
@@ -53,11 +51,16 @@ input{
     justify-content: center;
     width: 100%;
     margin: 90px 10px 20px 10px;
+    height: 80px;
 }
 .youare{
     text-align: center;
     justify-content: center;
     margin: 0px 10px 20px 10px;
+    position: fixed;
+    width: 100%;
+    left: 0;
+    right: 0;
 }
 
 .name{
@@ -135,6 +138,8 @@ header{
     width: 100%;
     padding: 0px;
     justify-content: center;
+    background-color: white;
+    color: brown;
 }
 header h1{
     width: 100%;
