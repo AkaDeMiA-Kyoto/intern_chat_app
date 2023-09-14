@@ -1,0 +1,25 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block extra_style %}<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/friends.css' %}" />{% endblock %}
+
+{% block header-title %}友達{% endblock %}
+
+{% block content %}
+
+{% for item in data %}
+<div class="friend">
+    <form enctype="multipart/form-data">
+        <img src="/media/{{item.image}}" class="icon">
+    </form>
+    <div class="item">{{item.username}}</div>
+    <div>
+        <a href="{% url 'talk_room' item.id %}" class="button"></a>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}
+
+
+

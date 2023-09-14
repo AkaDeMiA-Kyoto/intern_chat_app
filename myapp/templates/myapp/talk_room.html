@@ -1,1 +1,37 @@
-TR
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
+    <title>DeMiAインターン</title>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="{% url 'friends' %}" class="back">戻る</a>
+            <span class="header-container__title">
+                {{friendname}}
+            </span>
+        </div>
+    </header>
+    <div>
+        {{text}}
+    </div>
+    <footer>
+        <form method="POST" enctype="multipart/form-data" >
+            {% csrf_token %}
+            
+            {% for item in talk %}
+            {{item.talk_content}}
+            {{item.talk_time}}
+            {% endfor %}
+
+            {% for field in form %}
+            {{field}}
+            {% endfor %}
+            <button type="submit" class="button">送信</button>
+        </form>
+    </footer>
+</body> 

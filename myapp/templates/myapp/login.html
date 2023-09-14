@@ -5,6 +5,13 @@
         <title>チャットアプリ</title>
     </head>
     <body>
-        <div>hello</div>
+        <form method="POST" action="{% url 'friends' %}">
+            {% csrf_token %}
+            {% for field in form %}
+            <div>{{field.label_tag}}</div>
+            <div>{{field}}</div>
+            {% endfor %}
+            <button type="submit">ログイン</button>
+        </form>
     </body>
 </html>
