@@ -2,13 +2,28 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>login</title>
-        <link rel="stylesheet" href="static/myapp/css/singup.css">
+        <title>signup</title>
+        <link rel="stylesheet" href="static/myapp/css/signup.css">
     </head>
-    <header>
-        会員登録
-    </header>
     <body>
-
+        <header>
+            <div id="header">会員登録</div>
+        </header>
+        <br>
+        <div id="outofheader">
+            <form method='post' enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                {{field.label}}
+                {{ field }}
+                {{ field.errors }}
+                <hr>
+                {% endfor %}
+                <button type='submit'>Sign Up</button>
+            </form>
+            
+        </div>
+        
     </body>
 </html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>login</title>
+        <link rel="stylesheet" href="static/myapp/css/login.css">
+    </head>
+    <body>
+        <header>
+            <div id="header">ログイン</div>
+        </header>
+        <br>
+        <div id="outofheader">
+            <form method="post">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div>ユーザーID、パスワードが一致しません。</div>
+                {% endif %}
+                {% if field.errors %}
+                    <div>ユーザーID、パスワードが一致しません。</div>
+                {% endif %}
+                {% for field in form %}
+                    {{field.label}}
+                    {{ field }}
+                    <hr>
+                {% endfor %}
+                <button type='submit'>ログイン</button>
+
+            </form>
+        </div>
+    </body>
+</html>
