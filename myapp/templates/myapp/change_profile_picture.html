@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>プロフィール画像変更</title>
+    </head>
+    <body>
+        <h1>プロフィール画像変更</h1>
+        <!-- この値は、ファイルのアップロードなどでバイナリデータを含むフォームデータを正しく送信するために使用されます。 -->
+        <form action="", method="POST", enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">変更</button>
+        </form>
+    </body>
+</html>

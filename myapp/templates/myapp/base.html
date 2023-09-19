@@ -13,8 +13,18 @@
     <header class="header">
         <div class="header-container">
             <span class="header-container__title">
-                {% block header-title %}{% endblock %}
+                {% block header_title %}{% endblock %}
             </span>
+        </div>
+        <div class="header-container">
+            <ul>
+                {% if user.is_authenticated %}
+                <li>
+                    <a>ユーザ名：{{ user.get_username }} </a>
+                </li>
+
+                {% endif %}
+            </ul>
         </div>
     </header>
     {% endblock %}

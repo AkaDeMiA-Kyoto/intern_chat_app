@@ -1,1 +1,64 @@
-TR
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/talk_room.css' %}">
+{% endblock %}
+
+{% block title%}{{ friend.username }}{% endblock %}
+
+{% block header %}
+<a href="{% url 'friends' %}">
+    <i>></i>
+</a>
+{{ friend.username }}
+<a href="">更新</a>
+{% endblock %}
+
+<!-- {% block talk_room %}
+<a href="">更新</a>
+{% endblock %} -->
+
+{% block content %}
+<div class="talk_room">
+    <!--talkの表示部分-->
+    <ul class="chatboard", id="chatboard">
+        <!--
+            自分→友人と友人→自分のメッセージで表示を変える
+            ＞違いを見出してclassの違いに反映
+            ＞cssにて表示に違いを出す
+        -->
+        {% for talk in talk %}
+        <li class="chatboard__content chatboard__content--{% if talk.talk_from == user %}user{% else %}friend{% endif %}">
+            <img src="{{ friend.img.url }}" alt="フレンドの画像">
+            <p class="chatboard__name">＞{{ talk.talk_from }}</p>
+            <p class="chatboard__text">{{ talk.talk }}</p>
+            <p class="chatboard__time">{{ talk.time|date:"m/d" }}<br>{{ talk.time|date:"H:i" }}</p>
+        </li>
+        {% endfor %}
+
+    </ul>
+</div>
+{% endblock %}
+
+{% block footer %}
+<footer class="footer">
+    <form class="talk_room__sendbox" method="POST">
+        {% csrf_token %}
+        {{ form.talk }}
+        <button class="talk_room__sendbox-btn" type="submit">送信</button>
+    </form>
+</div>
+</footer>
+{% endblock %}
+
+{% block extra_js %}
+<!-- 機能を載せるために不可避だったので、ここだけコピペで実装してください -->
+<script>
+    // トークの表示を新しいものを下にしているため、最下にスクロールさせる
+    document.addEventListener("DOMContentLoaded", function () {
+        const chatboard = document.getElementById("chatboard");
+        window.scroll(0, chatboard.scrollHeight);
+    });
+</script>
+{% endblock %}

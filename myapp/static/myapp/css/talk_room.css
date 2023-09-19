@@ -1,0 +1,36 @@
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: gray;
+    box-sizing: border-box;
+}
+/* padding: これは要素の内側余白を指定するプロパティです。 */
+.talk_room {
+    padding: 64px 0;
+}
+
+/* トークの表示部分 */
+.chatboard{
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+
+/* 
+このCSSコードは、.chatboard__contentというクラスを持つ要素に適用されるスタイルを定義しています。
+border-bottom: solid 2px #eee;: 
+この行は、.chatboard__content要素の下部に2ピクセルの幅で灰色(#eee)の実線ボーダー（下線）を設定します。
+これにより、要素の下部にボーダーが表示され、セクション間を視覚的に区別するのに役立ちます。
+
+padding: 8px;:
+ この行は、.chatboard__content要素の内部コンテンツ（テキストや他の要素）と要素の境界との間に8ピクセルの余白（パディング）を設定します。
+ パディングは要素の内部のコンテンツと境界との間のスペースを制御し、要素の内容をより見やすく配置できるようにします。
+
+このスタイルルールを持つ.chatboard__content要素は、ボーダーで区切られたコンテンツを持つセクションのように見える可能性があります。
+例えば、チャットボード内のメッセージを区別するために使用されることが考えられます。 */
+.chatboard__content {
+    border-bottom: solid 2px #eee;
+    padding: 8px;
+}

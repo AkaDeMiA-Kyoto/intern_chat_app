@@ -1,1 +1,16 @@
-I
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>chat app</title>  
+    </head>
+    <header></header>
+    <body>
+        <div class="main">
+            <!--urlpatternsのnameがここで使える-->
+            <div class="login"><a href="{% url 'login_view' %}">ログイン</a></div>
+            <div class="signup"><a href="{% url 'signup_view' %}">会員登録</a></div>    
+        </div>
+    </body>
+    <footer></footer>
+</html>

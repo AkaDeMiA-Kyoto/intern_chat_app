@@ -1,1 +1,22 @@
-LI
+{% extends "myapp/base.html" %}
+
+{% block title %}ログインフォーム{% endblock %}
+
+{% block header %}ログイン{% endblock %}
+
+{% block content %} <div>
+    <!--'login_view'に送って、そのあとの処理を任せる-->
+    <!-- いわばフォームの保存先を指定してる -->
+    <form action="{% url 'login_view' %}" method="post">
+        {% csrf_token %}
+        <!-- form だけでフォームの具体的な内容が表示されるからok -->
+        <!-- Formクラスには、生成するフィールドのタグをほかのタグでくくって出力するための機能が用意されている -->
+        <!--1, <<Form>>.as_table   ←ラベルとフィールドのタグを<tr>と<td>でくくって書き出す    -->
+        <!--2, <<Form>>.as_p       ←ラベルとフィールド全体を<p>でくくる                      -->
+        <!--3, <<Form>>.as_url     ←ラベルとフィールド全体を<li>タグでくくる                  -->
+        <!--htmlのタグを直接書いてフォームを作ってもいいが、あえてクラスを作った方が各種機能を盛り込みやすい➔Django超入門p105-->
+        {{ form.as_p}}
+        <button type="submit">ログイン</button>
+    </form>
+</div>
+{% endblock %}

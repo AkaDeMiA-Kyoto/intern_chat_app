@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ユーザ名変更</title>
+    </head>
+    <body>
+        <h1>ユーザ名変更</h1>
+
+        <form action="{% url 'change_username' %}", method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">変更</button>
+        </form>
+    </body>
+</html>

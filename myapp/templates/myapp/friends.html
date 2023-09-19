@@ -1,0 +1,51 @@
+{% extends "myapp/base.html" %}
+<!--staticはcssなど、djangoのような動的ではない、静的なファイル-->
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
+{% endblock %}
+
+{% block header_title %}友達{% endblock %}
+
+{% block content %}
+<div class="friends">
+    <!-- 友達のリスト表示部分 -->
+    <ul class="friend-list">
+
+        <!--
+            友達に応じて表示
+            ＞for文を回して表示
+        -->
+
+        <!--
+            最新のトークを表示するVer
+            friendsではなく、作成したtalk_listでforをまわす
+            ＞ここでどういうリストなら表示ができるかを考えてリストの項目を設計
+        -->
+        {% for friend, talk, time in info %}
+        <a class="friend-list__link" href="{% url 'talk_room' user_id=friend.id %}">
+        <li class="friend-list__item">
+            <!-- それぞれが別のトーク画面に飛ぶようにリンクをはる -->
+                <img class="friend-list__usericon" src="{{ friend.img.url }}">
+                <div class="friend-list__username">{{ friend.username }}</div>
+                <!-- ここから最新のトークを表示する部分 -->
+                {% if talk %}
+                <div class="friend-list__talk">
+                    <p class="friend-list__content">{{ talk }}</p>
+                    <p class="friend-list__time">{{ time|date:"n/j H:i" }}</p>
+                </div>
+                {% else %}
+                <div class="friend-list__no_talk">
+                    <p class="friend-list__time">{{ time|date:"n/j H:i"}}</p>
+
+                </div>
+                {% endif %}
+        </li>
+        </a>
+        {% empty %}
+        {% endfor %}
+        <!-- ここまで　最新のトークを表示するVer -->
+    </ul>
+</div>
+{% endblock %}
