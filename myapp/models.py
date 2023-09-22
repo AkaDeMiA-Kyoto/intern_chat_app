@@ -4,10 +4,11 @@ class CustomUser(AbstractUser):
     iamge = models.ImageField(upload_to='MEDIA_ROOT')
 
 class Talk(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='talks')
+    sender = models.ForeignKey(CustomUser, related_name='sent_talks', on_delete=models.CASCADE,null=True)
+    receiver = models.ForeignKey(CustomUser, related_name='received_talks', on_delete=models.CASCADE, null=True)
     message = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.message
+        return f'{self.sender.username} - {self.receiver.username} - {self.message}'
 # Create your models here.

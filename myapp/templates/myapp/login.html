@@ -22,16 +22,18 @@
     {% block content %}
     
     <div class="container">
-        <form method="post" enctype="multipart/form-data">{% csrf_token %}
+        <form method="post" action="{% url 'login_view' %}">
+            {% csrf_token %}
             {{ form.non_field_errors }}
-            {% for field in form %}
-                <div class="fieldwrapper">
-                    {{ field.errors }}
-                    {{ field.label_tag }} 
-                    {{ field }}
-                </div>
-            {% endfor %}
-            <button type="submit" href="{% url 'friends' %}">ログイン</button>
+            <div class="fieldwrapper">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+            </div>
+            <div class="fieldwrapper">
+                {{ form.password.label_tag }}
+                {{ form.password }}
+            </div>
+            <button type="submit">ログイン</button>
         </form>
 
     </div>   

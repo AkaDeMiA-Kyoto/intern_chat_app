@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/change.css' %}" />
     {% block extra_style %}{% endblock %}
     <title>DeMiAインターン</title>
 </head>
@@ -13,20 +13,19 @@
     <header class="header">
         <div class="header-container">
             <span class="header-container__title">
-                {% block header-title %}設定{% endblock %}
+                {% block header-title %}名前変更{% endblock %}
             </span>
         </div>
     </header>
     {% endblock %}
 
     {% block content %}
-        <div class="container">
-            <p id="name_change"><a href="{% url 'change_username' %}">ユーザー名変更</a></p>
-            <p id="email_change"><a href="{% url 'change_email' %}">メールアドレス変更</a></p>
-            <p id="icon_change"><a href="{% url 'change_icon' %}">アイコン変更</a></p>
-            <p id="password_change"><a href="{% url 'change_password' %}">パスワード変更</a></p>
-            <p id="logout"><a href="{% url 'logout' %}">ログアウト</a></p>
-        </div>
+    <form method="post">
+        {% csrf_token %}
+        <label for="new_username">新しいユーザー名:</label>
+        <input type="text" id="new_username" name="new_username">
+        <button type="submit">変更</button>
+    </form>
     {% endblock %}
 
     {% block footer %}

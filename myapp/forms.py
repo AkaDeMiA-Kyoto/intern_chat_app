@@ -21,4 +21,9 @@ class LoginForm(AuthenticationForm):
     class Meta:
         model = CustomUser
         fields = ('username','password')
-    
+
+class MessageForm(forms.Form):
+    message = forms.CharField(widget=forms.TextInput(attrs={'class': 'message-input'}))
+
+class IconUploadForm(forms.Form):
+    new_icon = forms.ImageField()

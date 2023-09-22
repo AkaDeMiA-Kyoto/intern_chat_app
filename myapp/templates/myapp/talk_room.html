@@ -1,1 +1,57 @@
-TR
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
+    {% block extra_style %}{% endblock %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>DeMiAインターン</title>
+</head>
+<body>
+    {% block header %}
+        <header class="header">
+            <a href="{% url 'friends' %}" class="back-link">
+                <i class="fas fa-arrow-left"></i> <!-- Font Awesomeの矢印アイコン -->
+            </a>
+            <div class="header-container">
+                <span class="header-container__title">
+                    {% block header-title %}<p id="name">{{ user.username }}</p>{% endblock %}
+                </span>
+            </div>
+        </header>
+    {% endblock %}
+
+    {% block content %}
+        <div class="chat-box">
+            {% for message in messages %}
+                <div class="message {% if message.sender == user %}sender{% else %}receiver{% endif %}">
+                    {% if message.sender == user %}
+                        <div class="sender-icon">
+                            <img src="{{ message.sender.iamge.url }}" alt="{{ message.sender.username }} Icon" width="30" height="30">
+                        </div>
+                        <div class="sender-name">{{ message.sender.username }}</div>
+                    {% else %}
+                        <div class="receiver-icon">
+                            <img src="{{ message.sender.iamge.url }}" alt="{{ message.sender.username }} Icon" width="30" height="30">
+                        </div>
+                        <div class="receiver-name">{{ message.sender.username }}</div>
+                    {% endif %}
+                    <div class="message-content">{{ message.message }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endblock %}
+
+    {% block footer %}
+    <footer class="footer">
+        <form method="post" id="message-form">
+            {% csrf_token %}
+            {{ message_form.message }}
+            <button type="submit">送信</button>
+        </form>
+    </footer>
+    {% endblock %}
+</body>
+</html>
