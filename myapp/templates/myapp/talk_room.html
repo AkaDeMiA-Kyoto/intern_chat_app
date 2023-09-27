@@ -1,1 +1,37 @@
-TR
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>talk_room</title>
+        <link rel="stylesheet" href="static/myapp/css/talk_room.css">
+    </head>
+    <body>
+        <header> {# 仮ヘッダー #}
+            <a href="../../friends">&lt;</a>
+            {{friend_name}}
+            <a href="">更新</a>
+        </header>
+            {% for past_message in talk_log %}
+                >{{past_message.sender_name}}
+                {{past_message.talk_context}}
+                {{past_message.time}}
+                <br>
+            {% endfor %}
+        <footer>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                {{field.label}}
+                {{ field }}
+                {{ field.errors }}
+                <hr>
+                {% endfor %}
+                <button type='submit'>送信</button>
+            </form>
+        </footer>
+    </body>
+</html>
+
+
+

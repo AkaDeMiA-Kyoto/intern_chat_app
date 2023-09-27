@@ -1,0 +1,61 @@
+.friend_box {
+    height: 10vw;
+    width: 100vw;
+    border-bottom: solid 1px #9b9b9b;
+    display: flex;
+}
+
+.nontalk_friend_box {
+    height: 10vw;
+    width: 100vw;
+    border-bottom: solid 1px #9b9b9b;
+    display: flex;
+}
+
+.friend_image {
+    height: 80%;
+    width: 8%;
+    border-radius: 50%;
+    border: solid;
+    border-color: black;
+}
+
+* {
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.friend_name {
+    font-weight: bold;
+    color: black;
+}
+
+.message {
+    color: darkgray;
+}
+
+.header {
+    background-color:rgba(169,169,169,0.1);
+}
+
+.footer-container {
+    background-color: rgba(169,169,169,0.1);
+}
+
+.space {
+    width: 3vw;
+}
+
+.message {
+    width: 86vw;
+}
+
+
+.latest_message {
+    text-align: left;
+    float: left;
+}
+
+.time {
+    text-align: right;
+}

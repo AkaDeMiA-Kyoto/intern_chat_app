@@ -1,0 +1,52 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href=static/myapp/css/friends.css>
+{% endblock %}
+
+{% block header-title %}友達{% endblock %}
+
+{% block content %}
+<br>
+{% for friend in friend_info %}
+    <a href="talk_room/{{friend.friend_id}}">
+        <div class="friend_box">
+            <div class="space"></div>
+            <img class="friend_image" src="media/{{friend.friend_image}}">
+            <div class="space">
+            </div>
+            <div class="friend_item">
+                <div class="friend_name">
+                    {{friend.friend_name}}
+                </div>
+                <div class="message">
+                    <div class="latest_message">
+                        {{friend.latest_message}}
+                    </div>
+                    <div class="time">
+                        {{friend.time}}
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </a>
+    <br>   
+{% endfor %}
+{% for friend in nontalk_friend_info %}
+    <a href="talk_room/{{friend.friend_id}}">
+        <div class="nontalk_friend_box">
+            <div class="space"></div>
+            <img class="friend_image" src="media/{{friend.friend_image}}">
+            <div class="space"></div>
+            <div class="nontalk_friend_item">
+                <div class="friend_name">
+                    {{friend.friend_name}}
+                </div>
+            </div>
+        </div>
+        
+    </a>
+    <br>
+{% endfor %}
+{% endblock %}

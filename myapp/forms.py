@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import CustomUser
+from .models import CustomUser, Message
 from django import forms
 
 class SignupForm(UserCreationForm):
@@ -21,3 +21,9 @@ class SignupForm(UserCreationForm):
 class CustomAuthenticationForm(AuthenticationForm):
     username = forms.CharField(label="ユーザーネーム:", max_length=30)
     password = forms.CharField(label="パスワード:",widget=forms.PasswordInput)
+
+
+class MessageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ("message","sender","receiver","time")
