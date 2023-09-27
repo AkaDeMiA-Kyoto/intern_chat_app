@@ -1,1 +1,65 @@
-TR
+{% extends 'myapp/base.html' %}
+{% load widget_tweaks %}
+
+{% block extra_style %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'myapp/css/talk_room.css' %}" >
+{% endblock %}
+
+{% block header %}
+<header class="header">
+    <div class="header-container">
+        <span class="header-container__title">
+            {% block header-title %}{{ realname }}{% endblock %}
+        </span>
+    </div>
+    <div class="header-container2">
+        <div class="header-container__item1">
+            <a href="{% url 'friends' %}" class="reverse" style="text-decoration:none;">
+                ＜
+            </a>
+        </div>
+        <div class="header-container__item2">
+            <a href="">
+                <button class="button2">更新</button>
+            </a>
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="context">
+    {% for comment in data %}
+        <table class="table1">
+            <tr>
+                <td class="username">>{{comment.sender.username}}</td>
+            </tr>
+            <tr>
+                <td class="contents">{{comment.content}}</td>
+                <td class="date">{{comment.message_date|date:"Y/n/j H:i"}}</td>
+            </tr>
+        </table>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block footer %}
+<footer class="talkroomfooter">
+    <div class="footernakami">
+        <form action="{% url 'talk_room' username %}" method="POST">
+        {% csrf_token %}
+        <table class="table2">
+            <tr>
+                <td>
+                    {{ form.content|add_class:"input" }}
+                </td>
+                <td>
+                    <button type="submit" class="button">送信</button>
+                </td>
+            </tr>
+        </table>
+        </form>
+    </div>
+</footer>
+{% endblock %}

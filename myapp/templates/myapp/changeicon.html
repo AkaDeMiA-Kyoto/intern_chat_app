@@ -1,0 +1,27 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block extra_style %}
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/change.css' %}" >
+{% endblock %}
+
+{% block header-title %}アイコン{% endblock %}
+
+{% block content %}
+    <div class="context">
+        <br>
+        <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <tr>
+                        <td>New Image:</td>
+                        <td>{{ form.image }}</td>
+                    </tr>
+                </tr>
+            </table>
+            <button type='submit'>更新</button>
+        </form>
+    </div>
+{% endblock %}

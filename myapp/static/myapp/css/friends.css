@@ -1,0 +1,80 @@
+body {
+    text-align: left;
+    padding-top: 64px;
+}
+
+.context {
+    margin: 0px;
+}
+
+button {
+    font-size: 20px;
+    border: 2.5px solid rgb(180, 179, 179);
+    border-radius: 15px;
+    padding: 8px 22px;
+    margin: 20px 20px 6px;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+}
+
+table {
+    width:100%;
+    text-align: left;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    background-color: rgb(232, 232, 232);
+}
+
+
+.footer-container{
+    background-color: rgb(232, 232, 232);
+}
+
+.icon{
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border: 2px solid black;
+    border-radius: 50%;
+    margin: 7px;
+}
+
+a {
+    font-weight: 500;
+    color: black;
+}
+
+.message1 {
+    padding: 0px 0px 6px;
+    color: grey;
+    font-size: 85%;
+}
+
+.desk {
+    border-bottom: 1px solid grey;
+}
+
+td {
+    padding: 0px;
+}
+
+.ic {
+    width: 70px;
+    height: 60px;
+}
+
+.un {
+    padding: 6px 0px 0px;
+    margin: 0px;
+}
+
+.message2{
+    padding: 0px 0px 6px;
+    color: grey;
+    font-size: 50%;
+    width: 50px;
+}

@@ -1,4 +1,10 @@
 from django.contrib import admin
-from .models import CustomUser
+from .models import CustomUser, Message
 
-admin.site.register(CustomUser)
+class MemberAdmin(admin.ModelAdmin):
+    list_display = ("username",)
+    prepopulated_fields = {'slug': ('username',),}
+
+admin.site.register(CustomUser, MemberAdmin)
+
+admin.site.register(Message)

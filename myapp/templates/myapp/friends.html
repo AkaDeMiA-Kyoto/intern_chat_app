@@ -1,1 +1,40 @@
-F
+{% extends 'myapp/base.html' %}
+
+{% block extra_style %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}" >
+{% endblock %}
+
+{% block header-title %}友達{% endblock %}
+
+{% block content %}
+<div class="context">
+<table class="table">
+    {% for _, item, talk in already %}
+        <table class="desk">
+            <tr>
+                <td rowspan="2" class="ic"><a href="{% url 'talk_room' item.id %}" style="text-decoration:none;"><img src="{{item.image.url}}" class="icon"></a></td>
+                <td colspan="2" class="un"><a href="{% url 'talk_room' item.id %}" style="text-decoration:none;">{{item.username}}</a></td>
+            </tr>
+            <tr>
+                <td class="message1">{{ talk.content }}</td>
+                <td class="message2">{{ talk.message_date|date:"Y/n/j H:i" }}</td>
+            </tr>
+        </table>       
+    {% endfor %}
+    {% for _, item in yet %}
+        <table class="desk">
+            <tr>
+                <td rowspan="2" class="ic"><a href="{% url 'talk_room' item.id %}" style="text-decoration:none;"><img src="{{item.image.url}}" class="icon"></a></td>
+                <td colspan="2" class="un"><a href="{% url 'talk_room' item.id %}" style="text-decoration:none;">{{item.username}}</a></td>
+            </tr>
+            <tr>
+                <td class="message1">　</td>
+                <td class="message2">　</td>
+            </tr>
+        </table>
+    {% endfor %}
+</table>
+</div>
+{% endblock %}
+

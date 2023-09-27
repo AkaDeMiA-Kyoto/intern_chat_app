@@ -1,0 +1,16 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block extra_style %}
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/update.css' %}" >
+{% endblock %}
+
+{% block header-title %}メールアドレス{% endblock %}
+
+{% block content %}
+    <div class="context">
+        <br>
+        メールアドレス変更完了
+    </div>
+        {% endblock %}
