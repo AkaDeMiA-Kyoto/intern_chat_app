@@ -11,6 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from django.contrib.auth.forms import PasswordChangeForm
 import operator
+from django.db.models import Prefetch
 
 def index(request):
     return render(request, "myapp/index.html")
@@ -42,18 +43,25 @@ class friendslist(LoginRequiredMixin,generic.ListView):
         context["my_id"] = my_id
         friends = []
         friends_notalks=[]
-        print(self.request.GET)
+        
         if self.request.GET.get('searchname'):
-            data = CustomUser.objects.all().exclude(id=my_id).filter(username__icontains = self.request.GET.get('searchname'))
+            data = CustomUser.objects.exclude(id=my_id).filter(Q(username__icontains = self.request.GET.get('searchname'))|Q(email__icontains = self.request.GET.get('searchname'))).prefetch_related('from_name','to_name').order_by('time')
         else:
-            data = CustomUser.objects.all().exclude(id=my_id)
+            data = CustomUser.objects.exclude(id=my_id).prefetch_related('from_name','to_name').order_by('time')
+        print(data)
         for friend in data:
-            talks = Talk.objects.filter(Q(from_name = friend,to_name = my_id)|Q(from_name = my_id,to_name = friend)).order_by('time').last()
-            if talks:
-                friends.append([friend, talks.contents,talks.time])
+            if friend.contents:
+                if friend.from_name == my_id:
+                    friends=[friend.to_name,friend.contents,friend.time]
+                else:
+                    friends=[friend.from_name,friend.contents,friend.time]
             else:
-                friends_notalks.append([friend,None,None])
-            
+                if friend.from_name== my_id:
+                    friends=[friend.to_name,None,None]
+                else:
+                    friends=[friend.from_name,None,None]
+        data = CustomUser.objects.prefetch_related('from_name','to_name').get(id=5)
+        print(data.from_name)
         friends_info = sorted( friends, key=operator.itemgetter(2),reverse = True)
         context['friends'] = friends_info
         context['friends_notalks'] = friends_notalks

@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class CustomUser(AbstractUser):
-    img =models.ImageField()
+    img =models.ImageField(default = 'default_img.png')
 
 class Talk(models.Model):
     from_name = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='from_name')
