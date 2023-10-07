@@ -5,13 +5,13 @@ from django.contrib.auth.views import LoginView
 from django.views import generic
 from .models import CustomUser
 from .models import Talk
-from django.db.models import Q
+from django.db.models import Q,Max,F
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from django.contrib.auth.forms import PasswordChangeForm
 import operator
-from django.db.models import Prefetch
+from django.db.models.functions import Greatest,Coalesce
 
 def index(request):
     return render(request, "myapp/index.html")
@@ -41,30 +41,37 @@ class friendslist(LoginRequiredMixin,generic.ListView):
         context = super().get_context_data()
         my_id = self.request.user.id
         context["my_id"] = my_id
-        friends = []
-        friends_notalks=[]
+        my_username=CustomUser.objects.get(id=my_id).username
+        print(my_id)
         
         if self.request.GET.get('searchname'):
-            data = CustomUser.objects.exclude(id=my_id).filter(Q(username__icontains = self.request.GET.get('searchname'))|Q(email__icontains = self.request.GET.get('searchname'))).prefetch_related('from_name','to_name').order_by('time')
+            data = CustomUser.objects.exclude(id=my_id).filter(Q(username__icontains = self.request.GET.get('searchname'))|Q(email__icontains = self.request.GET.get('searchname'))).annotate(
+                from_name__time_max=Max("from_name__time",filter=Q(from_name__to_name=my_id)),
+                to_name__time_max=Max("to_name__time",filter=Q(to_name__from_name=my_id)),
+                greatest_time=Greatest("from_name__time_max","to_name__time_max"),
+                latest_time=Coalesce("greatest_time","from_name__time_max","to_name__time_max"),
+            ).order_by(F('latest_time').desc(nulls_last=True))
         else:
-            data = CustomUser.objects.exclude(id=my_id).prefetch_related('from_name','to_name').order_by('time')
-        print(data)
-        for friend in data:
-            if friend.contents:
-                if friend.from_name == my_id:
-                    friends=[friend.to_name,friend.contents,friend.time]
-                else:
-                    friends=[friend.from_name,friend.contents,friend.time]
-            else:
-                if friend.from_name== my_id:
-                    friends=[friend.to_name,None,None]
-                else:
-                    friends=[friend.from_name,None,None]
-        data = CustomUser.objects.prefetch_related('from_name','to_name').get(id=5)
-        print(data.from_name)
-        friends_info = sorted( friends, key=operator.itemgetter(2),reverse = True)
-        context['friends'] = friends_info
-        context['friends_notalks'] = friends_notalks
+            data = CustomUser.objects.exclude(id=my_id).annotate(
+                from_name__time_max=Max("from_name__time",filter=Q(from_name__to_name=my_id)),
+                to_name__time_max=Max("to_name__time",filter=Q(to_name__from_name=my_id)),
+                greatest_time=Greatest("from_name__time_max","to_name__time_max"),
+                latest_time=Coalesce("greatest_time","from_name__time_max","to_name__time_max"),
+            ).order_by(F('latest_time').desc(nulls_last=True))
+        # for friend in data:
+        #     if friend.latest_time:
+        #         if friend.from_name == my_id:
+        #             friends=[friend.to_name,friend.contents,friend.time]
+        #         else:
+        #             friends=[friend.from_name,friend.contents,friend.time]
+        #     else:
+        #         if friend.from_name== my_id:
+        #             friends=[friend.to_name,None,None]
+        #         else:
+        #             friends=[friend.from_name,None,None]
+        context['friends'] = data
+        # context['friends_notalks'] = friends_notalks
+       
         return context
     
 class TalkRoom(LoginRequiredMixin,generic.FormView):
