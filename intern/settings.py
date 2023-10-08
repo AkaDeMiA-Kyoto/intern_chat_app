@@ -87,7 +87,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'intern.wsgi.application'
 
 
-# Database
+# 
+# base
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
@@ -95,8 +96,8 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': BASE_DIR / 'db.sqlite3',
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'db',
-        'USER': 'fukuro_hoho',
+        'NAME': 'database',
+        'USER': 'fukurohoho',
         'PASSWORD': 'honokasanda',
         'HOST': 'localhost',
         'PORT': '5432',
@@ -138,8 +139,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = '/myapp/static/'
+STATIC_ROOT = BASE_DIR / "myapp/static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -180,10 +181,10 @@ ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_VARIFICATION = 'mandatory'
 ACCOUNT_EMAIL_REQUIRED = True
 
-SIGNUP_REDIRECT_URL = "/accounts/confirm-email"
+SIGNUP_REDIRECT_URL = "/"
 LOGIN_URL = '/login'
 
 #signupformからの情報をcustomusermodelに保存するのに必要
 ACCOUNT_ADAPTER = 'myapp.adapter.AccountAdapter'
 
-LOGIN_REDIRECT_URL="/accounts/confirm-email"
+LOGIN_REDIRECT_URL="/friends"

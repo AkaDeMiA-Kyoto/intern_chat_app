@@ -1,43 +1,15 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat-App Setting</title>
-    <link rel="stylesheet" href='../../static/myapp/css/setting_content.css'>
-</head>
+{% extends "base.html" %}
+{% load static %}
 
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}">
+{% endblock %}
 
-<header>
-    <h1>
-       {{ content }}
-    </h1>
-</header>
+{% block title %}Chat-App Setting{% endblock %}
+{% block head_title%}{{ content }}{% endblock %}
 
-<body>
-    <h1>
-        
-    </h1>
-    <h1>
-        Changing Completed
-    </h1>
-    
-</body>
-
-
-<footer>
-    <span>
-        <form action="{% url 'friends' %}">
-            <input type="submit" value="Friends">
-        </form>
-    </span>
-    <span>
-        <form action="{% url 'setting' 0 %}">
-            <input type="submit" value="Settings">
-        </form>
-    </span>
-</footer>
-
-
-{# https://blog.narito.ninja/detail/98/ #}
-</html>
+{% block contents %}
+<h1>
+    Changing Completed
+</h1>
+{% endblock %}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ja">
+{%block css%}{%endblock%}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% comment %} <link rel="stylesheet" href="{% static 'myapp/css/base.css' %}"> {% endcomment %}
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+<header>
+    <h1>
+        {% block head_title%}{% endblock %}
+    </h1>
+</header>
+
+<body>
+    {% block contents%}{% endblock %}
+</body>
+
+<footer>
+{% block footer%}
+    <span>
+        <form action="{% url 'friends' %}">
+            <input type="submit" value="Friends">
+        </form>
+    </span>
+    <span>
+        <form action="{% url 'setting' %}">
+            <input type="submit" value="Settings">
+        </form>
+    </span>
+{% endblock%}
+</footer>
+
+</html>

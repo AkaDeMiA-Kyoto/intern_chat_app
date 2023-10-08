@@ -1,43 +1,40 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat-App SignUp</title>
-    <link rel="stylesheet" href='../static/myapp/css/signup.css'>
-</head>
-<body>
-    <h1>
-        Sign Up Form
-    </h1>
-    <div class="formdiv">
-        <form action="{% url 'signup_view' %}" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}  {# CSRF 対策 #} 
-            
-            {% for elem in form %}
-            <div class="field-container">{{elem.label_tag}}{{elem}}</div>
-            {{ elem.non_field_errors }}
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}">
+{% endblock %}
+{% block title %}Chat-App SignUp{% endblock %}
+{% block head_title%}Sign Up Form{% endblock %}
 
-            {% if elem.errors %}
-                <div class="errorlist">
-                    {% for error in elem.errors %}
-                        ★ {{ error }}<br>
-                    {% endfor %}
-                </div>
-            {% endif %}
+{% block contents%}
+<div class="formdiv">
+    <form action="{% url 'signup_view' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}  {# CSRF 対策 #} 
+        
+        {% for elem in form %}
+        <div class="field-container">{{elem.label_tag}}{{elem}}</div>
+        {{ elem.non_field_errors }}
 
-            {% endfor %}
+        {% if elem.errors %}
+            <div class="errorlist">
+                {% for error in elem.errors %}
+                    ★ {{ error }}<br>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-            <p class="buttons">
-                <input type="submit" value="submit" id="button1">
-            </p>
-        </form>
-        <form action="{% url 'index' %}">
-            <p class="buttons">
-                <input type="submit" value="Back" id="button2">
-            </p>
-        </form>
-    </div>
-</body>
-{# https://blog.narito.ninja/detail/98/ #}
-</html>
+        {% endfor %}
+
+        <p class="buttons">
+            <input type="submit" value="submit" id="button1">
+        </p>
+    </form>
+    <form action="{% url 'index' %}">
+        <p class="buttons">
+            <input type="submit" value="Back" id="button2">
+        </p>
+    </form>
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

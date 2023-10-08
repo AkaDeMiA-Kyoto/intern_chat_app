@@ -1,236 +1,199 @@
-from django.shortcuts import redirect, render
-from django.contrib.auth.password_validation import validate_password # 以下追記箇所(6～7行目)
-from django.core.exceptions import ValidationError
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views import View
+from django.contrib.auth.views import LogoutView, LoginView, PasswordChangeView
+from django.views.generic.base import TemplateView
+from django.views.generic.edit import UpdateView, CreateView, FormMixin
+from django.views.generic import ListView
 from .models import *
 from .forms import *
-from django.contrib.auth.views import LoginView
 from django.db.models import Q, F, OuterRef, Subquery
-from PIL import Image
-from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import login_required
-from django.conf import settings
-
-def trimming_square(imgpath):
-    img = Image.open(imgpath)
-    new_size = min(img.width, img.height)
-    center_x = int(img.width / 2)
-    center_y = int(img.height / 2)
-
-    img_crop = img.crop((center_x - new_size / 2, center_y - new_size / 2, center_x + new_size / 2, center_y + new_size / 2))
-    img_crop.save(imgpath)
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 
+class SignupView(CreateView):
+    model = CustomUser
+    template_name = 'myapp/signup.html'
+    form_class = myUserForm
+    success_url = "/"
 
-def index(request):
-    print("user: ",request.user.username)
-    if request.user.username == '':
-        return render(request, "myapp/index.html")
-    else:
-        return friends(request)
+class FriendView(LoginRequiredMixin, FormMixin, ListView):
+    template_name = 'myapp/friends.html'
+    model = CustomUser
+    context_object_name = 'friends'
+    form_class = SearchFriendForm
+    success_url = 'friends'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        search_form = SearchFriendForm()
+
+        context = context | {"id": self.request.user.id, "username": self.request.user.username, "search_form": search_form}
+        return context
     
-def logout_view(request):
-    logout(request)
-    return index(request)
+    def get_queryset(self, **kwargs):
+        try:
+            search_name = self.request.POST.get('username')
+        except:
+            search_name = None
 
-def signup_view(request):
-    if request.POST:
-        form = myUserForm(request.POST, request.FILES)
-
-        if form.is_valid():
-            print("************VALID*********************")
-            new_username = request.POST["username"]
-
-            data = form.cleaned_data
-
-            form.save()
-            new_user = CustomUser.objects.get(username=new_username)
-            picpath = new_user.image.url
-            trimming_square("./"+picpath[1:]) # 正方形じゃない画像はトリミングする
-
-            return render(request, "myapp/index.html")
-
-        else:
-            print("************INVALID*********************")
-            return render(request, "myapp/signup.html", {'form': form})
-
-    else:
-        print("******************NOT POST*****************")
-        form = myUserForm()
-        return render(request, "myapp/signup.html", {'form': form})
-
-def login_view(request):
-    if request.POST:
-        form = myLoginForm(request, data=request.POST)
-
-        if form.is_valid():
-            print("************Login Sccess*********************")
-            username = request.POST["username"]
-            user = CustomUser.objects.get(username=username)
-            login(request, form.get_user())
-            return friends(request)
-
-        else:
-            print("************Login Failed*********************")
-            return render(request, "myapp/login.html", {'form': form})
-    
-    else:
-        print("******************NOT POST *****************")
-        form = myLoginForm()
-        return render(request, "myapp/login.html", {'form': form})
-
-@login_required
-def friends(request):
-    myid = request.user.id
-    myusername = request.user.username
-
-    lastmsg = Talk_content.objects.filter(
-            Q(user_to=request.user, user_from=OuterRef('pk'))|Q(user_to=OuterRef('pk'), user_from=request.user)
-        ).order_by("-time")
-    user_li = list(
-        CustomUser.objects.filter(~Q(username=myusername) & ~Q(username='admin')).annotate(
-            lasttalk = Subquery(lastmsg.values('chat_content')[:1]),
-        )
-    )
-
-    search_form = SearchFriendForm()
-    return render(request, "myapp/friends.html", {"id": myid, "username": myusername, "friends": user_li, "search_form": search_form})
-
-@login_required
-def search_friends(request):
-    myid = request.user.id
-    myusername = request.user.username
-
-    if request.POST:
-        search_form = SearchFriendForm(request.POST)
-
-        search_name = request.POST["username"]
-        print("*****search_name : ", search_name)
-        
         lastmsg = Talk_content.objects.filter(
-            Q(user_to=request.user, user_from=OuterRef('pk'))|Q(user_to=OuterRef('pk'), user_from=request.user)
+            Q(user_to=self.request.user, user_from=OuterRef('pk'))|Q(user_to=OuterRef('pk'), user_from=self.request.user)
         ).order_by("-time")
-        user_li = list(
-            CustomUser.objects.filter(Q(username__icontains=search_name)).annotate(
+
+        if search_name:
+            user_li = CustomUser.objects.filter(
+                Q(username__icontains=search_name)& ~Q(username='admin')
+                & ~Q(username=self.request.user.username) & ~Q(username='admin') 
+                ).annotate(
                 lasttalk = Subquery(lastmsg.values('chat_content')[:1]),
             )
-        )
+            return user_li
+        else:
+            user_li = CustomUser.objects.filter(
+                ~Q(username=self.request.user.username) & ~Q(username='admin') 
+                ).annotate(
+                lasttalk = Subquery(lastmsg.values('chat_content')[:1]),
+            )
+            return user_li
+        
+    def post(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        search_form = SearchFriendForm(request.POST)
+        if search_form.is_valid():
+            return self.form_valid(search_form)
+        else:
+            return self.form_invalid(search_form)
+        
+    def form_valid(self, form, **kwargs):
+        # フォームが有効な場合の処理
 
-        return render(request, "myapp/friends.html", {"id": myid, "username": myusername, "friends": user_li, "search_form": search_form})
+        # 特定のフィールドのデータを取得
+        search_name = form.cleaned_data['username']
 
-    return friends(request)
+        # contextに追加
+        context = self.get_context_data(**kwargs, object_list=None,)
+        context['search_name'] = search_name
 
+        return self.render_to_response(context)
 
-@login_required
-def talk_room(request, id1, id2):
-    user1 = CustomUser.objects.get(id=id1)
-    user2 = CustomUser.objects.get(id=id2)
+class TalkroomView(LoginRequiredMixin, FormMixin, ListView):
+    template_name = 'myapp/talk_room.html'
+    model = Talk_content
+    context_object_name = 'messages'
+    form_class = ChatInputForm
 
-    if request.POST:
+    def form_valid(self, form, **kwargs):
+        id1, id2 = self.kwargs['id1'], self.kwargs['id2']
+        url = reverse('talk_room', args=[id1, id2])
+
+        return HttpResponseRedirect(url)
+    
+    def get_context_data(self, **kwargs):
+        id1, id2 = self.kwargs['id1'], self.kwargs['id2']
+        user1 = CustomUser.objects.get(id=id1)
+        user2 = CustomUser.objects.get(id=id2)
+
+        context = super().get_context_data(**kwargs)
+        form = ChatInputForm()
+
+        context = context | {"I": user1, "You": user2, "form": form}
+        return context
+    
+    def get_queryset(self):
+        id1, id2 = self.kwargs['id1'], self.kwargs['id2']
+        user1 = CustomUser.objects.get(id=id1)
+        user2 = CustomUser.objects.get(id=id2)
+
+        search_name = self.request.POST.get('username')
+        lastmsg = Talk_content.objects.filter(
+            Q(user_to=self.request.user, user_from=OuterRef('pk'))|Q(user_to=OuterRef('pk'), user_from=self.request.user)
+        ).order_by("-time")
+
+        messages = Talk_content.objects.filter(
+                (Q(user_to=user1, user_from=user2) | Q(user_to=user2, user_from=user1)) & ~Q(chat_content="") 
+            ).order_by('time').values('time', 'user_from__username', 'user_to__username', 'chat_content') 
+        
+        return messages
+    
+    def post(self, request, *args, **kwargs):
+        id1, id2 = self.kwargs['id1'], self.kwargs['id2']
+        user1 = CustomUser.objects.get(id=id1)
+        user2 = CustomUser.objects.get(id=id2)
+
         chat_content = request.POST["chat_content"]
         new_message = ChatInputForm({"user_from": user1, "user_to": user2, "chat_content": chat_content})
         if new_message.is_valid():
-            print("***MESSAGE VALID******")
             new_message.save()
+            return self.form_valid(new_message)
         else:
-            print("***MESSAGE INAVLID***")
+            return self.form_invalid(new_message)
 
-    # talkroom 表示
-    messages= list(
-        Talk_content.objects.filter(
-            (Q(user_to=user1, user_from=user2) | Q(user_to=user2, user_from=user1)) & ~Q(chat_content="") 
-        ).order_by('time').values('time', 'user_from__username', 'user_to__username', 'chat_content') 
-    )
-    form = ChatInputForm()
-    data = {
-        "I": user1,
-        "You": user2,
-        "messages": messages,
-        "form": form
-    }
-    return render(request, "myapp/talk_room.html", data)
+class SettingsView(LoginRequiredMixin, TemplateView):
+    template_name = "myapp/setting.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-@login_required
-def setting(request, what):
-    id = request.user.id
-    data = {"id": id, "what": what}
-    now_user = CustomUser.objects.get(id=id)
-    username = now_user.username
+        context = context | {"content": "Username", "pk": self.request.user.id}
+        return context
 
-    # default
-    if what == 0:
-        return render(request, "myapp/setting.html", data | {"content": "Username"})
+class ChangeNameView(LoginRequiredMixin, UpdateView):
+    template_name = "myapp/setting_change_obj.html"
+    model = CustomUser
+    form_class = ChangeUserForm
+    success_url = '/change_complete'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context = context | {"content": "Username", "url_name": "change_name", "pk": self.request.user.id}
+        return context
+
+class ChangeEmailView(LoginRequiredMixin, UpdateView):
+    template_name = "myapp/setting_change_obj.html"
+    model = CustomUser
+    form_class = ChangeEmailForm
+    success_url = '/change_complete'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context = context | {"content": "Username", "url_name": "change_email", "pk": self.request.user.id}
+        return context
+
+class ChangeIconView(LoginRequiredMixin, UpdateView):
+    template_name = "myapp/setting_change_obj.html"
+    model = CustomUser
+    form_class = ChangeIconForm
+    success_url = '/change_complete'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context = context | {"content": "Username", "url_name": "change_icon", "pk": self.request.user.id}
+        return context
+
+class MyPasswordChangeView(PasswordChangeView):
+    template_name = "myapp/setting_change_obj.html"
+    model = CustomUser
+    form_class = ChangePWForm
+    success_url = '/change_complete'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context = context | {"content": "Username", "url_name": "change_pw", "pk": self.request.user.id}
+        return context
     
-    # change username
-    if what == 1: 
-        if request.POST:
-            new = request.POST["username"]
-            form = ChangeUserForm(request.POST)
 
-            if form.is_valid():
-                print("********VALID*********")
-                now_user.username = new
-                now_user.save()
-                return render(request, "myapp/change_complete.html", data | {"content": "Username"})
-            else:
-                return render(request, "myapp/setting_change.html", data | {"form": form, "content": "Username"})
-        else:
-            form = ChangeUserForm()
-            return render(request, "myapp/setting_change.html", data | {"form": form, "content": "Username"})
-    
-    # change email address
-    if what == 2: 
-        if request.POST:
-            new = request.POST["email"]
-            form = ChangeEmailForm(request.POST)
-
-            if form.is_valid():
-                print("********VALID*********")
-                now_user.email = new
-                now_user.save()
-                return render(request, "myapp/change_complete.html", data | {"content": "Email"})
-            else:
-                return render(request, "myapp/setting_change.html", data | {"form": form, "content": "Email"})
-        else:
-            form = ChangeEmailForm()
-            return render(request, "myapp/setting_change.html", data | {"form": form, "content": "Email"})
-
-    # change icon   
-    if what == 3: 
-        if request.POST:
-            new = request.FILES["image"]
-            form = ChangeIconForm(request.POST, request.FILES)
-
-            if form.is_valid():
-                print("********VALID*********")
-                now_user.image = new
-                now_user.save()
-                picpath = now_user.image.url
-                # trimming_square("./"+picpath[1:]) # 正方形じゃない画像はトリミングする
-                return render(request, "myapp/change_complete.html", data | {"content": "Icon"})
-            else:
-              return render(request, "myapp/setting_change.html", data | {"form": form, "content": "Icon"})
-        else:
-            form = ChangeIconForm()
-            return render(request, "myapp/setting_change.html", data | {"form": form, "content": "Icon"})
-
-        pass
-    # change password
-    if what == 4:
-        form = ChangePWForm(user=now_user, data=request.POST)
-        if request.POST:
-            print(request.POST, request.user,username)
-
-            if form.is_valid():
-                print("********VALID*********")
-                form.save()
-                return render(request, "myapp/change_complete.html", data | {"content": "Password"})
-            else:
-                print("********INVALID*********")
-                return render(request, "myapp/setting_change.html", data | {"form": form, "content": "Password"})
-
-        else:
-            form = ChangePWForm(user=now_user)
-            return render(request, "myapp/setting_change.html", data | {"form": form, "content": "Password"})
-
-    return render(request, "myapp/setting.html", data)
+index = TemplateView.as_view(template_name = 'myapp/index.html')
+logout_view = LogoutView.as_view(template_name = 'myapp/index.html')
+signup_view = SignupView.as_view()
+login_view = LoginView.as_view(template_name = 'myapp/login.html')
+friends = FriendView.as_view()
+talk_room = TalkroomView.as_view()
+setting = SettingsView.as_view()    
+change_name = ChangeNameView.as_view()
+change_email = ChangeEmailView.as_view()
+change_icon = ChangeIconView.as_view()
+change_pw = MyPasswordChangeView.as_view()

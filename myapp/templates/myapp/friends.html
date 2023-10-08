@@ -1,76 +1,41 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/friends.css' %}">
+{% endblock %}
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat-App Friend</title>
-    <link rel="stylesheet" href='../../static/myapp/css/friends.css'>
-</head>
+{% block title %}Chat-App Friend{% endblock %}
+{% block head_title%}Friend{% endblock %}
 
-<header>
-    <h1>
-        Friend
-    </h1>
-</header>
-
-<body>
-    <div class="top"><div class="youare">You are {{ username }}</div>
-    <br>
-        <!-- 検索機能づくり -->
-        <form class="message_form" action="{% url 'search_friends' %}" method="POST">  
-            {% csrf_token %}  {# CSRF 対策 #} 
-        
-            <p class="field-container">{{search_form.username}}</p>
-
-            <p class="search_button"><input type="submit" value="search" id="button1"></p>
-        </form>
-    </div>
-
-    {% comment %}
-    {% for user in friends %}
-    <form action="{% url 'talk_room' id user.id %}" method="GET">
+{% block contents%}
+<div class="top"><div class="youare">You are {{ username }}</div>
+<br>
+    <!-- 検索機能づくり -->
+    <form class="message_form" action="{% url 'friends' %}" method="POST">  
         {% csrf_token %}  {# CSRF 対策 #} 
-        <div class="list">
-            <div class="icon_p"><input action="{% url 'talk_room' id user.id %}" type="image" src="{{ user.image.url }}" alt="go" id="icon"></div>
-            <div class="name">{{ user.username }}</div>
+    
+        <p class="field-container">{{search_form.username}}</p>
+
+        <p class="search_button"><input type="submit" value="search" id="button1"></p>
+    </form>
+</div>
+
+<!-- aタグ使ってみる -->
+{% for user in friends %}
+<a href="{% url 'talk_room' id user.id %}">
+    <div class="list">
+        <div class="icon_p"><img src="{{ user.image.url }}" alt="go" id="icon"></div>
+        <div class="name">{{ user.username }}</div>
+        {% if user.lasttalk %}
             <div class="name">{{ user.lasttalk }}</div>
-        </div>
-    </form>
-    {% endfor %}
-    {% endcomment %}
+        {% endif %}
+    </div>
+</form>
+{% endfor %}
 
-
-<p class="box"><a href="" id="item"></a></p>
-<img src="" alt=""><span>   </span><span></span>
-    <!-- aタグ使ってみる -->
-    {% for user in friends %}
-    <a href="{% url 'talk_room' id user.id %}">
-        <div class="list">
-            <div class="icon_p"><img src="{{ user.image.url }}" alt="go" id="icon"></div>
-            <div class="name">{{ user.username }}</div>
-            {% if user.lasttalk %}
-                <div class="name">{{ user.lasttalk }}</div>
-            {% endif %}
-        </div>
-    </form>
-    {% endfor %}
-
-    <form action="{% url 'logout' %}">
-        <p class="buttons">
-            <input type="submit" value="Log out" id="button2">
-        </p>
-    </form>
-</body>
-<footer>
-    <span>
-        <form action="{% url 'friends' %}">
-            <input type="submit" value="Friends">
-        </form>
-    </span>
-    <span>
-        <form action="{% url 'setting' 0 %}">
-            <input type="submit" value="Settings">
-        </form>
-    </span>
-</footer>
-</html>
+<form action="{% url 'logout' %}">
+    <p class="buttons">
+        <input type="submit" value="Log out" id="button2">
+    </p>
+</form>
+{% endblock %}

@@ -1,39 +1,20 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}">
+{% endblock %}
+
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat-App Setting</title>
-    <link rel="stylesheet" href='../../static/myapp/css/setting.css'>
-</head>
+{% block title %}Chat-App Setting{% endblock %}
+{% block head_title%}Setting{% endblock %}
 
-<header>
-    <h1>
-       Setting
-    </h1>
-</header>
-
-<body>
-    <div class="button">
-        <form action="{% url 'setting' 1 %}" class="setting-button"><input type="submit" value="ユーザー名変更"></form>
-        <form action="{% url 'setting' 2 %}" class="setting-button"><input type="submit" value="メールアドレス変更"></form>
-        <form action="{% url 'setting' 3 %}" class="setting-button"><input type="submit" value="アイコン変更"></form>
-        <form action="{% url 'setting' 4 %}" class="setting-button"><input type="submit" value="パスワード変更"></form>
-        <form action="{% url 'index' %}" class="setting-button"><input type="submit" value="ログアウト"></form>
-    </div>
-</body>
-
-<footer>
-    <span>
-        <form action="{% url 'friends' %}">
-            <input type="submit" value="Friends">
-        </form>
-    </span>
-    <span>
-        <form action="{% url 'setting' 0 %}">
-            <input type="submit" value="Settings">
-        </form>
-    </span>
-</footer>
-
-</html>
+{% block contents%}
+<div class="button">
+    <form action="{% url 'change_name' pk %}" class="setting-button"><input type="submit" value="ユーザー名変更"></form>
+    <form action="{% url 'change_email' pk %}" class="setting-button"><input type="submit" value="メールアドレス変更"></form>
+    <form action="{% url 'change_icon' pk %}" class="setting-button"><input type="submit" value="アイコン変更"></form>
+    <form action="{% url 'change_pw' pk %}" class="setting-button"><input type="submit" value="パスワード変更"></form>
+    <form action="{% url 'logout'%}" class="setting-button"><input type="submit" value="ログアウト"></form>
+</div>
+{% endblock %}

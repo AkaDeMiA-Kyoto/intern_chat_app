@@ -7,7 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
 from allauth.account.forms import SignupForm
 
-class myUserForm(SignupForm):
+class myUserForm(UserCreationForm):#(SignupForm):
     image = forms.ImageField()
 
     def __init__(self, *args, **kwargs):
@@ -15,9 +15,9 @@ class myUserForm(SignupForm):
         self.label_suffix = " "
         print()
 
-    # class Meta:
-    #     model = CustomUser
-    #     fields = ("username", "email", "password1", "password2", "image")
+    class Meta:
+        model = CustomUser
+        fields = ("username", "email", "password1", "password2", "image")
 
 class myLoginForm(AuthenticationForm):
     error_messages = {
