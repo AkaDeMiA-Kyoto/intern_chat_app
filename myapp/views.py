@@ -43,7 +43,7 @@ class FriendView(LoginRequiredMixin, FormMixin, ListView):
 
         if search_name:
             user_li = CustomUser.objects.filter(
-                Q(username__icontains=search_name)& ~Q(username='admin')
+                (Q(username__icontains=search_name) | Q(email__icontains=search_name))
                 & ~Q(username=self.request.user.username) & ~Q(username='admin') 
                 ).annotate(
                 lasttalk = Subquery(lastmsg.values('chat_content')[:1]),

@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 class CustomUser(AbstractUser):
-    image = models.ImageField(upload_to=None, height_field=None, width_field=None)
+    image = models.ImageField(upload_to=None, height_field=None, width_field=None, default='None/default.png')
 
 class Talk_content(models.Model):
     #users = models.ForeignKey(Talk_content, on_delete=models.CASCADE)
