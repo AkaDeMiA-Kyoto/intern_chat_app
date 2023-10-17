@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 
 from django.contrib.auth.forms import UserCreationForm
 
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView 
 
 from .forms import (
     SignUpForm, 
@@ -13,7 +13,8 @@ from .forms import (
     PasswordChangeForm,
     UsernameResetForm,
     MailResetForm,
-    IconResetForm
+    IconResetForm,
+    FriendSearchForm,
 )
 
 from django.contrib.auth import get_user_model, login, logout
@@ -72,7 +73,15 @@ def login_view(request):
 def friends(request):
     user = request.user
     friends = CustomUser.objects.exclude(id=user.id)
-    
+    searchForm = FriendSearchForm(request.GET)
+    if request.method == "GET":
+        if searchForm.is_valid():
+            keyword = searchForm.cleaned_data['keyword']
+            friends = friends.filter(username__contains=keyword)
+        else:
+            searchForm = FriendSearchForm()
+            friends = friends.all()            
+
     info = []
     info_message = []
     info_no_message = []
@@ -94,6 +103,8 @@ def friends(request):
   
     context={
         "info":info,
+        'friends': friends,
+        'searchForm': searchForm,
     }
     return render(request, "myapp/friends.html", context)
 
@@ -183,7 +194,7 @@ def icon_change(request):
         form = IconResetForm(instance=user)
     
     elif request.method == "POST":
-        form = IconResetForm(request.POST, instance=user)
+        form = IconResetForm(request.POST, request.FILES,  instance=user)
         if form.is_valid():
             form.save()
             return redirect(to="icon_change_done")

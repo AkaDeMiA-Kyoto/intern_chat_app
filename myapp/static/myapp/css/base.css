@@ -4,6 +4,7 @@ html{
 }
 body{
     margin: 0;
+
 }
 
 /* ヘッダー */
@@ -46,6 +47,7 @@ body{
     height: 64px;
     text-align: center;
     border-top: solid 1px #9b9b9b;
+    background-color: white;
 }
 .footer-container__item{
     display: flex;
@@ -79,3 +81,5 @@ body{
     font-size: 0.8rem;
     color: #000;
 }
+
+

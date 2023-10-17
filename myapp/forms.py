@@ -41,3 +41,8 @@ class IconResetForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ("icon",)
+
+class FriendSearchForm(forms.Form):
+    keyword = forms.CharField(
+        label="検索",
+    )

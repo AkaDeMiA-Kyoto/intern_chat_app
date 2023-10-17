@@ -15,6 +15,12 @@
 
 
     {% block content %}
+
+    <form class="friend-search">
+        {{ searchForm }}
+        <button type="submit">検索</button>
+    </form>
+
         {% for friend, talk, time  in info %}
         <a class="friend_link" href="{% url 'talk_room' friend.id %}">
         <li class="friend_box">  
@@ -27,7 +33,6 @@
         </li>
         </a>
         
-       
         {% endfor %}
     {% endblock %}
 
