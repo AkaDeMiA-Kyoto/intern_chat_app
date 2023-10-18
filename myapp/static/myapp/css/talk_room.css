@@ -1,0 +1,119 @@
+* {
+    text-decoration: none;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+header {
+    width: 100vw;
+    height: 8vh;
+    display: flex;
+    border-bottom: solid 1px black;
+    background-color:#eeeeee;
+
+}
+
+.small_space {
+    width: 5vw;
+}
+
+.arrow {
+    width: 13vw;
+    text-align: center;
+    font-size: 55px;
+    line-height: 8vh;
+    color: black;
+    font-weight: bold;
+}
+
+.friend_name {
+    width: 30vw;
+    text-align: center;
+    font-size: 55px;
+    line-height: 8vh;
+    font-weight: bold;
+}
+
+.renew_text {
+    width: 13vw;
+    height: 4vh;
+    text-align: center;
+    font-size: 40px;
+    border: solid 4px #9b9b9b;
+    border-radius: 30px;
+    line-height: 4vh;
+    color: #9b9b9b;
+}
+
+.space {
+    height: 2vh;
+}
+
+.large_space {
+    width: 20vw;
+}
+
+
+.sender_name {
+    display: flex;
+    font-size: 30px;
+}
+
+.content_and_time {
+    display: flex;
+}
+
+.talk_content {
+    width: 78vw;
+    font-size: 30px;
+}
+
+.time {
+    width: 20vw;
+    font-size: 30px;
+}
+
+.talk_log {
+    border-bottom: solid 1px #9b9b9b;
+}
+
+.smaller_space {
+    width: 2vw;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+}
+
+form {
+    height: 5vh;
+    width: 100vw;
+    background-color: #eeeeee;
+    display: flex;
+    align-items: center;
+}
+
+textarea {
+    height: 3vh;
+    width: 85vw;
+    border-radius: 30px;
+    border: solid black;
+    font-size: 2vh;
+}
+
+button {
+    border-radius: 25px;
+    height: 3vh;
+    width: 10vw;
+    font-size: 30px;
+    border: solid 4px #9b9b9b;
+}
+
+.smallest_space {
+    width: 2vw;
+}
+
+.edge {
+    width: 1vw;
+}

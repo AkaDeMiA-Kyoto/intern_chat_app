@@ -1,8 +1,10 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from .forms import SignupForm, CustomAuthenticationForm, MessageForm
 from django.contrib.auth.decorators import login_required
 from .models import CustomUser, Message
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 
 
 def index(request):
@@ -60,12 +62,6 @@ def friends(request):
         else:   #トークしていない友達の処理
             nontalk_friend_list.append(friend)
             id_list.append(friend.id)
-    """sorted(time_list, reverse=True)     #時刻だけをソート
-    friend_info = []
-    for time in time_list:
-        for friend in temp_friend_info:
-            if friend.time == time:
-                friend_info.append(friend)      #時刻順に並べる"""
     friend_info = sorted(temp_friend_info, key=lambda x: x["time"], reverse=True)
     sorted(id_list, reverse=True)       #登録順にソート
     nontalk_friend_info = []
@@ -126,12 +122,73 @@ def talk_room(request, friend_id):
                     talk_context = past_message.message
                     time = past_message.time
                     talk_log.append({"sender_name":sender_name, "talk_context":talk_context, "time":time})
-            form = MessageForm(initial=initials)
-        return render(request, "myapp/talk_room.html", {**context, "form":form, "talk_log":talk_log})
+            return redirect("talk_room", friend_id)
 
 
 @login_required
 def setting(request):
     return render(request, "myapp/setting.html")
+
+
+class logout(LoginRequiredMixin, LogoutView):
+    template_name = "myapp/index.html"
+
+
+class passwordchange(LoginRequiredMixin, PasswordChangeView):
+    success_url = reverse_lazy("myapp:password_change_done")
+    template_name = "myapp/password.html"
+
+
+@login_required
+def username(request):
+    if request.method == "GET":
+        form = SignupForm()
+        return render(request, "myapp/username.html", {"form": form}) #formを描画
+    if request.method == "POST":
+        old_data = CustomUser.objects.get(id=request.user.id)
+        old_data.username = request.POST.get("username")
+        old_data.save()
+        return render(request, "myapp/username_change_done.html")
+    
+@login_required
+def username_change_done(request):
+    return render(request, "myapp/username_change_done.html")
+
+@login_required
+def email(request):
+    if request.method == "GET":
+        form = SignupForm()
+        return render(request, "myapp/email.html", {"form": form}) #formを描画
+    if request.method == "POST":
+        old_data = CustomUser.objects.get(id=request.user.id)
+        old_data.email = request.POST.get("email")
+        old_data.save()
+        return render(request, "myapp/email_change_done.html")
+
+@login_required
+def email_change_done(request):
+    return render(request, "myapp/email_change_done.html")
+
+@login_required
+def image(request):
+    old_data = CustomUser.objects.get(id=request.user.id)
+    context = {
+        "image":old_data.image
+    }
+    if request.method == "GET":
+        form = SignupForm()
+        return render(request, "myapp/image.html", {**context, "form": form})
+    if request.method == "POST":
+        old_data.image = request.FILES.get("image")
+        old_data.save()
+        return render(request, "myapp/image_change_done.html")
+
+@login_required
+def image_change_done(request):
+    return render(request, "myapp/image_change_done.html")
+
+
+
+
 
 

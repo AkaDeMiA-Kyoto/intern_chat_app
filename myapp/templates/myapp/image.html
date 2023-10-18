@@ -1,0 +1,20 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href=static/myapp/css/image.css>
+{% endblock %}
+
+{% block header-title %}
+アイコン変更
+{% endblock %}
+
+{% block content %}
+現在:{{image}}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    変更:{{form.image}}
+    現在の画像:<img src="media/{{image}}">
+    <button type='submit'>変更</button>
+</form>
+{% endblock %}

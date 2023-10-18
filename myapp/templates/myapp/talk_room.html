@@ -3,31 +3,55 @@
     <head>
         <meta charset="UTF-8">
         <title>talk_room</title>
-        <link rel="stylesheet" href="static/myapp/css/talk_room.css">
+        <link rel="stylesheet" href="../../static/myapp/css/talk_room.css">
     </head>
     <body>
-        <header> {# 仮ヘッダー #}
-            <a href="../../friends">&lt;</a>
-            {{friend_name}}
-            <a href="">更新</a>
+        <header>
+            <div class="small_space"></div>
+            <a class="arrow" href="../../friends">&lt;</a>
+            <div class="large_space"></div>
+            <div class="friend_name">{{friend_name}}</div>
+            <div class="large_space"></div>
+            <a class="renew" href="">
+                <div class="space"></div>
+                <div class="renew_text">
+                     更新 
+                </div>
+                <div class="space"></div>
+            </a>
+            <div class="small_space"></div>
         </header>
+        <br>
             {% for past_message in talk_log %}
-                >{{past_message.sender_name}}
-                {{past_message.talk_context}}
-                {{past_message.time}}
+                <div class="talk_log">
+                    <div class="sender_name">
+                        <div class="smaller_space"></div>
+                        >{{past_message.sender_name}}
+                    </div>
+                    <div class="content_and_time">
+                        <div class="smaller_space"></div>
+                        <div class="talk_content">
+                            {{past_message.talk_context}}
+                        </div>
+                        <div class="time">
+                            {{past_message.time | date:'n/d H:i'}}
+                        </div>
+                    </div> 
                 <br>
+                </div>
             {% endfor %}
         <footer>
             <form method="post">
+                <div class="smallest_space"></div>
                 {% csrf_token %}
                 {{ form.non_field_errors }}
-                {% for field in form %}
-                {{field.label}}
-                {{ field }}
-                {{ field.errors }}
-                <hr>
-                {% endfor %}
+                {{ form.message }}
+                {{ form.sender.as_hidden }}
+                {{ form.receiver.as_hidden }}
+                {{ form.time.as_hidden }}
+                <div class="smallest_space"></div>
                 <button type='submit'>送信</button>
+                <div class="edge"></div>
             </form>
         </footer>
     </body>
