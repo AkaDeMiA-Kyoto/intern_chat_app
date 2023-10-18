@@ -1,1 +1,18 @@
-I
+{% load static%}
+<!DOCTYPE html>
+    <head>
+        <meta charset="UTF-8">
+        <title>チャットアプリ/ログイン</title>
+        <link rel="stylesheet" href="{% static 'myapp/css/index.css' %}"></link>
+    </head>
+
+    <header></header>
+
+    <body>
+        <div class="all-bottons">
+            <a href="{% url 'login_view'%}" class="botton">ログイン</a>
+           <a href="{% url 'signup_view'%}" class="botton">会員登録</a>
+        </div>
+    </body>
+    
+    <footer></footer>
