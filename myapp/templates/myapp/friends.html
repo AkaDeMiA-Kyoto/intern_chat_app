@@ -1,12 +1,38 @@
 {% extends "myapp/base.html" %}
-<!--staticはcssなど、djangoのような動的ではない、静的なファイル-->
 {% load static %}
 
 {% block extra_style %}
+{{ block.super }} {# 親テンプレートのextra_styleブロックを継承 #}
 <link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
 {% endblock %}
 
-{% block header_title %}友達{% endblock %}
+{% block header %}
+<header class="header">
+    <div class="header-container">
+        <span class="header-container__title">
+            {% block header_title %}友達{% endblock %}
+        </span>
+    </div>
+    <div class="header-container">
+        <ul>
+            {% if user.is_authenticated %}
+            <li>
+                <a>ユーザ名：{{ user.get_username }} </a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    <div>
+        <form action="">
+        <!-- viewsでkeywordに関する処理を施しているから、後は何がkeywordかをinput nameで指定すればよし -->
+            <input name="keyword" type="text">
+            <button type="submit">検索</button>
+        </form>
+        <!-- Cookieにログイン情報が残ってるからただのfriendページに戻ってもログイン情報は残っている -->
+        <a href="{% url 'friends' %}">戻る</a>
+    </div>
+
+{% endblock %}
 
 {% block content %}
 <div class="friends">
@@ -23,16 +49,16 @@
             friendsではなく、作成したtalk_listでforをまわす
             ＞ここでどういうリストなら表示ができるかを考えてリストの項目を設計
         -->
-        {% for friend, talk, time in info %}
+        {% for friend, latest_message, time in info %}
         <a class="friend-list__link" href="{% url 'talk_room' user_id=friend.id %}">
         <li class="friend-list__item">
             <!-- それぞれが別のトーク画面に飛ぶようにリンクをはる -->
                 <img class="friend-list__usericon" src="{{ friend.img.url }}">
                 <div class="friend-list__username">{{ friend.username }}</div>
                 <!-- ここから最新のトークを表示する部分 -->
-                {% if talk %}
+                {% if latest_message %}
                 <div class="friend-list__talk">
-                    <p class="friend-list__content">{{ talk }}</p>
+                    <p class="friend-list__content">{{ latest_message }}</p>
                     <p class="friend-list__time">{{ time|date:"n/j H:i" }}</p>
                 </div>
                 {% else %}

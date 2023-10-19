@@ -10,7 +10,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import (
     TemplateView, ListView
 )
-from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic.edit import BaseCreateView
 # もし同じ名前で違うLoginViewをimportしたいとき、後ろに'as 名前'で競合しなくなる
@@ -36,7 +35,10 @@ from .models import (
 )
 from django.db.models.functions import Coalesce
 from django.contrib import messages
-
+from functools import reduce
+from operator import and_
+ 
+from django.contrib import messages
 
 # CustomUserにアクセス
 
@@ -47,7 +49,6 @@ User = get_user_model()
 #     login_url='/login'
 
 class Login(LoginView):
-    # templateからmyapp/login.html を探せ
     template_name='myapp/login.html'
     redirect_authenticated_user = True
     # form_classはこの後作成するフォームを指定します
@@ -104,7 +105,6 @@ def signup_view(request):
 
 def friends(request):
     # Djangoのビュー関数内で現在ログインしているユーザーを取得するためのコード
-    # このコードは、ログインしているユーザーに関する情報を取得するために使用される。
     # request オブジェクトの user 属性を通じて、現在のユーザー情報に
     # アクセスしています。user にはログインしているユーザーの情報が含まれる。
     # この情報には、ユーザーの名前、メールアドレス、パスワードなどが含まれる可能性がある。
@@ -112,12 +112,8 @@ def friends(request):
     # ログインしているユーザー以外のすべてのユーザーを取得するためのコード。具体的には、
     # 'User':Djangoの組み込み'User'モデルクラス。これは、ユーザーの認証やセッション管理に使用される。
     # 'User.objects':'User'モデルに関連付けられたデフォルトのクエリセットマネージャ。これを使用してデータベース内のユーザーオブジェクトにアクセスできる。
-    # 'exclude(id=user.id)'：'exclude'メソッドを使用して、条件に合致しないユーザーオブジェクトを取得する。
     # ここでは、ログインしているユーザーのIDと一致するユーザーオブジェクトを取得しないようにしている。
     # 'id=user.id'：ログインしているユーザーのIDに合致するユーザーオブジェクトを指す。
-    # 'exclude(id=user.id)'：この部分により、ログインしているユーザーを除く、ほかのすべてのユーザーオブジェクトが取得される。
-    # つまり、このコードはログインしているユーザー以外のすべてのユーザー(友達)を取得し、'friends'変数に格納している。これにより、'friends'変数にはログインユーザー以外のユーザーオブジェクトが含まれる。
-    # これを用いて友達リストを表示するなどの処理が行えるかも。
     # 'objects'は、Djangoのモデルクラスを操作するためのクエリセットマネージャーを指す。
     # クエリセットマネージャーは、データベースとの対話を行うためのメソッドとクエリを提供する。
     # これにより、データベースからデータを取得、作成、更新、削除するための操作を簡単に行うことができる。
@@ -152,7 +148,21 @@ def friends(request):
     # それを latest_message_time の降順で並べ替え、さらに date_joined の昇順で並べ替えています。
     # つまり、最も最新のメッセージを送信したユーザーが先頭に来るようにソートされたユーザーのリストが得られます。
 
+
+    # ここでviews側のユーザ検索機能を実装しているが、viewでreturnのように何か処理を施したわけではなく、
+    # friendsが何であるかの対象を絞り込んだだけ
+    # friendsが何かを絞り込んでおけば、後の処理は以前に書いてある通りに行われる。
+    keyword  = request.GET.get('keyword')
     friends = CustomUser.objects.exclude(id=user.id)
+
+    if keyword:
+        friends = friends.filter(username__icontains=keyword)
+        
+    # if keyword := request.GET.get('keyword'):でも同じ動作（セイウチ構文）
+    # いらないが、意味的にはこういう場合分け
+    # else:
+    #     friends = friends
+    # search=CustomUser.objects.filter
 
     info = []
     info_have_message = []
@@ -183,8 +193,6 @@ def friends(request):
 
     # 時間順に並び替え
     # operator.itemgetter(2)は３番目の要素(時間情報)を抽出してソートする。
-    # 降順の場合、引数reverse = true
-
 
     context = {
         "info": info,
@@ -192,13 +200,15 @@ def friends(request):
 
     return render(request, "myapp/friends.html", context)
 
-
-    # render はテンプレートをレンダリングするのに使われる関数
     # render(<<HttpRequest>>, テンプレート)
+    
+
 
 class CustomListView(ListView):
     template_name='myapp/friends.html'
     queryset=CustomUser.objects.order_by('date_joined')
+
+
 
 # user_idにより個々のユーザーに対してデータを扱える
 def talk_room(request, user_id):
@@ -302,7 +312,7 @@ def change_profile_picture(request):
 
 def change_password(request):
     return PasswordChangeView.as_view(
-        template_name='myapp/change_password.html',
+        template_name='myapp/password_change.html',
         success_url=reverse_lazy('change_password_done')
     )(request)
 
@@ -310,6 +320,6 @@ def change_password(request):
 def change_password_done(request):
     # messages.success(request, 'パスワードの変更が完了しました')
     return PasswordChangeDoneView.as_view(
-        template_name='myapp/change_password_done.html'
+        template_name='myapp/password_change_done.html'
     )(request)
 

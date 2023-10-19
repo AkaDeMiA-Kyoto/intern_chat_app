@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Password reset done{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <div>
+            <h1>パスワードリセット</h1>
+
+            {% if user.is_authenticated %}
+            {% include "myapp/snippets/already_logged_in.html" }
+            {% endif }
+
+            <p>パスワードリセット用のメールを送信しました</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

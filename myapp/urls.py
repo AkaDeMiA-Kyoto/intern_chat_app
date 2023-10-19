@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from .views import Login
 from django.contrib.auth.views import LogoutView
+from django.urls import include
 # path の第一引数はurlのパターンを表す文字列で、ドメイン部分('http://example.com/')を除いたurlのパス部分に対応。
 # ただし、'/'で始まる必要がある。
 # 第二引数は、このＵＲＬパターンにアクセスされたときに実行されるビュー関数またはクラスを指定。
@@ -20,6 +21,7 @@ urlpatterns = [
     path('change_password_done/', views.change_password_done, name='change_password_done'),
     # path('logout/', LogoutView.as_view(template_name='myapp/logout.html'), name='logout'),
     path('logout/', LogoutView.as_view(next_page='index'), name='logout'),
+    path('myapp/',  include('allauth.urls'))
     ]
 # /<int:user_id>/
 # loginの部分で第２引数に'Login.as_view()'と書いてあって特殊に見えるが、

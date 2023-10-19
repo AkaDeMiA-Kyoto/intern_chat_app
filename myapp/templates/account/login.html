@@ -1,0 +1,29 @@
+{% extends 'account/base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}Log In{% endblock %}
+
+{% block activate_login %}activate{% endblock %}
+
+{% block content %}
+<div class="conttainer">
+    <div class="row">
+        <div class="my-div-style">
+            <h1>ログイン</h1>
+            <form method="post" action="{% url 'account_login' %}">
+                {% csrf_token %}
+
+                <div>
+                    {% bootstrap_form form %}
+                </div>
+                {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+                {% endif %}
+
+                <button type="submit">ログイン</button>
+                <p><a href="{% url 'account_reset_password' %}">パスワードを忘れましたか？</a></p>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

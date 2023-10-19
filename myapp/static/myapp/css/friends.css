@@ -1,0 +1,12 @@
+.friend-list__usericon {
+    position: absolute;
+    /* 縦横の長さを合わせる */
+    height: calc(4rem - 16px);
+    width: calc(4rem - 16px);
+    border: solid 3px #000;
+    border-radius: 50%;
+    float: left;
+    /* ここは調べた方が早い、便利要素object-fit */
+    object-fit: cover;
+    z-index: -1;
+}

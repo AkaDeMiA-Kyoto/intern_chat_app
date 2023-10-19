@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-ozyl(r!*=wht$a7^pp+wp=zg5g96yg5wz!7fwe$gq63874z9##
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['18.182.142.195','127.0.0.1']
 
 
 # Application definition
@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'allauth',
     'allauth.account',
+    'django_bootstrap5',
+    'allauth.socialaccount',
 ]
 
 MIDDLEWARE = [
@@ -60,7 +62,10 @@ ROOT_URLCONF = 'intern.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [], # デフォルトのアプリケーションテンプレートディレクトリを使用
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates')
+            # BASE_DIR / "myapp" / "templates",
+        ], # デフォルトのアプリケーションテンプレートディレクトリを使用
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,7 +87,11 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': 'tsukasa_chat_app',
+        'USER': 'tsukasa',
+        'PASSWORD': 'thisistest',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -135,9 +144,11 @@ MEDIA_ROOT = BASE_DIR / 'media_local'
 
 SITE_ID = 1
 
-LOGIN_URL='login'
+LOGIN_URL='account_login'
 LOGIN_REDIRECT_URL='friends'
 LOGOUT_REDIRECT_URL='/login'
+# ログアウトリンクのクリック一発でログアウトする設定
+ACCOUNT_LOGOUT_ON_GET = True
 
 if os.path.isfile('.env'): # .envファイルが存在しない時にもエラーが発生しないようにする
     env = environ.Env(DEBUG=(bool, False),)
@@ -145,3 +156,28 @@ if os.path.isfile('.env'): # .envファイルが存在しない時にもエラ�
 
     DEBUG = env('DEBUG')
     ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+
+AUTHENTICATION_BACKENDS = (
+    'allauth.account.auth_backends.AuthenticationBackend',
+# 一般ユーザー用(メールアドレス認証)
+    'django.contrib.auth.backends.ModelBackend',
+# 管理サイト用(ユーザー名認証)
+)
+
+# メールアドレス認証に変更する設定
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USERNAME_REQUIRED = False
+
+# サインアップにメールアドレス確認をはさむよう設定
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_REQUIRED = True
+
+# django-allauthが送信するメールの件名に自動付与される接頭辞をブランクにする設定
+ACCOUNT_EMAIL_SUBJECT_PREFIX=''
+
+# デフォルトのメール送信元を設定
+DEFAULT_FROM_EMAIL = os.environ.get('FROM_EMAIL')
+
+
+# django開発入門に書いてたのを外れる
+EMAIL_BACKEND =  'django.core.mail.backends.console.EmailBackend'

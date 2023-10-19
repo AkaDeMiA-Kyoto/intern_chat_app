@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 class CustomUser(AbstractUser):
     img = models.ImageField(default="default_profile_img.jpg", upload_to='../media_local/')
     date_joined = models.DateTimeField(auto_now_add=True)
+    email = models.EmailField(max_length=20)
 # トーク内容を全てdatbaseに保存する形をとる
 # ＞１個のトーク内容に紐づける情報は
 # ＞〇誰が送ったのか
@@ -20,13 +21,10 @@ class CustomUser(AbstractUser):
 # CustomUser モデルから Talk モデルにアクセスする際に talk_from 属性を使用できます。
 # talk_fromとtalk_toはCusTomUserに逆参照できるように紐づけされている。
 class Talk(models.Model):
-    # メッセージ
+
     talk = models.CharField(max_length=500)
-    # 誰から
     talk_from = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="talk_from")
-    # 誰に
     talk_to = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="talk_to")
-    # 時間は
     time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
