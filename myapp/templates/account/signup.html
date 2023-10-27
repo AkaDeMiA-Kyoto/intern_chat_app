@@ -1,0 +1,55 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/edit.css' %}" />
+{% endblock %}
+
+{% block header %}
+    <header class="header">
+        <div class="header-container">
+            <div class='back'><a href='{% url "index" %}' class='back-button'>戻る</a></div>
+            <div class='title'>
+                会員登録
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <form action="{% url 'account_signup' %}" enctype='multipart/form-data' method='post'>
+        <div class='container'>
+            {{ form.non_field_errors }}
+            {% csrf_token %}
+            <div class='form'>
+                {{ form.username }}
+            </div>
+            <div class='form'>
+                {{ form.email }}
+            </div>
+            <div class='form'>
+                {{ form.password1 }}
+            </div>
+            <div class='form'>        
+                {{ form.password2 }}
+            </div>
+            <div class='form'>
+                プロフィール用画像<br>{{ form.icon }}
+            </div>
+            {% if form.errors %}
+            {% for item in form %}
+            <div>
+                {{ item.errors }}
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        {% if redirect_field_value %}
+        <input type='hidden' name='{{ redirect_field_name }}' value='{{redirect_field_value}}' />
+        {% endif %}
+        <div><input type='submit' class='submit-button' value='登録'></div>
+        </form>
+
+{% endblock %}
+
+{% block footer %}{% endblock %}

@@ -10,18 +10,30 @@
 {% block content %}
 <div class="friends">
 
+    <form class="search-form" method="GET">
+        <i class="fas fa-search"></i>
+        {{ form.keyword }}
+        <button class="friends__search-btn" name="friends_search" type="submit">検索</button>
+    </form>
+
     <ul class="friend-list">
 
-        {% for friend, talk, time in info %}
+        {% if is_searched %}
+        <li class="search-text">--検索結果--</li>
+        {% endif %}
+        
+        {% for friend in friends %}
         <a class="friend-list__link" href="{% url 'talk_room' friend.id %}">
         <li class="friend-list__item">
 
             <img class="friend-list__usericon" src="{{ friend.icon.url }}">
             <div class="friend-list__username">{{ friend.username }}</div>
 
-            {% if talk %}
+            
+
+            {% if friend.latest_msg_talk %}
             <div class="friend-list__talk">
-                <p class="friend-list__content">{{ talk }}</p>
+                <p class="friend-list__content">{{ friend.latest_msg_talk }}</p>
                 <p class="friend-list__time">{{ time|date:"n/j H:i" }}</p>
             </div>
             {% endif %}
