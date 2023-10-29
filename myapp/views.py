@@ -6,7 +6,7 @@ from django.db.models import (
     Q, Case, When, F, Max, Subquery, OuterRef, Value
 )
 
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect, render, HttpResponse
 from django.views.generic import (
     TemplateView, ListView
 )
@@ -156,7 +156,7 @@ def friends(request):
     friends = CustomUser.objects.exclude(id=user.id)
 
     if keyword:
-        friends = friends.filter(username__icontains=keyword)
+        friends = friends.filter(Q(username__icontains=keyword) | Q(email__icontains=keyword))
         
     # if keyword := request.GET.get('keyword'):でも同じ動作（セイウチ構文）
     # いらないが、意味的にはこういう場合分け
@@ -218,7 +218,7 @@ def talk_room(request, user_id):
     # 自分➔友達、友達➔自分のトークをすべて取得
     talk = Talk.objects.filter(
         Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-    ).order_by("time")
+    ).order_by("time").select_related('talk_from', 'talk_to')
     # 送信フォーム
     form = TalkForm
 
@@ -323,3 +323,13 @@ def change_password_done(request):
         template_name='myapp/password_change_done.html'
     )(request)
 
+# def is_ajax(request):
+#     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+
+# def ajax_test(request):
+#     if is_ajax(request=request):]
+#         message = "This is ajax"
+#     else:
+#         message = "Not ajax"
+#     return HttpResponse(message)
