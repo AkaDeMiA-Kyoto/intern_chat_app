@@ -21,14 +21,14 @@
         <button type="submit">検索</button>
     </form>
 
-        {% for friend, talk, time  in info %}
+        {% for friend in friends %}
         <a class="friend_link" href="{% url 'talk_room' friend.id %}">
         <li class="friend_box">  
             <img class="friend_icon" src="{{ friend.icon.url }}">
             <div class="friend_name">{{ friend.username }}</p>
-            {% if talk %}
-                <p class="friend_talk">{{ talk }}</p>
-                <p class="friend_time">{{ time|date:"n/j H:i" }}</p>
+            {% if friend.latest_message %}
+                <p class="friend_talk">{{ friend.latest_message }}</p>
+                <p class="friend_time">{{ friend.latest_time|date:"n/j H:i" }}</p>
             {% endif %}
         </li>
         </a>

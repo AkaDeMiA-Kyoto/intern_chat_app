@@ -21,7 +21,7 @@ from django.contrib.auth import get_user_model, login, logout
 
 from .models import CustomUser, Talk
 
-from django.db.models import Q
+from django.db.models import Q, Subquery, OuterRef, F
 
 from django.contrib.auth.decorators import login_required
 
@@ -69,40 +69,33 @@ def login_view(request):
 
     return render(request, "myapp/login.html",context)
 
+
 @login_required
 def friends(request):
     user = request.user
-    friends = CustomUser.objects.exclude(id=user.id)
+    new_message = Talk.objects.filter(
+        Q(talk_from=user, talk_to=OuterRef('pk')) | Q(talk_from=OuterRef('pk'), talk_to=user)
+    ).order_by('-time').values('talk')[:1]
+    new_time = Talk.objects.filter(
+        Q(talk_from=user, talk_to=OuterRef('pk')) | Q(talk_from=OuterRef('pk'), talk_to=user)
+    ).order_by('-time').values('time')[:1]
+    friends = CustomUser.objects.exclude(id=user.id).annotate(
+        latest_message=Subquery(new_message),
+        latest_time=Subquery(new_time)
+    ).order_by(F('latest_time').desc(nulls_last=True))
     searchForm = FriendSearchForm(request.GET)
     if request.method == "GET":
         if searchForm.is_valid():
             keyword = searchForm.cleaned_data['keyword']
-            friends = friends.filter(username__contains=keyword)
+            friends = friends.filter(
+                Q(username__contains=keyword) | Q(email__contains=keyword)
+                )
         else:
             searchForm = FriendSearchForm()
             friends = friends.all()            
 
-    info = []
-    info_message = []
-    info_no_message = []
-
-    for friend in friends:
-        new_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-        ).order_by('time').last()
-
-        if new_message:
-            info_message.append([friend, new_message.talk, new_message.time])
-        else:
-            info_no_message.append([friend, None, None])
-    
-    info_message = sorted(info_message, key=operator.itemgetter(2),reverse=True)
-  
-    info.extend(info_message)
-    info.extend(info_no_message)
   
     context={
-        "info":info,
         'friends': friends,
         'searchForm': searchForm,
     }
@@ -115,7 +108,7 @@ def talk_room(request, user_id):
     friend = get_object_or_404(CustomUser, id=user_id)
     talk = Talk.objects.filter(
         Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-    ).order_by("time")
+    ).order_by("time").select_related("talk_from", "talk_to")
     form = TalkForm()
     context = {
         "form": form,
