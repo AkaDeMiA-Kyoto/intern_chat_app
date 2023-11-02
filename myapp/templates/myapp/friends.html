@@ -1,12 +1,17 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>friends</title>
-</head>
-<body>
-    <div id="main">
-        <h1>フレンド</h1>
-    </div>
-</body>
-</html>
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block extra_style %}
+    <link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
+{% endblock %}
+{% block header-title %}友達{% endblock %}
+{% block content %}
+    {% for user in users %}
+        <div class="friend-box">
+            <a href="{% url 'talk_room' user.id %}"></a>
+            <img class="friend-pic" src="{{ user.image.url }}" alt="{{ user.username }}">
+            <div class="user-detail">
+                <p class="username">{{ user.username }}</p>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock content %}

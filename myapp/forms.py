@@ -36,6 +36,10 @@ class LoginForm(AuthenticationForm):
             raise forms.ValidationError("ユーザーが存在しません")
         if not user.check_password(password):
             raise forms.ValidationError("ユーザー名とパスワードが一致しません")
+    
         # self.user_cache = user
     # def get_user(self):
     #     return self.user_cache
+
+class MessageForm(forms.Form):
+    content = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'メッセージを入力'}))

@@ -1,0 +1,80 @@
+* {
+    box-sizing: border-box;
+}
+
+header {
+    background-color: lightgray;
+    position: fixed;
+    top: 0;
+}
+
+.header-container__title {
+    display: flex;
+}
+
+.header-container__title a {
+    text-decoration: none;
+    color: black;
+}
+
+.friend-name {
+    margin: auto;
+}
+
+body {
+    padding-top: 63px;
+    padding-bottom: 60px;
+}
+
+.message-box {
+    width: 100%;
+    height: 130px;
+    border-bottom: 1px solid gray;
+    display: flex;
+    overflow: auto;
+}
+
+.friend-pic {
+    display: block;
+    width: 100px;
+    height: 100px;
+    margin: auto 20px;
+}
+
+.message-content {
+    font-size: 24px;
+}
+
+.send-at {
+    font-size: 12px;
+}
+
+.self .message-box {
+    background-color: lightgreen;
+}
+
+.message-detail {
+    width: 100%;
+}
+
+.self .send-at {
+    margin-right: 20px;
+    text-align: right;
+}
+
+.self .message-content {
+    margin-right: 20px;
+    text-align: right;
+}
+
+.footer {
+    border-top: 1px solid gray;
+    position: fixed;
+    height: 70px;
+    bottom: 0;
+    background-color: lightgray;
+}
+
+form {
+    text-align: center;
+}

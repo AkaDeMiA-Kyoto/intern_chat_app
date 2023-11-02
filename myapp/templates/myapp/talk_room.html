@@ -1,1 +1,42 @@
-TR
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block extra_style %}
+    <link rel="stylesheet" href="{% static 'myapp/css/talk_room.css' %}">
+{% endblock %}
+{% block header-title %}
+    <a href="{% url 'friends' %}">戻る</a>
+    <div class="friend-name">{{ user2.username }}</div>
+{% endblock %}
+{% block content %}
+    {% for message in messages %}
+        {% if message.send_from == user1 %}
+            <div class="self">
+                <div class="message-box">
+                    <div class="message-detail">
+                        <p class="send-at">{{ message.send_at|date:'m/d' }}<br>{{ message.send_at|date:'H:i' }}</p>
+                        <p class="message-content">{{ message.content }}</p>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="friend">
+                <div class="message-box">
+                    <img class="friend-pic" src="{{ user2.image.url }}" alt="{{ user2.username }}">
+                    <div class="message-detail">
+                        <p class="send-at">{{ message.send_at|date:'m/d' }}<br>{{ message.send_at|date:'H:i' }}</p>
+                        <p class="message-content">{{ message.content }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+{% block footer %}
+    <footer class="footer">
+        <form method="post" action="{% url 'send_message' user2.id %}">
+            {% csrf_token %}
+            <input type="text" name="content">
+            <button type="submit">送信</button>
+        </form>
+    </footer>
+{% endblock %}
