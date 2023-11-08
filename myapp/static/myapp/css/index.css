@@ -1,0 +1,16 @@
+@charset "UTF-8";
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.button:first-child {
+  margin-bottom: 32px;
+}

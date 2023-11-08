@@ -1,0 +1,33 @@
+@charset 'UTF-8';
+
+form {
+  padding: 24px;
+  text-align: center;
+}
+
+form p {
+  margin: 16px 0;
+}
+
+form label {
+  font-size: 14px;
+}
+
+form input {
+  width: 130px;
+  font-size: 14px;
+  margin-left: 6px;
+  border-radius: 0;
+  border: 1.5px solid darkgray;
+}
+
+form input[type="file"] {
+  width: 115px;
+  border: none;
+}
+
+.button{
+  margin-top: 16px;
+  font-size: 16px;
+  background-color: #fff;
+}
