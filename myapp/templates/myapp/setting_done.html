@@ -1,0 +1,10 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block extra_style %}
+    <link rel="stylesheet" href="{% static 'myapp/css/setting_done.css' %}">
+{% endblock %}
+{% block header-title %}設定{% endblock %}
+{% block content %}
+    <div>設定が変更されました</div>
+    <a href="{% url 'setting' %}">戻る</a>
+{% endblock content %}

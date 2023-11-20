@@ -5,13 +5,15 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth import login, authenticate
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
-from .forms import SignUpForm, LoginForm, MessageForm
+from .forms import SignUpForm, LoginForm, MessageForm, MyPasswordChangeForm, EmailChangeForm, UsernameChangeForm, ImageChangeForm
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView, LogoutView
 from .models import CustomUser, Message
 from django.db.models import Max, F, ExpressionWrapper, DateTimeField, When, Case, Q, Subquery
 from django.db.models.functions import Coalesce
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
 
 
 def index(request):
@@ -27,12 +29,8 @@ def signup_view(request):
                 user.save()
             return redirect('index')
     else:
-        form = SignUpForm(request.POST, request.FILES)
+        form = SignUpForm()
     return render(request, "myapp/signup.html", {'form': form})
-
-# class login_view(LoginView):
-#     template_name = 'myapp/login.html'
-#     form_class = LoginForm
 
 class login_view(LoginView):
     template_name = 'myapp/login.html'
@@ -97,9 +95,6 @@ def talk_room(request, id):
     
     return render(request, "myapp/talk_room.html", context)
 
-def setting(request):
-    return render(request, "myapp/setting.html")
-
 @login_required
 def send_message(request, id):
     if request.method == 'POST':
@@ -113,5 +108,66 @@ def send_message(request, id):
             messages.success(request, 'メッセージが送信されました')
         else:
             messages.error(request, 'メッセージの送信に失敗しました')
-
     return redirect('talk_room', id=id)
+
+@login_required
+def setting(request):
+    return render(request, "myapp/setting.html")
+
+class password_change(LoginRequiredMixin, PasswordChangeView):
+    form_class = MyPasswordChangeForm
+    success_url = reverse_lazy('setting_done')
+    template_name = 'myapp/password_change.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['process_name'] = 'Change Password'
+        return context
+
+class setting_done(LoginRequiredMixin, PasswordChangeDoneView, TemplateView):
+    template_name = 'myapp/setting_done.html'
+
+class logout(LoginRequiredMixin, LogoutView):
+    template_name = 'myapp/logout.html'
+
+@login_required
+def email_change(request):
+    if request.method == 'POST':
+        form = EmailChangeForm(request.POST, user=request.user)
+        if form.is_valid():
+            user = request.user
+            user.email = form.cleaned_data['new_email1']
+            user.save()
+            return redirect('setting_done')
+    else:
+        form = EmailChangeForm()
+    return render(request, 'myapp/email_change.html', {'form': form})
+
+@login_required
+def username_change(request):
+    if request.method == 'POST':
+        form = UsernameChangeForm(request.POST, user=request.user)
+        if form.is_valid():
+            user = request.user
+            user.username = form.cleaned_data['new_username1']
+            user.save()
+            return redirect('setting_done')
+    else:
+        form = UsernameChangeForm()
+    return render(request, 'myapp/username_change.html', {'form': form})
+
+@login_required
+def image_change(request):
+    if request.method == 'POST':
+        print('A')
+        form = ImageChangeForm(request.POST, request.FILES)
+        if form.is_valid():
+            print('B')
+            user = request.user
+            if 'image' in request.FILES:
+                print('C')
+                user.image = request.FILES['image']
+                user.save()
+            return redirect('setting_done')
+    else:
+        form = ImageChangeForm()
+    return render(request, 'myapp/image_change.html', {'form': form})

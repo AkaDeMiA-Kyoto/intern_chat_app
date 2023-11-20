@@ -1,0 +1,11 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block extra_style %}
+    <link rel="stylesheet" href="{% static 'myapp/css/address_change.css' %}">
+{% endblock %}
+{% block header-title %}メールアドレス{% endblock %}
+{% block content %}
+    <form action="" method="post">
+        {% csrf_token %}
+    </form>
+{% endblock content %}

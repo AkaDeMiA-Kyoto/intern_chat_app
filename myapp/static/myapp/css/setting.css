@@ -1,0 +1,27 @@
+* {
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 30px;
+}
+
+/* #main {
+    margin-top: 40vh;
+} */
+
+.main-btn {
+    width: 300px;
+    margin: 30px auto;
+}
+
+.main-btn a {
+    display: block;
+    width: 100%;
+    text-decoration: none;
+    color: black;
+    border: 1px black solid;
+    border-radius: 20px;
+}
+
+.main-btn a:hover {
+    background-color: lightgray;
+}
