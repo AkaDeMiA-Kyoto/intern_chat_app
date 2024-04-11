@@ -35,9 +35,14 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware', 
 ]
 
 ROOT_URLCONF = 'intern.urls'
@@ -76,8 +82,12 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'my_database',
+        'USER': 'tomoya',
+        'PASSWORD': 'mizu0219',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -106,7 +116,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -116,7 +125,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -132,3 +141,20 @@ MEDIA_ROOT = BASE_DIR / 'media_local'
 
 TIME_ZONE = 'Asia/Tokyo'
 USE_TZ = True
+
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # デフォルトのモデルバックエンドを保持
+    'allauth.account.auth_backends.AuthenticationBackend',  # allauthの認証バックエンドを追加
+]
+
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'  # メールアドレスを使用した認証を有効にします
+ACCOUNT_EMAIL_REQUIRED = True  # メールアドレスを必須にします
+ACCOUNT_USERNAME_REQUIRED = False  # ユーザー名を必須にするかどうか。Falseにするとユーザー名を使わないログインが可能になります

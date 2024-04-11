@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from .views import CustomLoginView
 from django.conf import settings
@@ -17,6 +17,7 @@ urlpatterns = [
     path('setting/change_password', views.ChangePasswordView.as_view(), name='change_password'),
     path('setting/change_complete', views.ChangeCompleteView.as_view(), name='change_complete'),
     path('logout/', views.CustomLogoutView.as_view(), name='logout'),
+    path('accounts/', include('allauth.urls')),  # django-allauthのURLパターンを追加
 ]
 
 if settings.DEBUG:

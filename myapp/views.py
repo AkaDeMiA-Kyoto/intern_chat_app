@@ -18,7 +18,7 @@ from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.views import LogoutView
 from .forms import ChangeEmailForm, MessageForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q, Max, OuterRef, Subquery
+from django.db.models import Q, Max, OuterRef, Subquery, Case, When, Value, CharField
 
 class IndexView(TemplateView):
     template_name = 'myapp/index.html'
@@ -56,9 +56,13 @@ class FriendsView(ListView):
         queryset = CustomUser.objects.exclude(id=user.id).annotate(
             latest_message=Subquery(latest_message_subquery.values("message")),
             latest_message_date=Subquery(latest_message_subquery.values("date"))
-        ).order_by("-latest_message_date", "-date_joined")
-        for friend in queryset:
-            print(friend)
+        ).annotate(
+            has_message=Case(
+                When(latest_message_date__isnull=False, then=Value(1)),
+                default=Value(0),
+                output_field=CharField(),
+            )
+        ).order_by("-has_message", "-latest_message_date", "-date_joined")
         # friend_ids_with_latest_messages = [msg['receive_user'] for msg in latest_messages]
         # print("#", friend_ids_with_latest_messages)
         
@@ -80,7 +84,7 @@ class FriendsView(ListView):
             ).order_by('-date').first()
             friend_details[friend] = last_message
         
-        context["friend_details"] = self.get_queryset
+        context["friend_details"] = self.get_queryset()
         print(context['friend_details'])
         return context
     
