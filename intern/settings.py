@@ -75,14 +75,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'intern.wsgi.application'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 
 # Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+# https://docs.djangoproject.com/en/4.0/ref/settings/#
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'my_database',
         'USER': 'tomoya',
         'PASSWORD': 'mizu0219',
@@ -158,3 +159,21 @@ AUTHENTICATION_BACKENDS = [
 ACCOUNT_AUTHENTICATION_METHOD = 'email'  # メールアドレスを使用した認証を有効にします
 ACCOUNT_EMAIL_REQUIRED = True  # メールアドレスを必須にします
 ACCOUNT_USERNAME_REQUIRED = False  # ユーザー名を必須にするかどうか。Falseにするとユーザー名を使わないログインが可能になります
+
+if DEBUG:
+    # インストールされたアプリケーションのリストの最後に 'debug_toolbar' を追加します
+    INSTALLED_APPS += ['debug_toolbar']
+
+    # Django Debug Toolbarの設定を有効にします
+    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+
+    # Django Debug Toolbarが表示されるホストのリストを指定します
+    # これにより、ローカル開発環境のみでDebug Toolbarを表示できます
+    INTERNAL_IPS = ['127.0.0.1']
+
+    # Django Debug Toolbarを構成します
+    DEBUG_TOOLBAR_CONFIG = {
+        'SHOW_TOOLBAR_CALLBACK': lambda request: True  # ツールバーを常に表示
+    }
+    
+DEFAULT_FROM_EMAIL = 'tomomizu7773@gmail.com'
