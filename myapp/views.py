@@ -46,6 +46,7 @@ class FriendsView(ListView):
     
     def get_queryset(self):
         user = self.request.user
+        keyword = self.request.GET.get('keyword')
         
         latest_message_subquery = Message.objects.filter(
             Q(send_user=user, receive_user=OuterRef("id")) |
@@ -69,6 +70,10 @@ class FriendsView(ListView):
         # friends_ordered_by_latest_message = CustomUser.objects.filter(id__in=friend_ids_with_latest_messages).order_by('-message__date')
         # print(friends_ordered_by_latest_message)
         
+        
+        if keyword:
+            queryset = queryset.filter(username__icontains = keyword)
+        
         return queryset
     
     def get_context_data(self, **kwargs):
@@ -77,12 +82,14 @@ class FriendsView(ListView):
         user = self.request.user
         all_friends = CustomUser.objects.exclude(id=user.id)
         
+
+        
         friend_details = {}
         for friend in all_friends:
             last_message = Message.objects.filter(
                 (Q(send_user=user, receive_user=friend) | Q(send_user=friend, receive_user=user))
             ).order_by('-date').first()
-            friend_details[friend] = last_message
+            friend_details[friend] =last_message
         
         context["friend_details"] = self.get_queryset()
         print(context['friend_details'])

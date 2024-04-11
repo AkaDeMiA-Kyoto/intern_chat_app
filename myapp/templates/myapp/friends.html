@@ -9,6 +9,13 @@
 
 {% block content %}
 
+<div class="friend-search">
+    <form method="get">
+        <input type="text" name="keyword" placeholder="友達を検索">
+        <button type="submit">検索</button>
+    </form>
+</div>
+
     <div class="all-friends-box">
 
         {% for friend in friend_details %}
