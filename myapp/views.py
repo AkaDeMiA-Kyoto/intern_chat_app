@@ -94,7 +94,8 @@ class FriendsView(ListView):
         context["friend_details"] = self.get_queryset()
         print(context['friend_details'])
         keyword = self.request.GET.get('keyword')
-        context['search_form'] = keyword
+        if keyword:
+            context['search_form'] = keyword
         return context
     
 
