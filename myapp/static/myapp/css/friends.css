@@ -1,0 +1,14 @@
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+.friend_box {
+  border-top: 1px solid #9b9b9b;
+  border-bottom: 1px solid #9b9b9b;
+}
+
+h1, h2, p {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
