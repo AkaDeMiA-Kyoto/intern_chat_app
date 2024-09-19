@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.shortcuts import redirect, render, get_object_or_404
 
 from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate, login
@@ -221,7 +222,6 @@ def cha_pass(request):
     return render(request, "myapp/cha_pass.html")
 
 
-@login_required
 class UserPasswordChangeView(PasswordChangeView):
     form_class = CustomPasswordChangeForm
     success_url = reverse_lazy('myapp:cha_done')
