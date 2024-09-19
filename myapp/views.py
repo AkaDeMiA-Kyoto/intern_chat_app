@@ -2,12 +2,12 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 
 from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate, login
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView
-from .forms import SignupForm, LoginForm
 
+from .forms import SignupForm, LoginForm, MessageForm, ChangeUsernameForm, ChangeEmailForm, ChangeImageForm, CustomPasswordChangeForm
 from .models import CustomUser, Message
 
 
@@ -48,11 +48,12 @@ class UserLoginView(LoginView):
     #     return redirect('myapp/friends', {'customuser': customuser})
 
 
+"""
 @login_required
-def friends(request):
+def friends_bfr(request):
     user = request.user
     talk_info = []
-    friends = CustomUser.objects.exclude(username=request.user.username)
+    friends = CustomUser.objects.exclude(username=user.username)
     for friend in friends:
         latest_message = Message.objects.filter(
             Q(message_from=user, message_to=friend) |
@@ -77,23 +78,160 @@ def friends(request):
                     None
                 ]
             )
-            # msg_dict = {}
-            # customuser = CustomUser.objects.all().order_by('date_joined')
-            # print(customuser)
-            # for user in customuser:
-            #     latest_message = Message.objects.filter(user=user).order_by("-sent_at").first()
-            #     msg_dict[user] = latest_message
-            #     latest_messages.append(latest_message)
-            # print(latest_message)
-            # print(latest_messages)
-            # message = customuser.message_set.all()
-            context = {
-                'talk_info': talk_info
-            }
+        context = {
+            'talk_info': talk_info
+        }
+    return render(request, "myapp/friends.html", context)
+"""
+
+
+@login_required
+def friends(request):
+    user = request.user
+    talk_info = []
+    friends_no_talk = CustomUser.objects.exclude(username=request.user.username)
+    messages = Message.objects.filter(
+        Q(message_from=user) |
+        Q(message_to=user)
+    ).order_by("-sent_at")
+    for message in messages:
+        if friends_no_talk.filter(
+            Q(username=message.message_from) |
+            Q(username=message.message_to)
+        ).exists():
+            friend = CustomUser.objects.filter(
+                Q(username=message.message_from) |
+                Q(username=message.message_to)
+            ).exclude(username=user.username).get()
+            talk_info.append(
+                [
+                    friend.image,
+                    friend,
+                    message,
+                    message.sent_at
+                ]
+            )
+            friends_no_talk = friends_no_talk.exclude(username=friend.username)
+        else:
+            continue
+
+    for friend in friends_no_talk:
+        talk_info.append(
+            [
+                friend.image,
+                friend,
+                None,
+                None
+            ]
+        )
+
+    context = {
+        'talk_info': talk_info
+    }
     return render(request, "myapp/friends.html", context)
 
-def talk_room(request):
-    return render(request, "myapp/talk_room.html")
 
+@login_required
+def talk_room(request, friend_id):
+    user = request.user
+    friend = get_object_or_404(CustomUser, pk=friend_id)
+    messages = Message.objects.filter(
+        Q(message_from=user, message_to=friend) |
+        Q(message_from=friend, message_to=user)
+    ).order_by("sent_at")
+    if request.POST:
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            Message.objects.create(
+                message_from=user,
+                message_to=friend,
+                message=form.cleaned_data['message'],
+            )
+            return redirect('myapp:talk_room', friend_id)
+    else:
+        form = MessageForm()
+
+    context = {
+        'friend': friend,
+        'messages': messages,
+        'form': form
+    }
+    return render(request, "myapp/talk_room.html", context)
+
+
+@login_required
 def setting(request):
     return render(request, "myapp/setting.html")
+
+
+@login_required
+def cha_name(request):
+    user = request.user
+    form = ChangeUsernameForm(request.POST or None)
+    if form.is_valid():
+        # user = CustomUser.objects.get(pk=user.id)
+        user.username = form.cleaned_data['username_new']
+        user.save()
+        # render系の処理をする
+        return redirect('myapp:cha_completed')
+
+    context = {
+        'form': form
+    }
+
+    return render(request, "myapp/cha_name.html", context)
+
+
+@login_required
+def cha_email(request):
+    user = request.user
+    form = ChangeEmailForm(request.POST or None)
+    if form.is_valid():
+        user.email = form.cleaned_data['email_new']
+        user.save()
+        return redirect('myapp:cha_completed')
+
+    context = {
+        'form': form
+    }
+    return render(request, "myapp/cha_email.html", context)
+
+
+@login_required
+def cha_image(request):
+    user = request.user
+    image = user.image
+    form = ChangeImageForm(request.POST or None)
+    if form.is_valid():
+        if request.FILES.get('image_new'):
+            user.image = request.FILES.get('image_new')
+            user.save()
+            return redirect('myapp:cha_completed')
+
+    context = {
+        'form': form,
+        'image': image
+    }
+
+    return render(request, "myapp/cha_image.html", context)
+
+
+@login_required
+def cha_pass(request):
+    return render(request, "myapp/cha_pass.html")
+
+
+@login_required
+class UserPasswordChangeView(PasswordChangeView):
+    form_class = CustomPasswordChangeForm
+    success_url = reverse_lazy('myapp:cha_done')
+    template_name = 'myapp/cha_pass.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
+@login_required
+def cha_done(request):
+    return render(request, "myapp/cha_done.html")

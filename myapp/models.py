@@ -21,7 +21,7 @@ class Inquiry(models.Model):
 class CustomUser(AbstractUser):
     # username = models.CharField('name', max_length=40)
     email = models.EmailField('メールアドレス')
-    image = models.ImageField('プロフィール画像')
+    image = models.ImageField('プロフィール画像', upload_to="uploads/")
 
     def __str__(self):
         return self.username

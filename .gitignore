@@ -274,4 +274,22 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# 仮想環境
+.venv/
+
+# Python が生成するキャッシュファイル
+__pycache__/
+
+# ローカル設定
+local_settings.py
+
+# 静的ファイル
+staticfiles/
+
+# データベース
+db.sqlite3
+
+# macOS 固有のファイル
+.DS_Store
+
 # End of https://www.toptal.com/developers/gitignore/api/django,python,windows,macos,linux

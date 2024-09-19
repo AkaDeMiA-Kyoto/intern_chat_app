@@ -3,12 +3,57 @@ a {
   color: #000;
 }
 
+.friend_container {
+  margin-bottom: 64px;
+}
+
 .friend_box {
-  border-top: 1px solid #9b9b9b;
+  position: relative;
+  height: 10vh;
   border-bottom: 1px solid #9b9b9b;
 }
 
-h1, h2, p {
+h1,
+h2,
+p {
   margin-block-start: 0;
   margin-block-end: 0;
+}
+
+.friend_icon {
+  position: absolute;
+  width: auto;
+  height: 80%;
+  border-radius: 50%;
+  border: 1px solid #000;
+
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+}
+
+.friend_name, .friend_message, .friend_time {
+  width: auto;
+  height: auto;
+  position: absolute;
+}
+
+.friend_name, .friend_message {
+  font-size: 100%;
+  left: 150px;
+}
+
+.friend_name {
+  top: 16px;
+}
+
+.friend_message {
+  bottom: 16px;
+  color: #808080;
+}
+
+.friend_time {
+  bottom: 16px;
+  right: 16px;
+  color: #808080;
 }

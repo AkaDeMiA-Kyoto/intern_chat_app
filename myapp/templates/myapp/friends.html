@@ -1,23 +1,36 @@
 {% extends "myapp/base.html" %}
 {% load static %}
 
-{% block header-title %}友達{% endblock %}
+{% block header-title %}
+  友達
+{% endblock header-title %}
+
 {% block extra_style %}
-  <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/friends.css' %}"/>
-{% endblock %}
+  <link rel="stylesheet"
+        type="text/css"
+        href='{% static "myapp/css/friends.css" %}' />
+{% endblock extra_style %}
 
 {% block content %}
   <div class="friend_container">
     {% for icon, friend, message, time in talk_info %}
-    <div class="friend_box">
-      <a href="{% url "myapp:talk_room" %}">
-        <img src="{{ icon }}" alt="icon">
-        {{ friend }}
-        {{ message }}
-        {{ time }}
+      <a href="{% url 'myapp:talk_room' friend.id %}">
+        <div class="friend_box">
+          <img src="{{ friend.image.url }}"
+               alt="icon"
+               height="auto"
+               width="auto"
+               class="friend_icon" />
+          <div class="friend_name">{{ friend }}</div>
+          <div class="friend_message">
+            {% if message == None %}
+            {% else %}
+              {{ message }}
+            {% endif %}
+          </div>
+          <div class="friend_time">{{ time|date:"m/d H:i" }}</div>
+        </div>
       </a>
-    </div>
     {% endfor %}
   </div>
-
-{% endblock %}
+{% endblock content %}

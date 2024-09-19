@@ -1,1 +1,55 @@
-TR
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block header-title %}
+  {{ friend }}
+{% endblock header-title %}
+
+{% block header-content %}
+  <a href="{% url "myapp:friends" %}" class="back">&lt;Back</a>
+  <a href="{% url "myapp:talk_room" friend.id %}" class="reload">&#8635;Reload</a>
+{% endblock header-content %}
+
+{% block extra_style %}
+  <link rel="stylesheet"
+        type="text/css"
+        href='{% static "myapp/css/talk_room.css" %}' />
+{% endblock extra_style %}
+
+{% block content %}
+  <div class="message_container">
+    {% for message in messages %}
+      <div class="message_box">
+        {% if friend.id == message.message_from.id %}
+          <div class="message_flexbox friend">
+            <div class="message friend">{{ message }}</div>
+            <div class="time">
+              {{ message.sent_at|date:"m/d" }}
+              {{ message.sent_at|date:"H:i" }}
+            </div>
+          </div>
+        {% else %}
+          <div class="message_flexbox request">
+            <div class="time">
+              {{ message.sent_at|date:"m/d" }}
+              {{ message.sent_at|date:"H:i" }}
+            </div>
+            <div class="message request">{{ message }}</div>
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% endblock content %}
+
+{% block footer %}
+  <footer class='footer'>
+    <form method="post"
+          action="{% url "myapp:talk_room" friend.id %}"
+          class="send">
+      {% csrf_token %}
+      {{ form.message }}
+      <input type="submit">
+    </form>
+  </footer>
+{% endblock footer %}

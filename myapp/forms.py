@@ -1,8 +1,7 @@
 from django import forms
-from .models import CustomUser
+from .models import CustomUser, Message
 
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.backends import AllowAllUsersModelBackend
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
@@ -34,3 +33,39 @@ class LoginForm(AuthenticationForm):
     class Meta:
         model = CustomUser
         # fields = ('username', 'password')
+
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+
+    class Meta:
+        model = CustomUser
+
+
+class MessageForm(forms.Form):
+    message = forms.CharField(
+        label='message',
+        max_length=128,
+        required=True
+    )
+
+
+class ChangeUsernameForm(forms.Form):
+    username_new = forms.CharField(
+        label='New Username',
+        max_length=40,
+        required=True,
+    )
+
+
+class ChangeEmailForm(forms.Form):
+    email_new = forms.EmailField(
+        label='New Address',
+        required='True'
+    )
+
+
+class ChangeImageForm(forms.Form):
+    image_new = forms.ImageField(
+        label='New Icon',
+        required=True
+    )

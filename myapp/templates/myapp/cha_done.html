@@ -1,0 +1,17 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block header-title %}
+  アイコン変更
+{% endblock header-title %}
+
+{% block extra_style %}
+  <link rel="stylesheet"
+        type="text/css"
+        href='{% static "myapp/css/cha_done.css" %}' />
+{% endblock extra_style %}
+
+{% block content %}
+  <p>変更が完了しました。</p>
+  <a href="{% url "myapp:setting" %}">設定に戻る</a>
+{% endblock content %}

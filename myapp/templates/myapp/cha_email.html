@@ -1,0 +1,20 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block header-title %}
+  メールアドレス変更
+{% endblock header-title %}
+
+{% block extra_style %}
+  <link rel="stylesheet"
+        type="text/css"
+        href='{% static "myapp/css/cha_email.css" %}' />
+{% endblock extra_style %}
+
+{% block content %}
+  <form method='post'>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type='submit'>変更</button>
+  </form>
+{% endblock content %}

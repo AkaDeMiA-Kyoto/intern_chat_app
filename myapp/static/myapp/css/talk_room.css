@@ -1,0 +1,65 @@
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+.back, .reload {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.reload {
+  right: 0;
+}
+
+.message_box {
+  position: relative;
+  display: flex;
+  gap: 4px;
+  height: 36px;
+
+  margin-top: 16px;
+}
+
+.message_flexbox {
+  position: absolute;
+  display: flex;
+   align-items: flex-end;
+  gap: 4px;
+}
+
+.message_flexbox.friend {
+  left: 16px;
+}
+
+.message_flexbox.request {
+  right: 16px;
+}
+
+.message {
+  /* position: absolute; */
+  width: auto;
+
+  padding: 8px 16px;
+
+  border-radius: 100px;
+}
+
+.message.friend {
+  background: #d8d8d8;
+}
+
+.message.request {
+  background: yellowgreen;
+}
+
+.time {
+  color: #7f7f7f;
+  height: min-content;
+}
+
+.footer {
+  border-top: 1px solid #000;
+  background: #f7f7f7;
+}

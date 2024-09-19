@@ -1,36 +1,36 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
 
+<!DOCTYPE html>
+<html lang='ja'>
   <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}"/>
-    <link rel="stylesheet" href="../../static/myapp/css/login.css"/>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <link rel='stylesheet'
+          type='text/css'
+          href='{% static "myapp/css/base.css" %}' />
+    <link rel='stylesheet' href='../../static/myapp/css/login.css' />
     <title>DeMiAインターン</title>
   </head>
-
   <body>
-    <header class="header">
-      <div class="header-container">
-        <span class="header-container__title">
-          ログイン
-        </span>
+    <header class='header'>
+      <div class='header-container'>
+        <span class='header-container__title'>ログイン</span>
       </div>
     </header>
-
-    <form method="post" novalidate="novalidate">
+    <form method='post' novalidate='novalidate'>
       {% csrf_token %}
       {{ form.non_field_errors }}
-      {% for field in form %}
-        {{ field.label }}
-        {{ field }}
-        {{ field.errors }}
-        <br>
-      {% endfor %}
-      <button type="submit">Login</button>
-      <a href="{% url "myapp:index" %}">Back</a>
+      <div class="field_container">
+        {% for field in form %}
+          <div class="field_content">
+            {{ field.label }}
+            {{ field }}
+            {{ field.errors }}
+          </div>
+        {% endfor %}
+      </div>
+      <button type='submit'>Login</button>
+      <a href='{% url "myapp:index" %}'>Back</a>
     </form>
   </body>
-
 </html>

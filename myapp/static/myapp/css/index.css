@@ -34,13 +34,3 @@ a.login {
 a.signup {
   margin: 5vh 0 10vh 0;
 }
-
-.text {
-  position: absolute;
-  width: 80%;
-  height: 80%;
-  inset: 0;
-  margin: auto;
-  text-align: center;
-  line-height: 100%;
-}

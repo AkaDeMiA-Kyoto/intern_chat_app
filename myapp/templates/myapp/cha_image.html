@@ -1,0 +1,22 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block header-title %}
+  アイコン変更
+{% endblock header-title %}
+
+{% block extra_style %}
+  <link rel="stylesheet"
+        type="text/css"
+        href='{% static "myapp/css/cha_image.css" %}' />
+{% endblock extra_style %}
+
+{% block content %}
+  <form method='post'>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <p>現在の画像</p>
+    <img src="{{ image.url }}" alt="present your icon" class='icon'><br>
+    <button type='submit'>変更</button>
+  </form>
+{% endblock content %}
