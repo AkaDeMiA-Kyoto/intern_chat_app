@@ -141,7 +141,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # デプロイ環境のための設定(追加)
 if os.path.isfile('.env'):
-    env = environ.Env(DEBUG=(bool, False),)
+    env = environ.Env(DEBUG=(bool, False))
     environ.Env.read_env('.env')
 
     DEBUG = env('DEBUG')
