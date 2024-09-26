@@ -7,7 +7,7 @@ from django.contrib.auth import login
 class SignUp(generic.CreateView):
 
     form_class = CustomUserCreationForm
-    success_url = reverse_lazy('chat:chat_room')
+    success_url = reverse_lazy('chat:home')
     template_name = 'registration/signup.html'
 
     def form_valid(self, form):

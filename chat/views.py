@@ -74,7 +74,7 @@ class SearchUser(View):
                     break
         
         friends = getFriendsList(request.user.username)  #自分のフレンド一覧を取得
-        return render(request, "chat/search.html", {'users': user_list, 'friends': friends})
+        return render(request, "chat/search.html", {'friends': user_list, 'friend': friends})
     
 def addFriend(request, username):
     """

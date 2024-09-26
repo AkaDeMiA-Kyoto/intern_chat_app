@@ -2,36 +2,22 @@
 {% load static %}
 <html lang="ja">
 <head>
-   <style>
-        body{
-            background-image: url("{% static 'images/top.png' %}");
-            background-position: center;
-            background-size: cover;
-            height: 750px;
-            background-repeat: no-repeat
+    <style>
+        .login {
+            color: black; 
+            position: absolute;
+            top: 45%;
+            right: 50%;
+            border: 0.5px solid black;
         }
 
-        .navbar{
-            background-color: #5053fc;
-            overflow: hidden;
-            float: left;
-            width: 100%;
-            text-align: center;
-            text-decoration: none;
-            font-size: 18px;
-            padding: 8px 8px;
-            color: white
+        .signup {
+            color: black;
+            position: absolute;
+            top: 50%;
+            right: 50%;
+            border: 0.5px solid black
         }
-
-        .navbar a:hover{
-            text-decoration: none;
-        }
-
-        .navbar-right a{
-            margin-left: 16px;
-        }
-
-
     </style>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -40,14 +26,9 @@
     <title>Djangoチャットアプリ</title>
 </head>
 <body>
-
-    <div class="navbar">
-        <a href="/" class="text-white">Djangoチャットアプリ</a>
-        <div class="navbar-right">
-            <a href="{% url 'login' %}" class="login_text text-white">ログイン</a>
-            <a href="{% url 'signup' %}" class="register text text-white">ユーザ登録</a>
-        </div>
-    </div>
+    <a href="{% url 'login' %}" class="login">ログイン</a>
+    <a href="{% url 'signup' %}" class="signup">会員登録</a>
+    
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
