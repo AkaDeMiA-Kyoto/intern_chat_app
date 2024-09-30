@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
+    {% block extra_style %}{% endblock %}
+    <title>トークルーム</title>
+</head>
+<body>
+    {% block header %}
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container_title">
+                {% block header-title %}
+                {{ friend.username }}
+                {% endblock %}
+            </span>
+        </div>
+    </header>
+    {% endblock %}
+    <main>
+        <div class="messages">
+            {% for talk in talks %}
+                <div class="message">
+                    <strong>{{ talk.sender.username }}:</strong> {{ talk.content }} <em>{{ talk.timestamp }}</em>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+    <footer class="chat-footer">
+        <form method="POST" class="chat-form">
+            {% csrf_token %}
+            <input type="text" name="content" placeholder="メッセージを入力" required />
+            <button type="submit" class="send-button">送信</button>
+        </form>
+    </footer>

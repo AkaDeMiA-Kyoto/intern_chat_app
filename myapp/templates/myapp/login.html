@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/login.css' %}" />
+    <title>DeMiAインターン</title>
+</head>
+<body>
+<header>
+    <div class="header-container">
+        <h1 class="header-container__title">ログイン</h1>
+    </div>
+</header>
+
+<main>
+    {% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>{{ form.username.label_tag }}</td>
+                <td>{{ form.username }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.password.label_tag }}</td>
+                <td>{{ form.password }}</td>
+            </tr>
+        </table>
+
+        <input type="hidden" name="next" value="friends">
+        <div class="button-wrapper">
+            <input type="submit" value="login" class="submit-button"/>
+        </div>
+
+        {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+                <p class="error">{{ error }}</p>
+            {% endfor %}
+        {% endif %}
+    </form>
+    {% endblock %}
+</main>
+</body>
+</html>

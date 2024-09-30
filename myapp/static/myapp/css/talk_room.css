@@ -1,0 +1,148 @@
+html{
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+    margin: 0;
+}
+
+/* ヘッダー */
+.header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 64px;
+    border-bottom: solid 1px #9b9b9b;
+    background-color: #9b9b9b;
+    z-index: 10;
+}
+.header-container{
+    position: relative;
+    width: 90%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.header-container_title{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1rem;
+    line-height: 1rem;
+    margin: auto;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #000;
+}
+.main {
+    margin-top: 64px;
+}
+
+.messages {
+    width: 100%;
+    max-width: 600px;
+    padding: 64px 0 0;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow-y: auto;  
+    margin: 20px auto;
+    max-height: calc(100vh - 150px);  
+}
+
+form {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-width: 600px;
+    background-color: #ffffff;
+    padding: 10px;
+    display: flex;
+
+}
+
+
+form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+form button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+.message {
+    margin-bottom: 15px;
+    padding: 8px;
+    border-radius: 5px;
+    background-color: #f1f1f1;
+}
+
+.message.self {
+    background-color: #e0ffe0;
+    text-align: right;
+}
+
+.message.friend {
+    background-color: #ffffff;
+    text-align: left;
+}
+
+.chat-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.chat-form {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.chat-form input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-right: 10px;
+    box-sizing: border-box; 
+}
+
+.send-button {
+    padding: 10px 20px;
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    flex-shrink: 0;  
+}
+
+.send-button:hover {
+    background-color: blue;
+}

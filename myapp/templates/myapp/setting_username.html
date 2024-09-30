@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" />
+    <title>ユーザーネーム設定</title>
+</head>
+<body>
+    {% block header %}
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container_title">
+                {% block header-title %}
+                ユーザーネーム設定
+                {% endblock %}
+            </span>
+        </div>
+    </header>
+    {% endblock %}
+    <div class="content">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div>
+                <label for="id_username">現在のユーザー名:</label>
+                <p>{{ current_username }}</p>
+            </div>
+            <!-- ユーザー名 -->
+            <div class="form-group">
+                <label for="{{ user_form.username.id_for_label }}">新しいユーザー名</label>
+                {{ user_form.username }}
+                {% if user_form.username.errors %}
+                    <div class="error">
+                        {{ user_form.username.errors }}
+                    </div>
+                {% endif %}
+            </div>
+        
+            <!-- 保存ボタン -->
+            <button type="submit" name="update_profile">ユーザーネームを更新</button>
+        </form>
+        {% block footer %}
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-container__item">
+                    <a href="{% url 'friends' %}" class="footer-item__link">
+                        <span class="footer-item__icon"><img src="{% static 'myapp/img/people-24px.svg' %}"></span>
+                        <span class="footer-item__text">友達</span>
+                    </a>
+                </div>
+                <div class="footer-container__item">
+                    <a href="{% url 'setting' %}" class="footer-item__link">
+                        <span class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></span>
+                        <span class="footer-item__text">設定</span>
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    {% endblock %}
+</body>
+</html>

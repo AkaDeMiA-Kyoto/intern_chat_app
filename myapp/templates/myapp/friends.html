@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/friends.css' %}" />
+    {% block extra_style %}{% endblock %}
+    <title>フレンド</title>
+</head>
+<body>
+    {% block header %}
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container_title">
+                {% block header-title %}
+                友達
+                {% endblock %}
+            </span>
+        </div>
+    </header>
+    {% endblock %}
+    <div class="content">
+        <ul class="friend-list">
+            {% for user, last_message, timestamp in info %}
+            <li class="friend-item">
+                <a href="{% url 'talk_room' user.id %}">
+                    <div class="friend-info">
+                        <img src="{{ user.profile_image.url }}" alt="{{ user.username }}'s icon" class="friend-icon">
+                        <div class="friend-details">
+                            <span class="friend-name">{{ user.username }}</span>
+                            <div class="friend-footer">
+                                <p class="last-message">
+                                    {% if last_message %}
+                                        {{ last_message|truncatewords:5 }}
+                                    {% else %}
+                                        話したことのない友達です 話してみましょう！
+                                    {% endif %}
+                                </p>
+                                <span class="friend-time">
+                                    {% if timestamp %}
+                                        {{ timestamp|date:"H:i" }}
+                                    {% else %}
+                                        ??:??
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    {% block footer %}
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-container__item">
+                <a href="{% url 'friends' %}" class="footer-item__link">
+                    <span class="footer-item__icon"><img src="{% static 'myapp/img/people-24px.svg' %}"></span>
+                    <span class="footer-item__text">友達</span>
+                </a>
+            </div>
+            <div class="footer-container__item">
+                <a href="{% url 'setting' %}" class="footer-item__link">
+                    <span class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></span>
+                    <span class="footer-item__text">設定</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
+</body>
+</html>
