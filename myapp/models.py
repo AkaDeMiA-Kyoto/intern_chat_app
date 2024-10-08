@@ -1,30 +1,19 @@
 from django.db import models
-# Django charField で min_length を設定するためのインポート
-from django.core.validators import MinLengthValidator
 
 from django.contrib.auth.models import AbstractUser
+
+from accounts.models import CustomUser
 
 # Create your models here.
 
 
-class Inquiry(models.Model):
-    name = models.CharField('お名前', max_length=40)
-    email = models.EmailField('メールアドレス')
-    title = models .CharField('件名', max_length=128)
-    contents = models.TextField('内容')
-    posted_at = models.DateTimeField('お問い合わせ日時', auto_now_add=True)
+# class CustomUser(AbstractUser):
+#     # username = models.CharField('name', max_length=40)
+#     email = models.EmailField('メールアドレス')
+#     image = models.ImageField('プロフィール画像', upload_to="uploads/")
 
-    def __str__(self):
-        return self.title
-
-
-class CustomUser(AbstractUser):
-    # username = models.CharField('name', max_length=40)
-    email = models.EmailField('メールアドレス')
-    image = models.ImageField('プロフィール画像', upload_to="uploads/")
-
-    def __str__(self):
-        return self.username
+#     def __str__(self):
+#         return self.username
 
 
 class Message(models.Model):

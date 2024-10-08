@@ -1,5 +1,5 @@
 from django import forms
-from .models import CustomUser, Message
+from accounts.models import CustomUser
 
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.backends import AllowAllUsersModelBackend

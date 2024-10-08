@@ -1,0 +1,31 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="{% static 'myapp/css/base.css' %}" />
+    <title>DeMiAインターン</title>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-container">
+        <span class="header-container__title">ログイン</span>
+      </div>
+    </header>
+    <h1>ログイン</h1>
+    <form action="{% url "account_login" %}" method="post">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      {% if redirect_field_value %}
+        <input type="hidden"
+               name="{{ redirect_field_name }}"
+               value="{{ redirect_field_value }}">
+      {% endif %}
+      <button type="submit">ログイン</button>
+    </form>
+  </body>
+</html>

@@ -39,7 +39,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'myapp',
+    # 'myapp',
+    'myapp.apps.MyappConfig',
+
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'django_bootstrap5',
+
+    'accounts.apps.AccountsConfig',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +58,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # django-allauth 用に追加(v0.56.0以降で必要)
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'intern.urls'
@@ -78,8 +89,14 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'myapp',
+        'USER': 'ichikawa',
+        'PASSWORD': 'passpass',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -131,13 +148,37 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media_local'
 
-AUTH_USER_MODEL = "myapp.CustomUser"
+AUTH_USER_MODEL = "accounts.CustomUser"
 
-LOGIN_URL = '/myapp/login/'
-LOGIN_REDIRECT_URL = '/myapp/friends/'
-LOGOUT_REDIRECT_URL = '/myapp/'
+# LOGIN_URL = '/myapp/login/'
+LOGIN_REDIRECT_URL = 'myapp:friends'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
+# ACCOUNT_LOGOUT_REDIRECT_URL = 'myapp:login'
+
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# django-allauth で利用する django.contrib.sites を使うためにサイト識別用IDを設定
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = (
+    'allauth.account.auth_backends.AuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USERNAME_REQUIRED = False
+
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_REQUIRED = True
+
+ACCOUNT_LOGOUT_ON_GET = True
+
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
+
+DEFAULT_FROM_EMAIL = os.environ.get('FROM_EMAIL')
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # デプロイ環境のための設定(追加)
 if os.path.isfile('.env'):

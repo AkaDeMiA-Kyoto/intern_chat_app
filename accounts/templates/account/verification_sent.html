@@ -1,0 +1,23 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="{% static 'myapp/css/base.css' %}" />
+    <title>DeMiAインターン</title>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-container">
+        <span class="header-container__title">メール送信</span>
+      </div>
+    </header>
+    <h1>メールアドレスを確認してください</h1>
+    <p>確認のメールを送信しました。</p>
+    <p>メールに記載されたリンクをクリックして、ユーザー登録を完了させてください。数分待っても確認のメールが届かない場合はご連絡ください。</p>
+  </body>
+</html>

@@ -3,13 +3,15 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import redirect, render, get_object_or_404
 
 from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView
 
 from .forms import SignupForm, LoginForm, MessageForm, ChangeUsernameForm, ChangeEmailForm, ChangeImageForm, CustomPasswordChangeForm
-from .models import CustomUser, Message
+from .models import Message
+from accounts.models import CustomUser
 
 
 # def index(request):
@@ -88,9 +90,14 @@ def friends_bfr(request):
 
 @login_required
 def friends(request):
+    query = request.GET.get('q')
     user = request.user
     talk_info = []
     friends_no_talk = CustomUser.objects.exclude(username=request.user.username)
+    if query:
+        friends_no_talk = friends_no_talk.filter(
+            Q(username=query)
+        ).distinct()
     messages = Message.objects.filter(
         Q(message_from=user) |
         Q(message_to=user)
@@ -127,7 +134,8 @@ def friends(request):
         )
 
     context = {
-        'talk_info': talk_info
+        'talk_info': talk_info,
+        'query': query,
     }
     return render(request, "myapp/friends.html", context)
 
@@ -222,7 +230,7 @@ def cha_pass(request):
     return render(request, "myapp/cha_pass.html")
 
 
-class UserPasswordChangeView(PasswordChangeView):
+class UserPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     form_class = CustomPasswordChangeForm
     success_url = reverse_lazy('myapp:cha_done')
     template_name = 'myapp/cha_pass.html'

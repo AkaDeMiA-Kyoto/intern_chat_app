@@ -40,27 +40,27 @@ urlpatterns = [
         name='setting'
     ),
     path(
-        'cha_name',
+        'setting/cha_name/',
         views.cha_name,
         name='cha_name'
     ),
     path(
-        'cha_email',
+        'setting/cha_email/',
         views.cha_email,
         name='cha_email'
     ),
     path(
-        'cha_image',
+        'setting/cha_image/',
         views.cha_image,
         name='cha_image'
     ),
     path(
-        'cha_pass',
+        'setting/cha_pass/',
         views.UserPasswordChangeView.as_view(),
         name='cha_pass'
     ),
     path(
-        'cha_done',
+        'setting/cha_done/',
         views.cha_done,
         name='cha_done'
     ),
