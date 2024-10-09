@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ja">
+<head>
+    <style>
+        .login {
+            color: black; 
+            position: absolute;
+            top: 45%;
+            right: 50%;
+            border: 0.5px solid black;
+        }
+
+        .signup {
+            color: black;
+            position: absolute;
+            top: 50%;
+            right: 50%;
+            border: 0.5px solid black
+        }
+
+        .logout {
+            color: black;
+            position: absolute;
+            top: 55%;
+            right: 50%;
+            border: 0.5px solid black
+        }
+    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Djangoチャットアプリ</title>
+</head>
+<body>
+    <a href="{% url 'account_login' %}" class="login">ログイン</a>
+    <a href="{% url 'account_signup' %}" class="signup">会員登録</a>
+    <a href="{% url 'account_logout' %}" class='logout'>ログアウト</a>
+    
+</body>
+</html>

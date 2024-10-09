@@ -7,11 +7,11 @@
     <link rel="stylesheet" href="../../static/myapp/css/index.css">
 </head>
 <body>
-    <form method="post" action="{% url 'login' %}">
+    <form method="post" action="{% url 'account_login' %}">
         {% csrf_token %}
         <button type="submit" class="login">ログイン</button>
     </form>
-    <form method="post" action="{% url 'signup' %}">
+    <form method="post" action="{% url 'account_signup' %}">
         {% csrf_token %}
         <button type="submit" class="singup">会員登録</button>
     </form>

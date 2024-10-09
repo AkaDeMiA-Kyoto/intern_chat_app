@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 
 class Home(TemplateView):
     #Home画面を表示するビュー
-    template_name = 'home.html'
+    template_name = 'myapp/home.html'
     
     
 class ChatRoom(TemplateView):

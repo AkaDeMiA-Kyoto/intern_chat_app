@@ -8,6 +8,9 @@ from django.utils.decorators import method_decorator
 from django.http.response import JsonResponse
 from rest_framework.parsers import JSONParser
 from chat.serializers import MessageSerializer
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
+from django.contrib.auth import authenticate, login
 
 
 class UpdateMessage(View):
@@ -35,7 +38,7 @@ class UpdateMessage(View):
 
 class Home(TemplateView):
     #Home画面を表示するビュー
-    template_name = 'home.html'
+    template_name = 'myapp/home.html'
 
 class ChatRoom(TemplateView):
     #Home画面を表示するビュー
@@ -66,16 +69,28 @@ class SearchUser(View):
                 #検索文字列を含むユーザ情報を取得(自分は除外)
                 if query in user.username and user.username != request.user.username:
                     user_list.append(user)
-        else:
+        elif request.method == 'POST':
             user_list = list(CustomUser.objects.all())  #全ユーザ一覧を取得
             for user in user_list:
                 if user.username == request.user.username:
                     user_list.remove(user)  #自分のユーザだけ除外
                     break
         
+        user_list = CustomUser.objects.exclude(username=request.user.username)
         friends = getFriendsList(request.user.username)  #自分のフレンド一覧を取得
         return render(request, "chat/search.html", {'friends': user_list, 'friend': friends})
     
+# def login_view(request):
+#     if request.method == 'POST':
+#         # Get all users except the current user
+#         user_list = list(CustomUser.objects.exclude(username=request.user.username))
+        
+#         return render(request, 'chat/search.html', {'friends': user_list})
+
+class Login(TemplateView):
+    template_name = 'account/login.html'
+
+
 def addFriend(request, username):
     """
     引数で受け取ったユーザ名(username)を Friendsテーブルに友達として登録する。
@@ -97,16 +112,14 @@ def addFriend(request, username):
         friend.user_friends.create(friend=current_user)   #フレンド視点でログオンユーザをフレンドに登録
     return redirect("chat:search_user")
 
-def get_message(request, username):
-    """
-    特定ユーザ間のチャット情報を取得する
-    """
+def get_message(request, username):  
     friend = CustomUser.objects.get(username=username)
     current_user = CustomUser.objects.get(username=request.user.username)
     messages = Messages.objects.filter(sender_name=current_user.id, receiver_name=friend.id) | \
-               Messages.objects.filter(sender_name=friend.id, receiver_name=current_user.id)
+            Messages.objects.filter(sender_name=friend.id, receiver_name=current_user.id)
     friends = getFriendsList(request.user.username)
+    
     return render(request, "chat/messages.html",
-                      {'messages': messages,
-                       'friends': friends,
-                       'current_user': current_user, 'friend': friend})
+                    {'messages': messages,
+                    'friends': friends,
+                    'current_user': current_user, 'friend': friend})

@@ -41,7 +41,13 @@ INSTALLED_APPS = [
     'myapp',
     'chat',
     'widget_tweaks',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'django_bootstrap5',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -51,14 +57,45 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # django-allauth用に追加
+    'allauth.account.middleware.AccountMiddleware',
 ]
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = (
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# メールアドレス認証に変更する設定
+
+# settings.py
+ACCOUNT_AUTHENTICATION_METHOD = 'email'  # ユーザー名またはメールアドレスでの認証
+ACCOUNT_USERNAME_REQUIRED = True
+
+# サインアップにメールアドレス確認を挟むように設定
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_REQUIRED = True
+
+# ログイン/ログアウト後の遷移先を設定
+from django.urls import reverse_lazy
+LOGIN_REDIRECT_URL = reverse_lazy('chat:search_user')
+ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
+
+ACCOUNT_LOGOUT_ON_GET = 'True'
+
+ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
+
+DEFAULT_FROM_EMAIL = os.environ.get('FROM_EMAIL')
 
 ROOT_URLCONF = 'intern.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'myapp')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,10 +116,21 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'chatapp',
+        'USER': 'taichi',
+        'PASSWORD': '****',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation
@@ -130,7 +178,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'myapp.CustomUser'
 #ログイン後のリダイレクトURL設定
-LOGIN_REDIRECT_URL = '/search/'
+
 #ログアウト後のリダイレクト先
 LOGOUT_REDIRECT_URL = '/' 
 

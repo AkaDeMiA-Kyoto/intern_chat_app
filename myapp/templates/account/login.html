@@ -1,0 +1,23 @@
+{% load django_bootstrap5 %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <h1>ログイン</h1>
+        <form method="post" action="{% url 'account_login' %}">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+            {% endif %}
+
+            <button type="submit">ログイン</button>
+            </form>
+    </div>
+</body>
+</html>
