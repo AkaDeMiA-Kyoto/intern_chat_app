@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
-from .forms import CustomUserCreationForm, CustomAuthenticationForm, TalkForm, UsernameUpdateForm, UseradressUpdateForm, UserimageUpdateForm, CustomPasswordChangeForm
+from .forms import CustomUserCreationForm, CustomAuthenticationForm, TalkForm, UsernameUpdateForm, UseradressUpdateForm, UserimageUpdateForm, CustomPasswordChangeForm,UserSearchForm
 from .models import Message, CustomUser
 from django.contrib.auth import login, logout, get_user_model, update_session_auth_hash
 from django.http import HttpResponseRedirect
@@ -42,13 +42,21 @@ def login_view(request):
     return render(request, 'myapp/login.html', {'form': form, 'next': next_url})
 
 @login_required
+
 def friends(request):
-    friends = CustomUser.objects.exclude(id=request.user.id)
-    
+    form = UserSearchForm(request.GET)
+    if form.is_valid():
+        query = form.cleaned_data.get('query')
+        friends = CustomUser.objects.exclude(id=request.user.id)
+        if query:
+            friends = friends.filter(username__icontains=query)
+    else:
+        friends = CustomUser.objects.exclude(id=request.user.id)
+
     info = []
     info_have_message = []
     info_have_no_message = []
-    
+
     for friend in friends:
         last_message = Message.objects.filter(
                 Q(sender=request.user, recipient=friend) | Q(sender=friend, recipient=request.user)
@@ -64,7 +72,30 @@ def friends(request):
     info.extend(info_have_message)
     info.extend(info_have_no_message)
     
-    return render(request, "myapp/friends.html", {"info": info})
+    return render(request, "myapp/friends.html", {"info": info, "form": form})
+# def friends(request):
+#     friends = CustomUser.objects.exclude(id=request.user.id)
+    
+#     info = []
+#     info_have_message = []
+#     info_have_no_message = []
+    
+#     for friend in friends:
+#         last_message = Message.objects.filter(
+#                 Q(sender=request.user, recipient=friend) | Q(sender=friend, recipient=request.user)
+#         ).order_by('timestamp').last()
+        
+#         if last_message:
+#             info_have_message.append([friend, last_message.content, last_message.timestamp])
+#         else:
+#             info_have_no_message.append([friend, None, None])
+    
+#     info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
+    
+#     info.extend(info_have_message)
+#     info.extend(info_have_no_message)
+    
+#     return render(request, "myapp/friends.html", {"info": info})
 
 @login_required
 def talk_room(request, user_id):

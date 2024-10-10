@@ -13,6 +13,9 @@ class CustomUserCreationForm(UserCreationForm):
 class CustomAuthenticationForm(AuthenticationForm):
     pass
 
+class UserSearchForm(forms.Form):
+    query = forms.CharField(label='友達を検索', max_length=100)
+
 class TalkForm(forms.ModelForm):
     class Meta:
         model = Message
