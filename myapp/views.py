@@ -2,12 +2,17 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, TalkForm, UsernameUpdateForm, UseradressUpdateForm, UserimageUpdateForm, CustomPasswordChangeForm,UserSearchForm
 from .models import Message, CustomUser
-from django.contrib.auth import login, logout, get_user_model, update_session_auth_hash
+from django.contrib.auth import login, logout, get_user_model, update_session_auth_hash, authenticate
 from django.http import HttpResponseRedirect
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import operator
+from django.conf import settings
+from django.core.mail import send_mail
+from django.urls import reverse
+from django.contrib import messages
+import random
 
 Custom_User = get_user_model()
 
@@ -24,22 +29,96 @@ def signup_view(request):
         form = CustomUserCreationForm()
     return render(request, 'myapp/signup.html', {'form': form})
 
+
+def users_mail_test(request):
+    code = random.randint(1000, 9999)
+    request.session['auth_code'] = str(code)  
+    username = request.POST.get('username')
+    try:
+        user = CustomUser.objects.get(username=username)
+    except CustomUser.DoesNotExist:
+        messages.error(request, '指定されたユーザー名は存在しません。')
+        return redirect('login_view')
+
+    send_mail(
+        '2段階認証',
+        f'認証コードは {str(code)} です。',
+        settings.EMAIL_FROM,  
+        [user.email],   
+        fail_silently=False
+    )
+    messages.success(request, f'認証コードが {user.email} に送信されました。')
+    return redirect('login_with_code')  
+
 def login_view(request):
+    confirmed_username = request.session.get('confirmed_username', None)  
+
     if request.method == 'POST':
-        next_url = request.POST.get('next')
-        form = CustomAuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            if user:
-                login(request, user)
-                if not next_url or next_url == 'None':
-                    return redirect('index')
+        if 'clear_username' in request.POST:
+            request.session.pop('confirmed_username', None)  
+            messages.info(request, 'ユーザー名を再入力してください。')
+            form = CustomAuthenticationForm()
+            confirmed_username = None
+
+        elif 'send_code' in request.POST:
+            username = request.POST.get('username')
+
+            if not username:
+                messages.error(request, 'ユーザー名を入力してください。')
+                form = CustomAuthenticationForm()
+            else:
+                try:
+                    user = CustomUser.objects.get(username=username)
+                    code = random.randint(1000, 9999)
+                    request.session['auth_code'] = str(code)
+                    request.session['confirmed_username'] = username
+
+                    send_mail(
+                        '2段階認証',
+                        f'認証コードは {str(code)} です。',
+                        settings.EMAIL_FROM,
+                        [user.email],
+                        fail_silently=False
+                    )
+                    messages.success(request, f'認証コードが {user.email} に送信されました。')
+                except CustomUser.DoesNotExist:
+                    messages.error(request, '指定されたユーザー名は存在しません。')
+                form = CustomAuthenticationForm()
+                confirmed_username = request.session.get('confirmed_username', None)
+
+        else:
+
+            if confirmed_username:
+                request.POST = request.POST.copy()  
+                request.POST['username'] = confirmed_username  
+
+            form = CustomAuthenticationForm(request, data=request.POST)
+            if form.is_valid():
+                username = request.session.get('confirmed_username')
+                password = form.cleaned_data.get('password')
+                input_code = form.cleaned_data.get('code_form')
+                saved_code = request.session.get('auth_code')
+
+                if input_code == saved_code:
+                    user = authenticate(username=username, password=password)
+                    if user is not None:
+                        login(request, user)
+                        messages.success(request, 'ログインに成功しました。')
+                        return redirect('friends')
+                    else:
+                        messages.error(request, 'パスワードが正しくありません。')
                 else:
-                    return redirect(next_url)
+                    messages.error(request, '認証コードが正しくありません。')
+            else:
+                print(form.errors)
+                messages.error(request, 'フォームの入力に誤りがあります。')
+
     else:
         form = CustomAuthenticationForm()
-        next_url = request.GET.get('next')
-    return render(request, 'myapp/login.html', {'form': form, 'next': next_url})
+
+    return render(request, 'myapp/login.html', {'form': form, 'confirmed_username': confirmed_username})
+
+
 
 @login_required
 

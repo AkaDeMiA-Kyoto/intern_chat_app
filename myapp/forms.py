@@ -11,7 +11,8 @@ class CustomUserCreationForm(UserCreationForm):
     
 
 class CustomAuthenticationForm(AuthenticationForm):
-    pass
+    code_form = forms.CharField(label=("認証コード"), max_length=30)
+    
 
 class UserSearchForm(forms.Form):
     query = forms.CharField(label='友達を検索', max_length=100)
