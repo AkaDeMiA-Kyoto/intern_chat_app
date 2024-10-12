@@ -11,6 +11,7 @@ from chat.serializers import MessageSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
+from allauth.account.forms import LoginForm
 
 
 class UpdateMessage(View):
@@ -69,14 +70,13 @@ class SearchUser(View):
                 #検索文字列を含むユーザ情報を取得(自分は除外)
                 if query in user.username and user.username != request.user.username:
                     user_list.append(user)
-        elif request.method == 'POST':
+        else:
             user_list = list(CustomUser.objects.all())  #全ユーザ一覧を取得
             for user in user_list:
                 if user.username == request.user.username:
                     user_list.remove(user)  #自分のユーザだけ除外
                     break
-        
-        user_list = CustomUser.objects.exclude(username=request.user.username)
+
         friends = getFriendsList(request.user.username)  #自分のフレンド一覧を取得
         return render(request, "chat/search.html", {'friends': user_list, 'friend': friends})
     
@@ -88,8 +88,12 @@ class SearchUser(View):
 #         return render(request, 'chat/search.html', {'friends': user_list})
 
 class Login(TemplateView):
-    template_name = 'account/login.html'
+    template_name = 'chat/login.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = LoginForm()  # フォームインスタンスをコンテキストに追加
+        return context
 
 def addFriend(request, username):
     """

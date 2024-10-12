@@ -20,6 +20,14 @@
     </style>
 </head>
 <body>
+    <form method="get">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <input type="text" class="form-control-sm" placeholder="ユーザ名で検索" name="search"
+                saria-describedby="basic-addon2">
+            <button type="submit" class="btn btn-success ml-2">検索</button>
+        </div>
+    </form>
     {% for friend in friends %}
             <a href="{% url 'chat:get_message' friend.username %}">
         
