@@ -1,0 +1,11 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "database": "${workspaceFolder:django_project}/intern_chat_app/db.sqlite3",
+            "name": "django"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}
