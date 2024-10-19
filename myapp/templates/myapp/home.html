@@ -34,9 +34,9 @@
     <title>Djangoチャットアプリ</title>
 </head>
 <body>
+    <a href="{% url 'account_logout' %}" class='logout'>ログアウト</a>
     <a href="{% url 'chat:login' %}" class="login">ログイン</a>
     <a href="{% url 'account_signup' %}" class="signup">会員登録</a>
-    <a href="{% url 'account_logout' %}" class='logout'>ログアウト</a>
     
 </body>
 </html>
