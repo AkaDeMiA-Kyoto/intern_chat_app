@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
-from .forms import CustomUserCreationForm, CustomAuthenticationForm, TalkForm, UsernameUpdateForm, UseradressUpdateForm, UserimageUpdateForm, CustomPasswordChangeForm,UserSearchForm
+from .forms import CustomUserCreationForm, CustomAuthenticationForm, TalkForm, UsernameUpdateForm, UseradressUpdateForm, UserimageUpdateForm, CustomPasswordChangeForm, UserSearchForm
 from .models import Message, CustomUser
 from django.contrib.auth import login, logout, get_user_model, update_session_auth_hash, authenticate
 from django.http import HttpResponseRedirect
@@ -24,15 +24,14 @@ def signup_view(request):
         form = CustomUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('index') 
+            return redirect('index')
     else:
         form = CustomUserCreationForm()
     return render(request, 'myapp/signup.html', {'form': form})
 
-
 def users_mail_test(request):
     code = random.randint(1000, 9999)
-    request.session['auth_code'] = str(code)  
+    request.session['auth_code'] = str(code)
     username = request.POST.get('username')
     try:
         user = CustomUser.objects.get(username=username)
@@ -43,19 +42,19 @@ def users_mail_test(request):
     send_mail(
         '2段階認証',
         f'認証コードは {str(code)} です。',
-        settings.EMAIL_FROM,  
-        [user.email],   
+        settings.EMAIL_FROM,
+        [user.email],
         fail_silently=False
     )
     messages.success(request, f'認証コードが {user.email} に送信されました。')
-    return redirect('login_with_code')  
+    return redirect('login_with_code')
 
 def login_view(request):
-    confirmed_username = request.session.get('confirmed_username', None)  
+    confirmed_username = request.session.get('confirmed_username', None)
 
     if request.method == 'POST':
         if 'clear_username' in request.POST:
-            request.session.pop('confirmed_username', None)  
+            request.session.pop('confirmed_username', None)
             messages.info(request, 'ユーザー名を再入力してください。')
             form = CustomAuthenticationForm()
             confirmed_username = None
@@ -87,10 +86,9 @@ def login_view(request):
                 confirmed_username = request.session.get('confirmed_username', None)
 
         else:
-
             if confirmed_username:
-                request.POST = request.POST.copy()  
-                request.POST['username'] = confirmed_username  
+                request.POST = request.POST.copy()
+                request.POST['username'] = confirmed_username
 
             form = CustomAuthenticationForm(request, data=request.POST)
             if form.is_valid():
@@ -110,7 +108,6 @@ def login_view(request):
                 else:
                     messages.error(request, '認証コードが正しくありません。')
             else:
-                print(form.errors)
                 messages.error(request, 'フォームの入力に誤りがあります。')
 
     else:
@@ -119,62 +116,46 @@ def login_view(request):
     return render(request, 'myapp/login.html', {'form': form, 'confirmed_username': confirmed_username})
 
 
-
 @login_required
-
 def friends(request):
     form = UserSearchForm(request.GET)
+    friends = CustomUser.objects.exclude(id=request.user.id).prefetch_related('sent_messages', 'received_messages')
+
     if form.is_valid():
         query = form.cleaned_data.get('query')
-        friends = CustomUser.objects.exclude(id=request.user.id)
         if query:
-            friends = friends.filter(username__icontains=query)
-    else:
-        friends = CustomUser.objects.exclude(id=request.user.id)
+            friends = friends.filter(
+                Q(username__icontains=query) | Q(email__icontains=query)
+            )
 
     info = []
     info_have_message = []
     info_have_no_message = []
 
+    last_messages = Message.objects.filter(
+        Q(sender=request.user) | Q(recipient=request.user)
+    ).select_related('sender', 'recipient').order_by('timestamp')
+
+    message_dict = {}
+    for message in last_messages:
+        if message.sender_id == request.user.id:
+            message_dict[message.recipient_id] = message
+        else:
+            message_dict[message.sender_id] = message
+
     for friend in friends:
-        last_message = Message.objects.filter(
-                Q(sender=request.user, recipient=friend) | Q(sender=friend, recipient=request.user)
-        ).order_by('timestamp').last()
-        
+        last_message = message_dict.get(friend.id)
         if last_message:
             info_have_message.append([friend, last_message.content, last_message.timestamp])
         else:
             info_have_no_message.append([friend, None, None])
-    
+
     info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
-    
     info.extend(info_have_message)
     info.extend(info_have_no_message)
-    
+
     return render(request, "myapp/friends.html", {"info": info, "form": form})
-# def friends(request):
-#     friends = CustomUser.objects.exclude(id=request.user.id)
-    
-#     info = []
-#     info_have_message = []
-#     info_have_no_message = []
-    
-#     for friend in friends:
-#         last_message = Message.objects.filter(
-#                 Q(sender=request.user, recipient=friend) | Q(sender=friend, recipient=request.user)
-#         ).order_by('timestamp').last()
-        
-#         if last_message:
-#             info_have_message.append([friend, last_message.content, last_message.timestamp])
-#         else:
-#             info_have_no_message.append([friend, None, None])
-    
-#     info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
-    
-#     info.extend(info_have_message)
-#     info.extend(info_have_no_message)
-    
-#     return render(request, "myapp/friends.html", {"info": info})
+
 
 @login_required
 def talk_room(request, user_id):
@@ -192,13 +173,14 @@ def talk_room(request, user_id):
 
     talks = Message.objects.filter(
         Q(sender=request.user, recipient=friend) | Q(sender=friend, recipient=request.user)
-    ).order_by('timestamp')
+    ).select_related('sender', 'recipient').order_by('timestamp')
 
     return render(request, "myapp/talk_room.html", {
         'form': form,
         'talks': talks,
         'friend': friend,
     })
+
 
 @login_required
 def setting(request):
@@ -233,8 +215,7 @@ def setting_adress(request):
             messages.success(request, "メールアドレスが更新されました。")
             return redirect('setting')
         else:
-            print(user_form.errors) 
-
+            print(user_form.errors)
 
     else:
         user_form = UseradressUpdateForm(instance=user)

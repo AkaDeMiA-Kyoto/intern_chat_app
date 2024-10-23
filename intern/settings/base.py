@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import os
 import environ
+import debug_toolbar
 from settings_secret import *
 # from django.contrib.auth.backends import ModelBackend
 
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'myapp',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -56,7 +58,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware'
+    'allauth.account.middleware.AccountMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+]
+
+INTERNAL_IPS = [
+    '127.0.0.1',
 ]
 
 ROOT_URLCONF = 'intern.urls'
@@ -92,14 +99,21 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE':'django.db.backends.postgresql',
         'NAME': 'mydatabase',  
         'USER': 'myuser',       
         'PASSWORD': 'mypassword', 
         'HOST': 'localhost', 
-        'PORT': '5432',        
+        'PORT': '',        
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE':'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3', 
+#         }
+# }
 
 
 # Password validation
@@ -165,3 +179,7 @@ if os.path.isfile('.env'):
 
     DEBUG = env('DEBUG')
     ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+
+DEBUG = True
+
+ALLOWED_HOSTS = []
