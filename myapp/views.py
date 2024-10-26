@@ -6,8 +6,7 @@ from django.shortcuts import render
 
 
 class SignUp(generic.CreateView):
-
-    form_class = CustomUserCreationForm
+    form = CustomUserCreationForm
     success_url = reverse_lazy('chat:home')
     template_name = 'myapp/signup.html'
 

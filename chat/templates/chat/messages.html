@@ -9,7 +9,15 @@
         {% for message in messages %}
         {% if friend == message.sender_name %}
         <div class="incoming_msg">
-            <div class="incoming_msg_img"> <img src="{{ friend.thumbnail.url }}" alt="sunil"> </div>
+            <div class="incoming_msg_img"> 
+                
+                {% if friend.thumbnail %}
+                <img src="{{ friend.thumbnail.url }}" alt="sunil" style="width: 30px; height: auto;">
+                {% else %}
+                <img src="https://chie-pctr.c.yimg.jp/dk/iwiz-chie/que-12251150732?w=999&h=999&up=0" alt="sunil" style="width: 30px; height: auto;">
+                {% endif %}
+                 
+            </div>
             <div class="received_msg">
                 <div class="received_withd_msg">
                     <p style="font-size: 1vw;">{{message.description}}</p>
@@ -81,8 +89,9 @@
             scrolltoend();
         })
     }
+    
     $(function () {
-        setInterval(receive, 1000, '{{friend.thumbnail.url}}')
+        setInterval(receive, 1000, "{% if friend.thumbnail %}{{ friend.thumbnail.url }}{% else %}''{% endif %}")
     })
 
     const text = '<div class="incoming_ms">' +

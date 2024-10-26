@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'django_bootstrap5',
+    'debug_toolbar',
 ]
 
 SITE_ID = 1
@@ -59,6 +60,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # django-allauth用に追加
     'allauth.account.middleware.AccountMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 SITE_ID = 1
@@ -82,7 +84,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 # ログイン/ログアウト後の遷移先を設定
 from django.urls import reverse_lazy
 LOGIN_REDIRECT_URL = reverse_lazy('chat:search_user')
-ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'chat:home'
 
 ACCOUNT_LOGOUT_ON_GET = 'True'
 
@@ -183,3 +185,5 @@ AUTH_USER_MODEL = 'myapp.CustomUser'
 LOGOUT_REDIRECT_URL = '/' 
 
 MEDIA_URL = '/media/'
+
+INTERNAL_IPS = ['127.0.0.1',]

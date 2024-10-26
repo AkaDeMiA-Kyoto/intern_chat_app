@@ -7,9 +7,11 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm):
         model = CustomUser
-        fields = ('username', 'email')
+        fields = ('username', 'email', 'thumbnail')
 
     email = forms.EmailField()
+    thumbnail = forms.ImageField()
+    
 
 
 class CustomUserChangeForm(UserChangeForm):

@@ -8,6 +8,7 @@
         .chat_list {
             display: flex;
             flex-direction: row;
+            margin: auto;
         }
 
         .chat_people {
@@ -22,6 +23,7 @@
 <body>
     <form method="get">
         {% csrf_token %}
+        <p style="color: black; font: 900;">{{ request.user.username }}のトーク画面です</p>
         <div class="input-group mb-3">
             <input type="text" class="form-control-sm" placeholder="ユーザ名で検索" name="search"
                 saria-describedby="basic-addon2">
@@ -33,7 +35,12 @@
         
                 <div class="chat_list">
                     <div class="chat_people">
-                        <div class="chat_img"> <img src="{{ friend.thumbnail.url }}" alt="sunil" style="width: 30px; height: auto;">
+                        <div class="chat_img"> 
+                            {% if friend.thumbnail %}
+                            <img src="{{ friend.thumbnail.url }}" alt="sunil" style="width: 30px; height: auto;">
+                            {% else %}
+                            <img src="https://chie-pctr.c.yimg.jp/dk/iwiz-chie/que-12251150732?w=999&h=999&up=0" alt="sunil" style="width: 30px; height: auto;">
+                            {% endif %}
                         </div>
                         <div class="chat_ib">
                             <h5 style="margin-left: 10px;">{{friend.username}}</h5>

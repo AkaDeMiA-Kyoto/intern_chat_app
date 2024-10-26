@@ -70,6 +70,8 @@ class SearchUser(View):
                 #検索文字列を含むユーザ情報を取得(自分は除外)
                 if query in user.username and user.username != request.user.username:
                     user_list.append(user)
+                if query in user.email and user.email != request.user.email:
+                    user_list.append(user)
         else:
             user_list = list(CustomUser.objects.all())  #全ユーザ一覧を取得
             for user in user_list:

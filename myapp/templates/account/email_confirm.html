@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    
 </head>
 <body>
     <div>
@@ -11,7 +12,7 @@
 
         {% if confirmation %}
             <p>ユーザー登録を確定するには、以下のボタンを押してください。</p>
-            <form method="post" action="{% url 'myapp_confirm_email' confirmation.key %}">
+            <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
                 {% csrf_token %}
                 <button type="submit">確定</button>
             </form>

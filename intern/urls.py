@@ -23,6 +23,7 @@ urlpatterns = [
     path('', include('myapp.urls')),
     path('accounts/', include('allauth.urls')),#追加
     path('', include("chat.urls")),   
+    path("__debug__/", include("debug_toolbar.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

@@ -10,7 +10,7 @@
 <body>
     <div>
         <h1>サインアップ</h1>
-        <form method="post"  action="{% url 'account_signup' %}">
+        <form method="post" enctype="multipart/form-data" action="{% url 'account_signup' %}">
             {% csrf_token %}
 
             {% bootstrap_form form %}
@@ -18,8 +18,12 @@
             {% if redirect_field_value %}
                 <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_name }}">
             {% endif %}
+            <div class="mb-3">
+                {{ form.thumbnail.label_tag }}
+                {{ form.thumbnail }}
+            </div>
 
-            <button type="submit"></button>
+            <button type="submit">登録</button>
         </form>
     </div>
 </body>
