@@ -121,8 +121,10 @@ def addFriend(request, username):
 def get_message(request, username):  
     friend = CustomUser.objects.get(username=username)
     current_user = CustomUser.objects.get(username=request.user.username)
-    messages = Messages.objects.filter(sender_name=current_user.id, receiver_name=friend.id) | \
-            Messages.objects.filter(sender_name=friend.id, receiver_name=current_user.id)
+    messages = Messages.objects.filter(sender_name=current_user.id, receiver_name=friend.id
+    ).select_related('sender_name', 'receiver_name') | \
+            Messages.objects.filter(sender_name=friend.id, receiver_name=current_user.id
+    ).select_related('sender_name', 'receiver_name')
     friends = getFriendsList(request.user.username)
     
     return render(request, "chat/messages.html",
