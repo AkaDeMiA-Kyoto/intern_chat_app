@@ -16,8 +16,8 @@
     <a href="{% url "myapp:cha_name" %}" class='content'>ユーザー名変更</a>
     <a href="{% url "myapp:cha_email" %}" class='content'>メールアドレス変更</a>
     <a href="{% url "myapp:cha_image" %}" class='content'>アイコン変更</a>
-    <a href="{% url "myapp:cha_pass" %}" class='content'>パスワード変更</a>
-    <form action="{% url "myapp:logout" %}" method='post'>
+    <a href="{% url "account_change_password" %}" class='content'>パスワード変更</a>
+    <form action="{% url "account_logout" %}" method='post'>
       {% csrf_token %}
       <button type="submit" class='content'>ログアウト</button>
     </form>

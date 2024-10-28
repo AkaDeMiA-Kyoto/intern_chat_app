@@ -7,10 +7,11 @@ from django.contrib.auth.models import AbstractUser
 class CustomUser(AbstractUser):
     # username = models.CharField('name', max_length=40)
     email = models.EmailField('メールアドレス')
-    image = models.ImageField('プロフィール画像', upload_to="uploads/")
+    image = models.ImageField('プロフィール画像', upload_to="uploads/", null=True, blank=True)
 
     class Meta:
         verbose_name_plural = 'CustomUser'
+        db_table = "customuser"
 
     def __str__(self):
         return self.username

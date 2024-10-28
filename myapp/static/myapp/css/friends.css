@@ -4,6 +4,7 @@ a {
 }
 
 .friend_container {
+  border-top: 1px solid #9b9b9b;
   margin-bottom: 64px;
 }
 
@@ -40,7 +41,7 @@ p {
 
 .friend_name, .friend_message {
   font-size: 100%;
-  left: 150px;
+  left: 120px;
 }
 
 .friend_name {

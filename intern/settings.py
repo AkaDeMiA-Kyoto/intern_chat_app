@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'django_bootstrap5',
 
     'accounts.apps.AccountsConfig',
+
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -58,6 +60,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 
     # django-allauth 用に追加(v0.56.0以降で必要)
     'allauth.account.middleware.AccountMiddleware',
@@ -123,8 +127,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-# LANGUAGE_CODE = 'ja'
+# LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ja'
 
 
 TIME_ZONE = 'UTC'
@@ -137,7 +141,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 
 # Default primary key field type
@@ -153,10 +157,12 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 # LOGIN_URL = '/myapp/login/'
 LOGIN_REDIRECT_URL = 'myapp:friends'
 ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
+LOGOUT_REDIRECT_URL = 'account_login'
 # ACCOUNT_LOGOUT_REDIRECT_URL = 'myapp:login'
 
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
 
 # django-allauth で利用する django.contrib.sites を使うためにサイト識別用IDを設定
 SITE_ID = 1
@@ -187,3 +193,24 @@ if os.path.isfile('.env'):
 
     DEBUG = env('DEBUG')
     ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        },
+    }
+}

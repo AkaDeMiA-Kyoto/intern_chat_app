@@ -22,19 +22,19 @@
       <div class="message_box">
         {% if friend.id == message.message_from.id %}
           <div class="message_flexbox friend">
-            <div class="message friend">{{ message }}</div>
+            <div class="message friend">{{ message.talk }}</div>
             <div class="time">
-              {{ message.sent_at|date:"m/d" }}
-              {{ message.sent_at|date:"H:i" }}
+              {{ message.time|date:"m/d" }}
+              {{ message.time|date:"H:i" }}
             </div>
           </div>
         {% else %}
           <div class="message_flexbox request">
             <div class="time">
-              {{ message.sent_at|date:"m/d" }}
-              {{ message.sent_at|date:"H:i" }}
+              {{ message.time|date:"m/d" }}
+              {{ message.time|date:"H:i" }}
             </div>
-            <div class="message request">{{ message }}</div>
+            <div class="message request">{{ message.talk }}</div>
           </div>
         {% endif %}
       </div>

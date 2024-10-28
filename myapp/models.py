@@ -17,10 +17,16 @@ from accounts.models import CustomUser
 
 
 class Message(models.Model):
-    message_from = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="from_name")
-    message_to = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="to_name")
-    message = models.CharField('トーク', max_length=128)
-    sent_at = models.DateTimeField('送信日時', auto_now_add=True)
+    # 誰から
+    message_from = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="message_from")
+    # 誰へ
+    message_to = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="message_to")
+    # メッセージ内容
+    talk = models.CharField('トーク', max_length=512)
+    time = models.DateTimeField('送信日時', auto_now_add=True)
+
+    class Meta:
+        db_table = "message"
 
     def __str__(self):
-        return self.message
+        return "{}>{} {}".format(self.message_from, self.message_to, self.time)
