@@ -12,6 +12,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
 from allauth.account.forms import LoginForm
+from django.db.models import OuterRef, Subquery, Q, Max
+from django.db.models.functions import Coalesce, Greatest
 
 
 class UpdateMessage(View):
@@ -73,11 +75,26 @@ class SearchUser(View):
                 if query in user.email and user.email != request.user.email:
                     user_list.append(user)
         else:
-            user_list = list(CustomUser.objects.all())  #全ユーザ一覧を取得
-            for user in user_list:
-                if user.username == request.user.username:
-                    user_list.remove(user)  #自分のユーザだけ除外
-                    break
+            # user_list = list(CustomUser.objects.all())  #全ユーザ一覧を取得
+            # for user in user_list:
+            #     if user.username == request.user.username:
+            #         user_list.remove(user)  #自分のユーザだけ除外
+            #         break
+            user_list = []
+            me = CustomUser.objects.get(username=request.user.username)
+            user = CustomUser.objects.all().exclude(username=request.user.username)
+            latest_msg = Messages.objects.filter(
+            Q(sender_name=OuterRef("pk"), receiver_name=me)|   Q(sender_name=me, receiver_name=OuterRef("pk"))
+            ).order_by("-time")
+            user_list = user.annotate(
+            send_max=Max("sender__timestamp", filter=Q(sender__receiver_name=me)),
+            receive_max=Max("receiver__timestamp", filter=Q(receiver__sender_name=me)),
+            latest_time=Greatest("send_max", "receive_max"),
+            time=Coalesce("latest_time", "send_max", "receive_max"),
+            latest_msg_talk=Subquery(latest_msg.values("description")[:1])
+            )
+        
+            
 
         friends = getFriendsList(request.user.username)  #自分のフレンド一覧を取得
         return render(request, "chat/search.html", {'friends': user_list, 'friend': friends})
