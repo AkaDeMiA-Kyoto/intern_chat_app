@@ -83,7 +83,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 
 # ログイン/ログアウト後の遷移先を設定
 from django.urls import reverse_lazy
-LOGIN_REDIRECT_URL = reverse_lazy('chat:search_user')
+LOGIN_REDIRECT_URL = reverse_lazy('chat:friends')
 ACCOUNT_LOGOUT_REDIRECT_URL = 'chat:home'
 
 ACCOUNT_LOGOUT_ON_GET = 'True'

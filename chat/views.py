@@ -63,49 +63,31 @@ def getFriendsList(username):
 class SearchUser(View):
     
     def get(self, request, *args, **kwargs):
-        
+        user_list = []
+        me = CustomUser.objects.get(username=request.user.username)
+        user = CustomUser.objects.all().exclude(username=request.user.username)
+        latest_msg = Messages.objects.filter(
+        Q(sender_name=OuterRef("pk"), receiver_name=me)|   Q(sender_name=me, receiver_name=OuterRef("pk"))
+        ).order_by("-time")
+        user_list = user.annotate(
+        send_max=Max("sender__timestamp", filter=Q(sender__receiver_name=me)),
+        receive_max=Max("receiver__timestamp", filter=Q(receiver__sender_name=me)),
+        latest_time=Greatest("send_max", "receive_max"),
+        time=Coalesce("latest_time", "send_max", "receive_max"),
+        latest_msg_talk=Subquery(latest_msg.values("description")[:1])
+        )
         if 'search' in self.request.GET:
             query = request.GET.get("search")
             users = list(CustomUser.objects.all())
-            user_list = []
-            for user in users:
-                #検索文字列を含むユーザ情報を取得(自分は除外)
-                if query in user.username and user.username != request.user.username:
-                    user_list.append(user)
-                if query in user.email and user.email != request.user.email:
-                    user_list.append(user)
-        else:
-            # user_list = list(CustomUser.objects.all())  #全ユーザ一覧を取得
-            # for user in user_list:
-            #     if user.username == request.user.username:
-            #         user_list.remove(user)  #自分のユーザだけ除外
-            #         break
-            user_list = []
-            me = CustomUser.objects.get(username=request.user.username)
-            user = CustomUser.objects.all().exclude(username=request.user.username)
-            latest_msg = Messages.objects.filter(
-            Q(sender_name=OuterRef("pk"), receiver_name=me)|   Q(sender_name=me, receiver_name=OuterRef("pk"))
-            ).order_by("-time")
-            user_list = user.annotate(
-            send_max=Max("sender__timestamp", filter=Q(sender__receiver_name=me)),
-            receive_max=Max("receiver__timestamp", filter=Q(receiver__sender_name=me)),
-            latest_time=Greatest("send_max", "receive_max"),
-            time=Coalesce("latest_time", "send_max", "receive_max"),
-            latest_msg_talk=Subquery(latest_msg.values("description")[:1])
-            )
-        
-            
+            user_list = user_list.filter(
+                    Q(username__icontains=query)            
+                    | Q(email__icontains=query)            
+                    | Q(latest_msg_talk__icontains=query)   
+                )
 
         friends = getFriendsList(request.user.username)  #自分のフレンド一覧を取得
         return render(request, "chat/search.html", {'friends': user_list, 'friend': friends})
     
-# def login_view(request):
-#     if request.method == 'POST':
-#         # Get all users except the current user
-#         user_list = list(CustomUser.objects.exclude(username=request.user.username))
-        
-#         return render(request, 'chat/search.html', {'friends': user_list})
-
 class Login(TemplateView):
     template_name = 'chat/login.html'
 

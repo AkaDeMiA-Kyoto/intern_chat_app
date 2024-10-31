@@ -24,6 +24,7 @@
     <form method="get">
         {% csrf_token %}
         <p style="color: black; font: 900;">{{ request.user.username }}のトーク画面です</p>
+        <a href="{% url 'chat:search_user' %}">一覧を表示</a>
         <div class="input-group mb-3">
             <input type="text" class="form-control-sm" placeholder="ユーザ名で検索" name="search"
                 saria-describedby="basic-addon2">
