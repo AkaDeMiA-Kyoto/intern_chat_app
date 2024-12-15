@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    <a href=""></a>
-</body>
+    <link rel="stylesheet" href="{% static 'myapp/css/index.css' %}" />
+    <link rel="stylesheet" href="{% static 'myapp/css/base.css' %}" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="button-block">
+        <a href="{% url 'login_view' %}" class="button">ログイン</a>
+        <a href="{% url 'signup_view' %}" class="button">新規登録</a>
+      </div>
+    </div>
+  </body>
 </html>
+

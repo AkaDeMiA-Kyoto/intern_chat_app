@@ -33,6 +33,19 @@ body{
     color: #000;
 }
 
+.container{
+    width: 400px;
+    min-height: 100vh;
+    border: 1px solid black;
+    justify-self: center;
+}
+
+@media (max-width: 400px) {
+    .container {
+        width: 100%;
+    }
+}
+
 /* フッター */
 .footer{
     width: 100vw;
