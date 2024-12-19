@@ -9,9 +9,10 @@
     flex-direction: column;
 }
 
-.button-block .button{
+.button{
     text-decoration: none;
     color: black;
+    background-color: white;
     border: 1px solid black;
     border-radius: 5px;
     padding: 5px 10px;
