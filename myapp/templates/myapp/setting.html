@@ -5,7 +5,16 @@
 {% endblock %}
 
 {% block content %}
-  <p>ここにホームページの内容が入りますaaaaa。</p>
+  <div class="setting-buttons">
+    <a href="#" class="setting-button">ユーザ名変更</a>
+    <a href="#" class="setting-button">メールアドレス変更</a>
+    <a href="#" class="setting-button">アイコン変更</a>
+    <a href="#" class="setting-button">パスワード変更</a>
+    <form action="{% url "logout" %}" method="POST">
+        {% csrf_token %}
+        <button class="setting-button" type="submit">ログアウト</button>
+    </form>
+  </div>
 {% endblock %}
 
 {% block extra_style %}

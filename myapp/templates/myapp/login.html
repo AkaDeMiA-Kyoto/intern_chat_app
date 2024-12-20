@@ -17,20 +17,24 @@
         <div class="form-item">
           <label for="username">ユーザー名</label>
           <input type="text" name="username" id="username" value="{{ form.username.value|default:'' }}" required />
-          {% if form.username.errors %}
-            <div class="field-errors">{{ form.username.errors }}</div>
-          {% endif %}
         </div>
 
         <div class="form-item">
           <label for="password">パスワード</label>
           <input type="password" name="password" id="password" required />
-          {% if form.password.errors %}
-            <div class="field-errors">{{ form.password.errors }}</div>
-          {% endif %}
         </div>
 
         <button type="submit" class="submit-btn button">ログイン</button>
+
+        {% if form.non_field_errors %}
+          <div class="non-field-errors">
+            <ul>
+              {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
       </form>
     </div>
   </body>
