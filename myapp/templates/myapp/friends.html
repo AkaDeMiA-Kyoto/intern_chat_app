@@ -5,13 +5,27 @@
 {% endblock %}
 
 {% block content %}
-<div class="friends-list">
+  <div class="friends-list">
     {% for user in users %}
+      <a class="friend-link" href="{% url 'talk_room' user.id %}">
         <div class="friend-content">
-            <img src="" alt="">
+          {% if user.image %}
+            <img src="{{ user.image.url }}" class="user-icon" alt="{{ user.username }}のアイコン" />
+          {% else %}
+            {% load static %}
+            <img src="{% static 'myapp/img/first-icon.png' %}" class="user-icon" alt="{{ user.username }}のアイコン" />
+          {% endif %}
+          <div class="friend-detail">
+            <h1 class="username">{{ user.username }}</h1>
+            <div class="message-block">
+              <p>ヤッホー!!</p>
+              <p class="message-date">11/2</p>
+            </div>
+          </div>
         </div>
+      </a>
     {% endfor %}
-</div>
+  </div>
 {% endblock %}
 
 {% block extra_style %}

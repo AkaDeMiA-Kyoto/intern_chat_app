@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth import login
-from .forms import CustomUserCreationForm,CustomAuthenticationForm
+from .forms import CustomUserCreationForm, CustomAuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from .models import CustomUser
@@ -13,14 +13,11 @@ def index(request):
 
 def signup_view(request):
     if request.method == "POST":
-        print(request.FILES,request.POST)
         form = CustomUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            print("userが保存されました")
             return redirect("index")
         else:
-            print("userに誤りがあります",form.errors)
             return render(request, "myapp/signup.html", {"form": form})
 
     return render(request, "myapp/signup.html")
@@ -38,15 +35,21 @@ class CustomLoginView(LoginView):
     def get_success_url(self):
         return self.success_url
 
+
 @login_required
 def friends(request):
     users = CustomUser.objects.all()
-    
-    return render(request, "myapp/friends.html",{"users": users})
+
+    return render(request, "myapp/friends.html", {"users": users})
+
 
 @login_required
-def talk_room(request):
+def talk_room(request, user_id):
+    user = CustomUser.objects.filter(id=user_id)
+    print(user)
+
     return render(request, "myapp/talk_room.html")
+
 
 @login_required
 def setting(request):

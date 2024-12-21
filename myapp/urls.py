@@ -8,7 +8,7 @@ urlpatterns = [
     path('signup', views.signup_view, name='signup_view'),
     path('login', CustomLoginView.as_view(), name='login'),
     path('friends', views.friends, name='friends'),
-    path('talk_room', views.talk_room, name='talk_room'),
+    path('talk_room/<int:user_id>/', views.talk_room, name='talk_room'),
     path('setting', views.setting, name='setting'),
-    path('logout', LogoutView.as_view(), name='logout'), 
+    path('logout', LogoutView.as_view(), name='logout'),
 ]

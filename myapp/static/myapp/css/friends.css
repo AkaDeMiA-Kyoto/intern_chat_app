@@ -1,0 +1,46 @@
+.friend-link{
+    text-decoration: none;
+    color: black;
+}
+
+.friend-content {
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid black;
+    margin-top: 10px;
+}
+
+.user-icon {
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid black;
+    margin: 0 15px;
+    margin-right: 8px;
+}
+
+.friend-detail {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    width: 350px;
+}
+
+.friend-detail .username {
+    margin: 5px 0;
+    font-weight: normal;
+    font-size: 1.1rem;
+}
+
+.message-block {
+    width: 90%;
+    margin: 5px 0;
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.message-block>p {
+    margin-top: 3px;
+    margin-bottom: 3px;
+    color: gray;
+}
