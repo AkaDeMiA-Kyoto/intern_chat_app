@@ -9,7 +9,7 @@ class CustomUser(AbstractUser):
 
 
 class Message(models.Model):
-    created_by = models.ForeignKey(
+    send_by = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
         related_name="sent_messages",

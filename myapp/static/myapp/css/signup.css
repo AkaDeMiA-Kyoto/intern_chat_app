@@ -31,3 +31,9 @@ form{
     border-radius: 10px;
     padding: 8px 25px;
 }
+
+.login-link{
+    margin: 5px auto;
+    text-decoration: none;
+    color: gray;
+}

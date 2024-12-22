@@ -1,0 +1,61 @@
+.message-list {
+    margin-bottom: 50px;
+}
+
+.back-button {
+    position: absolute;
+    top: 16%;
+    left: 0;
+    text-decoration: none;
+    color: gray;
+    font-size: 2.6rem;
+    z-index: 100;
+}
+
+.update-button {
+    position: absolute;
+    top: 23%;
+    right: 0;
+    text-decoration: none;
+    border: black 1px solid;
+    border-radius: 5px;
+    color: black;
+    background-color: white;
+    font-size: 1rem;
+    padding: 5px 10px;
+}
+
+.footer {
+    height: 50px;
+}
+
+.footer-container {
+    height: 50px;
+}
+
+form {
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 85%;
+}
+
+.message-content {
+    line-height: 2;
+    width: 80%;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.message-text {
+    word-break: break-all;
+}
+
+.message-block {
+    border-bottom: 1px solid black;
+}
+
+.message-block>* {
+    margin: 10px;
+}

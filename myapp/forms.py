@@ -16,14 +16,13 @@ class CustomUserCreationForm(UserCreationForm):
         return email
 
     def clean(self):
-        cleaned_data = super().clean()
-        username = cleaned_data.get("username")
-        password1 = cleaned_data.get("password1")
-        password2 = cleaned_data.get("password2")
+        username = self.cleaned_data.get("username")
+        password1 = self.cleaned_data.get("password1")
+        password2 = self.cleaned_data.get("password2")
 
-        if username is None:
+        if username == None:
             raise forms.ValidationError("そのユーザ名は既に使用されています")
-        
+
         if password1 != password2:
             raise forms.ValidationError("パスワードが一致しません。")
 
@@ -35,13 +34,7 @@ class CustomUserCreationForm(UserCreationForm):
         if len(password1) < 8:
             raise forms.ValidationError("パスワードは8文字以上で入力してください。")
 
-        return cleaned_data
-
-
-from django import forms
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate
-from .models import CustomUser
+        return super().clean()
 
 
 class CustomAuthenticationForm(AuthenticationForm):
@@ -57,3 +50,4 @@ class CustomAuthenticationForm(AuthenticationForm):
             raise forms.ValidationError("ユーザー名またはパスワードが間違っています。")
 
         return super().clean()
+    

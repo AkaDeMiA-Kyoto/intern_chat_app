@@ -140,3 +140,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGOUT_REDIRECT_URL = 'login'
+
+TIME_ZONE = 'Asia/Tokyo'
+USE_TZ = True
+

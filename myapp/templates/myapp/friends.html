@@ -1,25 +1,23 @@
 {% extends 'myapp/base.html' %}
 
-{% block header-title %}
-<p>友達</p>
-{% endblock %}
+{% block header-title %}友達{% endblock %}
 
 {% block content %}
   <div class="friends-list">
-    {% for user in users %}
-      <a class="friend-link" href="{% url 'talk_room' user.id %}">
+    {% for user_object in user_objects %}
+      <a class="friend-link" href="{% url 'talk_room' user_object.user.id %}">
         <div class="friend-content">
-          {% if user.image %}
-            <img src="{{ user.image.url }}" class="user-icon" alt="{{ user.username }}のアイコン" />
+          {% if user_object.user.image %}
+            <img src="{{ user_object.user.image.url }}" class="user-icon" alt="{{ user_object.user.username }}のアイコン" />
           {% else %}
             {% load static %}
-            <img src="{% static 'myapp/img/first-icon.png' %}" class="user-icon" alt="{{ user.username }}のアイコン" />
+            <img src="{% static 'myapp/img/first-icon.png' %}" class="user-icon" alt="{{ user_object.user.username }}のアイコン" />
           {% endif %}
           <div class="friend-detail">
-            <h1 class="username">{{ user.username }}</h1>
+            <h1 class="username">{{ user_object.user.username }}</h1>
             <div class="message-block">
-              <p>ヤッホー!!</p>
-              <p class="message-date">11/2</p>
+              <p class="message-content">{{ user_object.latest_message.content|default:'&nbsp;' }}</p>
+              <p class="message-date">{{ user_object.latest_message.created_at|date:"n/j G:i" }}</p>
             </div>
           </div>
         </div>

@@ -26,6 +26,8 @@
 
         <button type="submit" class="submit-btn button">ログイン</button>
 
+        <a href="{% url "signup_view" %}" class="signup-link">ユーザー未登録の方はこちら</a>
+
         {% if form.non_field_errors %}
           <div class="non-field-errors">
             <ul>

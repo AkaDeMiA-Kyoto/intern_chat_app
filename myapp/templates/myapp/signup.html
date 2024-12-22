@@ -40,6 +40,8 @@
 
         <button type="submit" class="submit-btn button">Sign Up</button>
 
+        <a href="{% url "login" %}" class="login-link">ユーザー登録済の方はこちら</a>
+
         {% if form.non_field_errors %}
           <div class="non-field-errors">
             <ul>
