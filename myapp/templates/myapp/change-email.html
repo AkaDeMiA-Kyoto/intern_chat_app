@@ -1,0 +1,30 @@
+{% extends 'myapp/base.html' %}
+
+{% block header-title %}メールアドレスの変更{% endblock %}
+
+{% block content %}
+  <form action="{% url 'change_email' %}" method="POST">
+    {% csrf_token %}
+    <div class="form-item">
+      <label for="email">メールアドレス</label>
+      <input type="text" name="email" id="email" value="{{ user.email }}" required />
+    </div>
+
+    <button type="submit" class="submit-btn button">変更</button>
+
+    {% if form.email.errors and form.is_bound %}
+      <div>
+        <ul>
+          {% for error in form.email.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </form>
+{% endblock %}
+
+{% block extra_style %}
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/change-user.css' %}" />
+{% endblock %}

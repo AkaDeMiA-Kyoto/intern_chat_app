@@ -1,19 +1,39 @@
 {% extends 'myapp/base.html' %}
 
-{% block header-title %}
-設定
-{% endblock %}
+{% block header-title %}設定{% endblock %}
 
 {% block content %}
-  <div class="setting-buttons">
-    <a href="#" class="setting-button">ユーザ名変更</a>
-    <a href="#" class="setting-button">メールアドレス変更</a>
-    <a href="#" class="setting-button">アイコン変更</a>
-    <a href="#" class="setting-button">パスワード変更</a>
-    <form action="{% url "logout" %}" method="POST">
+  <div class="setting-content">
+    <div class="user-info">
+      <div class="user-icon">
+        {% if user.image %}
+          <img src="{{ user.image.url }}" alt="{{ user.username }}のアイコン" />
+        {% else %}
+          {% load static %}
+          <img src="{% static 'myapp/img/first-icon.png' %}" alt="{{ user.username }}のアイコン" />
+        {% endif %}
+      </div>
+      <p class="user-field username">
+        <span class="field-value">{{ user.username }}</span>
+      </p>
+      <p class="user-field">
+        <span class="field-value">{{ user.email }}</span>
+      </p>
+    </div>
+    <div class="setting-buttons">
+      <a href="{% url 'change_username' %}" class="setting-button">ユーザ名変更</a>
+      <a href="{% url 'change_email' %}" class="setting-button">メールアドレス変更</a>
+      <a href="{% url 'change_image' %}" class="setting-button">アイコン変更</a>
+      <a href="{% url 'change_password' %}" class="setting-button">パスワード変更</a>
+      <form action="{% url 'logout' %}" method="POST">
         {% csrf_token %}
         <button class="setting-button" type="submit">ログアウト</button>
-    </form>
+      </form>
+      <form action="{% url 'delete_user' %}" method="POST">
+        {% csrf_token %}
+        <button class="setting-button" type="submit">アカウント削除</button>
+      </form>
+    </div>
   </div>
 {% endblock %}
 

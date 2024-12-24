@@ -15,18 +15,26 @@
 }
 
 .user-icon {
+    width: 48px;
     height: 48px;
     border-radius: 50%;
     border: 1px solid black;
-    margin: 0 15px;
-    margin-right: 8px;
+    overflow: hidden;
+    margin-left: 10px;
+    aspect-ratio: 1 / 1;
+}
+
+.user-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .friend-detail {
     display: flex;
     flex-direction: column;
     margin-left: 10px;
-    width: 350px;
+    width: 330px;
 }
 
 .friend-detail .username {
@@ -60,4 +68,5 @@
     margin: 10px;
     width: 20%;
     text-align: right;
+    font-size: 0.6rem;
 }

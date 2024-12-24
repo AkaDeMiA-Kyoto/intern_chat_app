@@ -29,7 +29,7 @@
         <a href="{% url "signup_view" %}" class="signup-link">ユーザー未登録の方はこちら</a>
 
         {% if form.non_field_errors %}
-          <div class="non-field-errors">
+          <div>
             <ul>
               {% for error in form.non_field_errors %}
                 <li>{{ error }}</li>

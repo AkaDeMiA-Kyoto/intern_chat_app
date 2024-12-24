@@ -7,17 +7,21 @@
     {% for user_object in user_objects %}
       <a class="friend-link" href="{% url 'talk_room' user_object.user.id %}">
         <div class="friend-content">
-          {% if user_object.user.image %}
-            <img src="{{ user_object.user.image.url }}" class="user-icon" alt="{{ user_object.user.username }}のアイコン" />
-          {% else %}
-            {% load static %}
-            <img src="{% static 'myapp/img/first-icon.png' %}" class="user-icon" alt="{{ user_object.user.username }}のアイコン" />
-          {% endif %}
+          <div class="user-icon">
+            {% if user_object.user.image %}
+              <img src="{{ user_object.user.image.url }}" alt="{{ user_object.user.username }}のアイコン" />
+            {% else %}
+              {% load static %}
+              <img src="{% static 'myapp/img/first-icon.png' %}" alt="{{ user_object.user.username }}のアイコン" />
+            {% endif %}
+          </div>
           <div class="friend-detail">
             <h1 class="username">{{ user_object.user.username }}</h1>
             <div class="message-block">
               <p class="message-content">{{ user_object.latest_message.content|default:'&nbsp;' }}</p>
-              <p class="message-date">{{ user_object.latest_message.created_at|date:"n/j G:i" }}</p>
+              <p class="message-date">
+                {{ user_object.latest_message.created_at|date:'n/j' }}<br />{{ user_object.latest_message.created_at|date:'G:i' }}
+              </p>
             </div>
           </div>
         </div>

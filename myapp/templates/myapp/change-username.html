@@ -1,0 +1,29 @@
+{% extends 'myapp/base.html' %}
+
+{% block header-title %}ユーザー名の変更{% endblock %}
+
+{% block content %}
+  <form action="{% url 'change_username' %}" method="POST">
+    {% csrf_token %}
+    <div class="form-item">
+      <label for="username">ユーザー名</label>
+      <input type="text" name="username" id="username" value="{{ user.username }}" required />
+    </div>
+
+    <button type="submit" class="submit-btn button">変更</button>
+    {% if form and form.errors %}
+      <div>
+        <ul>
+          {% for error in form.username.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </form>
+{% endblock %}
+
+{% block extra_style %}
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/change-user.css' %}" />
+{% endblock %}

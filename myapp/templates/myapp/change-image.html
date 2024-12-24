@@ -1,0 +1,36 @@
+{% extends 'myapp/base.html' %}
+
+{% block header-title %}アイコンの変更{% endblock %}
+
+{% block content %}
+  {% if user.image %}
+    <div style="display: flex; justify-content: center;">
+      <img src="{{ user.image.url }}" alt="アイコン画像" />
+    </div>
+    <p class="description-text">ファイルを選択せずに変更を押すと画像が削除されます</p>
+  {% else %}
+    <p class="description-text">画像が登録されていません</p>
+  {% endif %}
+  <form action="{% url 'change_image' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-item">
+      <input type="file" name="image" id="image" style="margin: auto;" />
+    </div>
+
+    <button type="submit" class="submit-btn button">変更</button>
+    {% if form and form.errors %}
+      <div>
+        <ul>
+          {% for error in form.image.errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </form>
+{% endblock %}
+
+{% block extra_style %}
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/change-user.css' %}" />
+{% endblock %}

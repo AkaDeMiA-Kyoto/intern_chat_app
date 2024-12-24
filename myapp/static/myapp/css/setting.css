@@ -1,4 +1,39 @@
-.setting-buttons{
+.setting-content {
+    margin-bottom: 64px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.user-icon {
+    width: 30%;
+    border-radius: 50%;
+    border: 1px solid black;
+    overflow-x: hidden;
+    aspect-ratio: 1 / 1;
+}
+
+.user-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-field {
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.user-field.username {
+    margin-top: 5px;
+    font-size: 2rem;
+}
+
+.setting-buttons {
     display: flex;
     flex-direction: column;
     width: 40%;
@@ -6,7 +41,7 @@
     margin-top: 50px;
 }
 
-.setting-button{
+.setting-button {
     border: 2px solid #aeaeae;
     text-decoration: none;
     color: black;
@@ -18,7 +53,7 @@
     text-align: center;
 }
 
-form{
+form {
     display: flex;
     justify-content: center;
 }
