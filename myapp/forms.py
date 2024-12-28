@@ -14,13 +14,6 @@ class CustomUserCreationForm(UserCreationForm):
         model = CustomUser
         fields = ("username", "email", "password1", "password2", "image")
 
-    def clean_email(self):
-        email = self.cleaned_data.get("email")
-        if "@" not in email or "." not in email:
-            raise forms.ValidationError("有効なメールアドレスを入力してください。")
-
-        return email
-
     def clean_image(self):
         image = self.cleaned_data.get("image")
         if image and image.image.format not in ["PNG", "JPG", "JPEG", "PDF"]:
