@@ -7,6 +7,7 @@ from django.contrib.auth.forms import (
 from .models import CustomUser
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password
+from django.core.validators import FileExtensionValidator
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -14,14 +15,12 @@ class CustomUserCreationForm(UserCreationForm):
         model = CustomUser
         fields = ("username", "email", "password1", "password2", "image")
 
-    def clean_image(self):
-        image = self.cleaned_data.get("image")
-        if image and image.image.format not in ["PNG", "JPG", "JPEG", "PDF"]:
-            raise forms.ValidationError(
-                "画像の形式は「png」,「jpg」,「pdf」にしてください。"
-            )
-
-        return image
+    image = forms.ImageField(
+        required=False,
+        validators=[
+            FileExtensionValidator(allowed_extensions=["png", "jpg", "jpeg", "pdf"])
+        ],
+    )
 
     def clean(self):
         username = self.cleaned_data.get("username")
@@ -34,27 +33,12 @@ class CustomUserCreationForm(UserCreationForm):
         if password1 != password2:
             raise forms.ValidationError("パスワードが一致しません。")
 
-        if username.lower() in password1.lower():
-            raise forms.ValidationError(
-                "ユーザー名とパスワードが似すぎています。別のパスワードを設定してください。"
-            )
-
-        if len(password1) < 8:
-            raise forms.ValidationError("パスワードは8文字以上で入力してください。")
-
         return super().clean()
 
 
 class CustomAuthenticationForm(AuthenticationForm):
     def clean(self):
-        username = self.cleaned_data.get("username")
-        password = self.cleaned_data.get("password")
-
-        if username and not CustomUser.objects.filter(username=username).exists():
-            raise forms.ValidationError("指定されたユーザーは存在しません。")
-
-        user = authenticate(self.request, username=username, password=password)
-        if user is None:
+        if not self.is_valid():
             raise forms.ValidationError("ユーザー名またはパスワードが間違っています。")
 
         return super().clean()
@@ -124,13 +108,5 @@ class CustomPasswordChangeForm(PasswordChangeForm):
 
         if new_password1 != new_password2:
             raise forms.ValidationError("新パスワードが一致しません。")
-
-        if new_password1 and current_user.username.lower() in new_password1.lower():
-            raise forms.ValidationError(
-                "ユーザー名とパスワードが似すぎています。別のパスワードを設定してください。"
-            )
-
-        if new_password1 and len(new_password1) < 8:
-            raise forms.ValidationError("パスワードは8文字以上で入力してください。")
 
         return super().clean()

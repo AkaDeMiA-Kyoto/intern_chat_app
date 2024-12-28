@@ -148,3 +148,22 @@ if os.path.isfile(".env"):  # .envファイルが存在しない時にもエラ�
 
     DEBUG = env("DEBUG")
     ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+    
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8,
+        }
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+

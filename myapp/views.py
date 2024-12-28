@@ -14,6 +14,7 @@ from .models import CustomUser, Message
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def index(request):
@@ -50,8 +51,16 @@ def friends(request):
 
     message_users = []
     for user in users:
-        received_message = user.received_messages.filter(send_by=current_user).last()
-        sent_message = user.sent_messages.filter(send_to=current_user).last()
+        received_message = (
+            user.received_messages.filter(send_by=current_user)
+            .order_by("-created_at")
+            .first()
+        )
+        sent_message = (
+            user.sent_messages.filter(send_to=current_user)
+            .order_by("-created_at")
+            .first()
+        )
         latest_message = None
 
         if received_message or sent_message:
@@ -85,8 +94,12 @@ def friends(request):
 
 @login_required
 def talk_room(request, user_id):
-    if request.method == "GET":
+    try:
         recieved_user = CustomUser.objects.get(id=user_id)
+    except ObjectDoesNotExist:
+        return redirect("friends")
+
+    if request.method == "GET":
         current_user = request.user
         messages = Message.objects.filter(
             (Q(send_by=current_user) | Q(send_by=recieved_user))
@@ -100,7 +113,6 @@ def talk_room(request, user_id):
         )
 
     elif request.method == "POST":
-        recieved_user = CustomUser.objects.get(id=user_id)
         current_user = request.user
         content = request.POST.get("content")
 

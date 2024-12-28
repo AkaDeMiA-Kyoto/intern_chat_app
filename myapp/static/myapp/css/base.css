@@ -43,7 +43,7 @@ body {
     height: 100vh;
     border: 1px solid black;
     justify-self: center;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 @media (max-width: 450px) {

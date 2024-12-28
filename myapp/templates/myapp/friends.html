@@ -20,7 +20,7 @@
             <div class="message-block">
               <p class="message-content">{{ user_object.latest_message.content|default:'&nbsp;' }}</p>
               <p class="message-date">
-                {{ user_object.latest_message.created_at|date:'n/j' }}<br />{{ user_object.latest_message.created_at|date:'G:i' }}
+                {{ user_object.latest_message.created_at|date:'n/j' }}<br />{{ user_object.latest_message.created_at|date:'G:i'|default:'<br>' }}
               </p>
             </div>
           </div>
