@@ -1,1 +1,38 @@
-TR
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/talk_room.css' %}">
+{% endblock %}
+<body>
+    {% block header %}
+    <header class="header">
+    {{ friend.username }}
+    </header>
+    {% endblock %}
+    {% block content %}
+    <form method="post" enctype="multipart/form-data">
+        {%csrf_token %}
+        <table>
+            {% for talk in talks %}
+            <div class="talk">
+                <div class = talk_from>{{ talk.talk_from }}</div>
+                <div class = talk_info>{{ talk.talk }}</div>           
+                <div class = talk_time>{{ talk.talk_time }}</div>    
+            </div>
+            {% endfor %}
+        </table>
+    </form>
+    {% endblock %}
+
+    {% block footer %}
+    <form method="post" enctype="multipart/form-data">
+        {%csrf_token %}
+    <footer class="footer">
+        <div class="talk-submit">
+            {{form}}
+            <button  type="submit">送信</button>    
+        </div>    
+    </footer>
+    {% endblock %}
+</body>
+</html>

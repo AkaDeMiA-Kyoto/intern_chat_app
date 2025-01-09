@@ -1,1 +1,24 @@
-LI
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/login.css' %}">
+{% endblock %}
+{% block header %}
+<header class="header">
+    ログイン
+</header>
+{% endblock %}
+{% block content %}
+<body>
+    <form method="post" enctype="multipart/form-data">
+        {%csrf_token %}
+        <table>
+            <div class="login-form">
+                {{form.as_table}}
+            </div>
+        </table>
+        <button  type="submit">ログイン</button>    
+    </form>
+</body>
+{% endblock %}
+</html>

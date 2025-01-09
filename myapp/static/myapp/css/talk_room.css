@@ -1,0 +1,22 @@
+.header{
+    text-align:center;
+}
+.talk{
+    display:flex;
+    margin: 30px;
+    padding-bottom: 5px;
+    border-bottom:solid 1px;
+}
+.talk_from{
+    width: 20%;
+}
+.talk_info{
+    margin-left: 20px;
+}
+.talk_time{
+    margin-left: auto;
+    margin-right: 0;
+}
+.talk-submit{
+    display:flex;
+}
