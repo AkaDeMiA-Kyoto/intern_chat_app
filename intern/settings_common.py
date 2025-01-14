@@ -36,7 +36,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "myapp",
+    
+    "django.contrib.sites",
+    "allauth",
+    "allauth.account",
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -123,18 +129,27 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media_local"
 
+# User認証関連
 AUTH_USER_MODEL = "myapp.CustomUser"
-
-LOGIN_URL = "login"
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "friends"
 LOGOUT_REDIRECT_URL = "login"
 
+ACCOUNT_LOGOUT_ON_GET = True
+
 TIME_ZONE = "Asia/Tokyo"
-USE_TZ = True
 
 # if os.path.isfile(".env"):  # .envファイルが存在しない時にもエラーが発生しないようにする
 #     env = environ.Env(DEBUG=(bool, False))
