@@ -8,32 +8,48 @@ from .models import CustomUser
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password
 from django.core.validators import FileExtensionValidator
+from allauth.account.forms import SignupForm
 
 
-class CustomUserCreationForm(UserCreationForm):
+# class CustomUserCreationForm(UserCreationForm):
+#     class Meta:
+#         model = CustomUser
+#         fields = ("username", "email", "password1", "password2", "image")
+
+#     image = forms.ImageField(
+#         required=False,
+#         validators=[
+#             FileExtensionValidator(allowed_extensions=["png", "jpg", "jpeg", "pdf"])
+#         ],
+#     )
+
+#     def clean(self):
+#         username = self.cleaned_data.get("username")
+#         password1 = self.cleaned_data.get("password1")
+#         password2 = self.cleaned_data.get("password2")
+
+#         if username == None:
+#             raise forms.ValidationError("そのユーザ名は既に使用されています")
+
+#         if password1 != password2:
+#             raise forms.ValidationError("パスワードが一致しません。")
+
+#         return super().clean()
+
+
+class CustomSignupForm(SignupForm):
     class Meta:
         model = CustomUser
-        fields = ("username", "email", "password1", "password2", "image")
+        fields = ("username", "email", "image", "password1", "password2")
 
-    image = forms.ImageField(
-        required=False,
-        validators=[
-            FileExtensionValidator(allowed_extensions=["png", "jpg", "jpeg", "pdf"])
-        ],
-    )
+    image = forms.ImageField(required=False, label="プロフィール画像")
 
-    def clean(self):
-        username = self.cleaned_data.get("username")
-        password1 = self.cleaned_data.get("password1")
-        password2 = self.cleaned_data.get("password2")
-
-        if username == None:
-            raise forms.ValidationError("そのユーザ名は既に使用されています")
-
-        if password1 != password2:
-            raise forms.ValidationError("パスワードが一致しません。")
-
-        return super().clean()
+    def save(self, request):
+        user = super().save(request)
+        image = self.cleaned_data.get("image")
+        user.image = image
+        user.save()
+        return user
 
 
 class CustomAuthenticationForm(AuthenticationForm):

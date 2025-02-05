@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "myapp",
-    
     "django.contrib.sites",
     "allauth",
     "allauth.account",
@@ -52,6 +51,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "intern.urls"
@@ -137,15 +137,21 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/accounts/login/"
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "/friends"
 
-LOGIN_URL = "login"
+# ACCOUNT_SIGNUP_FORM_CLASS = 'myapp.forms.CustomSignupForm'
+
+LOGIN_URL = "accounts/login"
 LOGIN_REDIRECT_URL = "friends"
-LOGOUT_REDIRECT_URL = "login"
+LOGOUT_REDIRECT_URL = "accounts/login"
+ACCOUNT_AUTHENTICATION_METHOD = "email"
 
 ACCOUNT_LOGOUT_ON_GET = True
 

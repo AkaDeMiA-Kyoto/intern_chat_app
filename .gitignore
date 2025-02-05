@@ -294,4 +294,4 @@ db.sqlite3
 # macOS 固有のファイル
 .DS_Store
 
-media_local/
+media_local/*

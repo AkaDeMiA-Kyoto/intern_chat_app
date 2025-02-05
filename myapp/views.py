@@ -1,14 +1,17 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth import login
 from .forms import (
-    CustomUserCreationForm,
-    CustomAuthenticationForm,
+    # CustomUserCreationForm,
+    CustomSignupForm,
+    # CustomAuthenticationForm,
     UsernameChangeForm,
     EmailChangeForm,
     ImageChangeForm,
     CustomPasswordChangeForm,
 )
-from django.contrib.auth.views import LoginView, PasswordChangeView
+from django.views.generic import TemplateView
+from django.contrib.auth.views import PasswordChangeView
+from allauth.account.views import SignupView
 from django.urls import reverse_lazy
 from .models import CustomUser, Message
 from django.db.models import Q
@@ -17,31 +20,35 @@ from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 
 
-def index(request):
-    return render(request, "myapp/index.html")
+class IndexView(TemplateView):
+    template_name = "myapp/index.html"
 
 
-def signup_view(request):
-    if request.method == "POST":
-        form = CustomUserCreationForm(request.POST, request.FILES)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect("friends")
-        else:
-            return render(request, "myapp/signup.html", {"form": form})
+# def signup_view(request):
+#     if request.method == "POST":
+#         form = CustomUserCreationForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             user = form.save()
+#             login(request, user)
+#             return redirect("friends")
+#         else:
+#             return render(request, "myapp/signup.html", {"form": form})
 
-    return render(request, "myapp/signup.html")
+#     return render(request, "myapp/signup.html")
 
 
-class CustomLoginView(LoginView):
-    template_name = "myapp/login.html"
-    redirect_authenticated_user = True
-    success_url = reverse_lazy("friends")
-    authentication_form = CustomAuthenticationForm
+class CustomSignupView(SignupView):
+    form_class = CustomSignupForm
 
-    def get_success_url(self):
-        return self.success_url
+
+# class CustomLoginView(LoginView):
+#     template_name = "myapp/login.html"
+#     redirect_authenticated_user = True
+#     success_url = reverse_lazy("friends")
+#     authentication_form = CustomAuthenticationForm
+
+#     def get_success_url(self):
+#         return self.success_url
 
 
 @login_required
