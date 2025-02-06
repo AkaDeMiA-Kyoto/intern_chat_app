@@ -85,6 +85,7 @@
         {% endif %}
 
         <button type="submit" class="submit-btn button">Sign Up</button>
+        <a href="{% url 'account_login' %}" class="signup-link">すでに登録済みの方はこちら</a>
 
         {% if form.non_field_errors %}
           <div class="non-field-errors">
