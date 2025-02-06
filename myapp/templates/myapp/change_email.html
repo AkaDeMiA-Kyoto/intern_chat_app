@@ -6,11 +6,11 @@
   <p>現在のメールアドレス: {{ user.email }}</p>
 
   <p>新しいメールアドレスを入力してください</p>
-  <form method="post" action="{% url 'account_email' %}">
+  <form method="post" action="{% url 'change_email' %}">
     {% csrf_token %}
     <div>
       <label for="email">メールアドレス</label>
-      {{ form.email }}
+      <input type="email" name="email" id="email">
     </div>
 
     {% if form.email.errors %}
@@ -31,3 +31,4 @@
   {% load static %}
   <link rel="stylesheet" href="{% static 'myapp/css/email.css' %}" />
 {% endblock %}
+

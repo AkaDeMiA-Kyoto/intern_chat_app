@@ -1,18 +1,12 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth import login
 from .forms import (
-    # CustomUserCreationForm,
     CustomSignupForm,
-    # CustomAuthenticationForm,
     UsernameChangeForm,
     EmailChangeForm,
     ImageChangeForm,
-    CustomPasswordChangeForm,
 )
 from django.views.generic import TemplateView
-from django.contrib.auth.views import PasswordChangeView
 from allauth.account.views import SignupView
-from django.urls import reverse_lazy
 from .models import CustomUser, Message
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
@@ -24,31 +18,8 @@ class IndexView(TemplateView):
     template_name = "myapp/index.html"
 
 
-# def signup_view(request):
-#     if request.method == "POST":
-#         form = CustomUserCreationForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             user = form.save()
-#             login(request, user)
-#             return redirect("friends")
-#         else:
-#             return render(request, "myapp/signup.html", {"form": form})
-
-#     return render(request, "myapp/signup.html")
-
-
 class CustomSignupView(SignupView):
     form_class = CustomSignupForm
-
-
-# class CustomLoginView(LoginView):
-#     template_name = "myapp/login.html"
-#     redirect_authenticated_user = True
-#     success_url = reverse_lazy("friends")
-#     authentication_form = CustomAuthenticationForm
-
-#     def get_success_url(self):
-#         return self.success_url
 
 
 @login_required
@@ -151,9 +122,9 @@ def change_username(request):
 
             return redirect("setting")
         else:
-            return render(request, "myapp/change-username.html", {"form": form})
+            return render(request, "myapp/change_username.html", {"form": form})
     else:
-        return render(request, "myapp/change-username.html", {"user": current_user})
+        return render(request, "myapp/change_username.html", {"user": current_user})
 
 
 @login_required
@@ -166,9 +137,9 @@ def change_email(request):
             current_user.save()
             return redirect("setting")
         else:
-            return render(request, "myapp/change-email.html", {"form": form})
+            return render(request, "myapp/change_email.html", {"form": form})
     else:
-        return render(request, "myapp/change-email.html", {"user": current_user})
+        return render(request, "myapp/change_email.html", {"user": current_user})
 
 
 @login_required
@@ -182,16 +153,10 @@ def change_image(request):
             return redirect("setting")
         else:
             return render(
-                request, "myapp/change-image.html", {"form": form, "user": current_user}
+                request, "myapp/change_image.html", {"form": form, "user": current_user}
             )
     else:
-        return render(request, "myapp/change-image.html", {"user": current_user})
-
-
-class CustomPasswordChangeView(PasswordChangeView):
-    template_name = "myapp/change-password.html"
-    success_url = reverse_lazy("setting")
-    form_class = CustomPasswordChangeForm
+        return render(request, "myapp/change_image.html", {"user": current_user})
 
 
 @login_required

@@ -148,12 +148,15 @@ ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "/friends"
 
 # ACCOUNT_SIGNUP_FORM_CLASS = 'myapp.forms.CustomSignupForm'
 
-LOGIN_URL = "accounts/login"
-LOGIN_REDIRECT_URL = "friends"
-LOGOUT_REDIRECT_URL = "accounts/login"
+LOGIN_URL = "/accounts/login"
+LOGIN_REDIRECT_URL = "/friends"
+LOGOUT_REDIRECT_URL = "/accounts/login"
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 
 ACCOUNT_LOGOUT_ON_GET = True
+
+ACCOUNT_PASSWORD_RESET_DONE_URL = "/accounts/login/"
+ACCOUNT_PASSWORD_RESET_REDIRECT_URL = '/accounts/login/'
 
 TIME_ZONE = "Asia/Tokyo"
 
