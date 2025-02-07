@@ -1,40 +1,14 @@
 from django import forms
 from django.contrib.auth.forms import (
-    UserCreationForm,
     AuthenticationForm,
     PasswordChangeForm,
 )
 from .models import CustomUser
-from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import check_password
-from django.core.validators import FileExtensionValidator
 from allauth.account.forms import SignupForm
 
-
-# class CustomUserCreationForm(UserCreationForm):
-#     class Meta:
-#         model = CustomUser
-#         fields = ("username", "email", "password1", "password2", "image")
-
-#     image = forms.ImageField(
-#         required=False,
-#         validators=[
-#             FileExtensionValidator(allowed_extensions=["png", "jpg", "jpeg", "pdf"])
-#         ],
-#     )
-
-#     def clean(self):
-#         username = self.cleaned_data.get("username")
-#         password1 = self.cleaned_data.get("password1")
-#         password2 = self.cleaned_data.get("password2")
-
-#         if username == None:
-#             raise forms.ValidationError("そのユーザ名は既に使用されています")
-
-#         if password1 != password2:
-#             raise forms.ValidationError("パスワードが一致しません。")
-
-#         return super().clean()
+from django.core.validators import validate_email
+from allauth.account.models import EmailAddress
 
 
 class CustomSignupForm(SignupForm):
@@ -86,8 +60,14 @@ class EmailChangeForm(forms.ModelForm):
         if not email:
             raise forms.ValidationError("メールアドレスを入力してください")
 
-        if "@" not in email or "." not in email:
-            raise forms.ValidationError("有効なメールアドレスを入力してください。")
+        try:
+            validate_email(email)
+        except forms.ValidationError as e:
+            raise forms.ValidationError("無効なメールアドレスです: " + str(e))
+
+        if EmailAddress.objects.filter(email=email).exists():
+            raise forms.ValidationError("このメールアドレスはすでに使用されています。")
+
         return email
 
 

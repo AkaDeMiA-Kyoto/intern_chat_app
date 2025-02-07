@@ -79,9 +79,15 @@ WSGI_APPLICATION = "intern.wsgi.application"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
+    # "default": {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": BASE_DIR / "db.sqlite3",
+    # }
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "chatapp",
+        "USER": "myuser",
+        "PASSWORD": "suicade55",
     }
 }
 
@@ -156,7 +162,7 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_LOGOUT_ON_GET = True
 
 ACCOUNT_PASSWORD_RESET_DONE_URL = "/accounts/login/"
-ACCOUNT_PASSWORD_RESET_REDIRECT_URL = '/accounts/login/'
+ACCOUNT_PASSWORD_RESET_REDIRECT_URL = "/accounts/login/"
 
 TIME_ZONE = "Asia/Tokyo"
 
