@@ -1,3 +1,23 @@
+.searchbox {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid black;
+    padding: 5px 0;
+}
+
+form {
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 85%;
+}
+
+form input{
+    width: 80%;
+}
+
 .friends-list {
     margin-bottom: 64px;
 }

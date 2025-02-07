@@ -1,15 +1,24 @@
 from django.urls import path
-from . import views
-from .views import IndexView, CustomSignupView
+from .views import (
+    IndexView,
+    CustomSignupView,
+    FriendsListView,
+    TalkRoomView,
+    SettingView,
+    ChangeUsernameView,
+    ChangeEmailView,
+    ChangeImageView,
+    DeleteUserView,
+)
 
 urlpatterns = [
     path("", IndexView.as_view(), name="index"),
-    path("friends", views.friends, name="friends"),
-    path("talk_room/<int:user_id>", views.talk_room, name="talk_room"),
-    path("setting", views.setting, name="setting"),
-    path("change_username", views.change_username, name="change_username"),
-    path("delete_user", views.delete_user, name="delete_user"),
-    path("change_image", views.change_image, name="change_image"),
     path("accounts/signup/", CustomSignupView.as_view(), name="account_signup"),
-    path('change_email', views.change_email, name='change_email'),
+    path("friends", FriendsListView.as_view(), name="friends"),
+    path("talk_room/<int:user_id>", TalkRoomView.as_view(), name="talk_room"),
+    path("setting", SettingView.as_view(), name="setting"),
+    path("change_username", ChangeUsernameView.as_view(), name="change_username"),
+    path("change_email", ChangeEmailView.as_view(), name="change_email"),
+    path("change_image", ChangeImageView.as_view(), name="change_image"),
+    path("delete_user", DeleteUserView.as_view(), name="delete_user"),
 ]
