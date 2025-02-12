@@ -126,3 +126,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #signup画像処理用
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media_local'
+
+#サインアップ後indexにリダイレクト
+SIGNUP_REDIRECT_URL = "/index/"
+
+#ユーザーモデル
+AUTH_USER_MODEL = "myapp.CustomUser"

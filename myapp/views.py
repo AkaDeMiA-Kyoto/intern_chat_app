@@ -1,11 +1,21 @@
 from django.shortcuts import redirect, render
+from .models import CustomUser
+from .forms import SignUpForm
 
 
 def index(request):
     return render(request, "myapp/index.html")
 
 def signup_view(request):
-    return render(request, "myapp/signup.html")
+    if request.method == 'POST':
+        form = SignUpForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    else:
+        form = SignUpForm()
+    return render(request, 'myapp/signup.html', {'form': form})
+
 
 def login_view(request):
     return render(request, "myapp/login.html")
@@ -18,3 +28,4 @@ def talk_room(request):
 
 def setting(request):
     return render(request, "myapp/setting.html")
+
