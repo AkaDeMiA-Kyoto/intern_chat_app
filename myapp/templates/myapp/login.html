@@ -1,1 +1,19 @@
-LI
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/login.css' %}" />
+{% endblock %}
+
+
+{% block header %}
+{% block header-title %}
+<div>ログイン</div>
+{% endblock %}
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
