@@ -10,14 +10,14 @@
   </head>
   <body>
     <div class="container">
-      <p class="page-title">ユーザー登録</p>
+      <p class="page-title">メール認証</p>
 
       {% if confirmation %}
-        <p class="page-description">ユーザー登録を確定するには、以下のボタンを押してください</p>
+        <p class="page-description">メール認証を完了するには、以下のボタンを押してください</p>
 
         <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
           {% csrf_token %}
-          <button type="submit" class="confirm-button">登録を確定する</button>
+          <button type="submit" class="confirm-button">認証を完了する</button>
         </form>
       {% else %}
         <p class="error-message">

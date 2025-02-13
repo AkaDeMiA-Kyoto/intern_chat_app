@@ -5,7 +5,7 @@
 {% block content %}
   <div class="searchbox">
     <form method="GET" action="" class="search-form">
-      <input type="text" name="searchtext" placeholder="友達を検索" />
+      <input type="text" name="searchtext" placeholder="友達を検索" value="{{ request.GET.searchtext|default:'' }}" />
       <button type="submit" class="submit-button">検索</button>
     </form>    
   </div>
