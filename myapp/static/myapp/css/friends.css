@@ -1,0 +1,28 @@
+.header{
+    text-align:center;
+}
+.talk{
+    display: flex;
+    margin-bottom: 10px;
+    height: 100px;
+}
+.friend_icon{
+    width: 50px;
+}
+.friend_icon img{
+    width:100%;
+}
+.friend-info{
+    display: flex;
+    width: 500px;
+}
+.friend{
+    width:100%
+}
+.talk-info{
+    display: flex;
+}
+.talk_time{
+    margin-right: 10px;
+    margin-left: auto;
+}

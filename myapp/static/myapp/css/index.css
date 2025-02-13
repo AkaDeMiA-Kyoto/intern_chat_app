@@ -1,0 +1,21 @@
+.button{
+    position: relative;
+}
+.login-btn{
+    position: absolute;
+    width:100px;
+    top: 500px;
+    left: 50%;
+    transform: translate(-50%,0);
+    background-color: #fff;
+    border-radius: 10px;
+}
+.signup-btn{
+    position: absolute;
+    width:100px;
+    top: 550px;
+    left: 50%;
+    transform: translate(-50%,0);
+    background-color: #fff;
+    border-radius: 10px;
+}

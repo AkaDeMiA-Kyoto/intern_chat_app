@@ -1,11 +1,11 @@
 {% extends 'myapp/base.html' %}
 {% load static %}
 {% block extra_style %}
-<link rel="stylesheet" href="{% static 'myapp/css/login.css' %}">
+<link rel="stylesheet" href="{% static 'myapp/css/namechange.css' %}">
 {% endblock %}
 {% block header %}
 <header class="header">
-    ログイン
+    メールアドレス変更
 </header>
 {% endblock %}
 {% block content %}
@@ -17,7 +17,7 @@
                 {{form.as_table}}
             </div>
         </table>
-        <button  type="submit">ログイン</button>    
+        <button  type="submit">変更</button>    
     </form>
 </body>
 {% endblock %}

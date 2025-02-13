@@ -1,0 +1,34 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
+{% endblock %}
+{% block header %}
+<header class="header">
+  友達
+</header>
+{% endblock %}
+{% block content %}
+<body> 
+  {% for room in talk_rooms %}
+  <div class="talk">
+    <button class="friend-info">
+      <a href="{% url 'talk_room' room.0.id %}">
+        {% if room.0.image %}
+        <div class = friend_icon><img src="{{ room.0.image.url}}"></div>
+        {% endif %}
+        <div class = friend>{{ room.0}}</div>
+        {% if room.1 %}
+        <div class = talk-info>
+          <div class = talk_latest>{{ room.1 }}</div>
+          <div class = talk_time>{{ room.1.talk_time }}</div>  
+        </div>
+        {% endif %}
+
+      </a>
+    </button>  
+  </div>
+  {% endfor %}
+</body>
+{% endblock %}
+</html>
