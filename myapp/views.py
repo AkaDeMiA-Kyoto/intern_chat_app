@@ -9,7 +9,7 @@ from django.views import View
 from django.views.generic import TemplateView, FormView
 from allauth.account.views import SignupView
 from .models import CustomUser, Message
-from django.db.models import Q
+from django.db.models import Q, F, OuterRef, Subquery, DateTimeField, CharField
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from django.utils.timezone import now
@@ -27,79 +27,65 @@ class CustomSignupView(SignupView):
 class FriendsListView(LoginRequiredMixin, ListView):
     model = CustomUser
     template_name = "myapp/friends.html"
-    context_object_name = "user_objects"
+    context_object_name = "users"
 
     def get_queryset(self):
         query = self.request.GET.get("searchtext")
-        users = CustomUser.objects.exclude(id=self.request.user.id)
-
-        if query:
-            users = users.filter(username__icontains=query)
-
-        current_user = self.request.user
-        message_users = []
-        for user in users:
-            received_message = (
-                user.received_messages.filter(send_by=current_user)
-                .order_by("-created_at")
-                .first()
-            )
-            sent_message = (
-                user.sent_messages.filter(send_to=current_user)
-                .order_by("-created_at")
-                .first()
-            )
-            latest_message = None
-
-            if received_message and sent_message:
-                latest_message = max(
-                    received_message, sent_message, key=lambda msg: msg.created_at
-                )
-            elif received_message:
-                latest_message = received_message
-            elif sent_message:
-                latest_message = sent_message
-            else:
-                latest_message = None
-
-            message_users.append({"user": user, "latest_message": latest_message})
-
-        sorted_users = sorted(
-            message_users,
-            key=lambda entry: (
-                0 if entry["latest_message"] else 1,
-                (
-                    -entry["latest_message"].created_at.timestamp()
-                    if entry["latest_message"]
-                    else -entry["user"].date_joined.timestamp()
-                ),
-            ),
-            reverse=False,
+        users = CustomUser.objects.exclude(id=self.request.user.id).order_by(
+            "-created_at"
         )
 
-        return sorted_users
+        if query:
+            users = users.filter(username__icontains=query).order_by("-created_at")
+
+        current_user = self.request.user
+
+        latest_message = Message.objects.filter(
+            Q(send_by=current_user, send_to=OuterRef("pk"))
+            | Q(send_to=current_user, send_by=OuterRef("pk"))
+        ).order_by("-created_at")[:1]
+
+        users = users.annotate(
+            latest_message_time=Subquery(
+                latest_message.values("created_at"), output_field=DateTimeField()
+            ),
+            latest_message_content=Subquery(
+                latest_message.values("content"), output_field=CharField()
+            ),
+        )
+
+        users = users.order_by(
+            F("latest_message_time").desc(nulls_last=True), "-created_at"
+        )
+
+        return users
 
 
 class TalkRoomView(LoginRequiredMixin, View):
     template_name = "myapp/talk_room.html"
 
     def get(self, request, user_id):
-        recieved_user = get_object_or_404(CustomUser, id=user_id)
-        current_user = request.user
+        current_user_id = request.user.id
 
-        messages = Message.objects.filter(
-            (Q(send_by=current_user) | Q(send_by=recieved_user))
-            & (Q(send_to=recieved_user) | Q(send_to=current_user))
-        ).order_by("created_at")
-
-        return render(
-            request,
-            self.template_name,
-            {"recieved_user": recieved_user, "messages": messages},
+        messages = (
+            Message.objects.filter(
+                (
+                    Q(send_by_id=current_user_id, send_to_id=user_id)
+                    | Q(send_by_id=user_id, send_to_id=current_user_id)
+                )
+            )
+            .select_related("send_by", "send_to")
+            .order_by("created_at")
         )
 
+        context = {
+            "recieved_user": CustomUser.objects.get(id=user_id),
+            "messages": messages,
+        }
+        return render(request, self.template_name, context)
+
     def post(self, request, user_id):
-        recieved_user = get_object_or_404(CustomUser, id=user_id)
+        recieved_user = CustomUser.objects.get(id=user_id)
         current_user = request.user
         content = request.POST.get("content")
 
@@ -111,7 +97,7 @@ class TalkRoomView(LoginRequiredMixin, View):
                 send_by=current_user,
             )
 
-        return redirect("talk_room", user_id=recieved_user.id)
+        return redirect("talk_room", user_id=user_id)
 
 
 class SettingView(LoginRequiredMixin, TemplateView):

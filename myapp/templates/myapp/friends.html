@@ -7,27 +7,27 @@
     <form method="GET" action="" class="search-form">
       <input type="text" name="searchtext" placeholder="友達を検索" value="{{ request.GET.searchtext|default:'' }}" />
       <button type="submit" class="submit-button">検索</button>
-    </form>    
+    </form>
   </div>
 
   <div class="friends-list">
-    {% for user_object in user_objects %}
-      <a class="friend-link" href="{% url 'talk_room' user_object.user.id %}">
+    {% for user in users %}
+      <a class="friend-link" href="{% url 'talk_room' user.id %}">
         <div class="friend-content">
           <div class="user-icon">
-            {% if user_object.user.image %}
-              <img src="{{ user_object.user.image.url }}" alt="{{ user_object.user.username }}のアイコン" />
+            {% if user.image %}
+              <img src="{{ user.image.url }}" alt="{{ user.username }}のアイコン" />
             {% else %}
               {% load static %}
-              <img src="{% static 'myapp/img/first-icon.png' %}" alt="{{ user_object.user.username }}のアイコン" />
+              <img src="{% static 'myapp/img/first-icon.png' %}" alt="{{ user.username }}のアイコン" />
             {% endif %}
           </div>
           <div class="friend-detail">
-            <h1 class="username">{{ user_object.user.username }}</h1>
+            <h1 class="username">{{ user.username }}</h1>
             <div class="message-block">
-              <p class="message-content">{{ user_object.latest_message.content|default:'&nbsp;' }}</p>
+              <p class="message-content">{{ user.latest_message_content|default:'&nbsp;' }}</p>
               <p class="message-date">
-                {{ user_object.latest_message.created_at|date:'n/j' }}<br />{{ user_object.latest_message.created_at|date:'G:i'|default:'<br>' }}
+                {{ user.latest_message_time|date:'n/j' }}<br />{{ user.latest_message_time|date:'G:i'|default:'<br>' }}
               </p>
             </div>
           </div>

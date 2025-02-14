@@ -6,6 +6,7 @@ from django.utils.timezone import now
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=False)
     image = models.ImageField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Message(models.Model):
@@ -24,4 +25,3 @@ class Message(models.Model):
     content = models.TextField()
 
     created_at = models.DateTimeField(auto_now_add=True)
-
