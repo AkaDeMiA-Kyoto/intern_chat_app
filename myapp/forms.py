@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser
 
 class SignUpForm(UserCreationForm):
-    #UserCreationFormに含まれないフィールドの追加 requiredTrueで必須に
+    #UserCreationFormに含まれないフィールドの追加 requiredTrueで必須
     email = forms.EmailField(required=True, label="Email")
     image = forms.ImageField(required=False, label="Image")
 

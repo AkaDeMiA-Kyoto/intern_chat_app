@@ -3,5 +3,4 @@ from django.db import models
 
 # Create your models here.
 class CustomUser(AbstractUser):
-    def __str__(self):
-        return self.title
+    image = models.ImageField(upload_to='media_local')
