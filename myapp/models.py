@@ -22,6 +22,6 @@ class Message(models.Model):
         related_name="received_messages",
     )
 
-    content = models.TextField()
+    content = models.TextField("content")
 
     created_at = models.DateTimeField(auto_now_add=True)

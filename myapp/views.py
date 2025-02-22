@@ -6,7 +6,7 @@ from .forms import (
     ImageChangeForm,
 )
 from django.views import View
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, DeleteView
 from allauth.account.views import SignupView
 from .models import CustomUser, Message
 from django.db.models import Q, F, OuterRef, Subquery, DateTimeField, CharField
@@ -160,8 +160,9 @@ class ChangeImageView(LoginRequiredMixin, FormView):
         return context
 
 
-class DeleteUserView(LoginRequiredMixin, View):
-    def post(self, request, *args, **kwargs):
-        current_user = request.user
-        current_user.delete()
-        return redirect("index")
+class DeleteUserView(LoginRequiredMixin, DeleteView):
+    model = CustomUser
+    success_url = reverse_lazy("account_login")
+
+    def get_object(self, queryset=None):
+        return self.request.user
