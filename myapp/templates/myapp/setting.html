@@ -1,1 +1,22 @@
-S
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/settings.css' %}" />
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="btn-container">
+    
+    <form action="{% url 'logout' %}" method="POST"> <!-- a hrefはGetリクエストだが、LogoutViewはデフォでPOSTリクエストのみ受け付ける。 -->
+        {% csrf_token %}
+        <button type="submit" class="btn">ログアウト</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

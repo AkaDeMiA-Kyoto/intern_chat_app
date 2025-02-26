@@ -104,9 +104,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ja'  #管理画面の表示を日本語に変更
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tokyo' #日時を東京に　
 
 USE_I18N = True
 
@@ -129,6 +129,12 @@ MEDIA_ROOT = BASE_DIR / 'media_local'
 
 #サインアップ後indexにリダイレクト
 SIGNUP_REDIRECT_URL = "/index/"
+
+#ログインが必要な画面にログインしていないユーザがアクセスした際indexに
+LOGIN_URL = "/index/"
+
+#ログアウト後に自動的にindexにリダイレクト
+LOGOUT_REDIRECT_URL = "/"
 
 #ユーザーモデル
 AUTH_USER_MODEL = "myapp.CustomUser"

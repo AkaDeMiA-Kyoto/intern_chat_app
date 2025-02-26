@@ -2,10 +2,12 @@ from django.shortcuts import redirect, render
 from .forms import SignUpForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate #Djangoの認証システム
+from .models import CustomUser
 
 
 
-def index(request):
+
+def index(request): #requestはウェブサーバー⇀wsgiの流れで送られてきたrequestオブジェクト
     return render(request, "myapp/index.html")
 
 
@@ -38,8 +40,23 @@ class ChatLoginView(LoginView):
 
             return render(request, self.template_name, {"error_message": error_massage})
 
-def friends(request):
-    return render(request, "myapp/friends.html")
+#def friends(request):
+   # return render(request, "myapp/friends.html")
+
+#友達リスト情報取得用関数
+def getFriendsList(username):
+    """
+    指定したユーザーの友達リストを取得
+    :param:ユーザー名
+    :return:ユーザー名の友達リスト
+    """
+    try:
+        user = CustomUser.objects.get(username=username)
+        friends = list(user.user_friends.all()) #user_friendsはrelated_name="user_friends"の逆参照フィールド
+        return friends
+    except CustomUser.DoesNotExist:
+        return []
+
 
 def talk_room(request):
     return render(request, "myapp/talk_room.html")
