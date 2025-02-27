@@ -1,0 +1,6 @@
+.button{
+    width: 10vw;
+    height: 3vw;
+    border: solid 1px #000;
+    margin: 3px auto 4px;
+}
