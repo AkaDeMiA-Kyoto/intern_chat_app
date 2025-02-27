@@ -13,8 +13,8 @@
       <header class="header">
         <div class="header-container">
           <a class="back-button" href="{% url 'friends' %}"><</a>
-          <span class="header-container__title">{{ recieved_user.username }}</span>
-          <a class="update-button" href="{% url 'talk_room' recieved_user.id %}">更新</a>
+          <span class="header-container__title">{{ received_user.username }}</span>
+          <a class="update-button" href="{% url 'talk_room' received_user.id %}">更新</a>
         </div>
       </header>
 
@@ -31,7 +31,7 @@
 
       <footer class="footer">
         <div class="footer-container">
-          <form action="{% url 'talk_room' recieved_user.id %}" method="POST">
+          <form action="{% url 'talk_room' received_user.id %}" method="POST">
             {% csrf_token %}
             <input type="text" name="content" class="message-content" required />
             <button class="submit-button" type="submit">送信</button>

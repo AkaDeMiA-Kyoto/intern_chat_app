@@ -1,10 +1,10 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils.timezone import now
 
 
 class CustomUser(AbstractUser):
-    email = models.EmailField(unique=False)
+    username = models.TextField(max_length=10, blank=False, null=False, unique=True)
+    email = models.EmailField(unique=True)
     image = models.ImageField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 

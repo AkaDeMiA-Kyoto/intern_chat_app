@@ -8,16 +8,16 @@
     <div class="user-info">
       <div class="user-icon">
         {% if user.image %}
-          <img src="{{ user.image.url }}" alt="{{ user.username }}のアイコン" />
+          <img src="{{ request.user.image.url }}" alt="{{ request.user.username }}のアイコン" />
         {% else %}
-          <img src="{% static 'myapp/img/first-icon.png' %}" alt="{{ user.username }}のアイコン" />
+          <img src="{% static 'myapp/img/first-icon.png' %}" alt="{{ request.user.username }}のアイコン" />
         {% endif %}
       </div>
       <p class="user-field username">
-        <span class="field-value">{{ user.username }}</span>
+        <span class="field-value">{{ request.user.username }}</span>
       </p>
       <p class="user-field">
-        <span class="field-value">{{ user.email }}</span>
+        <span class="field-value">{{ request.user.email }}</span>
       </p>
     </div>
     <div class="setting-buttons">

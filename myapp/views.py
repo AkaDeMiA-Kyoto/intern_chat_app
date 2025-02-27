@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import redirect, render
 from .forms import (
     CustomSignupForm,
     UsernameChangeForm,
@@ -12,7 +12,6 @@ from .models import CustomUser, Message
 from django.db.models import Q, F, OuterRef, Subquery, DateTimeField, CharField
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
-from django.utils.timezone import now
 from django.urls import reverse_lazy
 
 
@@ -79,21 +78,20 @@ class TalkRoomView(LoginRequiredMixin, View):
         )
 
         context = {
-            "recieved_user": CustomUser.objects.get(id=user_id),
+            "received_user": CustomUser.objects.get(id=user_id),
             "messages": messages,
         }
         return render(request, self.template_name, context)
 
     def post(self, request, user_id):
-        recieved_user = CustomUser.objects.get(id=user_id)
+        received_user = CustomUser.objects.get(id=user_id)
         current_user = request.user
         content = request.POST.get("content")
 
         if content:
             Message.objects.create(
                 content=content,
-                created_at=now(),
-                send_to=recieved_user,
+                send_to=received_user,
                 send_by=current_user,
             )
 
@@ -102,11 +100,6 @@ class TalkRoomView(LoginRequiredMixin, View):
 
 class SettingView(LoginRequiredMixin, TemplateView):
     template_name = "myapp/setting.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["user"] = self.request.user
-        return context
 
 
 class ChangeUsernameView(LoginRequiredMixin, FormView):
