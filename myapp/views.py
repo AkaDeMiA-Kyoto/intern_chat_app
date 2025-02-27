@@ -1,5 +1,8 @@
 from django.shortcuts import redirect, render
-from .forms import SignUpForm
+from .forms import SignUpForm, LoginForm
+from django.contrib.auth.views import LoginView
+from .models import CustomUser
+
 
 def index(request):
     return render(request, "myapp/index.html")
@@ -15,12 +18,15 @@ def signup_view(request):
         form = SignUpForm()
         return render(request, "myapp/signup.html", {"form": form})
 
+class Login_View_Class(LoginView):
+    template_name = 'myapp/login.html'
+    form_class = LoginForm
 
-def login_view(request):
-    return render(request, "myapp/login.html")
+login_view = Login_View_Class.as_view()
 
 def friends(request):
-    return render(request, "myapp/friends.html")
+    friend_list = CustomUser.objects.all()
+    return render(request, "myapp/friends.html", {"friend_list":friend_list})
 
 def talk_room(request):
     return render(request, "myapp/talk_room.html")

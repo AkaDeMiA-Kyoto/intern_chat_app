@@ -1,0 +1,17 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}" />
+{% endblock %}
+
+{% block header-title %}友達{% endblock %}
+
+{% block content %}
+<ul>
+    {% for friend in friend_list %}
+        <li>{{ friend.username }}</li>
+    {% empty %}
+        <div>ユーザーが存在しません。</div>
+    {% endfor %}
+</ul>    
+{% endblock %}

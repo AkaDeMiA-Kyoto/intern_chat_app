@@ -1,8 +1,8 @@
-body{
-    width: 768px;
-    height: 1000px;
+body {
+    width: 375px;
+    height: 100vh;
     margin: 0 auto;
-    border: solid 2px #000;
+    border: 1px solid #000;
 }
 
 .btn{
