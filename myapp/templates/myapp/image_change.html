@@ -1,0 +1,17 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block header %}
+{% block header-title %}
+<h1>アイコン変更</h1>
+{% endblock %}
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">変更する</button>
+</form>
+<a href="{% url 'setting' %}">戻る</a>
+{% endblock %}

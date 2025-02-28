@@ -128,10 +128,12 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media_local'
 
 #サインアップ後indexにリダイレクト
-SIGNUP_REDIRECT_URL = "/index/"
+SIGNUP_REDIRECT_URL = "/index"
 
 #ログインが必要な画面にログインしていないユーザがアクセスした際indexに
-LOGIN_URL = "/index/"
+LOGIN_URL = "/"
+
+LOGIN_REDIRECT_URL = "/setting"
 
 #ログアウト後に自動的にindexにリダイレクト
 LOGOUT_REDIRECT_URL = "/"
