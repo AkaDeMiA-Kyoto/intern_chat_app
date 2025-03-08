@@ -1,0 +1,9 @@
+.header{
+    width: 100%;
+    border-bottom: solid #000000 1px;
+}
+
+.header > p{
+    text-align: center;
+    display: block;
+}

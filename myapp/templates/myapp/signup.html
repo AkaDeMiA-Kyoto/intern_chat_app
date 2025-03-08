@@ -1,15 +1,25 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Signup</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}" >
 </head>
 <body>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">submit</button>
-    </form>
+    <header>
+        <div class="header">
+            <p>会員登録</p>
+        </div>
+    </header>
+    <main>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">submit</button>
+        </form>
+    </main>
 </body>
 </html>
