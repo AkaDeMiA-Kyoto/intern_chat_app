@@ -8,4 +8,4 @@ class Signup(AbstractUser):
     email = models.EmailField(max_length=100, verbose_name="e-mailadress")
     password1 = models.CharField(max_length=100, verbose_name="password")
     password2 = models.CharField(max_length=100, verbose_name="password_comfirmation")
-    image = models.ImageField(verbose_name="img")
+    img = models.ImageField(upload_to="images/", null=True, blank=True, verbose_name="icon")
