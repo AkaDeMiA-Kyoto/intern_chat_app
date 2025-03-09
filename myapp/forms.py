@@ -21,10 +21,10 @@ class UsernameChangeForm(forms.ModelForm):
         fields = ["username"]
 
 
-class EmailChangeForm(forms.ModelForm):
-    class Meta:
-        model = CustomUser
-        fields = ["email"]
+# class EmailChangeForm(forms.ModelForm):
+#     class Meta:
+#         model = CustomUser
+#         fields = ["email"]
 
 
 class ImageChangeForm(forms.ModelForm):
@@ -36,6 +36,6 @@ class ImageChangeForm(forms.ModelForm):
         required=False,
         label="プロフィール画像",
         validators=[
-            FileExtensionValidator(allowed_extensions=["png", "jpg", "jpeg", "pdf"])
+            FileExtensionValidator(allowed_extensions=["png", "jpg", "jpeg"])
         ],
     )

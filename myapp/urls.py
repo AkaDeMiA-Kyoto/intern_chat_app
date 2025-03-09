@@ -6,7 +6,7 @@ from .views import (
     TalkRoomView,
     SettingView,
     ChangeUsernameView,
-    ChangeEmailView,
+    # ChangeEmailView,
     ChangeImageView,
     DeleteUserView,
 )
@@ -18,7 +18,7 @@ urlpatterns = [
     path("talk_room/<int:user_id>", TalkRoomView.as_view(), name="talk_room"),
     path("setting", SettingView.as_view(), name="setting"),
     path("change_username", ChangeUsernameView.as_view(), name="change_username"),
-    path("change_email", ChangeEmailView.as_view(), name="change_email"),
+    # path("change_email", ChangeEmailView.as_view(), name="change_email"),
     path("change_image", ChangeImageView.as_view(), name="change_image"),
     path("delete_user", DeleteUserView.as_view(), name="delete_user"),
 ]

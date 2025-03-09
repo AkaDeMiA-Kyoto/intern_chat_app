@@ -5,7 +5,7 @@
 {% block content %}
   {% if user.image %}
     <div style="display: flex; justify-content: center;">
-      <img src="{{ user.image.url }}" alt="アイコン画像" />
+      <img src="{{ request.user.image.url }}" alt="アイコン画像" />
     </div>
     <p class="description-text">ファイルを選択せずに変更を押すと画像が削除されます</p>
   {% else %}

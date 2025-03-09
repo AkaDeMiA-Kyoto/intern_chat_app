@@ -2,17 +2,18 @@ from django.shortcuts import redirect, render
 from .forms import (
     CustomSignupForm,
     UsernameChangeForm,
-    EmailChangeForm,
+    # EmailChangeForm,
     ImageChangeForm,
 )
 from django.views import View
-from django.views.generic import TemplateView, FormView, DeleteView
+from django.views.generic import TemplateView, FormView, DeleteView, UpdateView
 from allauth.account.views import SignupView
 from .models import CustomUser, Message
 from django.db.models import Q, F, OuterRef, Subquery, DateTimeField, CharField
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 from django.urls import reverse_lazy
+from allauth.account.utils import send_email_confirmation
 
 
 class IndexView(TemplateView):
@@ -30,12 +31,10 @@ class FriendsListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         query = self.request.GET.get("searchtext")
-        users = CustomUser.objects.exclude(id=self.request.user.id).order_by(
-            "-created_at"
-        )
+        users = CustomUser.objects.exclude(id=self.request.user.id)
 
         if query:
-            users = users.filter(username__icontains=query).order_by("-created_at")
+            users = users.filter(username__icontains=query)
 
         current_user = self.request.user
 
@@ -102,55 +101,24 @@ class SettingView(LoginRequiredMixin, TemplateView):
     template_name = "myapp/setting.html"
 
 
-class ChangeUsernameView(LoginRequiredMixin, FormView):
-    template_name = "myapp/change_username.html"
+class ChangeUsernameView(LoginRequiredMixin, UpdateView):
+    model = CustomUser
     form_class = UsernameChangeForm
+    template_name = "myapp/change_username.html"
     success_url = reverse_lazy("setting")
 
-    def form_valid(self, form):
-        current_user = self.request.user
-        current_user.username = form.cleaned_data["username"]
-        current_user.save()
-        return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["user"] = self.request.user
-        return context
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
-class ChangeEmailView(LoginRequiredMixin, FormView):
-    template_name = "myapp/change_email.html"
-    form_class = EmailChangeForm
-    success_url = reverse_lazy("setting")
-
-    def form_valid(self, form):
-        current_user = self.request.user
-        current_user.email = form.cleaned_data["email"]
-        current_user.save()
-        return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["user"] = self.request.user
-        return context
-
-
-class ChangeImageView(LoginRequiredMixin, FormView):
-    template_name = "myapp/change_image.html"
+class ChangeImageView(LoginRequiredMixin, UpdateView):
+    model = CustomUser
     form_class = ImageChangeForm
+    template_name = "myapp/change_image.html"
     success_url = reverse_lazy("setting")
 
-    def form_valid(self, form):
-        current_user = self.request.user
-        current_user.image = form.cleaned_data["image"]
-        current_user.save()
-        return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["user"] = self.request.user
-        return context
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
 class DeleteUserView(LoginRequiredMixin, DeleteView):
@@ -159,3 +127,13 @@ class DeleteUserView(LoginRequiredMixin, DeleteView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+
+def send_custom_email_confirmation(user, request):
+    expiration_time = 1
+
+    send_email_confirmation(
+        request,
+        user,
+        context={"expiration_time": expiration_time},
+    )

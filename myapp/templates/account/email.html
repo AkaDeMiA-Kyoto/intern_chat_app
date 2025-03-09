@@ -3,14 +3,14 @@
 {% block header-title %}メールアドレスの変更{% endblock %}
 
 {% block content %}
-  <p>現在のメールアドレス: {{ user.email }}</p>
+  <p>現在のメールアドレス: {{ request.user.email }}</p>
 
   <p>新しいメールアドレスを入力してください</p>
-  <form method="post" action="{% url 'change_email' %}">
+  <form method="post">
     {% csrf_token %}
     <div>
       <label for="email">メールアドレス</label>
-      <input type="email" name="email" id="email">
+      {{ form.email }}
     </div>
 
     {% if form.email.errors %}
@@ -31,4 +31,3 @@
   {% load static %}
   <link rel="stylesheet" href="{% static 'myapp/css/email.css' %}" />
 {% endblock %}
-
