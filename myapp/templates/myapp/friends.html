@@ -7,11 +7,70 @@
 {% block header-title %}友達{% endblock %}
 
 {% block content %}
-<ul>
+<div class="content">
+
+<div class="friends-wrapper">
+
+
+    {% for latestlog in latestlogs %}
+        {% if latestlog.fromuser == request.user %}
+            <div class="friends-content">
+                {% if latestlog.touser.image %}
+                    <a href="{% url 'myapp:talk_room' latestlog.touser.id %}">
+                        <img src="{{ latestlog.touser.image.url }}" alt="アイコン" class="icon">
+                    </a>
+                {% endif %}
+                <div class="friends-rightbox">
+                    <a href="{% url 'myapp:talk_room' latestlog.touser.id %}">
+                        <h4 class="username">{{ latestlog.touser.username }}</h3>
+                    </a>
+                    <div class="friends-underbox">
+                        <p class="friends-log">{{ latestlog.message }}</p>
+                        <p class="friends-logtime">{{ latestlog.timestamp }}</p>
+                    </div>
+                </div>
+                
+            </div>
+        {% else %}
+            <div class="friends-content">
+                {% if latestlog.fromuser.image %}
+                    <a href="{% url 'myapp:talk_room' latestlog.fromuser.id %}">
+                        <img src="{{ latestlog.fromuser.image.url }}" alt="アイコン" class="icon">
+                    </a>
+                {% endif %}
+                <div class="friends-rightbox">
+                    <a href="{% url 'myapp:talk_room' latestlog.fromuser.id %}">
+                        <h4 class="username">{{ latestlog.fromuser.username }}</h3>
+                    </a>
+                    <div class="friends-underbox">
+                        <p class="friends-log">{{ latestlog.message }}</p>
+                        <p class="friends-logtime">{{ latestlog.timestamp }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% empty %}
+        <p>ログ無し</p>
+    {% endfor %}
+
+
     {% for friend in friend_list %}
-        <li>{{ friend.username }}</li>
+        {% if friend != request.user and friend not in talked_friend_list %}
+            <div class="friends-content">
+                {% if friend.image %}
+                <a href="{% url 'myapp:talk_room' friend.id %}">
+                    <img src="{{ friend.image.url }}" alt="アイコン" class="icon">
+                </a>
+                {% endif %}
+                <a href="{% url 'myapp:talk_room' friend.id %}">
+                    <h4 class="username">{{ friend.username }}</h3>
+                </a>
+            </div>
+        {% endif %}   
     {% empty %}
         <div>ユーザーが存在しません。</div>
     {% endfor %}
-</ul>    
+</div>
+
+</div>
 {% endblock %}

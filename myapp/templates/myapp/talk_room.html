@@ -1,1 +1,43 @@
-TR
+{% extends "myapp/base.html" %}
+{% load static %}
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/talk_room.css' %}" />
+{% endblock %}
+
+{% block header-title %}
+    <a href="{% url 'myapp:friends'%}" class="btn"></a>
+    <h3 class="talk-title">{{ To_user.username }}</h3>
+    <a href="{% url 'myapp:talk_room' To_user.id %}" class="btn">更新</a>
+
+
+{% endblock %}
+
+{% block content %}
+<div class="content">
+    {% for chat in talklog %}
+    <div class="chat-content">
+        {% if chat.fromuser.image %}
+        <img src="{{ chat.fromuser.image.url }}" alt="アイコン" class="icon">
+        {% endif %}
+        <div class="chat-content-right">
+            <div class="chat-content-upper">
+                <h4 class="username">{{ chat.fromuser.username }}</h4>
+                <p class="chat-time">{{ chat.timestamp }}</p>
+            </div>
+            <p class="chat-message">{{ chat.message }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+
+{% block footer %}
+<footer class="footer">
+    <form method="post" enctype="multipart/form-data" class="message-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="submit">送信</button>
+    </form>
+</footer>
+{% endblock %}

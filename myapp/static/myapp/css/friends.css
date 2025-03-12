@@ -1,0 +1,52 @@
+.friends-wrpper{
+    display: flex;
+    flex-direction: column;
+}
+
+.friends-content{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #999;
+}
+
+.icon{
+    width: 40px;
+    height: 40px; 
+    border-radius: 50%;
+    border: 3px solid #333;
+    object-fit: cover;
+    margin: 10px;
+}
+
+.friends-rightbox{
+    width: 80%;
+}
+
+.friends-underbox{
+    display: flex;
+    margin: 0.5rem;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.friends-log{
+    width: 60%;
+    margin: 0;
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.friends-logtime{
+    width: 40%;
+    margin: 0;
+    font-size: 0.7rem;
+    text-align: center;
+}
+
+.username{
+    font-size: 1rem;
+    margin: 0.5rem;
+}

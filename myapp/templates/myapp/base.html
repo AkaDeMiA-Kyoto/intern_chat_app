@@ -9,6 +9,7 @@
     <title>DeMiAインターン</title>
 </head>
 <body>
+    <div class="wrapper">
     {% block header %}
     <header class="header">
         <div class="header-container">
@@ -23,7 +24,7 @@
     {% endblock %}
 
     {% block footer %}
-    <!-- <footer class="footer"> -->
+    <footer class="footer">
         <div class="footer-container">
             <div class="footer-container__item">
                 <a href="{% url 'myapp:friends' %}" class="footer-item__link">
@@ -38,7 +39,9 @@
                 </a>
             </div>
         </div>
-    <!-- </footer> -->
+    </footer>
     {% endblock %}
+
+    </div>
 </body>
 </html>
