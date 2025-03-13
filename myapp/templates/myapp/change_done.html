@@ -1,0 +1,11 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+{% block header-title %}{{ changed_field }}{% endblock %}
+
+{% block content %}
+<div class="content">
+    <p>{{ changed_field }} 変更完了</p>
+</div>
+
+
+{% endblock %}

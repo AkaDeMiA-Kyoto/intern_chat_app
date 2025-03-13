@@ -8,6 +8,20 @@
 
 {% block content %}
 <div class="content">
-
+    <div class="btn">
+        <a href="{% url 'myapp:change_name' %}">ユーザーネーム変更</a>
+    </div>
+    <div class="btn">
+        <a href="{% url 'myapp:change_mail' %}">メールアドレス変更</a>
+    </div>
+    <div class="btn">
+        <a href="{% url 'myapp:change_icon' %}">アイコン変更</a>
+    </div>
+    <div class="btn">
+        <a href="{% url 'myapp:change_password' %}">パスワード変更</a>
+    </div>
+    <div class="btn">
+        <a href="{% url 'myapp:logout_view' %}">ログアウト</a>
+    </div>
 </div>
 {% endblock %}

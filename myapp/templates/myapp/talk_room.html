@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block header-title %}
-    <a href="{% url 'myapp:friends'%}" class="btn"></a>
+    <a href="{% url 'myapp:friends'%}" class="btn"><</a>
     <h3 class="talk-title">{{ To_user.username }}</h3>
     <a href="{% url 'myapp:talk_room' To_user.id %}" class="btn">更新</a>
 

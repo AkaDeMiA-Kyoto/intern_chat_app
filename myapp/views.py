@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from .forms import SignUpForm, LoginForm, ChatMessageForm
-from django.contrib.auth.views import LoginView
+from .forms import SignUpForm, LoginForm, ChatMessageForm, ChangeNameForm, ChangeMailForm, ChangeIconForm
+from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView
 from django.views import View
 from .models import CustomUser, TalkLog
 from django.contrib.auth.decorators import login_required
@@ -8,7 +8,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Q
-
+from django.contrib.auth import logout
+from django.views import generic
+from django.urls import reverse_lazy
 
 
 def index(request):
@@ -81,14 +83,65 @@ class TalkRoomView(LoginRequiredMixin, View):
 
 talk_room = TalkRoomView.as_view()
 
-# def talk_room(request, id):
-#     user = get_object_or_404(CustomUser, id=id)
-#     return render(request, "myapp/talk_room.html", {"user": user})
-
-def setting(request):
-    return render(request, "myapp/setting.html")
-
-
 class SettingView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, "myapp/setting.html")
+    
+setting_view =SettingView.as_view()
+
+class LogoutView(LoginRequiredMixin, View):
+    def get(self, request):
+        logout(request)
+        return redirect("myapp:index")
+    
+logout_view = LogoutView.as_view()
+
+class ChangeNameView(LoginRequiredMixin, View):
+    def get(self, request):
+        form = ChangeNameForm()
+        return render(request, "myapp/change_name.html", {"form":form})
+    
+    def post(self, request):
+        form = ChangeNameForm(request.POST)
+        if form.is_valid():
+            user = CustomUser.objects.get(id=request.user.id)
+            user.username = form.cleaned_data['username']
+            user.save()
+            changed_field="ユーザーネーム"
+            return render(request, "myapp/change_done.html", {"changed_field":changed_field })
+        else:
+            return redirect(request.path)
+        
+class ChangeMailView(LoginRequiredMixin, View):
+    def get(self, request):
+        form = ChangeMailForm()
+        return render(request, "myapp/change_mail.html", {"form":form})
+    
+    def post(self, request):
+        form = ChangeMailForm(request.POST)
+        if form.is_valid():
+            user = CustomUser.objects.get(id=request.user.id)
+            user.email = form.cleaned_data['email']
+            user.save()
+            changed_field="メールアドレス"
+            return render(request, "myapp/change_done.html", {"changed_field":changed_field })
+        else:
+            return redirect(request.path)
+        
+
+class ChangeIconView(LoginRequiredMixin, View):
+    def get(self, request):
+        form = ChangeIconForm()
+        return render(request, "myapp/change_icon.html", {"form":form})
+    
+    def post(self, request):
+        form = ChangeIconForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = CustomUser.objects.get(id=request.user.id)
+            user.image = form.cleaned_data['image']
+            user.save()
+            changed_field="アイコン"
+            return render(request, "myapp/change_done.html" , {"changed_field":changed_field })
+        else:
+            return redirect(request.path)
+        
