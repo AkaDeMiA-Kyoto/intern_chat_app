@@ -1,9 +1,11 @@
-from django.forms import ModelForm
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from .models import Signup
 
 
-class Singup_Form(ModelForm):
+class SingupForm(UserCreationForm):
     class Meta:
         model = Signup
         fields = ["username", "email", "password1", "password2", "img"]
@@ -26,3 +28,6 @@ class Singup_Form(ModelForm):
             raise ValidationError("ユーザーネームとパスワードが酷似しています。")
 
         return cleaned_data
+
+class LoginForm(AuthenticationForm):
+    pass
