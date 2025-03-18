@@ -1,0 +1,127 @@
+.header {
+    width: 400px;
+    height: 64px;
+    border-bottom: solid 1px #9b9b9b;
+    background-color: #ececec;
+    position: absolute;
+}
+
+@media (max-width: 450px) {
+    .header {
+        width: 100%;
+    }
+}
+
+.header-container {
+    position: relative;
+    width: 100%;
+    height: 64px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.searchbox {
+    margin-top: 64px;
+    width: 400px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #000000;
+    border-top: 1px solid #000000;
+    padding: 5px 0;
+    position: absolute;
+    background-color: white;
+}
+
+@media (max-width: 450px) {
+    .searchbox {
+        width: 100%;
+    }
+}
+
+form {
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 85%;
+}
+
+form input {
+    width: 80%;
+}
+
+.friends-list {
+    margin-bottom: 64px;
+    margin-top: 110px;
+}
+
+.friend-link {
+    text-decoration: none;
+    color: black;
+}
+
+.friend-content {
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid black;
+    margin-top: 10px;
+}
+
+.user-icon {
+    width: 15%;
+    height: 15%;
+    border-radius: 50%;
+    border: 1px solid black;
+    overflow: hidden;
+    margin-left: 10px;
+    aspect-ratio: 1 / 1;
+}
+
+.user-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.friend-detail {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    width: 75%;
+}
+
+.friend-detail .username {
+    margin: 5px 0;
+    font-weight: normal;
+    font-size: 1.1rem;
+}
+
+.message-block {
+    width: 100%;
+    margin: 5px 0;
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.message-block>p {
+    margin-top: 3px;
+    margin-bottom: 3px;
+    color: gray;
+}
+
+.message-content {
+    margin: 10px;
+    margin-left: 0;
+    width: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.message-date {
+    margin: 10px;
+    width: 20%;
+    text-align: right;
+    font-size: 0.6rem;
+}

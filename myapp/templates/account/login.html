@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DeMiAインターン</title>
+    <link rel="stylesheet" href="{% static 'myapp/css/login.css' %}" />
+    <link rel="stylesheet" href="{% static 'myapp/css/base.css' %}" />
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="page-title">ログイン</h1>
+      <form action="{% url 'account_login' %}" method="POST">
+        {% csrf_token %}
+
+        <div class="form-item">
+          <label for="password">メールアドレス</label>
+          {{ form.login }}
+          {% if form.email.errors %}
+            <div class="error-message">{{ form.email.errors }}</div>
+          {% endif %}
+        </div>
+
+        <div class="form-item">
+          <label for="password">パスワード</label>
+          {{ form.password }}
+          {% if form.password.errors %}
+            <div class="error-message">{{ form.password.errors }}</div>
+          {% endif %}
+        </div>
+
+        <button type="submit" class="submit-btn button">ログイン</button>
+
+        <a href="{% url 'account_signup' %}" class="signup-link">ユーザー未登録の方はこちら</a>
+
+        {% if form.non_field_errors %}
+          <div class="error-messages">
+            <ul>
+              {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      </form>
+    </div>
+  </body>
+</html>

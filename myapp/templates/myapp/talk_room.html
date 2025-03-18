@@ -1,1 +1,43 @@
-TR
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DeMiAインターン</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'myapp/css/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'myapp/css/talk_room.css' %}" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div class="header-container">
+          <a class="back-button" href="{% url 'friends' %}"><</a>
+          <span class="header-container__title">{{ received_user.username }}</span>
+          <a class="update-button" href="{% url 'talk_room' received_user.id %}">更新</a>
+        </div>
+      </header>
+
+      <main>
+        <div class="message-list">
+          {% for message in messages %}
+            <div class="message-block">
+              <p class="username">>>{{ message.send_by }}</p>
+              <p class="message-text">{{ message.content }}</p>
+            </div>
+          {% endfor %}
+        </div>
+      </main>
+
+      <footer class="footer">
+        <div class="footer-container">
+          <form action="{% url 'talk_room' received_user.id %}" method="POST">
+            {% csrf_token %}
+            <input type="text" name="content" class="message-content" required />
+            <button class="submit-button" type="submit">送信</button>
+          </form>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

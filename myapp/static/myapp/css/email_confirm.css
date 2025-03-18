@@ -1,0 +1,14 @@
+.page-title{
+    justify-self: center;
+    font-size: 1.5rem;
+}
+
+.page-description{
+    margin: 10px;
+}
+
+form{
+    display: flex;
+    justify-content: center;
+}
+
