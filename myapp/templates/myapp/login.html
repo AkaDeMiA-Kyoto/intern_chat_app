@@ -10,6 +10,10 @@
 {% endblock %}
 {% block content %}
 <body>
+    <form action="{% url 'send_mail' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Mail</button>
+    </form>
     <form method="post" enctype="multipart/form-data">
         {%csrf_token %}
         <table>

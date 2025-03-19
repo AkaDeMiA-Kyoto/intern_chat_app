@@ -14,6 +14,8 @@ from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.urls import reverse_lazy
+from django.views.generic import ListView
+from django.core.mail import send_mail
 import  datetime
 
 def base(request):
@@ -50,6 +52,16 @@ def form_signup(request):
 
     return render(request, 'myapp/signup.html', {'form': form})
 
+def send_email(request):
+    send_mail(
+        '件名',  # 件名
+        'メールの本文',  # メッセージ
+        'okuru@gmail.com',  # 送信元のメールアドレス
+        ['uketoru@gmail.com'],  # 送信先のメールアドレスのリスト
+        fail_silently=False,
+    )
+    return redirect('index') 
+
 class LoginFormView(LoginView):
     authentication_form = LoginForm
     template_name = "myapp/login.html"
@@ -61,35 +73,48 @@ class FriendsListView(LoginRequiredMixin,ListView):
     template_name = 'myapp/friends.html'
     model = CustomUser
 
-def friend(request):
-    user = request.user
-    friends = CustomUser.objects.all()
-    latest_talks = {}
-    for friend in friends:
-        q_filter = Q(talk_from=user,talk_to=friend)|Q(talk_to=user,talk_from=friend)
-        ordered_talks = Talk.objects.filter(q_filter).order_by('-talk_time')
-        if ordered_talks.exists():
-          latest_talk = ordered_talks.first()
+class UserList(ListView):
+    template_name = 'myapp/friends.html'
+    def get_queryset(self):
+        query = self.request.GET.get('query')
+
+        if query:
+            user_list = CustomUser.objects.filter(
+                username__icontains=query)
         else:
-          latest_talk = None
-        latest_talks[friend.id] = latest_talk
+            user_list = CustomUser.objects.all()
+        return user_list
+
+    def friend(request):
+        user = request.user
+        friends = CustomUser.objects.all()
+        latest_talks = {}
+        for friend in friends:
+            q_filter = Q(talk_from=user,talk_to=friend)|Q(talk_to=user,talk_from=friend)
+            ordered_talks = Talk.objects.filter(q_filter).order_by('-talk_time')
+            if ordered_talks.exists():
+              latest_talk = ordered_talks.first()
+            else:
+              latest_talk = None
+            latest_talks[friend.id] = latest_talk
     
-    talk_rooms = []
+        talk_rooms = []
 
-    for friend in friends:
-        talk_rooms.append({"time":latest_talks[friend.id].talk_time if latest_talks[friend.id] else None,"value":(friend, latest_talks[friend.id])})
-    talk_rooms = sorted(talk_rooms,key = lambda x: (x["time"] is not None,x["time"]),reverse=True)
-    print(talk_rooms)
-    # print(latest_talk[id])
-    context = {
-        'friends':friends,
-        'user':user,
-        'latest_talks': latest_talks,
-        'talk_rooms': [talk_room["value"] for talk_room in talk_rooms]
-    }
-    return render(request,'myapp/friends.html',context)
+        for friend in friends:
+            talk_rooms.append({"time":latest_talks[friend.id].talk_time if latest_talks[friend.id] else None,"value":(friend, latest_talks[friend.id])})
+            talk_rooms = sorted(talk_rooms,key = lambda x: (x["time"] is not None,x["time"]),reverse=True)
+            print(talk_rooms)
+        context = {
+            'friends':friends,
+            'user':user,
+            'latest_talks': latest_talks,
+            'talk_rooms': [talk_room["value"] for talk_room in talk_rooms]
+        }
+        return render(request,'myapp/friends.html',context)
 
 
+
+@login_required
 def talk_room(request ,user_id):
     user = request.user
     friend = get_object_or_404 (CustomUser,id=user_id)
@@ -112,6 +137,7 @@ def talk_room(request ,user_id):
     else:
         return render(request,'myapp/talk_room.html',context)
 
+@login_required
 def form_namechange(request):
     if request.method == 'POST':
         form = UsernameChangeForm(request.POST, instance=request.user)
@@ -123,6 +149,7 @@ def form_namechange(request):
 
     return render(request, 'myapp/namechange.html', {'form': form})
 
+@login_required
 def form_mailchange(request):
     if request.method == 'POST':
         form = MailChangeForm(request.POST, instance=request.user)
@@ -134,6 +161,7 @@ def form_mailchange(request):
 
     return render(request, 'myapp/mailchange.html', {'form': form})
 
+@login_required
 def form_imagechange(request):
     if request.method == 'POST':
         form = ImageChangeForm(request.POST, instance=request.user)

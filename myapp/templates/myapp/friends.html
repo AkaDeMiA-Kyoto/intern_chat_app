@@ -10,6 +10,10 @@
 {% endblock %}
 {% block content %}
 <body> 
+  <form action="" method="get">
+    <input name="query" value="{{ request.GET.query }}" type="text" />
+    <button type="submit">検索する</button>
+  </form>
   {% for room in talk_rooms %}
   <div class="talk">
     <button class="friend-info">
