@@ -20,7 +20,8 @@ a{
 }
 
 .talk-title{
-    text-align: start;
+    /* text-align: start; */
+    margin: auto;
 }
 
 .chat-content{
