@@ -13,4 +13,12 @@
 {% endblock %}
 
 {% block content %}
+{% for friend in object_list %}
+    <a href="{% url 'talk_room' friend.pk %}" class="flexbox">
+        <img src="{% if friend.image %}{{ friend.image.url }}{% else %}{% static 'myapp/img/default_icon.png' %}{% endif %}" alt="{{ friend.username }} のアイコン" class="friend-icon">
+        <div>{{friend.username}}</div>
+        <p class="latest-talk">{{ friend.latest_talk|default:"まだメッセージなし" }}</p>
+        <span class="latest-time">{{ friend.latest_talk_time|date:"Y/m/d H:i" }}</span>
+    </a>
+{% endfor %}
 {% endblock %}

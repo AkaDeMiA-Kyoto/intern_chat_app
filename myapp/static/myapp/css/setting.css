@@ -1,0 +1,31 @@
+.btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    line-height: 2.5;
+    padding: 5px 0px;
+    font-size: 1rem;
+    border-radius: 10px;
+    color: #000000;
+    border: solid 1px gray;
+    text-decoration: none;
+}
+
+.btn-container{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btn[type="submit"] {
+    width: 250px; 
+    height: 50px;
+}
+
+html, body{
+    overflow: hidden;
+}

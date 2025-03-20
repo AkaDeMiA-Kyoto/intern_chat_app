@@ -1,1 +1,43 @@
-TR
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/talk_room.css' %}" />
+{% endblock %}
+
+{% block header %}
+<div class="header">
+    <button onclick="location.href='{% url 'friends' %}'">＜</button>
+    <span>{{ friend.username }}</span>
+    <button onclick="location.reload()">更新</button>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="messages-container" id="messageContainer">
+    {% for talk in talks %}
+    <div class="message-box" style="align-self: {% if talk.send_user == request.user %}flex-end{% else %}flex-start{% endif %};">
+        {% if talk.send_user != request.user %}
+            <img src="{{ talk.send_user.icon.url }}" alt="icon" class="icon">
+        {% endif %}
+        <div class="message-content {% if talk.send_user == request.user %}sent{% else %}received{% endif %}">
+            <strong>{{ talk.send_user.username }}</strong>
+            <p>{{ talk.content }}</p>
+            <div class="message-time">{{ talk.talk_at|date:"Y/m/d H:i" }}</div>
+        </div>
+    </div>
+    {% empty %}
+    <p>まだメッセージがありません</p>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block footer %}
+<div class="footer">
+    <form method="POST" action="{% url 'talk_room' friend.id %}">
+        {% csrf_token %}
+        <input type="text" name="content" placeholder="メッセージを入力" required>
+        <button type="submit">送信</button>
+    </form>
+</div>
+{% endblock %}

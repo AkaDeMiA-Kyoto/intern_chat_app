@@ -64,6 +64,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            
         },
     },
 ]
@@ -124,7 +125,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #signup画像処理用
-MEDIA_URL = '/media/'
+MEDIA_URL = '/media_local/'
 MEDIA_ROOT = BASE_DIR / 'media_local'
 
 #サインアップ後indexにリダイレクト
@@ -133,7 +134,7 @@ SIGNUP_REDIRECT_URL = "/index"
 #ログインが必要な画面にログインしていないユーザがアクセスした際indexに
 LOGIN_URL = "/"
 
-LOGIN_REDIRECT_URL = "/setting"
+LOGIN_REDIRECT_URL = "/friends"
 
 #ログアウト後に自動的にindexにリダイレクト
 LOGOUT_REDIRECT_URL = "/"

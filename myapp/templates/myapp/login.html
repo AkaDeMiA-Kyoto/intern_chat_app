@@ -13,14 +13,16 @@
 {% endblock %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">ログイン</button>
-</form>
-{% if error_message %}
-    <p>{{error_message}}</p>
-{% endif %}
+<div class="container">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">ログイン</button>
+    </form>
+    {% if error_message %}
+        <p>{{error_message}}</p>
+    {% endif %}
+</div>
 {% endblock %}
 
 {% block footer %}

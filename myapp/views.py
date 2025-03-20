@@ -2,8 +2,12 @@ from django.shortcuts import redirect, render
 from .forms import SignUpForm, LoginForm
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView
 
-from .models import CustomUser
-from django.views.generic import TemplateView, CreateView, UpdateView
+from .models import CustomUser, Talk
+from django.db import models
+from django.db.models import Q, Subquery, OuterRef
+from django.shortcuts import get_object_or_404, redirect
+
+from django.views.generic import TemplateView, CreateView, UpdateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.urls import reverse_lazy
@@ -24,56 +28,71 @@ class SignupView(CreateView):
     template_name = "myapp/signup.html"
     success_url = reverse_lazy("index")
 
-#def signup_view(request):
-    # if request.method == 'POST':
-    #     form = SignUpForm(request.POST, request.FILES)
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect('index')
-    # else:
-    #     form = SignUpForm()
-    # return render(request, 'myapp/signup.html', {'form': form})
-
-
 class ChatLoginView(LoginView):
     template_name = "myapp/login.html"
     form_class = LoginForm
-    # def post(self, request, *args, **kwargs):
-    #     username = request.POST.get('username')
-    #     password = request.POST.get('password')
 
-    #     user = authenticate(request, username=username,password=password)
+class FriendsView(LoginRequiredMixin, ListView):
+    model =CustomUser
+    template_name = "myapp/friends.html"
+    #context_object_name = 'friends'
+    ordering = ['-created_at']
 
-    #     if user is not None:
-    #         return super().post(request, *args, **kwargs)
-    #     else:
-    #         if not username or not password:
-    #             error_massage = "ユーザー名とパスワードを入力してください。"
-    #         else:
-    #             error_massage = "ユーザー名またはパスワードが間違っています。"
+    def get_queryset(self):
+        user = self.request.user
 
-    #         return render(request, self.template_name, {"error_message": error_massage})
+        # 自分がやり取りした相手を取得
+        friends = CustomUser.objects.exclude(pk=user.pk)
 
-#def friends(request):
-   # return render(request, "myapp/friends.html")
+        # 最新のトークを取得するサブクエリ
+        latest_talks = Talk.objects.filter(
+            (Q(send_user=user) & Q(recieve_user=OuterRef('pk'))) |
+            (Q(send_user=OuterRef('pk')) & Q(recieve_user=user))
+        ).order_by('-talk_at')  # 最新のトーク順
 
-#友達リスト情報取得用関数
-def getFriendsList(username):
-    """
-    指定したユーザーの友達リストを取得
-    :param:ユーザー名
-    :return:ユーザー名の友達リスト
-    """
-    try:
-        user = CustomUser.objects.get(username=username)
-        friends = list(user.user_friends.all()) #user_friendsはrelated_name="user_friends"の逆参照フィールド
+        # friends クエリセットに最新のトーク内容と時刻を追加
+        friends = friends.annotate(
+            latest_talk=Subquery(latest_talks.values('content')[:1]),  # 最新のメッセージ内容
+            latest_talk_time=Subquery(latest_talks.values('talk_at')[:1])  # 最新のメッセージ時刻
+        )
+
+        friends = friends.order_by('-latest_talk_time')
+
         return friends
-    except CustomUser.DoesNotExist:
-        return []
 
+class TalkroomView(LoginRequiredMixin, TemplateView):
+    template_name = 'myapp/talk_room.html'
 
-def talk_room(request):
-    return render(request, "myapp/talk_room.html")
+    def get_context_data(self, **kwargs):
+        # 話す相手を取得
+        target_user = get_object_or_404(CustomUser, pk=self.kwargs['pk'])
+        
+        # AからB / BからAの両方のトークを取得 (なくてもエラーにならない)
+        talks = Talk.objects.filter(
+            Q(send_user=self.request.user, recieve_user=target_user) |
+            Q(send_user=target_user, recieve_user=self.request.user)
+        ).order_by('talk_at')
+
+        # コンテキストデータを返す
+        context = super().get_context_data(**kwargs)
+        context['friend'] = target_user
+        context['talks'] = talks
+        return context
+
+    def post(self, request, *args, **kwargs):
+        # 話す相手を取得
+        target_user = get_object_or_404(CustomUser, pk=self.kwargs['pk'])
+        content = request.POST.get('content')
+
+        # メッセージをデータベースに保存
+        Talk.objects.create(
+            send_user=self.request.user,
+            recieve_user=target_user,
+            content=content
+        )
+
+        # トークルームへリダイレクト
+        return redirect('talk_room', pk=target_user.pk)
 
 class Setting(LoginRequiredMixin, TemplateView):
     template_name = 'myapp/setting.html'
