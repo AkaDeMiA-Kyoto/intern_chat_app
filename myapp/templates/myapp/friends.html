@@ -1,11 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    !
-</body>
-</html>
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/friends.css' %}" >
+{% endblock %}
+
+{% block content %}
+<div class="friends-wrapper">
+    {% for user in users %}
+        <a href="{% url 'myapp:talk_room' user.id %}" class="friend-link">
+            <div class="friend">
+                    {% if user.img %}
+                        <img src="{{user.img.url}}" alt="icon" width="50px" height="50px">
+                    {% endif %}
+                    <p class="username">{{user.username}}</p>
+            </div>
+        </a>
+    {% endfor %}
+</div>
+{% endblock %}

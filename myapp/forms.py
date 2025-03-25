@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
-from .models import Signup
+from .models import Signup, Message
 
 
 class SingupForm(UserCreationForm):
@@ -31,3 +31,8 @@ class SingupForm(UserCreationForm):
 
 class LoginForm(AuthenticationForm):
     pass
+
+class MessageSend(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ['message']

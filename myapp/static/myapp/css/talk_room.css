@@ -1,0 +1,57 @@
+.header{
+    position: fixed;
+    background-color: #fff;
+}
+
+.header-container{
+    display: flex;
+    flex: 1 8 1;
+}
+
+.friends-link{
+    text-decoration: none;
+    font-weight: 700;
+    font-size: large;
+    color: #000;
+    
+}
+
+.message-wrapper{
+    padding: 64px 0 61px;
+}
+
+.message{
+    height: max-content;
+    width: 80%;
+    border: #000 solid 2px;
+    margin: 0 auto 0;
+    padding: 10px;
+    overflow-wrap: break-word;
+}
+
+.message-form-wrapper{
+    position: fixed;
+    bottom: 0px;
+    height: max-content;
+    width: 100%;
+    background-color: #fff;
+    border-top: 1px solid #9b9b9b;
+}
+
+.message-form{
+    display: flex;
+    width: max-content;
+    margin-left: auto;
+}
+
+.message-form button{
+    margin:5px 30px 5px 60px;
+}
+
+.footer{
+    width: 96vw;
+}
+
+.footer-container{
+    background-color: #fff;
+}
