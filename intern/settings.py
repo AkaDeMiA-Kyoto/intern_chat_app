@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-ozyl(r!*=wht$a7^pp+wp=zg5g96yg5wz!7fwe$gq63874z9##
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["43.206.7.234"]
 
 
 # Application definition
@@ -137,3 +137,5 @@ AUTH_USER_MODEL = "myapp.CustomUser"
 
 LOGIN_URL = 'myapp:login_view'
 LOGIN_REDIRECT_URL = 'myapp:friends'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
