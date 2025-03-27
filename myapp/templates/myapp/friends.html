@@ -1,0 +1,45 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
+{% endblock %}
+
+{% block header_title %}友達{% endblock %}
+
+{% block content %}
+
+<h3>ともだち一覧</h3>
+    <ul class="friend-list">
+        {% for item in user_and_latest_messages %}
+        <li class="friend">
+            
+                <div class="friend-info">
+                    <span class="friend-name">{{ item.user.username }}</span>
+                    <img src="{{ friend.user.user_icon.url }}" class="profile-img">
+                    {% if item.message %}
+                        <div>
+                        <p>最新のメッセージ</p>
+                        <span class="latest-message">{{item.message}}</span> 
+                        <span class="message-time">{{ item.time}}</span>
+                        </div>
+                    {% else %}
+                        <span class="no-message">メッセージはありません</span> 
+                    {% endif %}
+                </div>
+        </li>
+        {% endfor %}
+    </ul>
+
+
+
+
+
+<form action="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+    <p><input type="submit" value="ログアウト" class="logout-form__submit"></p>
+</form>
+
+{% endblock %}
+
+{% block footer %}{% endblock %}

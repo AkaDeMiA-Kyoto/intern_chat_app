@@ -1,1 +1,19 @@
-LI
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/login.css' %}">
+{% endblock %}
+
+{% block header_title %}ログイン{% endblock %}
+
+{% block content %}
+<form action="{% url 'login' %}" method="post" class="login-form">
+    {% csrf_token %}
+    <table>{{ form.as_table }}</table>
+    <input type="hidden" name="next" value="{{ next }}">
+    <p><input type="submit" value="送信" class="login-form__submit"></p>
+</form>
+{% endblock %}
+
+{% block footer %}{% endblock %}
