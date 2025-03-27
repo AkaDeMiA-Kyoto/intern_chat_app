@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+import os 
+import environ
 
 from pathlib import Path
 
@@ -23,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ozyl(r!*=wht$a7^pp+wp=zg5g96yg5wz!7fwe$gq63874z9##'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -119,6 +121,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATIC_ROOT = BASE_DIR/"staticfiles"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -141,3 +145,10 @@ LOGOUT_REDIRECT_URL = "/"
 
 #ユーザーモデル
 AUTH_USER_MODEL = "myapp.CustomUser"
+
+if os.path.isfile('.env'):
+    env = environ.Env(DEBUG=(bool,False))
+    environ.Env.read_env('.env')
+
+    DEBUG = env('DEBUG')
+    ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
