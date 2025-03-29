@@ -12,6 +12,11 @@ urlpatterns = [
     path('friends', views.friends, name='friends'),
     path('talk_room/<int:user_id>', views.talk_room, name='talk_room'),
     path('setting', views.setting, name='setting'),
+    path('logout', views.logout_view, name='logout_view'),
+    path('username_update', views.username_update, name='username_update'),
+    path('email_update', views.email_update, name='email_update'),
+    path('password_update', views.password_update, name='password_update'),
+    path('img_update', views.img_update, name='img_update'),
 ]
 
 if settings.DEBUG:

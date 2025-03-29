@@ -1,0 +1,28 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" >
+{% endblock %}
+
+{% block header-title %}メールアドレス変更{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+<div>
+    {% for message in messages %}
+    <p>{{message}}</p>
+    {% endfor %}
+</div>
+{% else %}
+<div>
+    <p>現在のメールアドレス：{{user.email}}</p>
+</div>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">変更</button>
+</form>
+{% endif %}
+{% endblock %}

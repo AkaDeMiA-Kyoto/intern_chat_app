@@ -11,7 +11,7 @@
     <div class="header-container">
         <a href="{% url 'myapp:friends'%}" class="friends-link">＜</a>
         <div class="partner-name">
-            <span class="header-container__title">
+            <span>
                 {{user}}
             </span>
         </div>
@@ -25,9 +25,6 @@
 <main class="message-wrapper">
     {% for message in messages%}
     <div class="message">
-        {% if message.sender.img %}
-        <img src="{{ message.sender.img.url }}" alt="icon" width="30px" height="30px">
-        {% endif %}
         <p>{{message.message}}</p>
         <p>{{message.sended_at}}</p>
         <p>{{message.sender}}</p>

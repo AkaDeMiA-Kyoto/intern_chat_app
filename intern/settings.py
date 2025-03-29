@@ -117,3 +117,4 @@ MEDIA_ROOT = BASE_DIR / 'media_local'
 
 
 LOGIN_REDIRECT_URL = "myapp:friends"
+LOGOUT_REDIRECT_URL = "myapp:login"

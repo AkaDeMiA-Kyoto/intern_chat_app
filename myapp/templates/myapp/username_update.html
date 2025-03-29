@@ -1,0 +1,28 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" >
+{% endblock %}
+
+{% block header-title %}ユーザー名変更{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+<div>
+    {% for message in messages %}
+    <p>{{message}}</p>
+    {% endfor %}
+</div>
+{% else %}
+<div>
+    <p>現在のユーザー名：{{user.username}}</p>
+</div>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">変更</button>
+</form>
+{% endif %}
+{% endblock %}

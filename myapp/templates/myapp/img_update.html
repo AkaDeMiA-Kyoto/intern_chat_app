@@ -1,0 +1,29 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}" >
+{% endblock %}
+
+{% block header-title %}アイコン変更{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+<div>
+    {% for message in messages %}
+    <p>{{message}}</p>
+    {% endfor %}
+</div>
+{% else %}
+<div>
+    <p>現在のアイコン：</p>
+    <img src="{{user.img.url}}" alt="current_icon" width="100px" height="100px">
+</div>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">変更</button>
+</form>
+{% endif %}
+{% endblock %}

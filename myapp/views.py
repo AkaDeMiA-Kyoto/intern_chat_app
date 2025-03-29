@@ -1,6 +1,7 @@
 from django.shortcuts import redirect,get_object_or_404, render
-from django.contrib.auth import login
-from .forms import SingupForm, LoginForm, MessageSend
+from django.contrib import messages
+from django.contrib.auth import login, logout
+from .forms import SingupForm, LoginForm, MessageSend, UsernameUpdate, EmailUpdate, PasswordUpdate, ImgUpdate
 from django.contrib.auth.decorators import login_required
 from .models import Signup, Message
 
@@ -52,7 +53,7 @@ def talk_room(request,user_id):
     if request.method == "GET":
         #メッセージを送信順に表示する
         messages = Message.objects.filter(user1 = user1, user2 = user2).order_by('-sended_at')
-        return render(request, "myapp/talk_room.html", {'myself':myself, 'user':user, 'messages':messages, 'form':form})
+        return render(request, "myapp/talk_room.html", {'user':user, 'messages':messages, 'form':form})
 
     if request.method == "POST":
         form = MessageSend(request.POST)
@@ -70,3 +71,69 @@ def talk_room(request,user_id):
 def setting(request):
     return render(request, "myapp/setting.html")
 
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect("myapp:index")
+
+@login_required
+def username_update(request):
+    form = UsernameUpdate()
+    if request.method == "GET":
+        login_user = request.user
+        return render(request, "myapp/username_update.html", {'form':form, 'user':login_user})
+    if request.method == "POST":
+        obj = get_object_or_404(Signup, id=request.user.id)
+        form = UsernameUpdate(request.POST, instance=obj, request = request)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "ユーザー名を変更しました")
+            return redirect("myapp:username_update")
+    return render(request, "myapp/username_update.html", {'fomr':form})
+
+@login_required
+def email_update(request):
+    form = EmailUpdate()
+    if request.method == "GET":
+        login_user = request.user
+        return render(request, "myapp/email_update.html", {'form':form, 'user':login_user})
+    if request.method == "POST":
+        obj = get_object_or_404(Signup, id=request.user.id)
+        form = EmailUpdate(request.POST, instance=obj)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "メールアドレスを変更しました")
+            return redirect("myapp:email_update")
+    return render(request, "myapp/email_update.html", {'fomr':form})
+
+@login_required
+def password_update(request):
+    form = PasswordUpdate()
+    if request.method == "GET":
+        login_user = request.user
+        return render(request, "myapp/password_update.html", {'form':form, 'user':login_user})
+    if request.method == "POST":
+        obj = get_object_or_404(Signup, id=request.user.id)
+        form = PasswordUpdate(request.POST, instance=obj, user = request)
+        print("a")
+        if form.is_valid():
+            print("b")
+            form.save()
+            messages.success(request, "パスワードを変更しました")
+            return redirect("myapp:password_update")
+    return render(request, "myapp/password_update.html", {'form':form})
+
+@login_required
+def img_update(request):
+    form = ImgUpdate()
+    if request.method == "GET":
+        login_user = request.user
+        return render(request, "myapp/img_update.html", {'form':form, 'user':login_user})
+    if request.method == "POST":
+        obj = get_object_or_404(Signup, id=request.user.id)
+        form = ImgUpdate(request.POST, request.FILES, instance=obj)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "アイコンを変更しました")
+            return redirect("myapp:img_update")
+    return render(request, "myapp/img_update.html", {'fomr':form})
