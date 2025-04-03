@@ -1,4 +1,4 @@
-    .header{
+.header{
     position: fixed;
     background-color: #fff;
 }
@@ -66,12 +66,20 @@
 }
 
 .message{
+    position: relative;
     height: max-content;
     width: 80%;
     border: #000 solid 2px;
     margin: 0 auto 0;
     padding: 10px;
     overflow-wrap: break-word;
+}
+
+.sended-at{
+    margin-right: 20px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
 }
 
 .message-form-wrapper{

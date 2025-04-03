@@ -7,3 +7,23 @@
     text-align: center;
     display: block;
 }
+
+.helptext{
+    display: none;
+}
+
+.signup-form p{
+    width: max-content;
+    margin: 20px auto ;
+}
+
+.signup-button-wrapper{
+    width: max-content;
+    margin: 30px auto 0;
+}
+
+.signup-button{
+    padding: 10px 15px;
+    background-color: #fff;
+    cursor: pointer;
+}

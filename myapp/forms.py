@@ -9,6 +9,9 @@ class SingupForm(UserCreationForm):
     class Meta:
         model = Signup
         fields = ["username", "email", "password1", "password2", "img"]
+        error_messages ={
+            'username':{'unique': 'このユーザー名は既に使われています。',}
+        }
     
     def clean(self):
         cleaned_data = super().clean()

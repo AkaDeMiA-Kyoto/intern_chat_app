@@ -11,12 +11,17 @@
     margin: 3px auto 4px;
     border-radius: 15%;
     text-align: center;
-    padding-top: 10px;
+    position: relative;
 }
 
-.button > span{
+.button > p{
+    position: absolute;
     text-decoration: none;
     color: #000;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
 }
 
 a{

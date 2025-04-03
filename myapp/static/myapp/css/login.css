@@ -7,3 +7,19 @@
     text-align: center;
     display: block;
 }
+
+.login-form p{
+    width: max-content;
+    margin: 20px auto ;
+}
+
+.login-button-wrapper{
+    width: max-content;
+    margin: 30px auto 0;
+}
+
+.login-button{
+    padding: 10px 15px;
+    background-color: #fff;
+    cursor: pointer;
+}
