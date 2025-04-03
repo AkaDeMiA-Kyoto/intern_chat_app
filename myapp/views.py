@@ -1,6 +1,8 @@
 from django.shortcuts import redirect,get_object_or_404, render
 from django.contrib import messages
 from django.contrib.auth import login, logout
+from django.db import models
+from django.db.models import Q
 from .forms import SingupForm, LoginForm, MessageSend, UsernameUpdate, EmailUpdate, PasswordUpdate, ImgUpdate
 from django.contrib.auth.decorators import login_required
 from .models import Signup, Message
@@ -35,6 +37,16 @@ def login_view(request):
 @login_required
 def friends(request):
     users = Signup.objects.exclude(id=request.user.id)
+    for user in users:
+        partner = get_object_or_404(Signup, id = user.id)
+        latest_message =Message.objects.filter(
+                Q(recipient = user, sender = request.user)|Q(recipient = request.user, sender = user)
+                ).order_by('-sended_at').first()
+        partner.latest_message = latest_message
+        partner.save()
+    users = Signup.objects.exclude(id=request.user.id).order_by(
+        models.F('latest_message__sended_at').desc(nulls_last=True), 'id'
+        )
     return render(request, "myapp/friends.html", {'users': users})
 
 @login_required
@@ -115,9 +127,7 @@ def password_update(request):
     if request.method == "POST":
         obj = get_object_or_404(Signup, id=request.user.id)
         form = PasswordUpdate(request.POST, instance=obj, user = request)
-        print("a")
         if form.is_valid():
-            print("b")
             form.save()
             messages.success(request, "パスワードを変更しました")
             return redirect("myapp:password_update")

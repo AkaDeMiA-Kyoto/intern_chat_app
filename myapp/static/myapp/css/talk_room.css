@@ -1,19 +1,64 @@
-.header{
+    .header{
     position: fixed;
     background-color: #fff;
 }
 
 .header-container{
     display: flex;
-    flex: 1 8 1;
 }
 
+
 .friends-link{
+    flex: 1;
+}
+
+.friends-link a{
     text-decoration: none;
-    font-weight: 700;
-    font-size: large;
+}
+
+.friends-back{
+    width: 90px;
+    height: 64px;
+    cursor: grab;
+    position: relative;
+    z-index: 2;
+}
+
+.friends-back span{
+    height: 1rem;
+    line-height: 1rem;
+    text-align: center;
+    font-size: 2rem;
     color: #000;
-    
+    pointer-events: auto;
+    position: absolute;
+    left: 10px;
+    top: 20px;
+}
+
+.partner-name{
+    flex: 8;
+}
+
+.reload{
+    flex: 1;
+}
+
+.reload-button{
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(0,-50%);
+    z-index: 2;
+}
+
+.reload-text{
+    height: 1rem;
+    line-height: 1rem;
+    margin: auto;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #000;
 }
 
 .message-wrapper{

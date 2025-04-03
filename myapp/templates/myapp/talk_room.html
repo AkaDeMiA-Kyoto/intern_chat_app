@@ -9,13 +9,25 @@
 
 <header class="header">
     <div class="header-container">
-        <a href="{% url 'myapp:friends'%}" class="friends-link">＜</a>
+        <div class="friends-link">
+            <a href="{% url 'myapp:friends'%}">
+                <div class="friends-back">
+                    <span>＜</span>
+                </div>
+            </a>
+        </div>
         <div class="partner-name">
-            <span>
+            <span class="header-container__title">
                 {{user}}
             </span>
         </div>
-        <a href="{% url 'myapp:talk_room' user.id %}">更新</a>
+        <div class="reload">
+            <a href="{% url 'myapp:talk_room' user.id %}">
+                <button class="reload-button">
+                    <span class="reload-text">更新</span>
+                </button>
+            </a>
+        </div>
     </div>
 </header>
 

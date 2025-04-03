@@ -7,5 +7,5 @@ class SignupAdmin(admin.ModelAdmin):
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    fields=["message","sender","recipient","user1","user2","sended_at","id","last_sended_at",]
-    readonly_fields=["sended_at","id","last_sended_at",]
+    fields=["message","sender","recipient","user1","user2","sended_at","id",]
+    readonly_fields=["sended_at","id",]

@@ -95,7 +95,7 @@ AUTH_USER_MODEL = 'myapp.Signup'
 
 LANGUAGE_CODE = 'ja'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tokyo'
 
 USE_I18N = True
 
