@@ -3,9 +3,13 @@ from django.db import models
 
 
 class User(AbstractUser):
+
+    email = models.EmailField(blank=True, unique=True)
     icon = models.ImageField(
         verbose_name="画像", upload_to="uploads", default="images/noimage.png"
     )
+    REQUIRED_FIELDS = ["password"]
+    USERNAME_FIELD = "email"
 
 
 # トーク内容を全てdatbaseに保存する形をとる

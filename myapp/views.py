@@ -12,6 +12,8 @@ from django.contrib.auth.views import (
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
+from django.core.mail import send_mail
+
 
 from .forms import (
     ImageSettingForm,
@@ -36,15 +38,10 @@ def signup_view(request):
         form = SignUpForm()
         error_message = ''
     elif request.method == "POST":
-        # 画像ファイルをformに入れた状態で使いたい時はformに"request.FILES"を加える。
-        # request.POST だけではNoneが入る。
         form = SignUpForm(request.POST, request.FILES)
         if form.is_valid():
-            # モデルフォームはformの値をmodelsにそのまま格納できるsave()メソッドがあるので便利。
             form.save()
-            # フォームから"username"を読み取る
             username = form.cleaned_data.get("username")
-            # フォームから"password1"を読み取る
             password = form.cleaned_data.get("password1")
             # 認証情報のセットを検証するには authenticate() を利用してください。
             # このメソッドは認証情報をキーワード引数として受け取ります。
@@ -54,6 +51,7 @@ def signup_view(request):
             # (公式ドキュメントより)
             # つまり、autenticateメソッドは"username"と"password"を受け取り、その組み合わせが存在すれば
             # そのUserを返し、不正であれば"None"を返します。
+            send_mail("タイトル", "本文", "takagi.shu.73v@st.kyoto-u.ac.jp", [form.cleaned_data.get("email")])
             user = authenticate(username=username, password=password)
             if user is not None:
                 # あるユーザーをログインさせる場合は、login() を利用してください。この関数は HttpRequest オブジェクトと User オブジェクトを受け取ります。
@@ -79,8 +77,7 @@ class Login(LoginView):
 
     GETの時は指定されたformを指定したテンプレートに表示
     POSTの時はloginを試みる。→成功すればdettingのLOGIN_REDIRECT_URLで指定されたURLに飛ぶ
-    """
-
+    """    
     authentication_form = LoginForm
     template_name = "myapp/login.html"
 
