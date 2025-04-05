@@ -5,18 +5,19 @@
 <link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
 {% endblock %}
 
-{% block header_title %}友達{% endblock %}
+{% block header_title %}友達一覧{% endblock %}
 
 {% block content %}
 
 <h3>ともだち一覧</h3>
     <ul class="friend-list">
         {% for item in user_and_latest_messages %}
+        <a href="{% url 'talk_room' item.user.id%}" class="friend-link">
         <li class="friend">
             
                 <div class="friend-info">
                     <span class="friend-name">{{ item.user.username }}</span>
-                    <img src="{{ friend.user.user_icon.url }}" class="profile-img">
+                    <img src="{{ item.user.user_icon.url }}" class="profile-img">
                     {% if item.message %}
                         <div>
                         <p>最新のメッセージ</p>
@@ -28,6 +29,7 @@
                     {% endif %}
                 </div>
         </li>
+        </a>
         {% endfor %}
     </ul>
 
@@ -42,4 +44,3 @@
 
 {% endblock %}
 
-{% block footer %}{% endblock %}

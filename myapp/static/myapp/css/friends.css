@@ -1,3 +1,67 @@
+.profile-img {
+    width: 80px;
+    height: 80px;
+    margin-right: 20px;
+}
+
+.friend-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.friend {
+    background-color: var(--md-surface);
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    transition: background-color 0.3s ease;
+    height: 100px;
+}
+
+.friend:hover {
+    background-color: var(--md-secondary);
+}
+
+.friend-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 100%;
+    align-items: center;
+}
+
+.friend-info {
+    display: flex;
+}
+
+.friend-name {
+    font-weight: 500;
+    font-size: 1.1rem;
+    color: var(--md-on-surface);
+    padding-top: 10px;
+    width: 80px;
+}
+
+.latest-message {
+    font-size: 0.9rem;
+    color: var(--md-on-surface);
+}
+
+
+.no-message {
+    margin-top: 10px;
+}
+
+.message-time {
+    font-size: 0.8rem;
+    color: var(--md-on-surface);
+    margin-top: 5px;
+}
+
 .logout-form__submit {
     display: block;
     width: 30%;

@@ -1,0 +1,20 @@
+{% extends "myapp/base.html" %}
+
+{% block header_title %}ユーザーアイコン変更{% endblock %}
+
+{% block content %}
+<form method="post" action="{% url 'user_img_change' %}">
+    <table>
+        <tr>
+            <td>{{ form.user_icon.label_tag }}</td>
+            <td>{{ form.user_icon }}</td>
+        </tr>
+    </table>
+    {% csrf_token %}
+    <button type="submit">変更</button>
+    {# エラーメッセージを表示 #}
+    {% if form.errors %}
+        <div>{{ form.errors }}</div>
+    {% endif %}
+</form>
+{% endblock %}

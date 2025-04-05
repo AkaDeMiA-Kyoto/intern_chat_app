@@ -1,0 +1,20 @@
+{% extends "myapp/base.html" %}
+
+{% block header_title %}メールアドレス変更{% endblock %}
+
+{% block content %}
+<form method="post" action="{% url 'mail_change' %}">
+    <table>
+        <tr>
+            <td>{{ form.email.label_tag }}</td>
+            <td>{{ form.email }}</td>
+        </tr>
+    </table>
+    {% csrf_token %}
+    <button type="submit">変更</button>
+    {# エラーメッセージを表示 #}
+    {% if form.errors %}
+        <div>{{ form.errors }}</div>
+    {% endif %}
+</form>
+{% endblock %}

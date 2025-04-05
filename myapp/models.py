@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class CustomUser(AbstractUser):
-    user_icon = models.ImageField('プロフィール画像',upload_to='user_icons',default="img/people-24px.svg")
+    user_icon = models.ImageField('プロフィール画像',upload_to='user_icons',default="img/head_icon.png")
     
     def __str__(self):
         return f"{self.username},{self.id}"

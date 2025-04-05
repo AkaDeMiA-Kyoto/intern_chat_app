@@ -130,4 +130,4 @@ MEDIA_ROOT = BASE_DIR / 'media_local'
 AUTH_USER_MODEL = "myapp.CustomUser"
 
 LOGIN_REDIRECT_URL = "friends"
-LOGOUT_REDIRECT_URL = "login"
+LOGOUT_REDIRECT_URL = "index"
