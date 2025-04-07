@@ -22,3 +22,5 @@ class SettingForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['username', 'email', 'user_icon']
+        
+        

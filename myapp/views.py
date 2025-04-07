@@ -39,7 +39,7 @@ class UserLogin(LoginView):
     redirect_authenticated_user = True
 
 
-class UserLogout(LoginRequiredMixin, LogoutView):
+class UserLogout(LogoutView):
     pass
 
 
