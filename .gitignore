@@ -274,4 +274,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+#media_local for icon of chatapp
+/media_local
+
 # End of https://www.toptal.com/developers/gitignore/api/django,python,windows,macos,linux
