@@ -3,7 +3,7 @@
 {% block header_title %}ユーザーアイコン変更{% endblock %}
 
 {% block content %}
-<form method="post" enctype="multipart/form-data" action="{% url 'user_img_change' %}">
+<form method="post" enctype="multipart/form-data" action="{% url 'user_img_change' %}" >
     {% csrf_token %}
     <table>
         <tr>

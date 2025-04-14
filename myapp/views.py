@@ -2,7 +2,7 @@ from django.contrib.auth import login, authenticate
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.urls import reverse, reverse_lazy
-from .forms import SignUpForm, LoginForm, SettingForm
+from .forms import SignUpForm, LoginForm, SettingForm, EmailChangeForm, ImageChangeForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.views.generic import CreateView, ListView, TemplateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -126,7 +126,7 @@ def username_change_done(request):
 
 class MailChangeView(LoginRequiredMixin, UpdateView):
     model = CustomUser
-    form_class = SettingForm
+    form_class = EmailChangeForm
     template_name = 'myapp/mail_change.html'
     success_url = reverse_lazy('mail_change_done')
 
@@ -139,7 +139,7 @@ def mail_change_done(request):
 
 class UserImgChangeView(LoginRequiredMixin, UpdateView):
     model = CustomUser
-    form_class = SettingForm
+    form_class = ImageChangeForm
     template_name = 'myapp/user_img_change.html'
     success_url = reverse_lazy('user_img_change_done')
 
