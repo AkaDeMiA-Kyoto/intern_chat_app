@@ -21,32 +21,30 @@ def create_users(n):
 
     CustomUser.objects.bulk_create(users, ignore_conflicts=True)
 
-    my_id = CustomUser.objects.get(username="admin").id
+    my_id = CustomUser.objects.get(username="superryusei").id
 
     user_ids = CustomUser.objects.exclude(id=my_id).values_list("id", flat=True)
 
     talks = []
     for _ in range(len(user_ids)):
         sent_talk = Talk(
-            sender_id=my_id,
-            receiver_id=random.choice(user_ids),
-            message=fakegen.text(),
+            talk_from_id=my_id,
+            talk_to_id=random.choice(user_ids),
+            talk=fakegen.text(),
         )
         received_talk = Talk(
-            sender_id=random.choice(user_ids),
-            receiver_id=my_id,
-            message=fakegen.text(),
+            talk_from_id=random.choice(user_ids),
+            talk_to_id=my_id,
+            talk=fakegen.text(),
         )
         talks.extend([sent_talk, received_talk])
     Talk.objects.bulk_create(talks, ignore_conflicts=True)
 
-    talks = Talk.objects.order_by("-time")[: 2 * len(user_ids)]
+    talks = Talk.objects.order_by("-talk_time")[: 2 * len(user_ids)]
     for talk in talks:
-        talk.time = fakegen.date_time_this_year(tzinfo=tz.gettz("Asia/Tokyo"))
-    Talk.objects.bulk_update(talks, fields=["time"])
+        talk.talk_time = fakegen.date_time_this_year(tzinfo=tz.gettz("Asia/Tokyo"))
+    Talk.objects.bulk_update(talks, fields=["talk_time"])
 
 
 if __name__ == "__main__":
-    print("creating users ...", end="")
     create_users(5)
-    print("done")

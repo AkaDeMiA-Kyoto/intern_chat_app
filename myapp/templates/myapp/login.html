@@ -15,7 +15,7 @@
         <button type="submit">Mail</button>
     </form>
     <form method="post" enctype="multipart/form-data">
-        {%csrf_token %}
+        {% csrf_token %}
         <table>
             <div class="login-form">
                 {{form.as_table}}

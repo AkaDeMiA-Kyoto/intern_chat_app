@@ -2,11 +2,15 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class CustomUser(AbstractUser):
+    email = models.EmailField(unique=True)
     image = models.ImageField(
         upload_to="uploads",null=True
     )
     def __str__(self):
         return self.username
+    
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
 class Talk(models.Model):
     talk = models.CharField(max_length=500)

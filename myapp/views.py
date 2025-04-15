@@ -29,9 +29,6 @@ def signup_view(request):
 def login_view(request):
     return render(request, "myapp/login.html")
 
-@login_required
-def friends(request):
-    return render(request, "myapp/friends.html")
 
 @login_required
 def talk_room(request):
@@ -66,6 +63,7 @@ class LoginFormView(LoginView):
     authentication_form = LoginForm
     template_name = "myapp/login.html"
 
+
 class LogoutFormView(LoginRequiredMixin,LogoutView):
     template_name = 'myapp/index.html'
 
@@ -73,46 +71,67 @@ class FriendsListView(LoginRequiredMixin,ListView):
     template_name = 'myapp/friends.html'
     model = CustomUser
 
-class UserList(ListView):
-    template_name = 'myapp/friends.html'
-    def get_queryset(self):
-        query = self.request.GET.get('query')
-
-        if query:
-            user_list = CustomUser.objects.filter(
-                username__icontains=query)
-        else:
-            user_list = CustomUser.objects.all()
-        return user_list
-
-    def friend(request):
-        user = request.user
-        friends = CustomUser.objects.all()
-        latest_talks = {}
-        for friend in friends:
-            q_filter = Q(talk_from=user,talk_to=friend)|Q(talk_to=user,talk_from=friend)
-            ordered_talks = Talk.objects.filter(q_filter).order_by('-talk_time')
-            if ordered_talks.exists():
-              latest_talk = ordered_talks.first()
-            else:
-              latest_talk = None
-            latest_talks[friend.id] = latest_talk
+def friends(request):
     
-        talk_rooms = []
+    user = request.user
+    query = request.GET.get('query')
+    if query:
+        friends = CustomUser.objects.filter( Q(username__icontains="query")|Q(email__icontains="query") )
+    else:
+        friends = CustomUser.objects.all()
+        
+    latest_talks = {}
+    for friend in friends:
+        q_filter = Q(talk_from=user,talk_to=friend)|Q(talk_to=user,talk_from=friend)
+        ordered_talks = Talk.objects.filter(q_filter).order_by('-talk_time')
+        if ordered_talks.exists():
+            latest_talk = ordered_talks.first()
+        else:
+            latest_talk = None
+        latest_talks[friend.id] = latest_talk
+    
+    talk_rooms = []
 
-        for friend in friends:
-            talk_rooms.append({"time":latest_talks[friend.id].talk_time if latest_talks[friend.id] else None,"value":(friend, latest_talks[friend.id])})
-            talk_rooms = sorted(talk_rooms,key = lambda x: (x["time"] is not None,x["time"]),reverse=True)
-            print(talk_rooms)
-        context = {
-            'friends':friends,
-            'user':user,
-            'latest_talks': latest_talks,
-            'talk_rooms': [talk_room["value"] for talk_room in talk_rooms]
-        }
-        return render(request,'myapp/friends.html',context)
+    for friend in friends:
+        talk_rooms.append({"time":latest_talks[friend.id].talk_time if latest_talks[friend.id] else None,"value":(friend, latest_talks[friend.id])})
+        talk_rooms = sorted(talk_rooms,key = lambda x: (x["time"] is not None,x["time"]),reverse=True)
+    context = {
+        'friends':friends,
+        'user':user,
+        'latest_talks': latest_talks,
+        'talk_rooms': [talk_room["value"] for talk_room in talk_rooms]
+    }
+    return render(request,'myapp/friends.html',context)
 
+"""
+def friends(request):
+    user = request.user
+    friends = CustomUser.objects.all()
+    latest_talks = {}
+    for friend in friends:
+        q_filter = Q(talk_from=user,talk_to=friend)|Q(talk_to=user,talk_from=friend)
+        ordered_talks = Talk.objects.filter(q_filter).order_by('-talk_time')
+        if ordered_talks.exists():
+          latest_talk = ordered_talks.first()
+        else:
+          latest_talk = None
+        latest_talks[friend.id] = latest_talk
+    
+    talk_rooms = []
 
+    for friend in friends:
+        talk_rooms.append({"time":latest_talks[friend.id].talk_time if latest_talks[friend.id] else None,"value":(friend, latest_talks[friend.id])})
+    talk_rooms = sorted(talk_rooms,key = lambda x: (x["time"] is not None,x["time"]),reverse=True)
+    print(talk_rooms)
+    # print(latest_talk[id])
+    context = {
+        'friends':friends,
+        'user':user,
+        'latest_talks': latest_talks,
+        'talk_rooms': [talk_room["value"] for talk_room in talk_rooms]
+    }
+    return render(request,'myapp/friends.html',context)
+"""
 
 @login_required
 def talk_room(request ,user_id):
