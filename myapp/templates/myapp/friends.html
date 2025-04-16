@@ -1,0 +1,43 @@
+{% extends 'myapp/base.html' %}
+
+{% block header-title %}友達{% endblock %}
+
+{% block content %}
+  <div class="searchbox">
+    <form method="GET" action="" class="search-form">
+      <input type="text" name="searchtext" placeholder="友達を検索" value="{{ request.GET.searchtext|default:'' }}" />
+      <button type="submit" class="submit-button">検索</button>
+    </form>
+  </div>
+
+  <div class="friends-list">
+    {% for user in users %}
+      <a class="friend-link" href="{% url 'talk_room' user.id %}">
+        <div class="friend-content">
+          <div class="user-icon">
+            {% if user.image %}
+              <img src="{{ user.image.url }}" alt="{{ user.username }}のアイコン" />
+            {% else %}
+              {% load static %}
+              <img src="{% static 'myapp/img/first-icon.png' %}" alt="{{ user.username }}のアイコン" />
+            {% endif %}
+          </div>
+          <div class="friend-detail">
+            <h1 class="username">{{ user.username }}</h1>
+            <div class="message-block">
+              <p class="message-content">{{ user.latest_message_content|default:'&nbsp;' }}</p>
+              <p class="message-date">
+                {{ user.latest_message_time|date:'n/j' }}<br />{{ user.latest_message_time|date:'G:i'|default:'<br>' }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+{% endblock %}
+
+{% block extra_style %}
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/friends.css' %}" />
+{% endblock %}

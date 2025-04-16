@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DeMiAインターン</title>
+    <link rel="stylesheet" href="{% static 'myapp/css/email_confirm.css' %}" />
+    <link rel="stylesheet" href="{% static 'myapp/css/base.css' %}" />
+  </head>
+  <body>
+    <div class="container">
+      <p class="page-title">メール認証</p>
+
+      {% if confirmation %}
+        <p class="page-description">メール認証を完了するには、以下のボタンを押してください</p>
+
+        <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+          {% csrf_token %}
+          <button type="submit" class="confirm-button">認証を完了する</button>
+        </form>
+      {% else %}
+        <p class="error-message">
+          この確認リンクは無効です。すでに確認済みか、リンクが期限切れです <a href="{{ email_url }}">再申請</a>
+        </p>
+      {% endif %}
+    </div>
+  </body>
+</html>

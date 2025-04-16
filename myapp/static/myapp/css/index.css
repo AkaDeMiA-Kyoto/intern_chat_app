@@ -1,0 +1,23 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button-block{
+    display: flex;
+    flex-direction: column;
+}
+
+.button{
+    border: 2px solid #aeaeae;
+    border-radius: 10px;
+    text-decoration: none;
+    color: black;
+    background-color: white;
+    padding: 7px 12px;
+    margin-bottom: 20px;
+}
+
+
+
