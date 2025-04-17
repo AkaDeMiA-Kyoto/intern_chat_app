@@ -1,1 +1,22 @@
-a
+{% extends './base.html' %}
+{% block header-title %}友達{% endblock %}
+{% block content %}
+<ul>
+  {% for person_data in people_data %}
+    <li>
+      <a href="{% url 'myapp:talk_room' person_data.user.username %}">
+          <img src="/media/{{ person_data.user.image }}" alt="{{  person_data.user.username }}'s icon" width="50" height="50">
+      </a>
+      {{  person_data.user.username }}
+      {% if person_data.message != None %}
+      {{ person_data.message }}
+      {{ person_data.time}}
+      {% else %}
+      <p>トークしてみよう</p>
+      <p>{{ person_data.time}}</p>
+      {% endif %}
+    </li>   
+  {% endfor %}
+  </ul>
+{% endblock %}
+sender

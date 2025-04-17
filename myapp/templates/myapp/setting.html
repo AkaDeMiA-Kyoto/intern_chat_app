@@ -1,1 +1,14 @@
-S
+{% extends './base.html' %}
+{% block header-title %}設定{% endblock %}
+{% block content %}
+
+    <a href="{% url 'myapp:setting_username' %}">ユーザー名変更</a>
+    <a href="{% url 'myapp:setting_email' %}">メールアドレス変更</a>
+    <a href="{% url 'myapp:setting_image' %}">アイコン変更</a>
+    <a href="{% url 'myapp:setting_password' %}">パスワード変更</a>
+    <form method="post" action="{% url 'myapp:logout_view' %}">
+        {% csrf_token %}
+        <input type="submit" value="ログアウト" >
+    </form>
+    
+{% endblock %}

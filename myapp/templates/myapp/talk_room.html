@@ -1,1 +1,20 @@
-TR
+{% extends './base.html' %}
+
+{% block content %}
+  <h1>{{sender}}と{{ receiver }} とのチャット</h1>
+
+  <div class="chat-container">
+    {% for message in messages %}
+      <div class="chat-message">
+        <p>{{ message.sender }}: {{ message.message }}</p>
+        <small>{{ message.timestamp|date:"Y-m-d H:i" }}</small>
+      </div>
+    {% endfor %}
+  </div>
+
+  <form method="post" class="chat-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">送信</button>
+  </form>
+{% endblock %}

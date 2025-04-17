@@ -125,4 +125,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media_local'
 AUTH_USER_MODEL = "myapp.CustomUser"
-LOGIN_REDIRECT_URL ="/friends"
+LOGIN_REDIRECT_URL = "/setting"
+LOGOUT_REDIRECT_URL = "/"
