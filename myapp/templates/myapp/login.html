@@ -15,6 +15,13 @@
 {% endif %}
 <form method="POST" action="{% url 'login' %}" class="login-form">
     {% csrf_token %}
+
+    {% if request.session.otp_phase %}
+    <label>6桁の確認コードを入力してください:</label>
+    <input type="text" name="otp" maxlength="6" required>
+    {% endif %}
+
+
     <div class="login-form__username">
         <label>ユーザーネーム:</label>
         {{ form.username }}

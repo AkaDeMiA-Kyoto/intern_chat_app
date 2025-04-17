@@ -1,3 +1,8 @@
+.search {
+    z-index: 3;
+    position: absolute;
+}
+
 /* headerを避ける */
 .friends {
     padding: 64px 0;

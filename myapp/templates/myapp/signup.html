@@ -11,6 +11,7 @@
 {# signup処理部分 #}
 <form method="post" action="{% url 'signup' %}" enctype="multipart/form-data" class="signup-form">
     {% csrf_token %}
+
     {% for field in form %}
     <p>
         {{ field.label_tag }}

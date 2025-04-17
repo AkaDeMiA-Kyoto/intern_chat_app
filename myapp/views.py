@@ -1,5 +1,7 @@
 import operator
+import random
 
+from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -9,6 +11,7 @@ from django.contrib.auth.views import (
     PasswordChangeDoneView,
     PasswordChangeView,
 )
+from django.core.mail import send_mail
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -66,11 +69,10 @@ def signup_view(request):
             # エラー時 form.errors には エラー内容が格納されている
             print(form.errors)
 
-            
-
     context = {
         "form": form,
     }
+    
     return render(request, "myapp/signup.html", context)
 
 
@@ -83,6 +85,46 @@ class Login(LoginView):
 
     authentication_form = LoginForm
     template_name = "myapp/login.html"
+    
+    def post(self, request, *args, **kwargs):
+
+        if "otp_phase" in request.session:
+            user_id = request.session.get("pre_auth_user_id")
+            input_otp = request.POST.get("otp")
+            stored_otp = request.session.get("otp")
+
+            if str(input_otp) == str(stored_otp):
+                user = User.objects.get(id=user_id)
+                login(request, user)
+                request.session.pop("otp_phase")
+                request.session.pop("pre_auth_user_id")
+                request.session.pop("otp")
+                return redirect("friends")
+            else:
+                messages.error(request, "OTPが間違っています。")
+                return self.form_invalid(self.get_form())
+
+        else:
+            form = self.get_form()
+            if form.is_valid():
+                user = form.get_user()
+                otp = random.randint(100000, 999999)
+                request.session["otp"] = otp
+                request.session["otp_phase"] = True
+                request.session["pre_auth_user_id"] = user.id
+
+                send_mail(
+                    subject="ログイン用OTP",
+                    message=f"あなたのログインコードは {otp} です。",
+                    from_email=None,
+                    recipient_list=[user.email],
+                )
+                messages.info(
+                    request, "メールに送信された6桁コードを入力してください。"
+                )
+                return self.form_invalid(form)
+            else:
+                return self.form_invalid(form)
 
 
 class Logout(LoginRequiredMixin, LogoutView):
@@ -116,8 +158,16 @@ def friends(request):
     info.extend(info_have_message)
     info.extend(info_have_no_message)
     
+    query = request.GET.get('query')
+
+    if query:
+        people_list = User.objects.filter(
+                username__icontains=query)
+    else:
+        people_list = User.objects.all()
+    
     context = {
-        "info": info,
+        "info": info, 'people_list': people_list, 'query': query
     }
     return render(request, "myapp/friends.html", context)
 
