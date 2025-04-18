@@ -1,0 +1,21 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/login.css' %}">
+{% endblock %}
+
+{% block header_title %}ログイン{% endblock %}
+
+{% block content %}
+
+<form method="POST" action="{% url 'otp_verify' %}" class="login-form">
+    {% csrf_token %}
+    <div class="login-form__username">
+        <input type="text" name="code" placeholder="認証コードを入力" />
+    </div>
+    <button type="submit" class="login-form__submit">送信</button>
+</form>
+{% endblock %}
+
+{% block footer %}{% endblock %}

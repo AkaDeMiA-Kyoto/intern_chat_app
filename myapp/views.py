@@ -9,6 +9,7 @@ from django.contrib.auth.views import (
     PasswordChangeDoneView,
     PasswordChangeView,
 )
+from django.views import View
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -24,7 +25,9 @@ from .forms import (
     TalkForm,
     UserNameSettingForm,
 )
-from .models import Talk
+from .models import Talk, EmailOTP
+
+import random
 
 User = get_user_model()
 
@@ -36,7 +39,7 @@ def index(request):
 def signup_view(request):
     if request.method == "GET":
         form = SignUpForm()
-        error_message = ''
+        error_message = ""
     elif request.method == "POST":
         form = SignUpForm(request.POST, request.FILES)
         if form.is_valid():
@@ -51,7 +54,7 @@ def signup_view(request):
             # (公式ドキュメントより)
             # つまり、autenticateメソッドは"username"と"password"を受け取り、その組み合わせが存在すれば
             # そのUserを返し、不正であれば"None"を返します。
-            send_mail("タイトル", "本文", "takagi.shu.73v@st.kyoto-u.ac.jp", [form.cleaned_data.get("email")])
+
             user = authenticate(username=username, password=password)
             if user is not None:
                 # あるユーザーをログインさせる場合は、login() を利用してください。この関数は HttpRequest オブジェクトと User オブジェクトを受け取ります。
@@ -64,8 +67,6 @@ def signup_view(request):
             # エラー時 form.errors には エラー内容が格納されている
             print(form.errors)
 
-            
-
     context = {
         "form": form,
     }
@@ -77,9 +78,61 @@ class Login(LoginView):
 
     GETの時は指定されたformを指定したテンプレートに表示
     POSTの時はloginを試みる。→成功すればdettingのLOGIN_REDIRECT_URLで指定されたURLに飛ぶ
-    """    
+    """
+
+    # def post(self, request, *args, **kwargs):
+    #     response = super().post(request, *args, **kwargs)
+    #     send_mail("タイトル", "本文", "shutaka1801@gmail.com", [request.user.email])
+    #     return response
+
+    def form_valid(self, form):
+        user = form.get_user()
+        # OTPメール送信 & 一時的にユーザーID保存
+        self.request.session["pre_2fa_user_id"] = user.id
+        code = f"{random.randint(100000, 999999)}"
+        EmailOTP.objects.create(user=user, code=code)
+        print("メール送信")
+        send_mail(
+            "あなたの認証コード",
+            f"認証コード: {code}",
+            "noreply@example.com",
+            [user.email],
+        )
+        return redirect("otp_verify")  # OTP入力画面へ
+
     authentication_form = LoginForm
     template_name = "myapp/login.html"
+
+
+class OtpVerify(View):
+    def get(self, request):
+        if not request.session.get("pre_2fa_user_id"):
+            return redirect("login")
+        print("認証中")
+        return render(request, "myapp/otp_verify.html")
+
+    def post(self, request):
+        print("POST処理")
+        user_id = request.session.get("pre_2fa_user_id")
+        if not user_id:
+            print("認証失敗")
+            return redirect("login")
+
+        code = request.POST.get("code")
+        user = User.objects.get(id=user_id)
+        otp = EmailOTP.objects.filter(user=user, code=code).last()
+
+        if otp and not otp.is_expired():
+            login(request, user)
+            print("ログイン処理")
+            del request.session["pre_2fa_user_id"]
+            return redirect("friends")  # ログイン後にリダイレクトする場所
+        else:
+            return render(
+                request,
+                "myapp/otp_verify.html",
+                {"error": "コードが無効または期限切れです"},
+            )
 
 
 class Logout(LoginRequiredMixin, LogoutView):
@@ -90,29 +143,38 @@ class Logout(LoginRequiredMixin, LogoutView):
 def friends(request):
     user = request.user
     friends = User.objects.exclude(id=user.id)
-
+    keyword = request.GET.get("keyword")
     # トーク情報とフレンド情報を含む info を作成
     info = []
     info_have_message = []
     info_have_no_message = []
-    
+
     for friend in friends:
         # 最新のメッセージの取得
-        latest_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-        ).order_by('time').last()
+        if keyword is not None:
+            if keyword.lower() not in friend.username.lower():
+                continue
+        latest_message = (
+            Talk.objects.filter(
+                Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
+            )
+            .order_by("time")
+            .last()
+        )
 
         if latest_message:
             info_have_message.append([friend, latest_message.talk, latest_message.time])
         else:
             info_have_no_message.append([friend, None, None])
-    
+
     # 時間順に並び替え
-    info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
-    
+    info_have_message = sorted(
+        info_have_message, key=operator.itemgetter(2), reverse=True
+    )
+
     info.extend(info_have_message)
     info.extend(info_have_no_message)
-    
+
     context = {
         "info": info,
     }

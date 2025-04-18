@@ -49,6 +49,7 @@ class PasswordChangeForm(PasswordChangeForm):
     よってパスワード編集のために標準で用意されているformを使う。
     """
 
+
 class TalkForm(forms.ModelForm):
     """トークの送信のためのform
 
