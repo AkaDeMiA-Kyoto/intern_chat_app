@@ -3,6 +3,11 @@
     padding: 64px 0;
 }
 
+.friend-search{
+    margin-top: 40px;
+    height: 100px;
+}
+
 /* バックエンド追加機能 */
 .friend-list {
     list-style: none;

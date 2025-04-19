@@ -140,17 +140,29 @@ def friends(request):
     info = []
     info_have_message = []
     info_have_no_message = []
-    
+
+    search = request.GET.get('search')
+
     for friend in friends:
         # 最新のメッセージの取得
-        latest_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-        ).order_by('time').last()
-
-        if latest_message:
-            info_have_message.append([friend, latest_message.talk, latest_message.time])
+        if search:
+            latest_message = Talk.objects.filter(
+                Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
+            ).order_by('time').last()
+            if search in friend.username or (latest_message and search in latest_message.talk):
+                if latest_message:
+                    info_have_message.append([friend, latest_message.talk, latest_message.time])
+                else:
+                    info_have_no_message.append([friend, None, None])
         else:
-            info_have_no_message.append([friend, None, None])
+            latest_message = Talk.objects.filter(
+                Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
+            ).order_by('time').last()
+
+            if latest_message:
+                info_have_message.append([friend, latest_message.talk, latest_message.time])
+            else:
+                info_have_no_message.append([friend, None, None])
     
     # 時間順に並び替え
     info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
@@ -160,6 +172,7 @@ def friends(request):
     
     context = {
         "info": info,
+        "search":search,
     }
     return render(request, "myapp/friends.html", context)
 
