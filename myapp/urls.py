@@ -6,6 +6,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("signup/", views.signup_view, name="signup"),
     path("login/", views.Login.as_view(), name="login"),
+    path("login-verify/", views.login_verify, name="login-verify"),
     path("friends/", views.friends, name="friends"),
     # トーク画面
     # 誰とのトークかを、URLにて判別

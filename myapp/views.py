@@ -1,6 +1,7 @@
 import operator
+import random
 
-from django.contrib.auth import authenticate, get_user_model, login
+from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import (
@@ -24,6 +25,8 @@ from .forms import (
 )
 from django.core.mail import send_mail
 from .models import Talk
+from django.conf import settings
+from django.contrib import messages
 
 User = get_user_model()
 
@@ -85,6 +88,44 @@ class Login(LoginView):
     authentication_form = LoginForm
     template_name = "myapp/login.html"
 
+    def form_valid(self, form):
+        user = form.get_user()
+        code = f"{random.randint(0,9999):04}"
+
+        self.request.session['user_id'] = user.id
+        self.request.session['verification_code'] = code
+
+        send_mail(
+            subject = "ログイン認証コード",
+            message= f"認証コード:{code}",
+            from_email=settings.DEFAULT_SEND_EMAIL,
+            recipient_list=[user.email],
+            fail_silently=False,    
+        )
+        print(f"{code}")
+        return redirect('login-verify')
+
+def login_verify(request):
+    
+    if request.method == "GET":
+        return render(request, 'myapp/login-verify.html')
+    
+    if request.method == "POST":
+        user_id = request.session.get('user_id')
+        user = User.objects.get(id = user_id)
+        verify_code = request.session.get('verification_code')
+        input_code = request.POST.get('verify_code')
+        print(f"{verify_code}")
+        print(f"{input_code}")
+        if input_code == verify_code:
+            del request.session['verification_code']
+            del request.session['user_id']
+            login(request,user)
+            print(f"{user.username}")
+            return redirect('friends')
+        else:
+            messages.error(request,"認証されませんでした。")
+        return render(request, 'myapp/login-verify.html')
 
 class Logout(LoginRequiredMixin, LogoutView):
     """ログアウトページ"""
