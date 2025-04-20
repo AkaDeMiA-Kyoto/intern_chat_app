@@ -102,7 +102,6 @@ class Login(LoginView):
             recipient_list=[user.email],
             fail_silently=False,    
         )
-        print(f"{code}")
         return redirect('login-verify')
 
 def login_verify(request):
@@ -115,8 +114,6 @@ def login_verify(request):
         user = User.objects.get(id = user_id)
         verify_code = request.session.get('verification_code')
         input_code = request.POST.get('verify_code')
-        print(f"{verify_code}")
-        print(f"{input_code}")
         if input_code == verify_code:
             del request.session['verification_code']
             del request.session['user_id']
@@ -142,6 +139,8 @@ def friends(request):
     info_have_no_message = []
 
     search = request.GET.get('search')
+    if search == None:
+        search = ""
 
     for friend in friends:
         # 最新のメッセージの取得
