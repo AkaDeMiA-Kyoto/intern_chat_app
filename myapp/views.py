@@ -1,3 +1,4 @@
+import random
 from django.shortcuts import redirect,get_object_or_404, render
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -6,6 +7,11 @@ from django.db.models import Q
 from .forms import SingupForm, LoginForm, MessageSend, UsernameUpdate, EmailUpdate, PasswordUpdate, ImgUpdate
 from django.contrib.auth.decorators import login_required
 from .models import Signup, Message
+from django.views import View
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
+from django.conf import settings
+from django.core.mail import send_mail
 
 
 def index(request):
@@ -33,6 +39,53 @@ def login_view(request):
             login(request, user)
             return redirect("myapp:friends")
     return render(request, "myapp/login.html", {'form' : form})
+
+
+class Login(LoginView):
+    """ログインページ
+
+    GETの時は指定されたformを指定したテンプレートに表示
+    POSTの時はloginを試みる。→成功すればdettingのLOGIN_REDIRECT_URLで指定されたURLに飛ぶ
+    """
+
+    authentication_form = LoginForm
+    template_name = "myapp/login.html"
+
+    def form_valid(self, form):
+        user = form.get_user()
+        code = f"{random.randint(0,9999):04}"
+
+        self.request.session['user_id'] = user.id
+        self.request.session['verification_code'] = code
+
+        send_mail(
+            subject = "ログイン認証コード",
+            message= f"認証コード:{code}",
+            from_email=settings.DEFAULT_SEND_EMAIL,
+            recipient_list=[user.email],
+            fail_silently=False,    
+        )
+        return redirect('myapp:login-verify')
+
+def login_verify(request):
+    
+    if request.method == "GET":
+        return render(request, 'myapp/login-verify.html')
+    
+    if request.method == "POST":
+        user_id = request.session.get('user_id')
+        user = Signup.objects.get(id = user_id)
+        verify_code = request.session.get('verification_code')
+        input_code = request.POST.get('verify_code')
+        if input_code == verify_code:
+            del request.session['verification_code']
+            del request.session['user_id']
+            login(request,user)
+            return redirect('myapp:friends')
+        else:
+            messages.error(request,"認証されませんでした。")
+        return render(request, 'myapp/login-verify.html')
+
 
 @login_required
 def friends(request):

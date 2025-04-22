@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
-EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.console.ConsoleBackend")
+#EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.console.ConsoleBackend")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "no-reply@example.com")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -113,3 +113,5 @@ STATIC_ROOT = BASE_DIR / "static"
 LOGIN_REDIRECT_URL = "myapp:friends"
 LOGOUT_REDIRECT_URL = "myapp:login"
 
+
+DEFAULT_SEND_EMAIL = "example@gmail.com"

@@ -127,6 +127,7 @@ STATIC_ROOT = BASE_DIR / "static"
 LOGIN_REDIRECT_URL = "myapp:friends"
 LOGOUT_REDIRECT_URL = "myapp:login"
 
+DEFAULT_SEND_EMAIL = "example@gmail.com"
 
 #if os.path.isfile('.env'):
 #    env = environ.Env(DEBUG=(bool, False))

@@ -1,0 +1,27 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block header_title %}ログイン認証{% endblock %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/login-verify.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="verify-wrapper">
+    {% if messages %}
+        {% for message in messages %}
+            <p class="verify-error">{{message}}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <p class="verifycode-text">認証コード:</p>
+        <div class="verifycode"><input type="text" name="verify_code" maxlength="4"></div>
+        <button type="submit" class="login-verify__submit">認証</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}

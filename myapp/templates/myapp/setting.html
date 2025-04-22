@@ -29,9 +29,8 @@
         <button>パスワード変更</button>
     </div>
 </a>
-<a href="{% url 'myapp:logout_view'%}">
-    <div class="button">
-        <button>ログアウト</button>
-    </div>
-</a>
+<form method="POST" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit">ログアウト</button>
+</form>
 {% endblock %}
