@@ -1,4 +1,4 @@
-import random
+import random, operator
 from django.shortcuts import redirect,get_object_or_404, render
 from django.contrib import messages
 from django.contrib.auth import login, logout
@@ -89,18 +89,49 @@ def login_verify(request):
 
 @login_required
 def friends(request):
-    users = Signup.objects.exclude(id=request.user.id)
-    for user in users:
-        partner = get_object_or_404(Signup, id = user.id)
-        latest_message =Message.objects.filter(
-                Q(recipient = user, sender = request.user)|Q(recipient = request.user, sender = user)
-                ).order_by('-sended_at').first()
-        partner.latest_message = latest_message
-        partner.save()
-    users = Signup.objects.exclude(id=request.user.id).order_by(
-        models.F('latest_message__sended_at').desc(nulls_last=True), 'id'
-        )
-    return render(request, "myapp/friends.html", {'users': users})
+    user = request.user
+    friends = Signup.objects.exclude(id=user.id)
+
+    # トーク情報とフレンド情報を含む info を作成
+    info = []
+    info_have_message = []
+    info_have_no_message = []
+
+    search = request.GET.get('search')
+    if search == None:
+        search = ""
+
+    for friend in friends:
+        if search:
+            latest_message = Message.objects.filter(
+                Q(sender=user, recipient=friend) | Q(sender=user, recipient=friend)
+            ).order_by('sended_at').last()
+            if search in friend.username or (latest_message and search in latest_message.message):
+                if latest_message:
+                    info_have_message.append([friend, latest_message.message, latest_message.sended_at])
+                else:
+                    info_have_no_message.append([friend, None, None])
+        else:
+            latest_message = Message.objects.filter(
+                Q(sender=user, recipient=friend) | Q(sender=user, recipient=friend)
+            ).order_by('sended_at').last()
+
+            if latest_message:
+                info_have_message.append([friend, latest_message.message, latest_message.sended_at])
+            else:
+                info_have_no_message.append([friend, None, None])
+    
+    info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
+    
+    info.extend(info_have_message)
+    info.extend(info_have_no_message)
+    
+    context = {
+        "info": info,
+        "search":search,
+    }
+    return render(request, "myapp/friends.html", context)
+
 
 @login_required
 def talk_room(request,user_id):
@@ -128,12 +159,6 @@ def talk_room(request,user_id):
 def setting(request):
     return render(request, "myapp/setting.html")
 
-# @login_required
-# def logout_view(request):
-#     logout(request)
-#     return redirect("myapp:index")
-
-# @login_required
 class Logout(View):
     def post(self,request):
         logout(request)

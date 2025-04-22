@@ -9,7 +9,7 @@
 
 {% block content %}
 <div class="friends-wrapper">
-    {% for user in users %}
+    {% for user, message, time in info %}
         <a href="{% url 'myapp:talk_room' user.id %}" class="friend-link">
             <div class="friend">
                     {% if user.img %}
@@ -17,9 +17,9 @@
                     {% endif %}
                     <div class="friend-content">
                         <p class="username">{{user.username}}</p>
-                        <p class="latest_message">{{user.latest_message.message}}</p>
+                        <p class="latest_message">{{message}}</p>
                     </div>
-                    <p class="sended_at">{{user.latest_message.sended_at}}</p>
+                    <p class="sended_at">{{time}}</p>
             </div>
         </a>
     {% endfor %}
