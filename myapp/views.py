@@ -54,17 +54,11 @@ def talk_room(request,user_id):
     form = MessageSend()
     #ユーザー間でトークルームが重複しないための処理
     myself_id = request.user.id
-    if myself_id > user_id:
-        user1 = user_id
-        user2 = myself_id
-    else:
-        user1 = myself_id
-        user2 = user_id
     myself = request.user
     user = get_object_or_404(Signup, id = user_id) #送信相手
     if request.method == "GET":
         #メッセージを送信順に表示する
-        messages = Message.objects.filter(user1 = user1, user2 = user2).order_by('-sended_at')
+        messages = Message.objects.filter(Q(sender = myself_id,recipient = user_id)|Q(sender=user_id,recipient=myself_id)).order_by('-sended_at')
         return render(request, "myapp/talk_room.html", {'user':user, 'messages':messages, 'form':form})
 
     if request.method == "POST":
@@ -73,8 +67,6 @@ def talk_room(request,user_id):
             message = form.save(commit=False)
             message.sender = request.user
             message.recipient = user
-            message.user1 = user1
-            message.user2 = user2
             message.save()
             return redirect("myapp:talk_room", user_id = user_id)
         

@@ -65,8 +65,8 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'chatappkagaya',
-        'USER': 'katyota',
+        'NAME': 'chatappk',
+        'USER': 'karyota2',
         'PASSWORD': 'tfjkawpg',
         'HOST': 'localhost',
         'PORT': '5432',

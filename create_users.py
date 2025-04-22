@@ -39,12 +39,12 @@ def create_users(n):
         messages.extend([sent_message,received_message])
     Message.objects.bulk_create(messages,ignore_conflicts=True)
 
-    messages = Message.objects.order_by("-time")[:2*len(user_ids)]
+    messages = Message.objects.order_by("-sended_at")[:2*len(user_ids)]
     for message in messages:
-        message.time = fakegen.date_time_this_year(tzinfo=tz.gettz("Asia/Tokyo"))
-    Message.objects.bulk_update(messages,fields=["time"])
+        message.sended_at = fakegen.date_time_this_year(tzinfo=tz.gettz("Asia/Tokyo"))
+    Message.objects.bulk_update(messages,fields=["sended_at"])
 
 if __name__=="__main__":
     print("creating users ...", end="")
-    create_users(5)
+    create_users(1000)
     print("done")

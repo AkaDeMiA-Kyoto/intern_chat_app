@@ -3,9 +3,9 @@ from .models import Signup, Message
 
 @admin.register(Signup)
 class SignupAdmin(admin.ModelAdmin):
-    fields=["username","email","password1","password2","img"]
+    fields=["username","email","password1","password2","img",]
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    fields=["message","sender","recipient","user1","user2","sended_at","id",]
+    fields=["message","sender","recipient","sended_at","id",]
     readonly_fields=["sended_at","id",]

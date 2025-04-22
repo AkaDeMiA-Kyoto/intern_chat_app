@@ -15,6 +15,6 @@ class Message(models.Model):
     message = models.CharField(max_length=200)
     sender = models.ForeignKey("Signup", on_delete=models.CASCADE, related_name="sender")
     recipient = models.ForeignKey("Signup", on_delete=models.CASCADE, related_name="recipient")
-    user1 = models.IntegerField()
-    user2 = models.IntegerField()
+    # user1 = models.IntegerField()
+    # user2 = models.IntegerField()
     sended_at = models.DateTimeField(auto_now_add=True)
