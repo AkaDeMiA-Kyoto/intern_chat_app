@@ -17,6 +17,12 @@
     position: relative;
 }
 
+.friend-search{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: max-content;
+}
+
 .friends-wrapper{
     width: 90vw;
     margin: 0 auto 0;

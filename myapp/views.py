@@ -106,7 +106,7 @@ def friends(request):
             latest_message = Message.objects.filter(
                 Q(sender=user, recipient=friend) | Q(sender=user, recipient=friend)
             ).order_by('sended_at').last()
-            if search in friend.username or (latest_message and search in latest_message.message):
+            if search in friend.username or search in friend.email:
                 if latest_message:
                     info_have_message.append([friend, latest_message.message, latest_message.sended_at])
                 else:

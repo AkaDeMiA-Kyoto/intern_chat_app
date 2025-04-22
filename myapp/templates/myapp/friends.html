@@ -9,6 +9,12 @@
 
 {% block content %}
 <div class="friends-wrapper">
+    <div class="friend-search">
+        <form method="GET">
+            <input type="text" name="search" value="{{search}}">
+            <button type="submit">検索</button>
+        </form>
+    </div>
     {% for user, message, time in info %}
         <a href="{% url 'myapp:talk_room' user.id %}" class="friend-link">
             <div class="friend">
