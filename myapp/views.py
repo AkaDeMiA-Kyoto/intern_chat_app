@@ -9,6 +9,10 @@ from django.contrib.auth.views import (
     PasswordChangeDoneView,
     PasswordChangeView,
 )
+
+from django.core.mail import send_mail
+from django.views import View
+
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -24,7 +28,19 @@ from .forms import (
 )
 from .models import Talk
 
+#from django.http import HttpResponse
+
+import random
+
 User = get_user_model()
+
+#def sendmail(request):
+#    subject = 'テスト'
+#    message = 'これはテストです'
+#    from_email = 'example@gmail.com'
+#    receiver_list = ['exampleuno@gmail.com']
+#    send_mail(subject, message, from_email, receiver_list)
+#    return HttpResponse('<h1>email send complete.</h1>')
 
 
 def index(request):
@@ -55,6 +71,8 @@ def signup_view(request):
             # つまり、autenticateメソッドは"username"と"password"を受け取り、その組み合わせが存在すれば
             # そのUserを返し、不正であれば"None"を返します。
             user = authenticate(username=username, password=password)
+
+
             if user is not None:
                 # あるユーザーをログインさせる場合は、login() を利用してください。この関数は HttpRequest オブジェクトと User オブジェクトを受け取ります。
                 # ここでのUserは認証バックエンド属性を持ってる必要がある。
@@ -80,9 +98,61 @@ class Login(LoginView):
     GETの時は指定されたformを指定したテンプレートに表示
     POSTの時はloginを試みる。→成功すればdettingのLOGIN_REDIRECT_URLで指定されたURLに飛ぶ
     """
+    def get(self, request):
+        form = LoginForm()
+        return render(request, "myapp/login.html", {"form": form})
 
-    authentication_form = LoginForm
-    template_name = "myapp/login.html"
+    def post(self, request):
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+        if user:
+            # セッションに一時情報を保存
+            request.session["user_id"] = user.id
+
+            # ランダムな認証コードを生成stringyayo
+            code = str(random.randint(100000, 999999))
+            request.session["ver_code"] = code
+
+            # メールでコードを送信
+            send_mail(
+                "Your Verification Code",
+                f"Your 2FA code is: {code}",
+                "example@example.com",
+                [user.email],
+                fail_silently=False,
+            )
+
+            return redirect("verify")
+
+        return render(request, "myapp/login.html", {
+            "form": LoginForm(),
+            "error": "ユーザー名またはパスワードが正しくありません。",
+        })
+
+class VerifyCodeView(View):
+    def get(self, request):
+        return render(request, "myapp/verify.html")
+
+    def post(self, request):
+        input_code = request.POST.get("code")
+        session_code = request.session.get("ver_code")
+        user_id = request.session.get("user_id")
+
+        if input_code == session_code and user_id:
+            User = get_user_model()
+            user = User.objects.get(id=user_id)
+
+            login(request, user)
+
+            # 一時情報を削除
+            request.session.pop("ver_code", None)
+            request.session.pop("user_id", None)
+
+            return redirect("friends")
+
+        return render(request, "myapp/verify.html", {"error": "Incorrect code"})
+
 
 
 class Logout(LoginRequiredMixin, LogoutView):
@@ -93,6 +163,10 @@ class Logout(LoginRequiredMixin, LogoutView):
 def friends(request):
     user = request.user
     friends = User.objects.exclude(id=user.id)
+
+    query = request.GET.get("q")
+    if query:
+        friends = friends.filter(username__icontains=query)
 
     # トーク情報とフレンド情報を含む info を作成
     info = []
@@ -118,6 +192,7 @@ def friends(request):
     
     context = {
         "info": info,
+        "query": query,
     }
     return render(request, "myapp/friends.html", context)
 

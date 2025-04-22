@@ -20,6 +20,12 @@ class SignUpForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     pass
 
+#二段階認証用sessionForm
+class SessionForm(forms.Form):
+    session = forms.CharField(label="session", required=False, widget=forms.TextInput(attrs={"class": "form-control"}))
+
+
+
 
 class MailSettingForm(forms.ModelForm):
     class Meta:
