@@ -128,10 +128,16 @@ def talk_room(request,user_id):
 def setting(request):
     return render(request, "myapp/setting.html")
 
-@login_required
-def logout_view(request):
-    logout(request)
-    return redirect("myapp:index")
+# @login_required
+# def logout_view(request):
+#     logout(request)
+#     return redirect("myapp:index")
+
+# @login_required
+class Logout(View):
+    def post(self,request):
+        logout(request)
+        return redirect(settings.LOGOUT_REDIRECT_URL)
 
 @login_required
 def username_update(request):

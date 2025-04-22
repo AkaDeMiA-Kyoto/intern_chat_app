@@ -125,7 +125,7 @@ MEDIA_ROOT = BASE_DIR / 'media_local'
 STATIC_ROOT = BASE_DIR / "static"
 
 LOGIN_REDIRECT_URL = "myapp:friends"
-LOGOUT_REDIRECT_URL = "myapp:login"
+LOGOUT_REDIRECT_URL = "myapp:login_view"
 
 DEFAULT_SEND_EMAIL = "example@gmail.com"
 
