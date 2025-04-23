@@ -3,7 +3,7 @@ from django.shortcuts import redirect,get_object_or_404, render
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, F, OuterRef, Subquery
 from .forms import SingupForm, LoginForm, MessageSend, UsernameUpdate, EmailUpdate, PasswordUpdate, ImgUpdate
 from django.contrib.auth.decorators import login_required
 from .models import Signup, Message
@@ -90,47 +90,53 @@ def login_verify(request):
 @login_required
 def friends(request):
     user = request.user
-    friends = Signup.objects.exclude(id=user.id)
-
-    # トーク情報とフレンド情報を含む info を作成
-    info = []
-    info_have_message = []
-    info_have_no_message = []
-
+    #検索ありかなしか
     search = request.GET.get('search')
-    if search == None:
+    if not search:
         search = ""
-
-    for friend in friends:
-        if search:
-            latest_message = Message.objects.filter(
-                Q(sender=user, recipient=friend) | Q(sender=user, recipient=friend)
-            ).order_by('sended_at').last()
-            if search in friend.username or search in friend.email:
-                if latest_message:
-                    info_have_message.append([friend, latest_message.message, latest_message.sended_at])
-                else:
-                    info_have_no_message.append([friend, None, None])
-        else:
-            latest_message = Message.objects.filter(
-                Q(sender=user, recipient=friend) | Q(sender=user, recipient=friend)
-            ).order_by('sended_at').last()
-
-            if latest_message:
-                info_have_message.append([friend, latest_message.message, latest_message.sended_at])
-            else:
-                info_have_no_message.append([friend, None, None])
-    
-    info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
-    
-    info.extend(info_have_message)
-    info.extend(info_have_no_message)
-    
-    context = {
-        "info": info,
+    latest_message_at = Message.objects.filter(Q(sender=OuterRef("pk"),recipient=user.id)|Q(sender=user.id,recipient=OuterRef("pk"))).order_by("-sended_at")
+    #自分以外のユーザーのうち、検索ワードを含むユーザーを取得（検索ワードが無ければすべて）。その後それぞれに最後のチャットとその時間を追加。
+    friends = Signup.objects.exclude(id=user.id).filter(Q(username__icontains = search)|Q(email__icontains = search)).annotate(last_chat=Subquery(latest_message_at.values('message')[:1]),last_chat_at=Subquery(latest_message_at.values('sended_at')[:1])).order_by(F("last_chat_at").desc(nulls_last=True),'id')
+    contents = {
+        "users":friends,
         "search":search,
     }
-    return render(request, "myapp/friends.html", context)
+    # トーク情報とフレンド情報を含む info を作成
+    # info = []
+    # info_have_message = []
+    # info_have_no_message = []
+
+
+    # for friend in friends:
+    #     if search:
+    #         latest_message = Message.objects.filter(
+    #             Q(sender=user, recipient=friend) | Q(sender=user, recipient=friend)
+    #         ).order_by('sended_at').last()
+    #         if search in friend.username or search in friend.email:
+    #             if latest_message:
+    #                 info_have_message.append([friend, latest_message.message, latest_message.sended_at])
+    #             else:
+    #                 info_have_no_message.append([friend, None, None])
+    #     else:
+    #         latest_message = Message.objects.filter。。
+    #             Q(sender=user, recipient=friend) | Q(sender=user, recipient=friend)
+    #         ).order_by('sended_at').last()
+
+    #         if latest_message:
+    #             info_have_message.append([friend, latest_message.message, latest_message.sended_at])
+    #         else:
+    #             info_have_no_message.append([friend, None, None])
+    
+    # info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
+    
+    # info.extend(info_have_message)
+    # info.extend(info_have_no_message)
+    
+    # context = {
+    #     "info": info,
+    #     "search":search,
+    # }
+    return render(request, "myapp/friends.html",contents)
 
 
 @login_required

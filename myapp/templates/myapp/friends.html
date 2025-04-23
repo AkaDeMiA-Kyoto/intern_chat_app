@@ -15,7 +15,7 @@
             <button type="submit">検索</button>
         </form>
     </div>
-    {% for user, message, time in info %}
+    {% for user in users %}
         <a href="{% url 'myapp:talk_room' user.id %}" class="friend-link">
             <div class="friend">
                     {% if user.img %}
@@ -23,9 +23,9 @@
                     {% endif %}
                     <div class="friend-content">
                         <p class="username">{{user.username}}</p>
-                        <p class="latest_message">{{message}}</p>
+                        <p class="latest_message">{{user.last_chat}}</p>
                     </div>
-                    <p class="sended_at">{{time}}</p>
+                    <p class="sended_at">{{user.last_chat_at}}</p>
             </div>
         </a>
     {% endfor %}
