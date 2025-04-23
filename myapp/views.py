@@ -94,48 +94,13 @@ def friends(request):
     search = request.GET.get('search')
     if not search:
         search = ""
-    latest_message_at = Message.objects.filter(Q(sender=OuterRef("pk"),recipient=user.id)|Q(sender=user.id,recipient=OuterRef("pk"))).order_by("-sended_at")
+    latest_message = Message.objects.filter(Q(sender=OuterRef("pk"),recipient=user.id)|Q(sender=user.id,recipient=OuterRef("pk"))).order_by("-sended_at")
     #自分以外のユーザーのうち、検索ワードを含むユーザーを取得（検索ワードが無ければすべて）。その後それぞれに最後のチャットとその時間を追加。
-    friends = Signup.objects.exclude(id=user.id).filter(Q(username__icontains = search)|Q(email__icontains = search)).annotate(last_chat=Subquery(latest_message_at.values('message')[:1]),last_chat_at=Subquery(latest_message_at.values('sended_at')[:1])).order_by(F("last_chat_at").desc(nulls_last=True),'id')
+    friends = Signup.objects.exclude(id=user.id).filter(Q(username__icontains = search)|Q(email__icontains = search)).annotate(last_chat=Subquery(latest_message.values('message')[:1]),last_chat_at=Subquery(latest_message.values('sended_at')[:1])).order_by(F("last_chat_at").desc(nulls_last=True), "id")
     contents = {
         "users":friends,
         "search":search,
     }
-    # トーク情報とフレンド情報を含む info を作成
-    # info = []
-    # info_have_message = []
-    # info_have_no_message = []
-
-
-    # for friend in friends:
-    #     if search:
-    #         latest_message = Message.objects.filter(
-    #             Q(sender=user, recipient=friend) | Q(sender=user, recipient=friend)
-    #         ).order_by('sended_at').last()
-    #         if search in friend.username or search in friend.email:
-    #             if latest_message:
-    #                 info_have_message.append([friend, latest_message.message, latest_message.sended_at])
-    #             else:
-    #                 info_have_no_message.append([friend, None, None])
-    #     else:
-    #         latest_message = Message.objects.filter。。
-    #             Q(sender=user, recipient=friend) | Q(sender=user, recipient=friend)
-    #         ).order_by('sended_at').last()
-
-    #         if latest_message:
-    #             info_have_message.append([friend, latest_message.message, latest_message.sended_at])
-    #         else:
-    #             info_have_no_message.append([friend, None, None])
-    
-    # info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
-    
-    # info.extend(info_have_message)
-    # info.extend(info_have_no_message)
-    
-    # context = {
-    #     "info": info,
-    #     "search":search,
-    # }
     return render(request, "myapp/friends.html",contents)
 
 
@@ -144,11 +109,10 @@ def talk_room(request,user_id):
     form = MessageSend()
     #ユーザー間でトークルームが重複しないための処理
     myself_id = request.user.id
-    myself = request.user
     user = get_object_or_404(Signup, id = user_id) #送信相手
     if request.method == "GET":
         #メッセージを送信順に表示する
-        messages = Message.objects.filter(Q(sender = myself_id,recipient = user_id)|Q(sender=user_id,recipient=myself_id)).order_by('-sended_at')
+        messages = Message.objects.filter(Q(sender = myself_id,recipient = user_id)|Q(sender=user_id,recipient=myself_id)).select_related('sender').order_by('-sended_at')
         return render(request, "myapp/talk_room.html", {'user':user, 'messages':messages, 'form':form})
 
     if request.method == "POST":

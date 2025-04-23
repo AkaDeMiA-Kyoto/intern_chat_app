@@ -37,7 +37,7 @@
 <main class="message-wrapper">
     {% for message in messages%}
     <div class="message">
-        <p>>{{message.sender}}</p>
+        <p>{{message.sender.username}}</p>
         <p>{{message.message}}</p>
         <p class="sended-at">{{message.sended_at}}</p>
     </div>
