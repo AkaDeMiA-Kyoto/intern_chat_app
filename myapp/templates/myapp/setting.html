@@ -29,7 +29,7 @@
         <button>パスワード変更</button>
     </div>
 </a>
-<form method="POST" action="{% url 'myapp:logout_view' %}">
+<form method="POST" action="{% url 'myapp:logout_view' %}" class="logout_button">
     {% csrf_token %}
     <button type="submit">ログアウト</button>
 </form>

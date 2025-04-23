@@ -42,12 +42,6 @@ def login_view(request):
 
 
 class Login(LoginView):
-    """ログインページ
-
-    GETの時は指定されたformを指定したテンプレートに表示
-    POSTの時はloginを試みる。→成功すればdettingのLOGIN_REDIRECT_URLで指定されたURLに飛ぶ
-    """
-
     authentication_form = LoginForm
     template_name = "myapp/login.html"
 
@@ -107,7 +101,6 @@ def friends(request):
 @login_required
 def talk_room(request,user_id):
     form = MessageSend()
-    #ユーザー間でトークルームが重複しないための処理
     myself_id = request.user.id
     user = get_object_or_404(Signup, id = user_id) #送信相手
     if request.method == "GET":
