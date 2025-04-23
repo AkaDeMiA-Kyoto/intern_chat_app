@@ -1,2 +1,14 @@
-Django
-Pillow
+asgiref==3.8.1
+black==25.1.0
+click==8.1.8
+Django==5.1.6
+Faker==37.1.0
+mypy-extensions==1.0.0
+packaging==24.2
+pathspec==0.12.1
+pillow==11.1.0
+platformdirs==4.3.7
+psycopg2==2.9.10
+python-dotenv==1.1.0
+sqlparse==0.5.3
+tzdata==2025.2

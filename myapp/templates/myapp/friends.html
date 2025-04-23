@@ -12,8 +12,54 @@
 <div class="friends-wrapper">
 
 
-    {% for latestlog in latestlogs %}
-        {% if latestlog.fromuser == request.user %}
+    {% for user in users %}
+        {% if user != request.user and user.latest_message%}
+            <div class="friends-content">
+                {% if user.image %}
+                    <a href="{% url 'myapp:talk_room' user.id %}">
+                        <img src="{{ user.image.url }}" alt="アイコン" class="icon">
+                    </a>
+                {% endif %}
+                <div class="friends-rightbox">
+                    <a href="{% url 'myapp:talk_room' user.id %}">
+                        <h4 class="username">{{ user.username }}</h3>
+                    </a>
+                    <div class="friends-underbox">
+                        <p class="friends-log">{{ user.latest_message }}</p>
+                        <p class="friends-logtime">{{ user.latest_timestamp }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+    {% for user in users %}
+        {% if user != request.user and user.latest_message is None %}
+            <div class="friends-content">
+                {% if user.image %}
+                    <a href="{% url 'myapp:talk_room' user.id %}">
+                        <img src="{{ user.image.url }}" alt="アイコン" class="icon">
+                    </a>
+                {% endif %}
+                <div class="friends-rightbox">
+                    <a href="{% url 'myapp:talk_room' user.id %}">
+                        <h4 class="username">{{ user.username }}</h3>
+                    </a>
+                    <div class="friends-underbox">
+                        <p class="friends-log">{{ user.latest_message }}</p>
+                        <p class="friends-logtime">{{ user.latest_message }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+
+
+
+
+
+
+
+        {% comment %} {% if latestlog.fromuser == request.user %}
             <div class="friends-content">
                 {% if latestlog.touser.image %}
                     <a href="{% url 'myapp:talk_room' latestlog.touser.id %}">
@@ -48,13 +94,13 @@
                     </div>
                 </div>
             </div>
-        {% endif %}
-    {% empty %}
+        {% endif %} {% endcomment %}
+    {% comment %} {% empty %} {% endcomment %}
         {% comment %} <p>ログ無し</p> {% endcomment %}
-    {% endfor %}
+    {% comment %} {% endfor %} {% endcomment %}
 
 
-    {% for friend in friend_list %}
+    {% comment %} {% for friend in friend_list %}
         {% if friend != request.user and friend not in talked_friend_list %}
             <div class="friends-content">
                 {% if friend.image %}
@@ -69,7 +115,7 @@
         {% endif %}   
     {% empty %}
         <div>ユーザーが存在しません。</div>
-    {% endfor %}
+    {% endfor %} {% endcomment %}
 </div>
 
 </div>
