@@ -12,7 +12,7 @@ from django.contrib.auth.views import (
     PasswordChangeView,
 )
 from django.core.mail import send_mail
-from django.db.models import Q
+from django.db.models import OuterRef, Q, Subquery
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 
@@ -134,40 +134,34 @@ class Logout(LoginRequiredMixin, LogoutView):
 @login_required
 def friends(request):
     user = request.user
-    friends = User.objects.exclude(id=user.id)
+    
+    latest_message = Talk.objects.filter(
+        Q(talk_from=user, talk_to=OuterRef("pk")) | Q(talk_from=OuterRef("pk"), talk_to=user)
+    ).order_by("-time")
+    
+    friends = User.objects.exclude(id=user.id).annotate(
+        latest_message_talk=Subquery(latest_message.values("talk")[:1]),
+        latest_message_time=Subquery(latest_message.values("time")[:1]),
+    )
 
-    # トーク情報とフレンド情報を含む info を作成
-    info = []
-    info_have_message = []
-    info_have_no_message = []
     
-    for friend in friends:
-        # 最新のメッセージの取得
-        latest_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-        ).order_by('time').last()
-
-        if latest_message:
-            info_have_message.append([friend, latest_message.talk, latest_message.time])
-        else:
-            info_have_no_message.append([friend, None, None])
-    
-    # 時間順に並び替え
-    info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
-    
-    info.extend(info_have_message)
-    info.extend(info_have_no_message)
     
     query = request.GET.get('query')
 
     if query:
-        people_list = User.objects.filter(
-                username__icontains=query)
+        people_list = friends.filter(
+                Q(username__icontains=query) | Q(email__icontains=query))
+        
     else:
-        people_list = User.objects.all()
+        people_list = friends
+        
+    info=[
+        (friend, friend.latest_message_talk, friend.latest_message_time)
+        for friend in people_list
+    ]
     
     context = {
-        "info": info, 'people_list': people_list, 'query': query
+        'info': info, 'people_list': people_list, 'query': query
     }
     return render(request, "myapp/friends.html", context)
 

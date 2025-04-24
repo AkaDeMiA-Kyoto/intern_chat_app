@@ -10,7 +10,7 @@
 {% block content %}
 
 <form method="get" class="search">
-    <input name="query" value="{{ query }}" type="text" placeholder="名前で検索">
+    <input name="query" value="{{ query|default:'' }}" type="text" placeholder="検索">
     <button type="submit">検索する</button>
 </form>
 
