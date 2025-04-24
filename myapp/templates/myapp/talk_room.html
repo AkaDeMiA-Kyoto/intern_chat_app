@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="content">
+<div id="scroll-area" class="content">
     {% for chat in talklog %}
     <div class="chat-content">
         {% if chat.fromuser.image %}
@@ -29,6 +29,14 @@
     </div>
     {% endfor %}
 </div>
+<script>
+    window.addEventListener('load', () => {
+        const area = document.getElementById("scroll-area");
+        area.scrollTop = area.scrollHeight;
+        
+    });
+  </script>
+  
 {% endblock %}
 
 

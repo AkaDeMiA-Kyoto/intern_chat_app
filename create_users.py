@@ -4,6 +4,11 @@ import random
 import django
 from dateutil import tz
 from faker import Faker
+from django.core.files.base import ContentFile
+from PIL import Image
+import io
+import random
+
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intern.settings")
 django.setup()
@@ -13,15 +18,33 @@ from myapp.models import TalkLog, CustomUser
 fakegen = Faker(["ja_JP"])
 
 
+def generate_dummy_image():
+    img = Image.new(
+        "RGB",
+        (100, 100),
+        color=(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)),
+    )
+
+    buf = io.BytesIO()
+    img.save(buf, format="JPEG")
+    buf.seek(0)
+
+    return ContentFile(buf.read(), name="dummy.jpg")
+
+
 def create_users(n):
     users = [
-        CustomUser(username=fakegen.user_name(), email=fakegen.ascii_safe_email())
+        CustomUser(
+            username=fakegen.user_name(),
+            email=fakegen.ascii_safe_email(),
+            image=generate_dummy_image(),
+        )
         for _ in range(n)
     ]
 
     CustomUser.objects.bulk_create(users, ignore_conflicts=True)
-    my_id = CustomUser.objects.get(username="hiiragi614").id
-    me = CustomUser.objects.get(username="hiiragi614")
+    my_id = CustomUser.objects.get(username="shu").id
+    me = CustomUser.objects.get(username="shu")
     user_ids = CustomUser.objects.exclude(id=my_id).values_list("id", flat=True)
 
     talks = []

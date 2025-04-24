@@ -80,7 +80,7 @@ class TalkRoomView(LoginRequiredMixin, View):
                 Q(touser=id, fromuser=request.user.id)
                 | Q(touser=request.user.id, fromuser=id)
             )
-            .order_by("-timestamp")
+            .order_by("timestamp")
         )
 
         return render(
