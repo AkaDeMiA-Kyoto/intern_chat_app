@@ -16,7 +16,9 @@ from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.core.mail import send_mail
-import  datetime
+import random
+from django.contrib import messages
+from django.contrib.auth import login
 
 def base(request):
     return render(request, "myapp/base.html")
@@ -63,22 +65,97 @@ class LoginFormView(LoginView):
     authentication_form = LoginForm
     template_name = "myapp/login.html"
 
+    def post(self, request, *args, **kwargs):
+        session = request.session
 
+        if "otp_phase" in session:
+            user_id = session.get("pre_auth_user_id")
+            input_otp = request.POST.get("otp")
+            stored_otp = session.get("otp")
+
+            if str(input_otp) == str(stored_otp):
+                user = CustomUser.objects.get(id=user_id)
+                login(request, user)
+                session.pop("otp_phase")
+                session.pop("pre_auth_user_id")
+                session.pop("otp")
+                return redirect("friend")
+            else:
+                messages.error(request, "OTPが間違っています。")
+                return self.form_invalid(self.get_form())
+        else:
+            form = self.get_form()
+            if form.is_valid():
+                user = form.get_user()
+                otp = random.randint(100000, 999999)
+                session["otp"] = otp
+                session["otp_phase"] = True
+                session["pre_auth_user_id"] = user.id
+
+                send_mail(
+                    subject="ログイン用OTP",
+                    message=f"あなたのログインコードは {otp} です。",
+                    from_email=None,
+                    recipient_list=[user.email],
+                )
+                messages.info(
+                    request, "メールに送信された6桁コードを入力してください。"
+                )
+                return self.form_invalid(form)
+            else:
+                return self.form_invalid(form)
+'''
+    def form_invalid(self, form):
+        res = super().form_invalid(form)
+        res.status_code = 400
+        return res
+
+    def form_valid(self, form):
+        otp = random(100000,999999)
+        send_mail
+        
+        try:
+            form = LoginForm(self.request.POST)
+            rval = super().form_valid(form)
+            if rval.status_code >= 300 and rval.status_code < 400:
+                email = form.cleaned_data["email"]
+                password = form.cleaned_data["password1"]
+                backend = CustomUserBackend()
+                user = backend.authenticate(
+                    self.request, email=email, password=password
+                )
+                if user is None:
+                    return HttpResponseServerError(f"Server Error:{e}")
+
+                self.request.session["is_provisional_signup"] = True
+                self.request.session["user_id"] = user.id
+                tmp_time = datetime.now(tz=timezone.utc) + timedelta(seconds=300)
+                self.request.session["exp"] = str(tmp_time.timestamp())  # 5minutes
+
+                url = TwoFA().app(user)
+                data = {"qr": make_qr(url)}
+                return render(self.request, "friends.html", data)
+
+            else:
+                rval.satus_code = 400
+                return rval
+        except Exception as e:
+            return HttpResponseServerError(f"Server Error:{e}")
+'''
 class LogoutFormView(LoginRequiredMixin,LogoutView):
     template_name = 'myapp/index.html'
 
-class FriendsListView(LoginRequiredMixin,ListView):
-    template_name = 'myapp/friends.html'
-    model = CustomUser
 
+@login_required
 def friends(request):
     
     user = request.user
     query = request.GET.get('query')
+    print(query)
     if query:
-        friends = CustomUser.objects.filter( Q(username__icontains="query")|Q(email__icontains="query") )
+        friends = CustomUser.objects.filter( Q(username__icontains=query)|Q(email__icontains=query) ).exclude(id=user.id)
     else:
-        friends = CustomUser.objects.all()
+        friends = CustomUser.objects.all().exclude(id=user.id)
         
     latest_talks = {}
     for friend in friends:

@@ -10,18 +10,26 @@
 {% endblock %}
 {% block content %}
 <body>
-    <form action="{% url 'send_mail' %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Mail</button>
-    </form>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <table>
-            <div class="login-form">
-                {{form.as_table}}
-            </div>
-        </table>
-        <button  type="submit">ログイン</button>    
+
+        {% if request.session.otp_phase %}  
+        <form action="{% url 'friends' %}" method="post">
+            {% csrf_token %}
+            <input
+            type="texts"
+            required
+            size="10" />   
+            <button  type="submit">ログイン</button>      
+        </form>
+        {% else %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table>
+                <div class="login-form">
+                    {{form.as_table}}
+                </div>
+            </table>
+            <button  type="submit">ログイン</button> 
+        {% endif %}
     </form>
 </body>
 {% endblock %}

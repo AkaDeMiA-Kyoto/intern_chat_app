@@ -141,4 +141,4 @@ if os.path.isfile('.env'):
     DEBUG = env('DEBUG')
     ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 """
-
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
