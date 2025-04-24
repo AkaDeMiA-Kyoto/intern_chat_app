@@ -35,46 +35,60 @@ def index(request):
 
 
 def signup_view(request):
-    if request.method == "GET":
-        form = SignUpForm()
-        error_message = ''
-    elif request.method == "POST":
-        # 画像ファイルをformに入れた状態で使いたい時はformに"request.FILES"を加える。
-        # request.POST だけではNoneが入る。
+    phase = request.session.get("otp_phase", "form_phase")
+
+    if request.method == "POST" and phase == "form_phase":
         form = SignUpForm(request.POST, request.FILES)
         if form.is_valid():
-            # モデルフォームはformの値をmodelsにそのまま格納できるsave()メソッドがあるので便利。
-            form.save()
-            # フォームから"username"を読み取る
-            username = form.cleaned_data.get("username")
-            # フォームから"password1"を読み取る
-            password = form.cleaned_data.get("password1")
-            # 認証情報のセットを検証するには authenticate() を利用してください。
-            # このメソッドは認証情報をキーワード引数として受け取ります。
-            # 検証する対象はデフォルトでは username と password であり
-            # その組み合わせを個々の 認証バックエンド に対して問い合わせ、認証バックエンドで認証情報が有効とされれば
-            # User オブジェクトを返します。もしいずれの認証バックエンドでも認証情報が有効と判定されなければ PermissionDenied が送出され、None が返されます。
-            # (公式ドキュメントより)
-            # つまり、autenticateメソッドは"username"と"password"を受け取り、その組み合わせが存在すれば
-            # そのUserを返し、不正であれば"None"を返します。
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                # あるユーザーをログインさせる場合は、login() を利用してください。この関数は HttpRequest オブジェクトと User オブジェクトを受け取ります。
-                # ここでのUserは認証バックエンド属性を持ってる必要がある。
-                # authenticate()が返すUserはuser.backendを持つので連携可能。
-                login(request, user)
-            return redirect("/")
-        # バリデーションが通らなかった時の処理を記述
+            request.session["signup_data"] = {
+                "username": form.cleaned_data["username"],
+                "email": form.cleaned_data["email"],
+                "password1": form.cleaned_data["password1"],}
+            otp = random.randint(100000, 999999)
+            request.session["otp"] = str(otp)
+            request.session["otp_phase"] = "otp_phase"
+            
+            send_mail(
+                subject="登録用OTP",
+                message=f"あなたの確認コードは {otp} です。",
+                from_email=None,
+                recipient_list=[form.cleaned_data["email"]],
+            )
+        
+            messages.info(request, "メールに送られた6桁コードを入力してください。")
+            return redirect("signup")
         else:
-            # エラー時 form.errors には エラー内容が格納されている
             print(form.errors)
-
-    context = {
-        "form": form,
-    }
+    elif request.method == "POST" and phase == "otp_phase":
+        input_otp = request.POST.get("otp")
+        stored_otp = request.session.get("otp")
+        
+        if str(input_otp) == str(stored_otp):
+            data = request.session.get("signup_data")
+            user_model = get_user_model()
+            user = user_model.objects.create_user(
+                username=data["username"],
+                password=data["password1"],
+                email=data["email"],
+                icon=request.FILES.get("icon") if request.FILES.get("icon") else None
+            )
+            login(request, user)
+            request.session.pop("signup_data", None)
+            request.session.pop("otp_phase", None)
+            request.session.pop("otp", None)
+            
+            return redirect("friends")
+        else:
+            messages.error(request, "OTPが間違っています。")
+            return redirect("signup")
     
-    return render(request, "myapp/signup.html", context)
+    else:
+        form = SignUpForm()
 
+    return render(request, "myapp/signup.html", {
+        "form": form,
+        "otp_phase": phase
+    })
 
 class Login(LoginView):
     """ログインページ

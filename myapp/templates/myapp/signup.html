@@ -9,19 +9,35 @@
 
 {% block content %}
 {# signup処理部分 #}
+
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+
+
 <form method="post" action="{% url 'signup' %}" enctype="multipart/form-data" class="signup-form">
     {% csrf_token %}
-
-    {% for field in form %}
-    <p>
-        {{ field.label_tag }}
-        {{ field }}
-        {# エラーメッセージを表示 #}
-        {% if field.errors %}
-            {{ field.errors }}
-        {% endif %}
-    </p>
-    {% endfor %}
+    {% if otp_phase == "otp_phase" %}
+    <!-- OTP入力用 -->
+    <label>メールに送信された6桁のコードを入力：</label>
+    <input type="text" name="otp" required>
+    {% else %}
+        {% for field in form %}
+        <p>
+            {{ field.label_tag }}
+            {{ field }}
+            {# エラーメッセージを表示 #}
+            {% if field.errors %}
+                {{ field.errors }}
+            {% endif %}
+        </p>
+        {% endfor %}
+    {% endif %}
     <button type="submit" class="signup-form__submit">Sign Up</button>
 </form>
 
