@@ -13,7 +13,7 @@ from django.contrib.auth.views import (
 from django.core.mail import send_mail
 from django.views import View
 
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 
@@ -162,11 +162,32 @@ class Logout(LoginRequiredMixin, LogoutView):
 @login_required
 def friends(request):
     user = request.user
-    friends = User.objects.exclude(id=user.id)
 
-    query = request.GET.get("q")
-    if query:
-        friends = friends.filter(username__icontains=query)
+    talks = Talk.objects.filter(
+        Q(talk_from=user)|Q(talk_to=user)
+    ).select_related('talk_from', 'talk_to')
+
+    friends = User.objects.exclude(id=user.id).prefetch_related(
+        Prefetch(
+            'talk_from',
+            queryset=talks,
+            to_attr='related_talks_sent'
+        ),
+        Prefetch(
+            'talk_to',
+            queryset=talks,
+            to_attr='related_talks_recieved'
+        )
+    )
+
+    username_query = request.GET.get("search_username")
+    email_query = request.GET.get("search_email")
+
+    if username_query:
+        friends = friends.filter(username__icontains=username_query)
+    
+    if email_query:
+        friends = friends.filter(email__icontains=email_query)
 
     # トーク情報とフレンド情報を含む info を作成
     info = []
@@ -175,11 +196,9 @@ def friends(request):
     
     for friend in friends:
         # 最新のメッセージの取得
-        latest_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-        ).order_by('time').last()
-
-        if latest_message:
+        related_talks = friend.related_talks_sent + friend.related_talks_recieved
+        if related_talks:
+            latest_message = max(related_talks, key=lambda talk:talk.time)
             info_have_message.append([friend, latest_message.talk, latest_message.time])
         else:
             info_have_no_message.append([friend, None, None])
@@ -192,7 +211,8 @@ def friends(request):
     
     context = {
         "info": info,
-        "query": query,
+        "username_query": username_query,
+        "email_query": email_query,
     }
     return render(request, "myapp/friends.html", context)
 
@@ -205,7 +225,7 @@ def talk_room(request, user_id):
     # 自分→友達、友達→自分のトークを全て取得
     talk = Talk.objects.filter(
         Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-    ).order_by("time")
+    ).select_related('talk_from', 'talk_to').order_by("time")
     # 送信form
     form = TalkForm()
     # メッセージ送信だろうが更新だろが、表示に必要なパラメーターは変わらないので、この時点でまとめて指定

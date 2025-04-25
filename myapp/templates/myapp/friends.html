@@ -10,7 +10,8 @@
 {% block content %}
 <div class="search-box" style="text-align: right; margin-bottom: 10px;">
     <form method="get" action="{% url 'friends' %}" class="search-box">
-        <input type="text" name="q" placeholder="ユーザー名で検索" value="{{ query }}">
+        <input type="text" name="search_username" placeholder="ユーザー名で検索" value="{{ query }}">
+        <input type="text" name="search_email" placeholder="メールアドレスで検索" value="{{ query }}">
         <button type="submit">検索</button>
     </form>
 </div>
