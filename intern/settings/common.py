@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'myapp',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'intern.urls'
@@ -142,3 +144,4 @@ if os.path.isfile('.env'):
     ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 """
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+INTERNAL_IPS = ['127.0.0.1',]

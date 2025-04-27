@@ -17,6 +17,8 @@ urlpatterns = [
     path('passwordchange/', views.PasswordChange.as_view(), name='passwordchange'),
     path('confirm_email/', views.PasswordChange.as_view(), name='confirm_email'),
     path('send_mail/', views.send_email, name='send_mail'),
+        path("__debug__/", include("debug_toolbar.urls")),
+
 
 
 ]

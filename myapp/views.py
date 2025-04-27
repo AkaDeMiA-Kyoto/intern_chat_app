@@ -12,7 +12,7 @@ from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
+from django.db.models import Q,OuterRef,Subquery,F
 from django.urls import reverse_lazy
 from django.views.generic import ListView
 from django.core.mail import send_mail
@@ -79,7 +79,7 @@ class LoginFormView(LoginView):
                 session.pop("otp_phase")
                 session.pop("pre_auth_user_id")
                 session.pop("otp")
-                return redirect("friend")
+                return redirect('friends')
             else:
                 messages.error(request, "OTPが間違っています。")
                 return self.form_invalid(self.get_form())
@@ -104,44 +104,6 @@ class LoginFormView(LoginView):
                 return self.form_invalid(form)
             else:
                 return self.form_invalid(form)
-'''
-    def form_invalid(self, form):
-        res = super().form_invalid(form)
-        res.status_code = 400
-        return res
-
-    def form_valid(self, form):
-        otp = random(100000,999999)
-        send_mail
-        
-        try:
-            form = LoginForm(self.request.POST)
-            rval = super().form_valid(form)
-            if rval.status_code >= 300 and rval.status_code < 400:
-                email = form.cleaned_data["email"]
-                password = form.cleaned_data["password1"]
-                backend = CustomUserBackend()
-                user = backend.authenticate(
-                    self.request, email=email, password=password
-                )
-                if user is None:
-                    return HttpResponseServerError(f"Server Error:{e}")
-
-                self.request.session["is_provisional_signup"] = True
-                self.request.session["user_id"] = user.id
-                tmp_time = datetime.now(tz=timezone.utc) + timedelta(seconds=300)
-                self.request.session["exp"] = str(tmp_time.timestamp())  # 5minutes
-
-                url = TwoFA().app(user)
-                data = {"qr": make_qr(url)}
-                return render(self.request, "friends.html", data)
-
-            else:
-                rval.satus_code = 400
-                return rval
-        except Exception as e:
-            return HttpResponseServerError(f"Server Error:{e}")
-'''
 class LogoutFormView(LoginRequiredMixin,LogoutView):
     template_name = 'myapp/index.html'
 
@@ -156,65 +118,26 @@ def friends(request):
         friends = CustomUser.objects.filter( Q(username__icontains=query)|Q(email__icontains=query) ).exclude(id=user.id)
     else:
         friends = CustomUser.objects.all().exclude(id=user.id)
-        
-    latest_talks = {}
-    for friend in friends:
-        q_filter = Q(talk_from=user,talk_to=friend)|Q(talk_to=user,talk_from=friend)
-        ordered_talks = Talk.objects.filter(q_filter).order_by('-talk_time')
-        if ordered_talks.exists():
-            latest_talk = ordered_talks.first()
-        else:
-            latest_talk = None
-        latest_talks[friend.id] = latest_talk
-    
-    talk_rooms = []
 
-    for friend in friends:
-        talk_rooms.append({"time":latest_talks[friend.id].talk_time if latest_talks[friend.id] else None,"value":(friend, latest_talks[friend.id])})
-        talk_rooms = sorted(talk_rooms,key = lambda x: (x["time"] is not None,x["time"]),reverse=True)
+    q_filter = Q(talk_from=user,talk_to=OuterRef("pk"))|Q(talk_to=user,talk_from=OuterRef("pk"))
+    ordered_talks = Talk.objects.filter(q_filter).order_by(F('talk_time').desc(nulls_last=True)).reverse()
+    friends=(
+            CustomUser.objects.exclude(id=user.id)
+            .annotate(
+                latest_talk = Subquery(ordered_talks.values("talk")[:1])
+            )
+        )
     context = {
         'friends':friends,
         'user':user,
-        'latest_talks': latest_talks,
-        'talk_rooms': [talk_room["value"] for talk_room in talk_rooms]
     }
     return render(request,'myapp/friends.html',context)
-
-"""
-def friends(request):
-    user = request.user
-    friends = CustomUser.objects.all()
-    latest_talks = {}
-    for friend in friends:
-        q_filter = Q(talk_from=user,talk_to=friend)|Q(talk_to=user,talk_from=friend)
-        ordered_talks = Talk.objects.filter(q_filter).order_by('-talk_time')
-        if ordered_talks.exists():
-          latest_talk = ordered_talks.first()
-        else:
-          latest_talk = None
-        latest_talks[friend.id] = latest_talk
-    
-    talk_rooms = []
-
-    for friend in friends:
-        talk_rooms.append({"time":latest_talks[friend.id].talk_time if latest_talks[friend.id] else None,"value":(friend, latest_talks[friend.id])})
-    talk_rooms = sorted(talk_rooms,key = lambda x: (x["time"] is not None,x["time"]),reverse=True)
-    print(talk_rooms)
-    # print(latest_talk[id])
-    context = {
-        'friends':friends,
-        'user':user,
-        'latest_talks': latest_talks,
-        'talk_rooms': [talk_room["value"] for talk_room in talk_rooms]
-    }
-    return render(request,'myapp/friends.html',context)
-"""
 
 @login_required
 def talk_room(request ,user_id):
     user = request.user
     friend = get_object_or_404 (CustomUser,id=user_id)
-    talks = Talk.objects.filter(
+    talks = Talk.objects.select_related("talk_to").select_related("talk_from").filter(
         Q(talk_from=user,talk_to=friend)|Q(talk_to=user,talk_from=friend)
     ).order_by('talk_time')
     form = TalkForm()

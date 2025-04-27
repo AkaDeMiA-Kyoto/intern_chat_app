@@ -14,21 +14,20 @@
     <input name="query" value="{{ request.GET.query }}" type="text" />
     <button type="submit">検索する</button>
   </form>
-  {% for room in talk_rooms %}
+  {% for friend in friends %}
   <div class="talk">
     <button class="friend-info">
-      <a href="{% url 'talk_room' room.0.id %}">
-        {% if room.0.image %}
-        <div class = friend_icon><img src="{{ room.0.image.url}}"></div>
+      <a href="{% url 'talk_room' friend.id %}">
+        {% if friend.image %}
+        <div class = friend_icon><img src="{{ friend.image.url}}"></div>
         {% endif %}
-        <div class = friend>{{ room.0}}</div>
-        {% if room.1 %}
+        <div class = friend>{{ friend }}</div>
+        {% if friend.latest_talk %}
         <div class = talk-info>
-          <div class = talk_latest>{{ room.1 }}</div>
-          <div class = talk_time>{{ room.1.talk_time }}</div>  
+          <div class = talk_latest>{{ friend.latest_talk }}</div>
+          <div class = talk_time>{{ friend.latest_talk.talk_time }}</div>  
         </div>
         {% endif %}
-
       </a>
     </button>  
   </div>
