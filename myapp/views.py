@@ -48,10 +48,7 @@ def index(request):
 
 
 def signup_view(request):
-    if request.method == "GET":
-        form = SignUpForm()
-        error_message = ''
-    elif request.method == "POST":
+    if request.method == "POST":
         # 画像ファイルをformに入れた状態で使いたい時はformに"request.FILES"を加える。
         # request.POST だけではNoneが入る。
         form = SignUpForm(request.POST, request.FILES)
@@ -83,9 +80,11 @@ def signup_view(request):
         else:
             # エラー時 form.errors には エラー内容が格納されている
             print(form.errors)
+    else:
+        form = SignUpForm()
+        error_message = ''
 
-            
-
+        
     context = {
         "form": form,
     }
@@ -271,12 +270,7 @@ def setting(request):
 @login_required
 def user_img_change(request):
     user = request.user
-    if request.method == "GET":
-        # モデルフォームには `instance=user` をつけることで user の情報が入った状態のフォームを参照できます。
-        # 今回はユーザ情報の変更の関数が多いのでこれをよく使います。
-        form = ImageSettingForm(instance=user)
-
-    elif request.method == "POST":
+    if request.method == "POST":
         form = ImageSettingForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
@@ -285,6 +279,10 @@ def user_img_change(request):
         else:
             # エラー時 form.errors には エラー内容が格納されている
             print(form.errors)
+    else:
+        # モデルフォームには `instance=user` をつけることで user の情報が入った状態のフォームを参照できます。
+        # 今回はユーザ情報の変更の関数が多いのでこれをよく使います。
+        form = ImageSettingForm(instance=user)
 
     context = {
         "form": form,
@@ -300,10 +298,7 @@ def user_img_change_done(request):
 @login_required
 def mail_change(request):
     user = request.user
-    if request.method == "GET":
-        form = MailSettingForm(instance=user)
-
-    elif request.method == "POST":
+    if request.method == "POST":
         form = MailSettingForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
@@ -312,6 +307,10 @@ def mail_change(request):
         else:
             # エラー時 form.errors には エラー内容が格納されている
             print(form.errors)
+    else:
+        form = MailSettingForm(instance=user)
+
+    
 
     context = {
         "form": form,
@@ -327,10 +326,7 @@ def mail_change_done(request):
 @login_required
 def username_change(request):
     user = request.user
-    if request.method == "GET":
-        form = UserNameSettingForm(instance=user)
-
-    elif request.method == "POST":
+    if request.method == "POST":
         form = UserNameSettingForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
@@ -339,6 +335,8 @@ def username_change(request):
         else:
             # エラー時 form.errors には エラー内容が格納されている
             print(form.errors)
+    else:
+        form = UserNameSettingForm(instance=user)
 
     context = {
         "form": form,

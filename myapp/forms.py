@@ -20,9 +20,7 @@ class SignUpForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     pass
 
-#二段階認証用sessionForm
-class SessionForm(forms.Form):
-    session = forms.CharField(label="session", required=False, widget=forms.TextInput(attrs={"class": "form-control"}))
+
 
 
 
@@ -31,14 +29,14 @@ class MailSettingForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ("email",)
-        labels = {"email": "新しいユーザー名"}
+        labels = {"email": "新しいメールアドレス"}
 
 
 class UserNameSettingForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ("username",)
-        labels = {"username": "新しいメールアドレス"}
+        labels = {"username": "新しいユーザー名"}
 
 
 class ImageSettingForm(forms.ModelForm):

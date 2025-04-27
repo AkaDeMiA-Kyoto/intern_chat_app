@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "myapp.settings.base")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "intern.settings.base")
 django.setup()
 
 from myapp.models import Talk, User
