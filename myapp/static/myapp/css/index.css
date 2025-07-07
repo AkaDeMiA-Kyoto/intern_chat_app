@@ -1,0 +1,35 @@
+body {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(255, 255, 255);
+}
+
+.wrap {
+    width: 25vw;
+    min-width: 90px;
+    max-width: 200px;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+.button {
+    margin: 20px 0;
+    display: block;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    font-size: clamp(15px, 2.5vw, 27px);
+    border: solid 4px rgb(205, 205, 205);
+    color: black;
+    text-decoration: none;
+    border-radius: 15px;
+}
+
+.button:hover {
+    color: rgb(255, 255, 255);
+    background-color: rgb(138, 103, 103);
+    transition: 0.5s;
+}
