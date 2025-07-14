@@ -1,0 +1,24 @@
+div {
+    position: relative;
+    top: 50vh;
+    display: flex;
+    transform: translate(0, -50%);
+    flex-direction: column;
+}
+
+a {
+    position: relative;
+    width: 100px;
+    height: 20px;
+    border: solid 3px #bbb;
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 10px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    text-decoration: none;
+    color: black;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+}
