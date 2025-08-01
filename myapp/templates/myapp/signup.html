@@ -1,1 +1,28 @@
-SU
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'myapp/css/signup.css' %}">
+    <title>SignUP</title>
+</head>
+<body>
+    <div class="title">会員登録</div>
+    <form action="{% url 'signup_view' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            <tr><th>Username:</th><th>{{ form.username }}</th></tr>
+            <tr><th></th><th class="error">{{ form.username.errors}}</th></tr>
+            <tr><th>Email address:</th><th>{{ form.email }}</th></tr>
+            <tr><th></th><th class="error">{{ form.email.errors}}</th></tr>
+            <tr><th>Password:</th><th>{{ form.password1 }}</th></tr>
+            <tr><th></th><th class="error">{{ form.password1.errors}}</th></tr>
+            <tr><th>Password confirmation:</th><th>{{ form.password2 }}</th></tr>
+            <tr><th></th><th class="error">{{ form.password2.errors}}</th></tr>
+            <tr><th>img:</th><th>{{ form.image }}</th></tr>
+            <tr><th></th><th class="error">{{ form.image.errors}}</th></tr>
+        </table>
+        <input type="submit" value="submit" class="submit">
+    </form>
+</body>
+</html>

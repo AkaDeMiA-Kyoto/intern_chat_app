@@ -1,0 +1,39 @@
+table{
+    table-layout: fixed;
+    width: 80vw;
+    font-size: 3vw;
+    display: block;
+    margin: 0 auto;
+}
+#id_username, #id_password{
+    width: 40vw;
+    height: 2vh;
+}
+.submit{
+    font-size: 3vw;
+    width: 30vw;
+    height: 5vh;
+    background-color: #fff;
+    border: 1px solid #000;
+    color: #000;
+    border-radius: 1vw;
+    display: block;
+    margin: 2vh auto 0 auto;
+    line-height: 100%;
+}
+.title{
+    font-size: 7vw;
+    display: block;
+    border-bottom: 1px solid #000;
+    width: 100vw;
+    text-align: center;
+    padding: 1vh 0;
+    margin-bottom: 4vh;
+}
+.error{
+    display: block;
+    margin: 0 auto;
+    width: 80vw;
+    text-align: left;
+    font-weight: normal;
+}

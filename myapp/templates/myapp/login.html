@@ -1,1 +1,22 @@
-LI
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'myapp/css/login.css' %}">
+    <title>ログイン</title>
+</head>
+<body>
+    <div class="title">ログイン</div>
+    <form action="{% url 'login_view' %}" method="post">
+         {% csrf_token %}
+         <div class="error">{{ form.non_field_errors }}</div>
+        <table>
+            <tr><th>ユーザーネーム：</th><th>{{ form.username }}</th></tr>
+            <tr><th>パスワード：</th><th>{{ form.password }}</th></tr>
+        </table>
+    <input type="submit" value="ログイン" class="submit">
+    </form>
+    
+</body>
+</html>

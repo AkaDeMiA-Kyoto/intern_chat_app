@@ -1,0 +1,20 @@
+body{
+    display: block;
+    height: 30vw;
+    width: 40vw;
+    margin: 40vh auto 0 auto;
+}
+.button{
+    display: block;
+    width: 100%;
+    padding: 2vh 0;
+    border: 1px solid #a9a9a9;
+    text-align: center;
+    margin-bottom: 3vh;
+    border-radius: 2vw;
+    font-size: 5vw;  
+    color: #000;
+}
+a{
+    text-decoration: none;
+}
