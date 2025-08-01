@@ -9,6 +9,7 @@ class SignUpForm(UserCreationForm):
         model = CustomUser
         fields = UserCreationForm.Meta.fields + ('email','image')
 
+
 class LoginForm(AuthenticationForm):
     pass
 
