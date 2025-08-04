@@ -1,5 +1,5 @@
 import operator
-
+import random
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,8 +10,15 @@ from django.contrib.auth.views import (
     PasswordChangeView,
 )
 from django.db.models import Q
+from django.http import (
+    HttpResponse,
+    HttpResponsePermanentRedirect,
+    HttpResponseRedirect,
+)
+from .signals import custom_send_mail
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
+from django.http import HttpRequest
 
 from .forms import (
     ImageSettingForm,
@@ -21,6 +28,8 @@ from .forms import (
     SignUpForm,
     TalkForm,
     UserNameSettingForm,
+    TwoFAForm,
+    SearchFriendForm,
 )
 from .models import Talk
 
@@ -31,10 +40,12 @@ def index(request):
     return render(request, "myapp/index.html")
 
 
-def signup_view(request):
+def signup_view(
+    request,
+) -> HttpResponseRedirect | HttpResponsePermanentRedirect | HttpResponse:
     if request.method == "GET":
         form = SignUpForm()
-        error_message = ''
+        error_message = ""
     elif request.method == "POST":
         # 画像ファイルをformに入れた状態で使いたい時はformに"request.FILES"を加える。
         # request.POST だけではNoneが入る。
@@ -66,23 +77,80 @@ def signup_view(request):
             # エラー時 form.errors には エラー内容が格納されている
             print(form.errors)
 
-            
-
     context = {
         "form": form,
     }
     return render(request, "myapp/signup.html", context)
 
 
-class Login(LoginView):
-    """ログインページ
+# class Login(LoginView):
+#     """ログインページ
 
-    GETの時は指定されたformを指定したテンプレートに表示
-    POSTの時はloginを試みる。→成功すればdettingのLOGIN_REDIRECT_URLで指定されたURLに飛ぶ
-    """
+#     GETの時は指定されたformを指定したテンプレートに表示
+#     POSTの時はloginを試みる。→成功すればdettingのLOGIN_REDIRECT_URLで指定されたURLに飛ぶ
+#     """
 
-    authentication_form = LoginForm
-    template_name = "myapp/login.html"
+#     authentication_form = LoginForm
+#     template_name = "myapp/login.html"
+
+
+def Login_View(request: HttpRequest):
+    if request.method == "GET":
+        form = LoginForm()
+        error_message = ""
+    elif request.method == "POST":
+        form = LoginForm(request=request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password"]
+            user = authenticate(username=username, password=password)
+            print(f"user = {user}")
+            if user is not None:
+                email = user.email
+                code = str(random.randint(1000, 9999))
+                request.session["2fa"] = code
+                request.session["username"] = user.username
+                custom_send_mail(email=email, code=code)
+                return redirect("two_FA")
+
+    error_message = form.error_messages
+    context = {"form": form, "error_message": error_message}
+    return render(request, "myapp/login.html", context)
+
+
+def two_FA(request: HttpRequest):
+    error_message = ""
+
+    if not (request.session.get("2fa", None)):
+        return redirect("/")
+
+    if request.method == "POST":
+        form = TwoFAForm(request.POST)
+
+        if form.is_valid():
+            code = str(form.cleaned_data["code"])
+            user = User.objects.get(username=request.session.get("username"))
+            try:
+                if code == code:
+                    login(request, user)
+                    # session削除
+                    request.session.pop("code", None)
+                    request.session.pop("username", None)
+
+                    return redirect("friends")
+            except Exception as e:
+                print(e)
+                error_message = "session error"
+            else:
+                print("認証できませんでした")
+                error_message = "認証できませんでした"
+        else:
+
+            error_message = form.errors
+
+    form = TwoFAForm()
+    context = {"form": form, "error_message": error_message}
+    return render(request, "myapp/twoFA.html", context)
 
 
 class Logout(LoginRequiredMixin, LogoutView):
@@ -92,33 +160,43 @@ class Logout(LoginRequiredMixin, LogoutView):
 @login_required
 def friends(request):
     user = request.user
-    friends = User.objects.exclude(id=user.id)
+
+    if "name" in request.GET:
+        name = request.GET.get("name")
+        friends = User.objects.filter(username__contains=name).exclude(id=user.id)
+
+    else:
+        friends = User.objects.exclude(id=user.id)
 
     # トーク情報とフレンド情報を含む info を作成
     info = []
     info_have_message = []
     info_have_no_message = []
-    
+
     for friend in friends:
         # 最新のメッセージの取得
-        latest_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-        ).order_by('time').last()
+        latest_message = (
+            Talk.objects.filter(
+                Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
+            )
+            .order_by("time")
+            .last()
+        )
 
         if latest_message:
             info_have_message.append([friend, latest_message.talk, latest_message.time])
         else:
             info_have_no_message.append([friend, None, None])
-    
+
     # 時間順に並び替え
-    info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
-    
+    info_have_message = sorted(
+        info_have_message, key=operator.itemgetter(2), reverse=True
+    )
+
     info.extend(info_have_message)
     info.extend(info_have_no_message)
-    
-    context = {
-        "info": info,
-    }
+    form = SearchFriendForm()
+    context = {"info": info, "form": form}
     return render(request, "myapp/friends.html", context)
 
 

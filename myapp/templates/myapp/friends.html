@@ -9,8 +9,22 @@
 
 {% block content %}
 <div class="friends">
+
+
     <!-- 友達のリスト表示部分 -->
     <ul class="friend-list">
+        <div class="friends-search__container">
+            {{ form.non_field_errors }}
+            <form action="{% url 'friends' %}" method="get" class="friends-search__form">
+                <div class="left-box">
+                    {{form.name}}
+                </div>
+                <div class="right-box">
+                    <button class="search" type="submit">検索</button>
+                </div>
+
+            </form>
+        </div>
 
         <!--
             友達に応じて表示
@@ -24,8 +38,8 @@
         -->
         {% for friend, talk, time in info %}
         <a class="friend-list__link" href="{% url 'talk_room' friend.id %}">
-        <li class="friend-list__item">
-            <!-- それぞれが別のトーク画面に飛ぶようにリンクをはる -->
+            <li class="friend-list__item">
+                <!-- それぞれが別のトーク画面に飛ぶようにリンクをはる -->
                 <img class="friend-list__usericon" src="{{ friend.icon.url }}">
                 <div class="friend-list__username">{{ friend.username }}</div>
                 <!-- ここから最新のトークを表示する部分 -->
@@ -35,7 +49,7 @@
                     <p class="friend-list__time">{{ time|date:"n/j H:i" }}</p>
                 </div>
                 {% endif %}
-        </li>
+            </li>
         </a>
         {% empty %}
         {% endfor %}

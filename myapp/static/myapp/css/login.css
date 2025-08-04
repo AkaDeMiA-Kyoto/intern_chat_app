@@ -16,7 +16,8 @@
     text-align: center;
 }
 
-.login-form__password {
+.login-form__password,
+.login-form__code {
     text-align: center;
 }
 

@@ -49,6 +49,11 @@ class PasswordChangeForm(PasswordChangeForm):
     よってパスワード編集のために標準で用意されているformを使う。
     """
 
+
+class TwoFAForm(forms.Form):
+    code = forms.CharField(min_length=4, max_length=4, label="認証コード")
+
+
 class TalkForm(forms.ModelForm):
     """トークの送信のためのform
 
@@ -60,3 +65,13 @@ class TalkForm(forms.ModelForm):
         fields = ("talk",)
         # 入力予測の表示をさせない（めっちゃ邪魔）
         widgets = {"talk": forms.TextInput(attrs={"autocomplete": "off"})}
+
+
+class SearchFriendForm(forms.Form):
+    name = forms.CharField(
+        required=False,
+        label="友達",
+        widget=forms.TextInput(
+            attrs={"class": "friend-search-form", "placeholder": "ユーザー名で検索"}
+        ),
+    )

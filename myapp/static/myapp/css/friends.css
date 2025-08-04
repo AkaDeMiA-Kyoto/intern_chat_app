@@ -11,6 +11,46 @@
     height: calc(100vh - 128px);
 }
 
+.friends-search__container {
+    background-color: #bebebe;
+    padding: 3% 0%;
+}
+
+.friends-search__form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.left-box {
+    flex: 3;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.right-box {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.right-box>button {
+    padding: 2% 5%;
+    height: 100%;
+    margin: auto;
+    border: 2px #696969 solid;
+    background-color: white;
+    border-radius: 50%;
+}
+
+.friend-search-form {
+    display: block;
+    width: 80%;
+    padding: 2% 5%;
+}
+
+
 /*
  * margin:autoと横幅の指定でcalcを上手く利用することで、単位が違う横幅指定をしつつ
  * 全体のバランスを取れるように設計する
@@ -84,6 +124,7 @@
     width: 2.4rem;
     margin: auto 0;
 }
+
 /* ここまで　LINEのようにユーザーの最後のやりとりを表示できるようにしてみる */
 
 /* ここはbaseに入れたいな */

@@ -1,0 +1,32 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/login.css' %}">
+{% endblock %}
+
+{% block header_title %}ログイン{% endblock %}
+
+{% block content %}
+{% if form.errors %}
+<div class="login-error-message">
+    <span>フォームが不正です</span>
+</div>
+{% endif %}
+{% if error_message %}
+<div class="login-error-message">
+    <span>{{error_message}}</span>
+</div>
+{% endif %}
+<form method="POST" action="{% url 'two_FA' %}" class="2fa-form">
+    {% csrf_token %}
+    <div class="login-form__code">
+        <label>認証コード:</label>
+        {{ form.code }}
+        {{ form.code.errors }}
+    </div>
+    <button type="submit" class="login-form__submit">ログイン</button>
+</form>
+{% endblock %}
+
+{% block footer %}{% endblock %}
