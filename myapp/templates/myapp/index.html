@@ -1,1 +1,9 @@
-I
+
+{% extends "myapp/base.html" %}
+{% block title %}index{% endblock %}
+{% block content %}
+<div class="button" style="display:flex; align-items: center; flex-direction: column;">
+    <a href="{% url 'myapp:login' %}" ><button style="background-color: white; border: solid 0.5px; border-radius: 30%; padding: 10px 25px; margin: 250px 0 70px 0;" name="login">ログイン</button></a>
+    <a href="{% url 'myapp:signup' %}" ><button style="background-color: white; border: solid 0.5px; border-radius: 30%; padding: 10px 25px; " name="signup">会員登録</button></a>
+</div>
+{% endblock %}

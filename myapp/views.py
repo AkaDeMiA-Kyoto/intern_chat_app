@@ -1,14 +1,27 @@
+from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
+
+from .forms import LoginForm, SignUpForm
 
 
 def index(request):
     return render(request, "myapp/index.html")
 
 def signup_view(request):
-    return render(request, "myapp/signup.html")
+    if request.method == 'POST':
+        form = SignUpForm(request.POST, request.FILES)
+        if form.is_valid():
+            print("is_valid")
+            form.save()
+            return redirect('myapp:index')
+    else:
+        form = SignUpForm()
 
-def login_view(request):
-    return render(request, "myapp/login.html")
+    return render(request, 'myapp/signup.html', {'form': form})
+
+class login_view(LoginView):
+    template_name = 'myapp/login.html'
+    form_class = LoginForm
 
 def friends(request):
     return render(request, "myapp/friends.html")

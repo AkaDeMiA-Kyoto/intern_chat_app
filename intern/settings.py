@@ -40,6 +40,13 @@ INSTALLED_APPS = [
     'myapp',
 ]
 
+AUTH_USER_MODEL = "myapp.CustomUser" 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media_local'
+
+LOGIN_URL = "/myapp/login"
+LOGIN_REDIRECT_URL = "/friends"
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -104,9 +111,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ja'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tokyo'
 
 USE_I18N = True
 
