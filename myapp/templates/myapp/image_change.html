@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+     <link rel="stylesheet" href="{% static 'myapp/css/setting.css' %}">
+    <title>setting</title>
+</head>
+<header>
+    アイコン
+</header>
+<body>
+    <form action="{% url 'i_done' %}" method="post">
+        {% csrf_token %}
+        <div class="auto"><div class="form">{{ form}}</div></div>
+    <input type="submit" value="送信" class="submit">
+    </form>
+</body>
+<footer>
+        <div class="foot">
+            <a href="{% url 'friends' %}">
+                <img href="/home/issei827/django_project2/intern_chat_app/myapp/static/myapp/img/people-24px.svg" class="image">
+                <div class="letters">友達</div>
+            </a>
+        </div>
+        <div class="foot">
+            <a href="{% url 'setting' %}">
+                <img href="/home/issei827/django_project2/intern_chat_app/myapp/static/myapp/img/settings-black-18dp.svg" class="image">
+                <div class="letters">設定</div>
+            </a>
+        </div>
+    </footer>
+</html>

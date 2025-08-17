@@ -1,0 +1,93 @@
+header{
+    top: 0;
+    display: block;
+    height: 10vh;
+    width: 99vw;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 5vh;
+    position: fixed;
+    background-color: #d3d3d3;
+    z-index: 1;
+}
+footer{
+    bottom: 0;
+    display: flex;
+    height: 10vh;
+    margin: 0 auto;
+    width: 99vw;
+    text-align: center;
+    font-size: 1vh;
+    position: fixed;
+    background-color: #d3d3d3;
+    z-index: 1;
+}
+.foot{
+    display: block;
+    width: 50vw;
+}
+.image{
+    display: block;
+    width: 5vh;
+    height: 5vh;
+    margin: 2vh auto 1vh auto;
+}
+.letters{
+    display: block;
+    width: 5vh;
+    margin: 0 auto;
+}
+.friend_list{
+    display: block;
+    margin-top: 10vh;
+}
+.person{
+    display: flex;
+    width: 98vw;
+    height: 10vh;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+}
+a{
+    text-decoration: none;
+    color: #000;
+}
+.icon{
+    display: block;
+    height: 8vh;
+    width: 8vh;
+    margin: auto 3vw
+}
+.inf{
+    display: block;
+}
+.flex{
+    display: flex;
+}
+.name{
+    display: block;
+    margin-top: 1vh;
+    margin-bottom: 2vh;
+    font-weight: bold;
+    font-size: 1.5vh;
+}
+.message{
+    display: block;
+    font-size: 1vh;
+    width: 50vw;
+    overflow: hidden;
+    max-height: 1.5vh;
+    color: #696969;
+}
+.time{
+    margin-left: 5vh;
+    display: block;
+    font-size: 1vh;
+}
+.space{
+    display: block;
+    width: 50vw;
+}
+.friend_list{
+    overflow-y: auto;
+}
