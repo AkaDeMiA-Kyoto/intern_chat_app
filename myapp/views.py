@@ -1,8 +1,6 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LoginView
-from django.db.models import Q
 from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
 from .forms import SignUpForm ,LoginForm
 
 def index(request):
