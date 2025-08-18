@@ -1,1 +1,42 @@
-SU
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/signup.css' %}" />
+    {% block extra_style %}{% endblock %}
+    <title>DeMiAインターン</title>
+</head>
+<body>
+    {% block header %}
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container__title">
+                {% block header-title %}会員登録{% endblock %}
+            </span>
+        </div>
+    </header>
+    {% endblock %}
+
+    {% block content %}
+    <form method="post" action="{% url 'myapp:signup_view' %}" enctype="multipart/form-data" class="signup-form">
+        {% csrf_token %}
+        {% for field in form %}
+        <p>
+            {{ field.label_tag }}
+            {{ field }}
+            {% if field.errors %}
+                {{ field.errors }}
+            {% endif %}
+        </p>
+        {% endfor %}
+        <button type="submit" class="signup-form__submit">Sign Up</button>
+    </form>
+    {% endblock %}
+
+    {% block footer %}
+   
+    {% endblock %}
+</body>
+</html>
