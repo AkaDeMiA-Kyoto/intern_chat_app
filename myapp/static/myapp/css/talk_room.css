@@ -6,10 +6,6 @@
     display: flex;
     justify-content: start;
 }
-.space{
-    display: block;
-    height: 11vh;
-}
 p{
     display: inline-block;
     max-width: 70vw;
@@ -23,6 +19,8 @@ p{
     width: 3vh;
     height: 3vh;
     margin: 2vh 2vh 0 2vh;
+    border: 1px solid #000;
+    border-radius: 100%;
 }
 .time{
     display: block;
@@ -98,4 +96,17 @@ footer{
     border: 3px solid #000;
     height: 4vh;
     font-size: 2.5vh;
+}
+body{
+    margin-top: 10vh;
+    display: block;
+    width: 99vw;
+    height: 80vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.space{
+    display: block;
+    width: 99vw;
+    height: 5vh;
 }

@@ -12,7 +12,6 @@
     <a href="{% url 'talk_room' user_id %}"><div class="update">更新</div></a>
 </header>
 <body>
-    <div class="space"></div>
     {% for value in msgs %}
     {% if value.sender == himself %}
     <div class="right"><div class="time">{{ value.arrived_at }}</div><p>{{ value.message }}</p><img src="{{ himself.image.url }}" class="icon"></div>
@@ -21,6 +20,7 @@
     <div class="left"><img src="{{ opponent.image.url }}" class="icon"><p>{{ value.message }}</p><div class="time">{{ value.arrived_at }}</div></div>
     {% endif %}
     {% endfor %}
+    <div class="space"></div>
 </body>
 <footer>
     <form action="{% url 'talk_room' user_id %}" method="post">

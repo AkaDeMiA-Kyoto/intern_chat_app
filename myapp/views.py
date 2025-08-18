@@ -5,6 +5,7 @@ from django.contrib.auth.views import LoginView, PasswordChangeView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     return render(request, "myapp/index.html")
@@ -41,7 +42,7 @@ def friends(request):
                 talked_message.append(talk)
     zipped_never_data = zip(never_talked_id, never_talked_username, never_talked_image, never_talked_time)
     zipped_data=zip(talked_id,talked_username,talked_image,talked_time,talked_message)
-    zipped_data=sorted(zipped_data, key=lambda x:x[3])
+    zipped_data=sorted(zipped_data, key=lambda x:x[3]['arrived_at'], reverse=True)
     params={
         "zipped_never_data":zipped_never_data,
         "zipped_data":zipped_data
@@ -85,16 +86,20 @@ def signup_view(request):
 
     return render(request,"myapp/signup.html",{'form':form})
 
+@login_required
 def n_done(request):
     return render(request,"myapp/n_done.html")
 
+@login_required   
 def m_done(request):
     return render(request,"myapp/m_done.html")
 
+@login_required   
 def i_done(request):
     return render(request,"myapp/i_done.html")
 
 
+@login_required   
 def p_done(request):
     return render(request,"myapp/p_done.html")
 
@@ -102,38 +107,44 @@ class password_change(LoginRequiredMixin, PasswordChangeView):
     success_url = reverse_lazy('p_done.html')
     template_name = 'myapp/password_change.html'
 
+@login_required
 def username_change(request):
     if request.method == 'POST':
-        u=request.user
-        a=request.POST["a"]
-        u.name=a
-        u.save()
-        return redirect(request,"myapp/n_done.html")
+        form = NameForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect("n_done") 
     else:
-        form=NameForm()
-        return render(request,"myapp/username_change.html",{"form":form})
+        form = NameForm(instance=request.user)
 
+    context = {'form': form}
+    return render(request, 'myapp/username_change.html', context)
+
+@login_required
 def mail_change(request):
     if request.method == 'POST':
-        u=request.user
-        a=request.POST["a"]
-        u.name=a
-        u.save()
-        return redirect(request,"myapp/m_done.html")
+        form = MailForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect("m_done") 
     else:
-        form=MailForm()
-        return render(request,"myapp/mail_change.html",{"form":form})
+        form = MailForm(instance=request.user)
 
+    context = {'form': form}
+    return render(request, 'myapp/mail_change.html', context)
+
+@login_required
 def image_change(request):
     if request.method == 'POST':
-        u=request.user
-        a=request.POST["a"]
-        u.name=a
-        u.save()
-        return redirect(request,"myapp/i_done.html")
+        form = ImageForm(request.POST,request.FILES,instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect("i_done") 
     else:
-        form=ImageForm()
-        return render(request,"myapp/image_change.html",{"form":form})
-    
+        form = ImageForm(instance=request.user)
+
+    context = {'form': form}
+    return render(request, 'myapp/image_change.html', context)
+ 
 class logout(LogoutView):
     template_name = 'setting.html'

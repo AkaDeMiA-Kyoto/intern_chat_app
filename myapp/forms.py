@@ -19,11 +19,19 @@ class MessageForm(forms.Form):
         model=Talk
         fields=['message']
 
-class NameForm(forms.Form):
-    a= forms.CharField(label="New username",widget=forms.TextInput(attrs={'class': 'large-text-input'}))
+class NameForm(forms.ModelForm):
+    class Meta:
+        model=CustomUser
+        fields=['username']
+        widget=forms.TextInput(attrs={'class': 'large-text-input'})
 
-class MailForm(forms.Form):
-    a= forms.EmailField(label="New Email address",widget=forms.TextInput(attrs={'class': 'large-text-input'}))
+class MailForm(forms.ModelForm):
+    class Meta:
+        model=CustomUser
+        fields=['email']
+        widget=forms.TextInput(attrs={'class': 'large-text-input'})
 
-class ImageForm(forms.Form):
-    a= forms.ImageField(label="New icon")
+class ImageForm(forms.ModelForm):
+    class Meta:
+        model=CustomUser
+        fields=['image']

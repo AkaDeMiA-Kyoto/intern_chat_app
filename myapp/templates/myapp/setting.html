@@ -22,13 +22,13 @@
 <footer>
         <div class="foot">
             <a href="{% url 'friends' %}">
-                <img href="/home/issei827/django_project2/intern_chat_app/myapp/static/myapp/img/people-24px.svg" class="image">
+                <img src="{% static 'myapp/img/people-24px.svg' %}" class="image">
                 <div class="letters">友達</div>
             </a>
         </div>
         <div class="foot">
             <a href="{% url 'setting' %}">
-                <img href="/home/issei827/django_project2/intern_chat_app/myapp/static/myapp/img/settings-black-18dp.svg" class="image">
+                <img src="{% static 'myapp/img/settings-black-18dp.svg' %}" class="image">
                 <div class="letters">設定</div>
             </a>
         </div>

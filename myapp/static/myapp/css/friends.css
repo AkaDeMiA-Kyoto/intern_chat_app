@@ -56,7 +56,9 @@ a{
     display: block;
     height: 8vh;
     width: 8vh;
-    margin: auto 3vw
+    margin: auto 3vw;
+    border: 1px solid #000;
+    border-radius: 100%;
 }
 .inf{
     display: block;
@@ -86,8 +88,13 @@ a{
 }
 .space{
     display: block;
-    width: 50vw;
+    width: 99vw;
+    height: 5vh;
 }
 .friend_list{
+    display: block;
+    height: 80vh;
+    margin-top: 10vh;
     overflow-y: auto;
+    overflow-x: hidden;
 }
