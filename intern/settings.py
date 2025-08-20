@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+import environ
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -24,7 +26,8 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 SECRET_KEY = "oaab#2kr%trbj2h-w9ycf0&f$7dgi2+p=37!cjw$*y0@26pq77"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+
 
 ALLOWED_HOSTS = ["*"]
 
@@ -156,3 +159,10 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
 INTERNAL_IPS = ["127.0.0.1"]
+
+if os.path.isfile(".env"):
+    env = environ.Env(DEBUG=(bool, False))
+    environ.Env.read_env(".env")
+
+    DEBUG = env("DEBUG")
+    ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
