@@ -27,6 +27,9 @@
     display: flex;
     justify-content: center;
     width: 100%;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding-left: 2%;
 }
 
 .right-box {
@@ -42,6 +45,7 @@
     border: 2px #696969 solid;
     background-color: white;
     border-radius: 50%;
+    font-size: 2rem;
 }
 
 .friend-search-form {

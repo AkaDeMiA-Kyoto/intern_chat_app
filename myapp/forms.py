@@ -75,3 +75,10 @@ class SearchFriendForm(forms.Form):
             attrs={"class": "friend-search-form", "placeholder": "ユーザー名で検索"}
         ),
     )
+    mail = forms.CharField(
+        required=False,
+        label="メールアドレス",
+        widget=forms.TextInput(
+            attrs={"class": "friend-search-form", "placeholder": "メールアドレスで検索"}
+        ),
+    )

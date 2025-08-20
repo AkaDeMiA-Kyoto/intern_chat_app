@@ -8,12 +8,6 @@ class User(AbstractUser):
     )
 
 
-# トーク内容を全てdatbaseに保存する形をとる
-# ＞１個のトーク内容に紐づける情報は
-# ＞〇誰が送ったのか
-# ＞〇誰に送ったのか
-# ＞〇いつ送ったのか
-# という情報
 class Talk(models.Model):
     # メッセージ
     talk = models.CharField(max_length=500)

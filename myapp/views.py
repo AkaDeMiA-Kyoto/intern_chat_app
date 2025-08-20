@@ -9,7 +9,8 @@ from django.contrib.auth.views import (
     PasswordChangeDoneView,
     PasswordChangeView,
 )
-from django.db.models import Q
+from django.db.models import Q, Case, When, Value, Max, F
+from django.db.models.functions import Coalesce
 from django.http import (
     HttpResponse,
     HttpResponsePermanentRedirect,
@@ -131,7 +132,7 @@ def two_FA(request: HttpRequest):
             code = str(form.cleaned_data["code"])
             user = User.objects.get(username=request.session.get("username"))
             try:
-                if code == code:
+                if code == request.session["2fa"]:
                     login(request, user)
                     # session削除
                     request.session.pop("code", None)
@@ -160,44 +161,52 @@ class Logout(LoginRequiredMixin, LogoutView):
 @login_required
 def friends(request):
     user = request.user
+    name, mail = None, None
+    if request.method == "GET" and (
+        request.GET.get("name") or request.GET.get("mail") is not None
+    ):
+        forms = SearchFriendForm(request.GET)
+        if forms.is_valid():
+            name = forms.cleaned_data.get("name")
+            mail = forms.cleaned_data.get("mail")
 
-    if "name" in request.GET:
-        name = request.GET.get("name")
-        friends = User.objects.filter(username__contains=name).exclude(id=user.id)
+    infos = return_frinends(user, name=name, mail=mail)
+    forms = SearchFriendForm()
 
-    else:
-        friends = User.objects.exclude(id=user.id)
-
-    # トーク情報とフレンド情報を含む info を作成
-    info = []
-    info_have_message = []
-    info_have_no_message = []
-
-    for friend in friends:
-        # 最新のメッセージの取得
-        latest_message = (
-            Talk.objects.filter(
-                Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-            )
-            .order_by("time")
-            .last()
-        )
-
-        if latest_message:
-            info_have_message.append([friend, latest_message.talk, latest_message.time])
-        else:
-            info_have_no_message.append([friend, None, None])
-
-    # 時間順に並び替え
-    info_have_message = sorted(
-        info_have_message, key=operator.itemgetter(2), reverse=True
-    )
-
-    info.extend(info_have_message)
-    info.extend(info_have_no_message)
-    form = SearchFriendForm()
-    context = {"info": info, "form": form}
+    context = {"infos": infos, "forms": forms}
     return render(request, "myapp/friends.html", context)
+
+
+def return_frinends(user, name=None, mail=None):
+    filter_conditions = Q()
+    if name:
+        filter_conditions &= Q(username__icontains=name)
+    if mail:
+        filter_conditions &= Q(email__icontains=mail)
+    infos = (
+        User.objects.all()
+        .exclude(id=user.id)
+        .filter(filter_conditions)
+        .annotate(
+            last_send_time=Max("talk_from__time", filter=Q(talk_from__talk_to=user)),
+            last_get_time=Max("talk_to__time", filter=Q(talk_to__talk_from=user)),
+            latest_msg_time=Coalesce("last_send_time", "last_get_time"),
+            have_msg=Case(
+                When(latest_msg_time__isnull=False, then=Value(1)),
+                When(latest_msg_time__isnull=True, then=Value(0)),
+            ),
+            latest_msg=Case(
+                When(
+                    latest_msg_time__gte=F("last_send_time"),
+                    then=F("talk_from__talk"),
+                ),
+                When(latest_msg_time__gte=F("last_get_time"), then=F("talk_to__talk")),
+            ),
+        )
+        .order_by("have_msg", F("latest_msg_time"))
+        .reverse()
+    )
+    return infos
 
 
 @login_required
@@ -205,10 +214,14 @@ def talk_room(request, user_id):
     # ユーザ・友達をともにオブジェクトで取得
     user = request.user
     friend = get_object_or_404(User, id=user_id)
-    # 自分→友達、友達→自分のトークを全て取得
-    talk = Talk.objects.filter(
-        Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-    ).order_by("time")
+
+    talk = (
+        Talk.objects.filter(
+            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
+        )
+        .select_related("talk_from", "talk_to")
+        .all()
+    ).order_by("-time")
     # 送信form
     form = TalkForm()
     # メッセージ送信だろうが更新だろが、表示に必要なパラメーターは変わらないので、この時点でまとめて指定

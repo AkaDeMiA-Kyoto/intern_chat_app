@@ -14,10 +14,12 @@
     <!-- 友達のリスト表示部分 -->
     <ul class="friend-list">
         <div class="friends-search__container">
-            {{ form.non_field_errors }}
-            <form action="{% url 'friends' %}" method="get" class="friends-search__form">
+            {{ forms.non_field_errors }}
+            <form action="{% url 'friends' %}" method="get" class="friends-search__form" name="friends-search__form">
                 <div class="left-box">
-                    {{form.name}}
+                    {% for form in forms %}
+                    {{form}}
+                    {% endfor %}
                 </div>
                 <div class="right-box">
                     <button class="search" type="submit">検索</button>
@@ -36,17 +38,17 @@
             friendsではなく、作成したtalk_listでforをまわす
             ＞ここでどういうリストなら表示ができるかを考えてリストの項目を設計
         -->
-        {% for friend, talk, time in info %}
-        <a class="friend-list__link" href="{% url 'talk_room' friend.id %}">
+        {% for info in infos %}
+        <a class="friend-list__link" href="{% url 'talk_room' info.id %}">
             <li class="friend-list__item">
                 <!-- それぞれが別のトーク画面に飛ぶようにリンクをはる -->
                 <img class="friend-list__usericon" src="{{ friend.icon.url }}">
-                <div class="friend-list__username">{{ friend.username }}</div>
+                <div class="friend-list__username">{{ info.username }}</div>
                 <!-- ここから最新のトークを表示する部分 -->
-                {% if talk %}
+                {% if info.latest_msg %}
                 <div class="friend-list__talk">
-                    <p class="friend-list__content">{{ talk }}</p>
-                    <p class="friend-list__time">{{ time|date:"n/j H:i" }}</p>
+                    <p class="friend-list__content">{{ info.latest_msg }}</p>
+                    <p class="friend-list__time">{{ info.latest_msg_time|date:"n/j H:i" }}</p>
                 </div>
                 {% endif %}
             </li>
