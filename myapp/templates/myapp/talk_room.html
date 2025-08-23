@@ -1,1 +1,52 @@
-TR
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>talk_room</title>
+    <link rel="stylesheet" href="{% static 'myapp/css/talk_room.css' %}">
+</head>
+<body>
+    <header>
+        <a href="{% url 'friends' %}" class="return">&lt;</a>
+        <div class="other_name">{{ the_other_user.username }}</div>
+        <a href="#" class=reload>更新</a>
+    </header>
+    <div class="body">
+        {% for i in messages %}
+        {% if i.sender == request.user %}
+        <div class="wrapper1">
+            <div class="wrapper2">
+                <div>{{ i.sender }}</div>
+                <div class="text">{{ i.text }}</div>
+                <div>{{ i.send_time|date:"n/j G:i" }}</div>
+            </div>
+        </div>
+        {% else %}
+        <div class="wrapper3">
+            <div class="wrapper4">
+                <div class="wrapper5">
+                    {% if i.sender.image %}
+                    <img src="{{ i.sender.image.url }}" alt="">
+                    {% else %}
+                    <img src="{% static 'myapp/img/default.png' %}" alt="">
+                    {% endif %}
+                    <div>{{ i.sender }}</div>
+                </div>
+                <div class="text">{{ i.text }}</div>
+                <div>{{ i.send_time|date:"n/j G:i" }}</div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <footer>
+        <form method="POST" action="{% url 'talk_room' the_other_user.pk %}">
+            {% csrf_token %}
+            {{ form.text }}
+            <button type="submit">送信</button>
+        </form>
+    </footer>
+</body>
+</html>

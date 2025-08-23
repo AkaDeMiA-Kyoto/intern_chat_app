@@ -1,1 +1,47 @@
-oppaappa
+{%load static%}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>friends</title>
+    <link rel="stylesheet" href="{% static 'myapp/css/friends.css'%}">
+</head>
+<body>
+    <div class="hed">友達</div>
+    {% for i,j in friend_text %}
+    <a href="{% url 'talk_room' i.pk %}">
+        <div class="wrapper1">
+            {% if i.image %}
+            <img src="{{ i.image.url }}" alt="">
+            {% else %}
+            <img src="{% static 'myapp/img/default.png' %}" alt="">
+            {% endif %}
+            <div class="wrapper2">
+                <div class="username">{{ i.username }}</div>
+                <div class="wrapper3">
+                    <div>{{ j.text }}</div>
+                    <div class="time">{{ j.send_time }}</div>
+                </div>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+    <footer>
+        <div class="wrapper3">
+            <a href="{% url 'friends' %}">
+                <div class="wrapper4">
+                    <img src="{% static 'myapp/img/people-24px.svg' %}" alt="">
+                    <div>友達</div>
+                </div>
+            </a>
+            <a href="{% url 'setting' %}">
+                <div class="wrapper4">
+                    <img src="{% static 'myapp/img/settings-black-18dp.svg' %}" alt="">
+                    <div>設定</div>
+                </div>
+            </a>
+        </div>
+    </footer>
+</body>
+</html>

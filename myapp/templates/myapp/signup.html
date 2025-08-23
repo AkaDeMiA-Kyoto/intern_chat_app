@@ -35,7 +35,6 @@
         </div>
         <button type="submit">submit</button>
         {% if form.errors %}
-        {# Djangoが生成する実際のエラーメッセージを表示 #}
         {{ form.username.errors }}
         {{ form.email.errors }}
         {{ form.password.errors }}

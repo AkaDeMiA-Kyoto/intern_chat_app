@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser
+from .models import CustomUser, Message
 from django import forms
 
 class CustomUserCreationForm(UserCreationForm):
@@ -15,3 +15,8 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = ['username', 'email', 'image']
+
+class SendMessageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ['text']
