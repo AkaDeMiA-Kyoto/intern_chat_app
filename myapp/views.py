@@ -14,7 +14,9 @@ class login_view(LoginView,LoginRequiredMixin):
     form_class = LoginForm
     template_name = "myapp/login.html"
 
+@login_required 
 def friends(request):
+    # 名前がわかりにくい
     all = CustomUser.objects.all().order_by("date_joined")
     never_talked_id=[]
     never_talked_username=[]
@@ -25,17 +27,25 @@ def friends(request):
     talked_image=[]
     talked_time=[]
     talked_message=[]
+
+    # never_toked_rooms = []
+
     for friend in all:
         if friend != request.user:
+        # excludeを最初に使えばよい
             talk = Talk.objects.filter(Q(recipient=request.user, sender=friend)|Q(recipient=friend, sender=request.user)).values("message").last()
-            if talk==None:
-                never_talked_id.append(friend.id)
+            if talk is None:
+                # リストにした方がわかりやすい
+                # never_toked_rooms.append({
+                #     "friend_id": friend.pk
+                # })
+                never_talked_id.append(friend.pk)
                 never_talked_username.append(friend.username)
                 never_talked_image.append(friend.image)
                 never_talked_time.append(friend.date_joined) 
             else:
                 time=Talk.objects.filter(Q(recipient=request.user, sender=friend)|Q(recipient=friend, sender=request.user)).values("arrived_at").last()
-                talked_id.append(friend.id)
+                talked_id.append(friend.pk)
                 talked_username.append(friend.username)
                 talked_image.append(friend.image)
                 talked_time.append(time)
@@ -49,7 +59,9 @@ def friends(request):
     }
     return render(request,"myapp/friends.html",params)
 
+@login_required 
 def talk_room(request,user_id):
+    # ユーザーから来るものすべてについてはバリデーションを行うべき
     if request.method=='POST':
         message=request.POST["message"]
         from_user=request.user
@@ -59,7 +71,7 @@ def talk_room(request,user_id):
             recipient=to_user,
             message=message
         )
-        return redirect(talk_room,user_id=to_user.id)
+        return redirect(talk_room,user_id=to_user.pk)
     else:
         user=CustomUser.objects.get(id=user_id)
         msgs = Talk.objects.filter(Q(recipient=request.user, sender=user)|Q(recipient=user, sender=request.user)).order_by("arrived_at")
@@ -72,9 +84,11 @@ def talk_room(request,user_id):
         }
         return render(request,"myapp/talk_room.html",params)
 
+@login_required 
 def setting(request):
     return render(request, "myapp/setting.html")
 
+@login_required 
 def signup_view(request):
     if request.method=='POST':
         form = SignUpForm(request.POST,request.FILES)
@@ -103,8 +117,9 @@ def i_done(request):
 def p_done(request):
     return render(request,"myapp/p_done.html")
 
+
 class password_change(LoginRequiredMixin, PasswordChangeView):
-    success_url = reverse_lazy('p_done.html')
+    success_url = reverse_lazy('p_done')
     template_name = 'myapp/password_change.html'
 
 @login_required
