@@ -63,6 +63,7 @@ def talk_room(request):
     if partner.pk == me.pk:
         return redirect('home')
 
+
     qs = Message.objects.filter(
         Q(sender=me, receiver=partner) | Q(sender=partner, receiver=me)
     ).select_related('sender', 'receiver').order_by('created_at')  # 古い→新しい
