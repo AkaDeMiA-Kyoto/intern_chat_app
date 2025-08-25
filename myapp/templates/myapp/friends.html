@@ -1,1 +1,65 @@
-FR
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>friends</title>
+    <link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
+</head>
+<body>
+    {% block header %}
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container__title">
+                {% block header-title %}友達{% endblock %}
+            </span>
+        </div>
+    </header>
+    {% endblock %}
+
+    {% block content %}
+    <ul class="friend-list">
+        {% for u in users %}
+        <li class="friend-item">
+            <a class="friend-link" href="{% url 'myapp:talk_room' u.id %}">
+            <img class="avatar"
+                src="{% if u.image %}{{ u.image.url }}{% else %}{% static 'myapp/img/myapp/img/icon.png' %}{% endif %}">
+            <div class="meta">
+                <div class="name">{{ u.username }}</div>
+                <div class="last">
+                {% if u.last_message %}{{ u.last_message|truncatechars:28 }}
+                {% else %}<span class="muted">メッセージはまだありません</span>{% endif %}
+                </div>
+            </div>
+            <time class="time">
+                {% if u.last_time %}{{ u.last_time|date:"H:i" }}{% endif %}
+            </time>
+            </a>
+        </li>
+        {% empty %}
+        <li class="empty">ユーザーがいません</li>
+        {% endfor %}
+</ul>
+    {% endblock %}
+
+    {% block footer %}
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-container__item">
+                <a href="{% url 'myapp:friends' %}" class="footer-item__link">
+                    <span class="footer-item__icon"><img src="{% static 'myapp/img/people-24px.svg' %}"></span>
+                    <span class="footer-item__text">友達</span>
+                </a>
+            </div>
+            <div class="footer-container__item">
+                <a href="{% url 'myapp:setting' %}" class="footer-item__link">
+                    <span class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></span>
+                    <span class="footer-item__text">設定</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+    {% endblock %}
+</body>
+</html>
