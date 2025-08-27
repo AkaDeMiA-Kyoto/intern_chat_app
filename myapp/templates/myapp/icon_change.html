@@ -1,19 +1,16 @@
 {% extends 'myapp/base.html' %}
 {% load static %}
-{% block title %} setting {% endblock %}
+{% block title %} icon {% endblock %}
 {% block extra_style %}
-<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/icon.css' %}">
 {% endblock %} 
-{% block header-title %}設定{% endblock %}
-{% block content %}
-<a href="{% url 'myapp:username_change' %}" class="url">ユーザー名変更</a> 
-<a href="{% url 'myapp:email_change' %}" class="url">メールアドレス変更</a> 
-<a href="{% url 'myapp:icon_change' %}" class="url">アイコン変更</a> 
-<a href="{% url 'myapp:password_change' %}" class="url">パスワード変更</a> 
-<form action="{% url 'myapp:logout' %}" method="post">
+{% block header-title %}アイコン変更{% endblock %}
+{% block content %} 
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <button type="submit" style="background-color: white; display: block;
-  margin: auto;">ログアウト</button></form>
+    {{ form.as_p }}
+    <button type="submit">送信</button>
+</form>
 {% endblock %}
 {% block footer %}
     <footer class="footer">

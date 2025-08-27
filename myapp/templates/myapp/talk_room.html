@@ -1,1 +1,23 @@
-TR
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block title %} talk_room {% endblock %}
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}">
+{% endblock %} 
+{% block header-title %}{{ other_user.username }}{% endblock %}
+{% block content %}
+<div class="talkroom">
+    {% for msg in messages %}
+    <div class="message">
+        <p class="name">>{{ msg.sender.username }}</p>
+        <p class="msg">{{ msg.content|linebreaksbr}}</p>
+        <p class="time">{{ msg.timestamp|date:"n/j H:i"}}</p>
+    </div>
+    {% endfor %}
+</div>
+<form method="POST" class="form">
+    {% csrf_token %}
+    <textarea style="width: 300px; margin-right: 11px;"></textarea>
+    <button type="submit">送信</button>
+</form>
+{% endblock %}

@@ -44,8 +44,9 @@ AUTH_USER_MODEL = "myapp.CustomUser"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media_local'
 
-LOGIN_URL = "/myapp/login"
-LOGIN_REDIRECT_URL = "/friends"
+LOGIN_URL = "myapp:login"
+LOGIN_REDIRECT_URL = "myapp:friends"
+LOGOUT_REDIRECT_URL = "myapp:index"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

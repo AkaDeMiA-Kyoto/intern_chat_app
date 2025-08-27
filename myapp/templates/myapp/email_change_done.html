@@ -1,19 +1,12 @@
 {% extends 'myapp/base.html' %}
 {% load static %}
-{% block title %} setting {% endblock %}
+{% block title %} email_change_done {% endblock %}
 {% block extra_style %}
-<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/change_done.css' %}">
 {% endblock %} 
-{% block header-title %}設定{% endblock %}
-{% block content %}
-<a href="{% url 'myapp:username_change' %}" class="url">ユーザー名変更</a> 
-<a href="{% url 'myapp:email_change' %}" class="url">メールアドレス変更</a> 
-<a href="{% url 'myapp:icon_change' %}" class="url">アイコン変更</a> 
-<a href="{% url 'myapp:password_change' %}" class="url">パスワード変更</a> 
-<form action="{% url 'myapp:logout' %}" method="post">
-    {% csrf_token %}
-    <button type="submit" style="background-color: white; display: block;
-  margin: auto;">ログアウト</button></form>
+{% block header-title %}メールアドレス変更{% endblock %}
+{% block content %} 
+メールアドレス変更完了
 {% endblock %}
 {% block footer %}
     <footer class="footer">

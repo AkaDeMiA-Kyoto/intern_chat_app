@@ -1,0 +1,23 @@
+form {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    background-color: #dcdcdc;
+    padding: 15px;
+}
+.name {
+    font-size: 20px;
+    margin: 0;
+}
+.msg {
+    font-size: 20px;
+    margin: 2px;
+}
+.time {
+    text-align: right;
+    margin: 0;
+}
+.message {
+    border-bottom: 1px solid #000;
+}

@@ -1,8 +1,11 @@
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.models import User
-from .models import CustomUser
 from django import forms
+from django.contrib.auth.forms import (
+    AuthenticationForm,
+    UserCreationForm,
+)
+
+from .models import CustomUser
+
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required = True)
@@ -14,3 +17,23 @@ class SignUpForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     def __init__ (self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+class UsernameChangeForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = [
+            'username'
+        ]
+
+class EmailChangeForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = [
+            'email'
+        ]
+class IconChangeForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = [
+            'profile_image'
+        ]

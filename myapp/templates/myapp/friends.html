@@ -1,0 +1,43 @@
+{% extends 'myapp/base.html' %}
+{% block title %} friends {% endblock %}
+{% block extra_style %}
+{% endblock %}
+{% block header-title %}友達{% endblock %}
+{% block content %}
+{% for c in conversations %}
+    <li style="margin-bottom: 30px;border-bottom: 1px solid #000;
+      display: inline-block; display:flex; padding-bottom: 10px;">
+        <a href="{% url 'myapp:talk_room' c.other.username %}"  style="color:black;">
+        {% if c.other.profile_image %}
+            <img src="{{ c.other.profile_image.url }}" style="width:40px; height:40px; border-radius: 50%;">
+        {% else %}
+            <img src="/static/icon_iser_light.png" style="width:40px; height:40px; border-radius: 50%;">
+        {% endif %}
+            <b style="margin-left: 30px; text-decoration: none;">{{ c.other.username }}</b><br>
+        {% if c.last_message %}
+            {{c.last_message.content|truncatechars:20}}<br>
+            <small style="margin-left: 50px;">{{c.last_message.timestamp|date:"n/j H:i"}}</small>
+        {% else %}
+        {% endif %}
+        </a>
+    </li>
+{% endfor %}
+{% endblock %}
+{% block footer %}
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-container__item">
+                <a href="{% url 'myapp:friends' %}" class="footer-item__link">
+                    <span class="footer-item__icon"><img src="/static/myapp/img/people-24px.svg"></span>
+                    <span class="footer-item__text">友達</span>
+                </a>
+            </div>
+            <div class="footer-container__item">
+                <a href="{% url 'myapp:setting' %}" class="footer-item__link">
+                    <span class="footer-item__icon"><img src="/static/myapp/img/settings-black-18dp.svg"></span>
+                    <span class="footer-item__text">設定</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
