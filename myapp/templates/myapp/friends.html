@@ -11,9 +11,9 @@
     {% block header %}
     <header class="header">
         <div class="header-container">
-            <span class="header-container__title">
+            <div class="header-container__title">
                 {% block header-title %}友達{% endblock %}
-            </span>
+            </div>
         </div>
     </header>
     {% endblock %}
@@ -24,7 +24,7 @@
         <li class="friend-item">
             <a class="friend-link" href="{% url 'myapp:talk_room' u.id %}">
             <img class="avatar"
-                src="{% if u.image %}{{ u.image.url }}{% else %}{% static 'myapp/img/myapp/img/icon.png' %}{% endif %}">
+                src="{% if u.image %}{{ u.image.url }}{% else %}{% static 'myapp/img/icon.png' %}{% endif %}">
             <div class="meta">
                 <div class="name">{{ u.username }}</div>
                 <div class="last">

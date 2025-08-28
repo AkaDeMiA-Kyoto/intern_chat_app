@@ -4,59 +4,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/base.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
     {% block extra_style %}{% endblock %}
-    <title>DeMiAインターン</title>
+    <title>talk_room</title>
 </head>
 <body>
     {% block header %}
-    <header class="header">
-        <div class="header-container">
-            <span class="header-container__title">
-                {% block header-title %}{% endblock %}
-            </span>
-        </div>
+    <header class="room-header">
+        <a class="back" href="{% url 'myapp:friends' %}" aria-label="戻る">‹</a>
+        <h1 class="title">{{ partner.username }}</h1>
+        <a class="refresh" href="{% url 'myapp:talk_room' partner.id %}#bottom">更新</a>
     </header>
     {% endblock %}
 
     {% block content %}
-    <div class="room">
-        <ul class="msg-list">
+    <main class="room-main">
+        <ul id="messages" class="msg-list">
             {% for m in messages %}
+            {% with snd=m.sender %}
             <li class="msg {% if m.sender_id == request.user.id %}me{% else %}you{% endif %}">
-                <span class="text">{{ m.content }}</span>
-                <time class="at">{{ m.created_at|date:"H:i" }}</time>
+                <img class="avatar"
+                    src="{% if snd.image %}{{ snd.image.url }}{% else %}{% static 'myapp/img/icon.svg' %}{% endif %}"
+                    alt="{{ snd.username }}">
+                <div class="bubble">
+                <div class="sender">&gt; {{ snd.username }}</div>
+                <div class="text">{{ m.content|linebreaksbr }}</div>
+                </div>
+                <time class="at">{{ m.created_at|date:"m/d H:i" }}</time>
             </li>
+            {% endwith %}
             {% empty %}
             <li class="empty">まだメッセージはありません</li>
             {% endfor %}
+            <li id="bottom"></li>
         </ul>
-
-        <form class="msg-form" method="post">
-            {% csrf_token %}
-            <input name="content" placeholder="メッセージを入力" autocomplete="off">
-            <button type="submit">送信</button>
-        </form>
-        </div>
+    </main>
     {% endblock %}
 
     {% block footer %}
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-container__item">
-                <a href="{% url 'friends' %}" class="footer-item__link">
-                    <span class="footer-item__icon"><img src="{% static 'myapp/img/people-24px.svg' %}"></span>
-                    <span class="footer-item__text">友達</span>
-                </a>
-            </div>
-            <div class="footer-container__item">
-                <a href="{% url 'setting' %}" class="footer-item__link">
-                    <span class="footer-item__icon"><img src="{% static 'myapp/img/settings-black-18dp.svg' %}"></span>
-                    <span class="footer-item__text">設定</span>
-                </a>
-            </div>
-        </div>
-    </footer>
+    <form class="msg-form" method="post" action="{% url 'myapp:talk_room' partner.id %}#bottom">
+    {% csrf_token %}
+    <input type="text" name="content" placeholder="メッセージを入力" autocomplete="off" required>
+    <button type="submit">送信</button>
+    </form>
+
+    <script>
+    const bottom = document.getElementById('bottom');
+    if (bottom) bottom.scrollIntoView({block: 'end'});
+    const input = document.querySelector('.msg-form input[name="content"]');
+    input && input.focus();
+    </script>
     {% endblock %}
 </body>
 </html>

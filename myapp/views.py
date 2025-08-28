@@ -7,6 +7,7 @@ from django.db.models import Q, OuterRef, Subquery, Case, When, IntegerField
 from .models import Message
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
 
 User = get_user_model()
 
@@ -57,24 +58,33 @@ def friends(request):
 
     return render(request, 'myapp/friends.html', {'users': others})
 
-def talk_room(request):
+def talk_room(request, user_id: int):
     me = request.user
     partner = get_object_or_404(User, pk=user_id)
     if partner.pk == me.pk:
         return redirect('home')
 
 
-    qs = Message.objects.filter(
-        Q(sender=me, receiver=partner) | Q(sender=partner, receiver=me)
-    ).select_related('sender', 'receiver').order_by('created_at')  # 古い→新しい
-
     if request.method == 'POST':
-        content = request.POST.get('content', '').strip()
+        content = (request.POST.get('content') or '').strip()
         if content:
             Message.objects.create(sender=me, receiver=partner, content=content)
-            return redirect('talk_room', user_id=partner.pk)
+        # 送信後は末尾へ
+        return redirect(reverse('myapp:talk_room', args=[partner.pk]) + '#bottom')
 
-    return render(request, 'myapp/talk_room.html', {'partner': partner, 'messages': qs})
+    # 双方向メッセージを古い→新しいで取得（件数を絞りたい場合は .order_by('-created_at')[:100][::-1]）
+    messages_qs = (
+        Message.objects
+        .filter(Q(sender=me, receiver=partner) | Q(sender=partner, receiver=me))
+        .select_related('sender')
+        .order_by('created_at')
+    )
+
+    ctx = {
+        'partner': partner,
+        'messages': messages_qs,
+    }
+    return render(request, 'myapp/talk_room.html', ctx)
 
 def setting(request):
     return render(request, "myapp/setting.html")
