@@ -55,29 +55,27 @@ body{
   position: fixed;
   left: 0; right: 0; bottom: 0; z-index: 10;
 
-  /* フッターバー風 */
+
   background: #f3f3f3;
-  border-top: 1px solid #dcdcdc;               /* ← メインとの境界線 */
+  border-top: 1px solid #dcdcdc;             
   box-shadow: 0 -1px 0 rgba(0,0,0,.03);
 
   display: flex; gap: .6rem;
-  padding: .6rem .7rem calc(.7rem + env(safe-area-inset-bottom)); /* iOSノッチ対策 */
+  padding: .6rem .7rem calc(.7rem + env(safe-area-inset-bottom)); 
 }
 
-/* 入力欄を“箱”に（送信ボタンと同格の見た目） */
 .msg-form input {
   flex: 1;
   height: 44px;
   padding: 0 1rem;
-  border: 1px solid #cfcfcf;                   /* ← 仕切り線を明確に */
+  border: 1px solid #cfcfcf;                  
   border-radius: 999px;
   background: #fff;
   outline: none;
-  box-shadow: inset 0 1px 0 rgba(0,0,0,.03);   /* ごく薄い内側の縁 */
+  box-shadow: inset 0 1px 0 rgba(0,0,0,.03);   
 }
 .msg-form input::placeholder { color: #9aa0a6; }
 
-/* フォーカス時はうっすら発光 */
 .msg-form input:focus {
   border-color: #99c4ff;
   box-shadow:

@@ -38,6 +38,11 @@ body{
 .friend-list { list-style:none; margin:0; padding:0; }
 .friend-item { border-bottom:1px solid #e5e5e5; }
 .friend-link { display:flex; align-items:center; gap:.75rem; padding:.7rem .9rem; text-decoration:none; color:inherit; }
+.friend-link:hover {
+  background: #f8f8f8;
+  border-color: #bcbcbc;
+  box-shadow: 0 2px 6px rgba(0,0,0,.06);
+}
 .avatar     { width:40px; height:40px; border-radius:50%; object-fit:cover; border:1px solid #999; }
 .meta       { flex:1; min-width:0; }
 .name       { font-weight:600; }

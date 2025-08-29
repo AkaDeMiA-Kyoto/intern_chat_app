@@ -1,13 +1,16 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView, PasswordChangeView, LogoutView
 from django.shortcuts import redirect, render
 from .forms import SignUpForm ,LoginForm
 from django.db.models import Q, OuterRef, Subquery, Case, When, IntegerField
 from .models import Message
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+
+from .forms import NameForm, EmailForm, IconForm
 
 User = get_user_model()
 
@@ -58,6 +61,7 @@ def friends(request):
 
     return render(request, 'myapp/friends.html', {'users': others})
 
+@login_required
 def talk_room(request, user_id: int):
     me = request.user
     partner = get_object_or_404(User, pk=user_id)
@@ -69,10 +73,8 @@ def talk_room(request, user_id: int):
         content = (request.POST.get('content') or '').strip()
         if content:
             Message.objects.create(sender=me, receiver=partner, content=content)
-        # 送信後は末尾へ
         return redirect(reverse('myapp:talk_room', args=[partner.pk]) + '#bottom')
 
-    # 双方向メッセージを古い→新しいで取得（件数を絞りたい場合は .order_by('-created_at')[:100][::-1]）
     messages_qs = (
         Message.objects
         .filter(Q(sender=me, receiver=partner) | Q(sender=partner, receiver=me))
@@ -86,5 +88,50 @@ def talk_room(request, user_id: int):
     }
     return render(request, 'myapp/talk_room.html', ctx)
 
+@login_required
 def setting(request):
     return render(request, "myapp/setting.html")
+
+@login_required
+def setting_name(request):
+    if request.method == 'POST':
+        form = NameForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('myapp:setting')
+    else:
+        form = NameForm(instance=request.user)
+    return render(request, 'myapp/setting/name.html', {'form': form})
+
+@login_required
+def setting_email(request):
+    if request.method == 'POST':
+        form = EmailForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('myapp:setting')
+    else:
+        form = EmailForm(instance=request.user)
+    return render(request, 'myapp/setting/email.html', {'form': form})
+
+@login_required
+def setting_icon(request):
+    if request.method == 'POST':
+        form = IconForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('myapp:setting')
+    else:
+        form = IconForm(instance=request.user)
+    return render(request, 'myapp/setting/icon.html', {'form': form})
+
+class PasswordChange(LoginRequiredMixin, PasswordChangeView):
+    template_name = 'myapp/setting/password.html'
+    success_url   = reverse_lazy('myapp:setting_password_done')
+
+@login_required
+def setting_password_done(request):
+    return render(request, 'myapp/setting/password_done.html')
+
+class UserLogout(LogoutView):
+    next_page='myapp:index'
