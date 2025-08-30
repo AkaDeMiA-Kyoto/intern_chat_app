@@ -1,3 +1,4 @@
+{% extends 'myapp/base.html' %}
 {%load static%}
 <!DOCTYPE html>
 <html lang="ja">
@@ -5,10 +6,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>friends</title>
-    <link rel="stylesheet" href="{% static 'myapp/css/friends.css'%}">
+    {% block extra_style %}<link rel="stylesheet" href="{% static 'myapp/css/friends.css'%}">{% endblock %}
 </head>
 <body>
-    <div class="hed">友達</div>
+    {% block header-title %}友達{% endblock %}
+    {% block content %}
     {% for i,j in friend_text %}
     <a href="{% url 'talk_room' i.pk %}">
         <div class="wrapper1">
@@ -27,21 +29,6 @@
         </div>
     </a>
     {% endfor %}
-    <footer>
-        <div class="wrapper3">
-            <a href="{% url 'friends' %}">
-                <div class="wrapper4">
-                    <img src="{% static 'myapp/img/people-24px.svg' %}" alt="">
-                    <div>友達</div>
-                </div>
-            </a>
-            <a href="{% url 'setting' %}">
-                <div class="wrapper4">
-                    <img src="{% static 'myapp/img/settings-black-18dp.svg' %}" alt="">
-                    <div>設定</div>
-                </div>
-            </a>
-        </div>
-    </footer>
+    {% endblock %}
 </body>
 </html>

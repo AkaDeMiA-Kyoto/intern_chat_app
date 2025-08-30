@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render, get_object_or_404
-from .forms import CustomUserCreationForm, SendMessageForm
-from django.contrib.auth.views import LoginView
+from .forms import CustomUserCreationForm, SendMessageForm, EmailChangeForm, UsernameChangeForm, IconChangeForm
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth.forms import AuthenticationForm
 from .models import Message, CustomUser
 from django.db.models import Q
@@ -68,3 +68,56 @@ def talk_room(request, pk):
 def setting(request):
     return render(request, "myapp/setting.html")
 
+def change_username(request):
+    item = CustomUser.objects.get(id=request.user.id)
+    if request.method == "POST":
+        form = UsernameChangeForm(request.POST, instance=item)
+        if form.is_valid():
+            form.save()
+            return redirect("complete_username")
+    else:
+        form = UsernameChangeForm(instance=item)
+        form.initial['username'] = ''
+    context = {
+         'form' : form
+    }
+    return render(request,"myapp/change_username.html", context)
+
+def change_email(request):
+    item = CustomUser.objects.get(id=request.user.id)
+    if request.method == "POST":
+        form = EmailChangeForm(request.POST, instance=item)
+        if form.is_valid():
+            form.save()
+            return redirect("complete_email")
+    else:
+        form = EmailChangeForm(instance=item)
+        form.initial['email'] = ''
+    context = {
+         'form' : form
+    }
+    return render(request,"myapp/change_email.html", context)
+
+def change_icon(request):
+    item = CustomUser.objects.get(id=request.user.id)
+    if request.method == "POST":
+        form = IconChangeForm(request.POST, request.FILES, instance=item)
+        if form.is_valid():
+            form.save()
+            return redirect("complete_icon")
+    else:
+        form = IconChangeForm(instance=item)
+        form.initial['image'] = ''
+    context = {
+         'form' : form
+    }
+    return render(request,"myapp/change_icon.html", context)
+
+def complete_username(request):
+    return render(request,"myapp/complete_username.html")
+
+def complete_email(request):
+    return render(request,"myapp/complete_email.html")
+
+def complete_icon(request):
+    return render(request,"myapp/complete_icon.html")

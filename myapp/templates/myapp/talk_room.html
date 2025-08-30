@@ -1,3 +1,4 @@
+{% extends 'myapp/base.html' %}
 {%load static%}
 <!DOCTYPE html>
 <html lang="en">
@@ -5,14 +6,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>talk_room</title>
-    <link rel="stylesheet" href="{% static 'myapp/css/talk_room.css' %}">
+    {% block extra_style %}<link rel="stylesheet" href="{% static 'myapp/css/talk_room.css'%}">{% endblock %}
 </head>
 <body>
-    <header>
+    {% block header-title %}
+    <div class="hed">
         <a href="{% url 'friends' %}" class="return">&lt;</a>
         <div class="other_name">{{ the_other_user.username }}</div>
         <a href="#" class=reload>更新</a>
-    </header>
+    </div>
+    {% endblock %}
+    {% block content %}
     <div class="body">
         {% for i in messages %}
         {% if i.sender == request.user %}
@@ -41,12 +45,15 @@
         {% endif %}
         {% endfor %}
     </div>
+    {% endblock %}
+    {% block footer %}
     <footer>
         <form method="POST" action="{% url 'talk_room' the_other_user.pk %}">
             {% csrf_token %}
-            {{ form.text }}
+            <div>{{ form.text }}</div>
             <button type="submit">送信</button>
         </form>
     </footer>
+    {% endblock %}
 </body>
 </html>

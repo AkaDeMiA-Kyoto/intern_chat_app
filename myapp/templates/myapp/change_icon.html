@@ -1,0 +1,22 @@
+{% extends 'myapp/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% block header-title %}アイコン{% endblock %}
+    {% block content %}
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div>新しいアイコン：{{ form.image }}</div>
+        {% if form.error %}
+        {{ form.image.error }}
+        {% endif %}
+        <button type="submit">送信</button>
+    </form>
+    {% endblock %}
+</body>
+</html>
