@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render, get_object_or_404
 from .forms import CustomUserCreationForm, SendMessageForm, EmailChangeForm, UsernameChangeForm, IconChangeForm
-from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
+from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import AuthenticationForm
 from .models import Message, CustomUser
 from django.db.models import Q
@@ -27,18 +27,26 @@ class login_view(LoginView):
     template_name = 'myapp/login.html'
 
 def friends(request):
-    friends_list = CustomUser.objects.exclude(id = request.user.id).all()
-    text_list = []
+    friends_list = CustomUser.objects.exclude(id = request.user.id).order_by('-date_joined')
+    chatted_list = []
+    no_chat_list = []
     for i in friends_list:
         if not Message:
-            text_list.append(" ")
-        else:    
+            no_chat_list.append(i)
+        else:
             sentence = Message.objects.filter((Q(sender = i, receiver = request.user) | Q(receiver = i, sender = request.user))).order_by('-send_time').first()
             if sentence == None:
-                text_list.append(" ")
+                no_chat_list.append(i)
             else:
-                text_list.append(sentence)
-    friend_text = zip(friends_list, text_list)
+                chatted_list.append((i, sentence))
+    sorted_chatted_list = sorted(
+        chatted_list,
+        key=lambda x: x[1].send_time,
+        reverse=True
+    )
+    new_friend_list = [item[0] for item in sorted_chatted_list] + no_chat_list
+    text_list = [item[1] for item in sorted_chatted_list] + [" " for i in no_chat_list]
+    friend_text = zip(new_friend_list, text_list)
     context = {
         'text_list' : text_list,
         'friend_text' : friend_text
