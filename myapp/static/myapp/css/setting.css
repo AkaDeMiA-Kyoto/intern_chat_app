@@ -82,26 +82,34 @@ body{
     color: #000;
 } 
 
-
+/* body */
 .setting-wrap {
-  display:flex; flex-direction:column; align-items:center; gap:1.2rem;
+  display:flex; 
+  flex-direction:column; 
+  align-items:center; 
+  gap:1.2rem;
   padding:1.6rem 1rem 5rem;
 }
 
 .setting-btn{
-  display:flex; align-items:center; justify-content:center;
+  display:flex; 
+  align-items:center; 
+  justify-content:center;
   width: min(var(--setting-btn-w), 90vw);   
   height: var(--setting-btn-h);
   padding: 0 1rem;                          
-  text-align:center; line-height:1.2;
-  border:1px solid #cfcfcf; border-radius:14px;
-  background:#fff; color:#333; 
+  text-align:center; 
+  line-height:1.2;
+  border:1px solid #cfcfcf; 
+  border-radius:14px;
+  background:#fff; 
+  color:#333; 
   box-shadow:0 1px 0 rgba(0,0,0,.1);
-cursor: pointer;
+  cursor: pointer;
 }
 
-.setting-btn:hover, .footer-item__link:hover{
-  background: #f8f8f8;
+.btn:hover, .setting-btn:hover, .footer-item__link:hover{
+  background: #f2f2f2;
   border-color: #bcbcbc;
   box-shadow: 0 2px 6px rgba(0,0,0,.06);
 }
@@ -111,18 +119,67 @@ cursor: pointer;
   filter: brightness(.98);
 }
 
-.setting-btn.danger { border-color:#d1bcbc; }
-
-.form-card {
-  margin:1rem; padding:1rem; border:1px solid var(--border); border-radius:12px; background:#fff;
+.form-card, .icon-form {
+  max-width: 560px;
+  margin: 20px 48px;
+  padding: 24px 28px;
+  background:#fff;
 }
-.form-actions { display:flex; gap:.6rem; justify-content:flex-end; margin-top:.8rem; }
+.form-card p{
+  display:grid;
+  grid-template-columns: 12em 1fr; 
+  align-items:center;
+  gap:8px 16px;
+  margin:14px 0;
+}
+.form-card label{
+  justify-self:end;
+  font-weight:600;
+  white-space:nowrap;
+}
+.form-card input[type="text"],
+.form-card input[type="email"],
+.form-card input[type="password"]{
+  width:100%;
+  padding:10px 12px;
+  border:1px solid #d1d5db;
+  border-radius:8px;
+  font-size:16px;
+  background:#fff;
+}
+
+.helptext{
+  grid-column:2;
+  color:#6b7280;
+  font-size:.9rem;
+  margin-top:4px;
+}
+.form-actions { 
+    display:flex; 
+    gap:.6rem; 
+    justify-content:flex-end; 
+    margin-top:.8rem; }
 
 .btn {
-  display:inline-block; padding:.55rem 1.0rem;
-  border:1px solid #bdbdbd; border-radius:999px; background:#eee; color:#333;
-  font-weight:600;text-decoration: none;
+  display:inline-block;
+padding:.55rem 1.0rem;
+  border:1px solid #bdbdbd; 
+  border-radius:999px; 
+  background:#fff; 
+  color:#333;
+  font-weight:600;
+  text-decoration: none;
+  cursor: pointer;
 }
-.btn.ghost { background:#fff; }
+.icon-form input[type="file"]{
+  width: auto;
+  max-width: 100%;
+  padding: 10px 8px;                 /* 右側の文字が欠けない最小限 */
+  line-height: 1.2;
+  background: #fff;
+}
 
+.icon-form label[for="id_image"]{
+  display: none;
+}
 .done { padding:1rem; }

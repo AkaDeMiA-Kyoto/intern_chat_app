@@ -36,9 +36,9 @@
     <form class="setting-item" action="{% url 'myapp:setting_password' %}" method="get">
         <button type="submit" class="setting-btn">パスワード変更</button>
     </form>
-    <form action="{% url 'myapp:logout' %}" method="post" class="logout-form">
+    <form class="logout-form" action="{% url 'myapp:logout' %}" method="post" >
         {% csrf_token %}
-        <button type="submit" class="setting-btn danger">ログアウト</button>
+        <button type="submit" class="setting-btn">ログアウト</button>
     </form>
     </div>
   {% endblock %}

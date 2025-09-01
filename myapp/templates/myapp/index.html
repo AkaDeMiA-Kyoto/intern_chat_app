@@ -9,14 +9,14 @@
 </head>
 <body>
     <div class="container">
-        <form action="{% url 'myapp:login_view' %}" method="get">
-            <button type="submit" >
+        <form  action="{% url 'myapp:login_view' %}" method="get">
+            <button class="index-btn" type="submit" >
                 ログイン
             </button>
         </form>
         <br>
         <form action="{% url 'myapp:signup_view' %}" method="get">
-            <button type="submit" >
+            <button class="index-btn" type="submit" >
                 会員登録
             </button>
         </form>
