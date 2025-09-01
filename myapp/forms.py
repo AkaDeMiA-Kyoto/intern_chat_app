@@ -3,9 +3,15 @@ from django.contrib.auth.forms import  AuthenticationForm, UserCreationForm
 from .models import CustomUser
 
 class SignUpForm(UserCreationForm):
+    image = forms.ImageField(label="アイコン（任意）", required=False)
+    
     class Meta:
         model = CustomUser
         fields = ("username", "email", "image")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["email"].required = True
 
 class LoginForm(AuthenticationForm):
     class Meta:
