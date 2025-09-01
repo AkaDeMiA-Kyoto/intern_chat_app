@@ -43,4 +43,11 @@ body>a>div>img {
     border-radius: 50%;
     border: solid 3px #000;
     margin-right: 20px;
+    z-index: 0;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    background-color: #fff;
 }
