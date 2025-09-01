@@ -24,8 +24,7 @@
             {% with snd=m.sender %}
             <li class="msg {% if m.sender_id == request.user.id %}me{% else %}you{% endif %}">
                 <img class="avatar"
-                    src="{% if snd.image %}{{ snd.image.url }}{% else %}{% static 'myapp/img/icon.svg' %}{% endif %}"
-                    alt="{{ snd.username }}">
+                    src="{% if u.image %}{{ u.image.url }}{% else %}{% static 'myapp/img/icon.png' %}{% endif %}">
                 <div class="bubble">
                 <div class="sender">&gt; {{ snd.username }}</div>
                 <div class="text">{{ m.content|linebreaksbr }}</div>
