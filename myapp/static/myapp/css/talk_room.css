@@ -1,0 +1,156 @@
+html{
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    overflow-x: hidden;
+}
+body{
+    margin: 0;
+}
+
+.header{
+    width: 100vw;
+    height: 70px;
+    border-bottom: solid 1px #1e1b1b;
+    background-color: #d5d1d1;
+}
+.header-container{
+    position: relative;
+    width: 90%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.header-container__title{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1rem;
+    line-height: 1rem;
+    margin: auto;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #000;
+}
+
+.back {
+    position: relative;
+    top: 7px;
+    left: 7px;
+    font-size: 50px;
+    width: 50px;
+    height: 50px;
+    text-decoration: none;
+    color: #9b9b9b;
+    display: block;
+}
+
+.backbotton {
+    width: 50px;
+    height: 50px;
+}
+
+.redirect {
+    position: relative;
+    text-decoration: none;
+    width: 60px;
+    height: 30px;
+    color: #9b9b9b;
+    border: 1px solid rgb(53, 50, 48);
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    display: block;
+    text-align: center;
+    border-radius: 25px;
+    left: calc(95% - 60px);
+    top: -30px;
+}
+
+.message_container {
+    width: 100%;
+    display: flex;
+}
+
+.message_box {
+    display: block;
+    width: 100%;
+    height: 70px;
+    border-bottom: solid 1px #9b9b9b;
+}
+
+.message_sender {
+    font-size: 17px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    position: relative;
+    left: 5px;
+    display: inline;
+}
+
+.who {
+    position: relative;
+    top: 3px;
+    font-size: 23px;
+    display: inline;
+}
+
+.message_content {
+    font-size: 20px;
+    position: relative;
+    left: 5px;
+    width: calc(100% - 120px);
+}
+
+.datetime {
+    position: relative;
+    font-size: 10px;
+    left: calc(100% - 40px);
+    width: 40px;
+    display: block;
+    top: 20px;
+}
+
+.date {
+    width: 40px;
+}
+
+.time {
+    width: 40px;
+}
+
+.footer-container {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    height: 50px;
+    border-top: solid 1px #9b9b9b;
+    width: 100%;
+    color: #d5d1d1;
+}
+
+.message_form {
+    position: relative;
+    left: 3%;
+    width: 75%;
+    font-size: 16px;
+    height: 25px;
+    border-radius: 20px;
+
+}
+
+.form {
+    position: relative;
+    top: 10px;
+    width: 100%;
+}
+
+.send_box {
+    position: relative;
+    left: 5%;
+    width: 14%;
+    font-size: 15px;
+    height: 25px;
+    border-radius: 25px;
+}
+

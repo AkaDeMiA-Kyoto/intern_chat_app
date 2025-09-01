@@ -1,0 +1,47 @@
+{% extends 'myapp/base.html' %}
+{% load widget_tweaks %}
+{% load boost %}
+{% block extra_style %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
+{% endblock %}
+{% block header-title %}
+    友達
+{% endblock %}
+{% block content %}
+    {% if zip %}
+        <div class="user_box">
+        {% for user,message in zip %}
+            <a href="{% url 'myapp:talk_room' user_id=user.id %}" class="user_each">
+            {% if user.img %}
+                <div class="img_box"><img src="{{ user.img.url }}" / class="img" width=50px></div>
+            {% else %}
+                <div class="img_box2"><img src="{% static "myapp/img/aiueo.png" %}" / class="img2" width=50px></div>
+            {% endif %}
+            <div class="name">{{ user.username }}</div>
+            {% if message.content %}
+            <div class="latest_message">
+                {{ message.content }}<p class="time">{{ message.time|date:"H:i" }}</p>
+            </div>
+            {% endif %}
+            </a>
+        {% endfor %}
+        </div>
+    {% endif %}
+    {% if users %}
+        <div class="user_box">
+        {% for user in users %}
+            {% if user.username %}
+                <a href="{% url 'myapp:talk_room' user_id=user.id %}" class="user_each2">
+                {% if user.img %}
+                    <div class="img_box2"><img src="{{ user.img.url }}" / class="img2" width=50px></div>
+                {% else %}
+                    <div class="img_box2"><img src="{% static "myapp/img/aiueo.png" %}" / class="img2" width=50px></div>
+                {% endif %}
+                <div class="name2">{{ user.username }}</div>
+                </a>
+            {% endif %}
+        {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %} 

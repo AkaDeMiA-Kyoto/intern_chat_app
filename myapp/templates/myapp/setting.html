@@ -1,1 +1,21 @@
-S
+{% extends 'myapp/base.html' %}
+{% load widget_tweaks %}
+{% block extra_style %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'myapp/css/setting.css' %}">
+{% endblock %}
+{% block header-title %}
+    設定
+{% endblock %}
+{% block content %}
+    <div class="box_box">
+        <a href="{% url 'myapp:username' user.id %}" class="box"><p class="ptag">ユーザー名変更</p></a>
+        <a href="{% url 'myapp:email' user.id %}" class="box"><p class="ptag">メールアドレス変更</p></a>
+        <a href="{% url 'myapp:icon' user.id %}" class="box"><p class="ptag">アイコン変更</p></a>
+        <a href="{% url 'myapp:password' %}" class="box"><p class="ptag">パスワード変更</p></a>
+        <form action="{% url 'myapp:logout' %}" method="post" class="box">
+            {% csrf_token %}
+            <p><input type="submit" value="ログアウト"></p>
+        </form>
+    </div>
+{% endblock %} 

@@ -1,1 +1,45 @@
-TR
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>talk_room</title>
+    <link rel="stylesheet" href="{% static 'myapp/css/talk_room.css' %}">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container__title">
+                {{ talk_to.username }}
+            </span>
+            <a href="{% url 'myapp:friends' %}" class="back">
+                <div class="backbotton">&lt;	</div>
+            </a>
+            <a href="{% url 'myapp:talk_room' user_id=id %}" class="redirect">更新</a>
+        </div>
+    </header>
+    <div class="message_container">
+        {% for message in messages %}
+        <div class="message_box">
+            <div class="message_sender"><div class="who">&gt;</div>{{ message.sender }}</div>
+            <div class="message_content">{{ message.content }}</div>
+            <div class="datetime">
+                <div class="date">{{ message.time|date:"m/d" }}</div>
+                <div class="time">{{ message.time|date:"H:i" }}</div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <footer>
+        <div class="footer-container">
+            <form method='POST' enctype="multipart/form-data" class="form">
+                {% csrf_token %}
+                {{ form.content | add_class:'message_form' }}
+                <button type='submit' class="send_box">送信</button>
+            </form>
+        </div>
+    </footer>
+</body>
+</html>

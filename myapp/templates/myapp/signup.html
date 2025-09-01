@@ -1,1 +1,40 @@
-SU
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignUp</title>
+    <link rel="stylesheet" href="{% static 'myapp/css/signup.css' %}">
+</head>
+<body>
+    <div class="signupbox">会員登録</div>
+    <form method='POST' enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="forms_container">
+            <div class="form_box">
+                <div class="form_title">Username:</div>
+                {{ form.username | add_class:'input_box1' }}
+            </div>
+            <div class="form_box">
+                <div class="form_title">Email address:</div>
+                {{ form.email | add_class:'input_box1' }}
+            </div>
+            <div class="form_box">
+                <div class="form_title">Password:</div>
+                {{ form.password1 | add_class:'input_box1' }}
+            </div>
+            <div class="form_box">
+                <div class="form_title">Password confirmation:</div>
+                {{ form.password2 | add_class:'input_box1' }}
+            </div>
+            <div class="form_box">
+                <div class="form_title">Img:</div>
+                {{ form.img | add_class:'input_box2' }}
+            </div>
+        </div>
+        <button type='submit' class="box">Submit</button>
+    </form>
+</body>
+</html>

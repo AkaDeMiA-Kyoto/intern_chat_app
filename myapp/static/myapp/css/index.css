@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+.box_box {
+    
+    position: relative;
+    top: 50vh;
+    transform: translate(0, -50%);
+}
+
+.box {
+    position: relative;
+    margin: 0 auto;
+    font-size: 4vw;
+    line-height: 40px;
+    width: 30%;
+    margin-bottom: 30px;
+    border: 1px solid #9b9b9b;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    display: block;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.ptag {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}

@@ -1,0 +1,106 @@
+@charset "UTF-8";
+
+
+.user_box{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    z-index: 1;
+    height: calc(100vh - 128px);
+    overflow-y: scroll;
+    position: fixed;
+}
+
+.user_each {
+    display: block;
+    width: 100%;
+    height: 100px;
+    border-bottom: 1px solid black;
+    text-decoration: none;
+    color:black;
+}
+
+.img_box{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid black;
+    top: 15px;
+    left: 15px;
+}
+
+.img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+}
+
+.name{
+    position: relative;
+    left: 115px;
+    top: -55px;
+    width: calc(100% - 115px);
+    font-size: 22px;
+}
+
+.latest_message {
+    position: relative;
+    left: 115px;
+    font-size: 13px;
+    width: calc(100% - 195px);
+    top: -47px;
+    color: #9b9b9b;
+}
+
+.time {
+    display: block;
+    position: relative;
+    left: calc(100vw - 195px);
+    top: -27px;
+    width: 40px;
+}
+
+/* ここから2 */
+
+.user_each2 {
+    display: block;
+    width: 100%;
+    height: 100px;
+    border-bottom: 1px solid black;
+    text-decoration: none;
+    color:black;
+}
+
+.img_box2{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid black;
+    top: 15px;
+    left: 15px;
+}
+
+.img2{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+}
+
+.name2 {
+    position: relative;
+    left: 115px;
+    top: -55px;
+    width: calc(100% - 115px);
+    font-size: 22px;
+}
+
