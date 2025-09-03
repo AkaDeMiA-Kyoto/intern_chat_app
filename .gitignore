@@ -289,3 +289,7 @@ db.sqlite3
 .DS_Store
 
 .env
+
+media/
+media_local/
+static_root/
