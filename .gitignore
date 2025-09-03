@@ -293,4 +293,3 @@ db.sqlite3
 media/
 media_local/
 static_root/
-media_local/user_image
