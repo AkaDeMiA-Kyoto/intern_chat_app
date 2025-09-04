@@ -22,8 +22,8 @@
             <div class="wrapper2">
                 <div class="username">{{ i.username }}</div>
                 <div class="wrapper3">
-                    <div>{{ j.text }}</div>
-                    <div class="time">{{ j.send_time }}</div>
+                    <div class="text">{{ j.text|truncatechars:17 }}</div>
+                    <div class="time">{{ j.send_time|date:"n/j G:i" }}</div>
                 </div>
             </div>
         </div>

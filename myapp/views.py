@@ -31,14 +31,11 @@ def friends(request):
     chatted_list = []
     no_chat_list = []
     for i in friends_list:
-        if not Message:
+        sentence = Message.objects.filter((Q(sender = i, receiver = request.user) | Q(receiver = i, sender = request.user))).order_by('-send_time').first()
+        if sentence == None:
             no_chat_list.append(i)
         else:
-            sentence = Message.objects.filter((Q(sender = i, receiver = request.user) | Q(receiver = i, sender = request.user))).order_by('-send_time').first()
-            if sentence == None:
-                no_chat_list.append(i)
-            else:
-                chatted_list.append((i, sentence))
+            chatted_list.append((i, sentence))
     sorted_chatted_list = sorted(
         chatted_list,
         key=lambda x: x[1].send_time,
