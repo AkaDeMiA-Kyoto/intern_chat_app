@@ -1,0 +1,22 @@
+.button {
+    display: block;
+    background-color: #fff;
+    color: #000;
+    margin: 0 auto;
+    padding: 10px 16px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 20px;
+    /* font-weight: bold; */
+    border-radius: 8px;
+    width: 120px;
+    border: solid 1px #939393;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
