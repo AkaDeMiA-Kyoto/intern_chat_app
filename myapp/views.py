@@ -222,13 +222,15 @@ def talk_room(request, user_id):
         .select_related("talk_from", "talk_to")
         .all()
     ).order_by("-time")
-    # 送信form
-    form = TalkForm()
+
+    room_name = f"{user.id}_{user_id}" if user_id < user.id else f"{user_id}_{user.id}"
+
     # メッセージ送信だろうが更新だろが、表示に必要なパラメーターは変わらないので、この時点でまとめて指定
     context = {
-        "form": form,
+        "room_name": room_name,
         "talk": talk,
         "friend": friend,
+        "user_id": user_id,
     }
 
     # POST（メッセージ送信あり）

@@ -28,21 +28,24 @@
             ＞cssにて表示に違いを出す
         -->
         {% for talk in talk %}
-            <li class="chatboard__content chatboard__content--{% if talk.talk_from == user %}user{% else %}friend{% endif %}">
-                <p class="chatboard__name">＞{{ talk.talk_from }}</p>
-                <p class="chatboard__text">{{ talk.talk }}</p>
-                <p class="chatboard__time">{{ talk.time|date:"m/d" }}<br>{{ talk.time|date:"H:i" }}</p>
-            </li>
+        <li
+            class="chatboard__content chatboard__content--{% if talk.talk_from == user %}user{% else %}friend{% endif %}">
+            <p class="chatboard__name">＞{{ talk.talk_from }}</p>
+            <p class="chatboard__text">{{ talk.talk }}</p>
+            <p class="chatboard__time">{{ talk.time|date:"m/d" }}<br>{{ talk.time|date:"H:i" }}</p>
+        </li>
         {% endfor %}
     </ul>
 
     <!-- トークの送信部分 -->
-    <form class="talk_room__sendbox" method="POST">
-        {% csrf_token %}
-        {{ form.talk }}
-        <button class="talk_room__sendbox-btn" type="submit">送信</button>
-    </form>
+    <div class="talk_room__sendbox">
+        <input type="text" name="talk" id="talk_field" autocomplete="none" class="talk_room__sendbox-input"
+            placeholder="{{ friend.username }}へメッセージを送信">
+        <button class="talk_room__sendbox-btn" type="submit" id="submit-btn">送信</button>
+    </div>
 </div>
+<input type="hidden" name="room-name" id="room-name" value="{{ room_name }}">
+<input type="hidden" name="user-id" id="user-id" value="{{user_id}}">
 {% endblock %}
 
 {% block footer %}{% endblock %}
@@ -56,4 +59,7 @@
         window.scroll(0, chatboard.scrollHeight);
     });
 </script>
+
+<script src="{% static 'myapp/js/talk_room.js' %}"></script>
+
 {% endblock %}
