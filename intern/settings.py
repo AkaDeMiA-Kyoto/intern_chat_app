@@ -80,12 +80,8 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'intern_chat_app',
-        'USER': 'sho32',
-        'PASSWORD': '0827tanzyo',
-        'HOST': 'localhost',
-        'POST': '5432',
+        'ENGINE': 'django.db.backends.',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
