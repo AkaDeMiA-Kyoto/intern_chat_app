@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
+from .models import CustomUser
 
 class SignUpForm(UserCreationForm):
-    # ここに、追加したいフィールドやバリデーションルールを記述できます。
-    # 例: ユーザー名やパスワードのバリデーションをカスタマイズする場合
-    pass
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'email', 'password1', 'password2','img')
