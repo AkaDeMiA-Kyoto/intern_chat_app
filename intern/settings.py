@@ -156,6 +156,12 @@ INTERNAL_IPS = ["127.0.0.1"]
 
 ASGI_APPLICATION = "intern.asgi.application"
 CHANNEL_LAYERS = {
+    # "default": {
+    #     "BACKEND": "channels_redis.core.RedisChannelLayer",
+    #     "CONFIG": {
+    #         "hosts": [("redis", 6379)],
+    #     },
+    # },
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
