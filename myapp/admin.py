@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser
+from .models import CustomUser,Chat
 
 # Register your models here.
 
@@ -17,4 +17,6 @@ class UserAdmin(admin.ModelAdmin):
         ("変更可能", {"fields": ["username"]}),
     ] # fieldsets で詳細ページの分類ができる
 
-admin.site.register(CustomUser, UserAdmin)
+admin.site.register(CustomUser,UserAdmin)
+admin.site.register(Chat)
+

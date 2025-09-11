@@ -8,7 +8,7 @@ from django.utils import timezone
 class CustomUser(AbstractUser):
     img = models.ImageField(upload_to='media_local', null=True, blank=True)
 
-class chat(models.Model):
+class Chat(models.Model):
     sender = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name="sender")
     receiver = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name="receiver")
     time = models.DateTimeField(auto_now_add=True)

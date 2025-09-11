@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm,AuthenticationForm,PasswordChangeForm
-from .models import CustomUser,chat
+from .models import CustomUser,Chat
 from django import forms
 from django.db import models
 
@@ -21,7 +21,7 @@ class LoginForm(AuthenticationForm):
 class message(forms.ModelForm):
 
     class Meta:
-        model = chat
+        model = Chat
         fields = ['content']
 
 class MyPasswordChangeForm(PasswordChangeForm):
@@ -31,11 +31,7 @@ class MyPasswordChangeForm(PasswordChangeForm):
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
 
-# class changeusername(forms.ModelForm):
 
-#     class Meta:
-#         model = CustomUser
-#         fields = ('username',)
 
 
 

@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from .models import CustomUser,chat
+from .models import CustomUser,Chat
 from .forms import SignUpForm,LoginForm,message,MyPasswordChangeForm
 from django.views.generic.list import ListView
 from django.views.generic.edit import UpdateView
@@ -13,18 +13,6 @@ from django.urls import reverse_lazy
 def index(request):
     return render(request, "myapp/index.html")
 
-def signup_view(request):
-    return render(request, "myapp/signup.html")
-
-def login_view(request):
-    return render(request, "myapp/login.html")
-
-def friends(request):
-    return render(request, "myapp/friends.html")
-
-def talk_room(request):
-    return render(request, "myapp/talk_room.html")
-
 def setting(request):
     return render(request, "myapp/setting.html")
 
@@ -32,17 +20,8 @@ def form_signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST,request.FILES)
         if form.is_valid():
-            CustomUser = form.save()
-            raw_password = form.cleaned_data['password1']
-            CustomUser.set_password(raw_password)
-            CustomUser.save
+            form.save()
 
-            # CustomUser.objects.create(
-            #     username = form.cleaned_data['username'],
-            #     email = form.cleaned_data['email'],
-            #     password = form.cleaned_data['password1'],
-            #     img = form.cleaned_data['img']
-            # ) 
             return render(request,'myapp/index.html')
     else:
         form = SignUpForm()
@@ -65,9 +44,9 @@ class Loginview1(LoginView):
 @login_required
 def friends_view(request):
     user_now = request.user
-    messages = chat.objects.filter(Q(sender = user_now) | Q(receiver = user_now))
+    messages = Chat.objects.filter(Q(sender = user_now) | Q(receiver = user_now))
 
-    if chat.objects.filter(Q(sender = user_now) | Q(receiver = user_now)).exists():
+    if Chat.objects.filter(Q(sender = user_now) | Q(receiver = user_now)).exists():
         others_data = CustomUser.objects.exclude(id=user_now.id).order_by('-date_joined')
         latest_message_order_by_others_data = []
         has_messages = []
@@ -89,8 +68,6 @@ def friends_view(request):
         ziplist = zip(users_ordered,latest_message_order_by_others_data)
         content = {
             'zip':ziplist,
-            # 'users':users_ordered,
-            # 'message':latest_message_order_by_others_data,
         }
         return render(request,'myapp/friends.html',content)
 
@@ -106,22 +83,23 @@ def friends_view(request):
 def talk_room_view(request,user_id):
     user_now = request.user
     friend = CustomUser.objects.exclude(id=user_now.id).order_by('date_joined').get(id=user_id)
-    messages = chat.objects.filter(Q(sender = user_now,receiver = friend) | Q(sender = friend,receiver = user_now)).order_by('-time')
+    messages = Chat.objects.filter(Q(sender = user_now,receiver = friend) | Q(sender = friend,receiver = user_now)).order_by('time')
     if request.method == 'POST':
         form = message(request.POST)
         if form.is_valid():
-            chat.objects.create(
+            Chat.objects.create(
                 sender = user_now,
                 receiver = friend,
                 content = form.cleaned_data['content'],
             )
+        form = message()    
         content = {
             'form':form,
             'messages':messages,
             'talk_to':friend,
             'id':user_id,
         }
-        return render(request, 'myapp/talk_room.html', content)
+        return render(request,'myapp/talk_room.html',content)
     else:
         form = message()
         content = {
@@ -131,19 +109,6 @@ def talk_room_view(request,user_id):
             'id':user_id,
         }
     return render(request, 'myapp/talk_room.html', content)
-
-# @login_required
-# def change_username(request):
-#     if request.method == 'POST':
-#         user = request.user
-#         form = changeusername(request.POST)
-#         if form.is_valid():
-#             user.username = form.cleaned_data['username']
-#             return render(request,'myapp/friends.html')
-
-#     else:
-#         form = changeusername
-#     return render(request, 'myapp/change_username.html', {'form': form})
 
 class Change_username(UpdateView,LoginRequiredMixin):
     model = CustomUser
@@ -163,6 +128,7 @@ class Change_icon(UpdateView,LoginRequiredMixin):
     template_name = 'myapp/change_icon.html'
     success_url = reverse_lazy('myapp:friends')
 
+
 class PasswordChange(PasswordChangeView,LoginRequiredMixin):
     form_class = MyPasswordChangeForm
     success_url = reverse_lazy('myapp:changedone')
@@ -171,8 +137,7 @@ class PasswordChange(PasswordChangeView,LoginRequiredMixin):
 class PasswordChangeDone(PasswordChangeDoneView,LoginRequiredMixin):
     template_name = 'myapp/change_done.html'
 
-# class Logout(LogoutView):
-#     template_name = 'myapp/index.html'
+
 
 
     

@@ -298,3 +298,6 @@ db.sqlite3
 
 # 環境設定ファイル
 .env
+
+#画像
+media_local
