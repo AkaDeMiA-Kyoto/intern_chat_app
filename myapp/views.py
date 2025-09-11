@@ -1,6 +1,7 @@
 import operator
+import random
 
-from django.contrib.auth import authenticate, get_user_model, login
+from django.contrib.auth import get_user_model, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import (
@@ -9,6 +10,7 @@ from django.contrib.auth.views import (
     PasswordChangeDoneView,
     PasswordChangeView,
 )
+from django.core.mail import send_mail
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -41,7 +43,10 @@ def signup_view(request):
         form = SignUpForm(request.POST, request.FILES)
         if form.is_valid():
             # モデルフォームはformの値をmodelsにそのまま格納できるsave()メソッドがあるので便利。
-            form.save()
+            user = form.save(commit=False)
+            user.is_active = False
+            user.verification_code = str(random.randint(1000,9999))
+            user.save()
             # フォームから"username"を読み取る
             username = form.cleaned_data.get("username")
             # フォームから"password1"を読み取る
@@ -52,15 +57,22 @@ def signup_view(request):
             # その組み合わせを個々の 認証バックエンド に対して問い合わせ、認証バックエンドで認証情報が有効とされれば
             # User オブジェクトを返します。もしいずれの認証バックエンドでも認証情報が有効と判定されなければ PermissionDenied が送出され、None が返されます。
             # (公式ドキュメントより)
-            # つまり、autenticateメソッドは"username"と"password"を受け取り、その組み合わせが存在すれば
+            # つまり、authenticateメソッドは"username"と"password"を受け取り、その組み合わせが存在すれば
             # そのUserを返し、不正であれば"None"を返します。
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                # あるユーザーをログインさせる場合は、login() を利用してください。この関数は HttpRequest オブジェクトと User オブジェクトを受け取ります。
-                # ここでのUserは認証バックエンド属性を持ってる必要がある。
-                # authenticate()が返すUserはuser.backendを持つので連携可能。
-                login(request, user)
-            return redirect("/")
+            # user = authenticate(username=username, password=password)
+            send_mail (
+                subject = "メールアドレス認証",
+                message = f"認証コードは {user.verification_code} です。",
+                from_email = "admin@example.com",
+                recipient_list = [user.email]
+            )
+            return redirect ("verify", user_id = user.id)
+            # # if user is not None:
+            #     # あるユーザーをログインさせる場合は、login() を利用してください。この関数は HttpRequest オブジェクトと User オブジェクトを受け取ります。
+            #     # ここでのUserは認証バックエンド属性を持ってる必要がある。
+            #     # authenticate()が返すUserはuser.backendを持つので連携可能。
+            #     login(request, user)
+            # return redirect("/")
         # バリデーションが通らなかった時の処理を記述
         else:
             # エラー時 form.errors には エラー内容が格納されている
@@ -73,12 +85,28 @@ def signup_view(request):
     }
     return render(request, "myapp/signup.html", context)
 
+def verify(request,user_id):
+    user = get_object_or_404(User, id= user_id)
+    if request.method == "POST":
+        code = request.POST.get("code")
+        if code == user.verification_code:
+            user.is_active = True
+            user.is_verified = True
+            user.verification_code = None
+            user.save()
+            login(request, user)
+            return redirect("/")
+        else:
+            return render(request, "myapp/verify.html", {"user": user, "error": "コードが違います"})
+    return render(request, "myapp/verify.html", {"user": user})
+
+
 
 class Login(LoginView):
     """ログインページ
 
     GETの時は指定されたformを指定したテンプレートに表示
-    POSTの時はloginを試みる。→成功すればdettingのLOGIN_REDIRECT_URLで指定されたURLに飛ぶ
+    POSTの時はloginを試みる。→成功すればsettingのLOGIN_REDIRECT_URLで指定されたURLに飛ぶ
     """
 
     authentication_form = LoginForm
@@ -93,6 +121,10 @@ class Logout(LoginRequiredMixin, LogoutView):
 def friends(request):
     user = request.user
     friends = User.objects.exclude(id=user.id)
+
+    query = request.GET.get('q')
+    if query:
+        friends = friends.filter(username__icontains=query)
 
     # トーク情報とフレンド情報を含む info を作成
     info = []
@@ -118,6 +150,8 @@ def friends(request):
     
     context = {
         "info": info,
+        "query": query,
+        "users": friends,
     }
     return render(request, "myapp/friends.html", context)
 

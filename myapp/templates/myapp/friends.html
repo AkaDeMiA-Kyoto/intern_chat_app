@@ -8,7 +8,22 @@
 {% block header_title %}友達{% endblock %}
 
 {% block content %}
+
 <div class="friends">
+    <div class="search">
+    <form action="{% url 'friends' %}" method="get" style="display:flex;">
+        <input type="text" name="q" placeholder="ユーザー名で検索" value="{{ query|default:'' }}" style="width: 80%; height:30px;">
+        <button type="submit" style="width:20%; height:35px">検索</button>
+    </form>
+    <ul>
+        {% if query %}
+            {% for user in users %}
+            <li>{{user.username}}</li>
+            {% empty %}
+            {% endfor %}
+        {% endif %}
+    </ul>
+    </div>
     <!-- 友達のリスト表示部分 -->
     <ul class="friend-list">
 

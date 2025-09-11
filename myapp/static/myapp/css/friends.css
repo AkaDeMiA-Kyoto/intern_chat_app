@@ -1,4 +1,7 @@
 /* headerを避ける */
+.search {
+    margin-top: 150px;
+}
 .friends {
     padding: 64px 0;
 }

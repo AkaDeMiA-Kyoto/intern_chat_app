@@ -1,0 +1,17 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block header_title %}認証{% endblock %}
+
+{% block content %}
+<p>{{ user.username }}さん</p><br>
+<div>メールに届いた認証コードを入力してください。</div>
+<form method ="POST">
+    {% csrf_token %}
+    <input type="text" name="code" placeholder="認証コード">
+    <button type="submit">認証する</button>
+</form>
+{% endblock %}
