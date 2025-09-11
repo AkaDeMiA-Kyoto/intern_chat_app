@@ -2,10 +2,13 @@ from django.urls import path
 
 from . import views
 
+from .views import  two_factor_verify_view, two_factor_resend_view
 urlpatterns = [
     path("", views.index, name="index"),
     path("signup/", views.signup_view, name="signup"),
     path("login/", views.Login.as_view(), name="login"),
+    path("2fa/", two_factor_verify_view, name="two_factor_verify"),
+    path("2fa/resend/", two_factor_resend_view, name="two_factor_resend"),
     path("friends/", views.friends, name="friends"),
     # トーク画面
     # 誰とのトークかを、URLにて判別

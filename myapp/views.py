@@ -1,5 +1,13 @@
 import operator
 
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import login, get_user_model
+from django.contrib.auth.views import LoginView
+from django.core.mail import send_mail
+from django.db.models import F
+from django.shortcuts import redirect, render
+from django.utils import timezone
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -21,10 +29,12 @@ from .forms import (
     SignUpForm,
     TalkForm,
     UserNameSettingForm,
+    TwoFactorForm,
 )
-from .models import Talk
+from .models import Talk,EmailOTP
 
 User = get_user_model()
+
 
 
 def index(request):
@@ -52,7 +62,7 @@ def signup_view(request):
             # その組み合わせを個々の 認証バックエンド に対して問い合わせ、認証バックエンドで認証情報が有効とされれば
             # User オブジェクトを返します。もしいずれの認証バックエンドでも認証情報が有効と判定されなければ PermissionDenied が送出され、None が返されます。
             # (公式ドキュメントより)
-            # つまり、autenticateメソッドは"username"と"password"を受け取り、その組み合わせが存在すれば
+            # つまり、authenticateメソッドは"username"と"password"を受け取り、その組み合わせが存在すれば
             # そのUserを返し、不正であれば"None"を返します。
             user = authenticate(username=username, password=password)
             if user is not None:
@@ -83,6 +93,97 @@ class Login(LoginView):
 
     authentication_form = LoginForm
     template_name = "myapp/login.html"
+
+    def form_valid(self, form):
+        user = form.get_user()
+
+        if not user.email:
+            form.add_error(None, "このアカウントにメールアドレスが登録されていません。")
+            return self.form_invalid(form)
+
+        # OTP発行＆送信
+        otp = EmailOTP.create_for(user, ttl_minutes=10)
+        send_mail(
+            subject="【ログイン確認】パスコード",
+            message=f"パスコード: {otp.code}\n有効期限: 10分",
+            from_email=getattr(settings, "DEFAULT_FROM_EMAIL", None),
+            recipient_list=[user.email],
+            fail_silently=False,
+        )
+
+        # 認証予定ユーザーIDと next をセッションに保存
+        self.request.session["2fa_user_id"] = user.id
+        nxt = self.request.POST.get("next") or self.request.GET.get("next")
+        if nxt:
+            self.request.session["2fa_next"] = nxt
+
+        messages.info(self.request, "パスコードをメールに送信しました。10分以内に入力してください。")
+        return redirect("two_factor_verify")  # 2FA入力画面へ
+
+def two_factor_verify_view(request):
+    user_id = request.session.get("2fa_user_id")
+    if not user_id:
+        messages.warning(request, "まずユーザー名とパスワードを入力してください。")
+        return redirect("login_view")  # あなたのURL名に合わせて
+
+    User = get_user_model()
+    user = User.objects.get(id=user_id)
+    otp = EmailOTP.objects.filter(user=user, is_used=False).order_by("-created_at").first()
+
+    if request.method == "POST":
+        form = TwoFactorForm(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data["code"]
+            if (otp is None) or (not otp.is_valid_now()):
+                form.add_error(None, "コードが無効か期限切れです。はじめからやり直してください。")
+            elif code != otp.code:
+                # 失敗カウント
+                EmailOTP.objects.filter(pk=otp.pk).update(attempts=F("attempts") + 1)
+                otp.refresh_from_db()
+                if otp.attempts >= 5:
+                    form.add_error(None, "失敗が多すぎます。再度ログインからやり直してください。")
+                else:
+                    form.add_error("code", "コードが違います。")
+            else:
+                # 成功 → ログイン確定
+                otp.is_used = True
+                otp.save(update_fields=["is_used"])
+                login(request, user)
+
+                # リダイレクト先を決定
+                next_url = request.session.pop("2fa_next", None)
+                request.session.pop("2fa_user_id", None)
+                return redirect(next_url or self_success_url_fallback())
+
+    else:
+        form = TwoFactorForm()
+
+    return render(request, "myapp/two_factor.html", {"form": form, "user_email": user.email})
+
+def self_success_url_fallback():
+    # LoginView と同等の挙動に寄せるための簡易フォールバック
+    from django.conf import settings
+    return getattr(settings, "LOGIN_REDIRECT_URL", "/")
+
+def two_factor_resend_view(request):
+    user_id = request.session.get("2fa_user_id")
+    if not user_id:
+        messages.warning(request, "まずユーザー名とパスワードを入力してください。")
+        return redirect("login_view")
+
+    User = get_user_model()
+    user = User.objects.get(id=user_id)
+
+    otp = EmailOTP.create_for(user, ttl_minutes=10)
+    send_mail(
+        subject="【ログイン確認】パスコード（再送）",
+        message=f"パスコード: {otp.code}\n有効期限: 10分",
+        from_email=getattr(settings, "DEFAULT_FROM_EMAIL", None),
+        recipient_list=[user.email],
+        fail_silently=False,
+    )
+    messages.info(request, "パスコードを再送しました。")
+    return redirect("two_factor_verify")
 
 
 class Logout(LoginRequiredMixin, LogoutView):

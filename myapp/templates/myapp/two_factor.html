@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="ja">
+  <body>
+    <h1>2段階認証</h1>
+    <p>{{ user_email }} に送った6桁コードを入力してください（有効10分）。</p>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <p>
+        {{ form.code.label_tag }}<br>
+        {{ form.code }} {{ form.code.errors }}
+      </p>
+      <button type="submit">ログイン</button>
+    </form>
+    <p><a href="{% url 'two_factor_resend' %}">コードを再送する</a></p>
+    {% for message in messages %}<p>{{ message }}</p>{% endfor %}
+  </body>
+</html>

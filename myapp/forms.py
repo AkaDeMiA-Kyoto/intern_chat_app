@@ -20,6 +20,13 @@ class SignUpForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     pass
 
+class TwoFactorForm(forms.Form):
+    code = forms.CharField(
+        label="メールの6桁コード",
+        min_length=6, max_length=6,
+        widget=forms.TextInput(attrs={"autocomplete": "one-time-code"})
+    )
+
 
 class MailSettingForm(forms.ModelForm):
     class Meta:

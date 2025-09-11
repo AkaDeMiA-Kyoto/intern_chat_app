@@ -13,6 +13,14 @@
     <li><a href="{% url 'mail_change' %}" class="setting-button">メールアドレス変更</a></li>
     <li><a href="{% url 'user_img_change' %}" class="setting-button">アイコン変更</a></li>
     <li><a href="{% url 'password_change' %}" class="setting-button">パスワード変更</a></li>
-    <li><a href="{% url 'logout' %}" class="setting-button">ログアウト</a></li>
+    <li>
+        <a href="#" class="setting-button"
+            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            ログアウト
+        </a>
+        <form id="logout-form" action="{% url 'logout' %}" method="post" style="display:none;">
+            {% csrf_token %}
+        </form>
+    </li>
 </ul>
 {% endblock %}
