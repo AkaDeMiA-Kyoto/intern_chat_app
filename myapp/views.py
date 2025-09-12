@@ -1,5 +1,7 @@
 from django.shortcuts import redirect, render
 from .forms import SignUpForm
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.views import LoginView
 
 
 def index(request):
@@ -16,8 +18,15 @@ def signup_view(request):
 
     return render(request, 'myapp/signup.html', {'form': form})
 
-def login_view(request):
-    return render(request, "myapp/login.html")
+# def login_view(request):
+#     return render(request, "myapp/login.html")
+
+class login_view(LoginView):
+    # ログイン画面のテンプレートを指定
+    template_name = 'myapp/login.html'
+
+    # ログイン成功後のリダイレクト先URL名を指定
+    authentication_form = AuthenticationForm
 
 def friends(request):
     return render(request, "myapp/friends.html")

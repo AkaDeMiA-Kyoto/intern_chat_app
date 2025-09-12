@@ -3,16 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../static/myapp/css/signup.css">
     <title>新規会員登録</title>
 </head>
 <body>
-    <header>
-        会員登録
+    <header class="header">
+        <div class="header-container">
+            <span class="header-container__title">
+                {% block header-title %}会員登録{% endblock %}
+            </span>
+        </div>
     </header>
     <form action="" method="POST" enctype="multipart/form-data">
-        {%  csrf_token  %}
+        {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">登録</button>
+        <button type="submit">submit</button>
     </form>
 </body>
 </html>
