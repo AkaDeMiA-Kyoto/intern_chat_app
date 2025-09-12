@@ -129,3 +129,7 @@ MEDIA_ROOT = BASE_DIR / 'media_local'
 AUTH_USER_MODEL = "myapp.CustomUser"
 
 LOGIN_REDIRECT_URL = "friends"
+
+LANGUAGE_CODE = 'ja' # 使用言語を日本語にする
+
+TIME_ZONE = 'Asia/Tokyo' # タイムゾーンを東京にする
