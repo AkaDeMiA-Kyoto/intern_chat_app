@@ -1,1 +1,74 @@
-SU
+{% load static %} 
+
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- IEの互換モードの無効化 -->
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1.0"> <!-- レスポンシブデザインのため -->
+    <title>Chat Apps</title>
+    <link rel="shortcut icon" href=""><!-- rel="shortcut icon"でファビコン -->
+    <link rel="apple-touch-icon" href=""><!-- rel="apple-touch-icon"でタッチアイコン -->
+    <link rel="stylesheet" href="{% static 'myapp/css/signup.css' %}">
+</head>
+<body>
+    <div class="header">
+        <h2>会員登録</h2>
+    </div>
+    <div class="main">
+        <form method='post' enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class='legend'>
+                {{ form.username.label_tag }}
+                {{ form.username }}
+                {% comment %} 
+                Djangoテンプレートでは{{ オブジェクト.名前 }}と書いた場合、
+                1.オブジェクトの辞書型（getitem）としてキーアクセス
+                2.オブジェクトの属性（attribute）としてアクセス
+                3.オブジェクトのメソッドとしてアクセス（呼び出し可能なら実行）
+                この順番で、最初に見つかったものを表示する 
+                usernameはフィールド
+                label_tagは<label>要素を自動生成するメソッド
+                {% endcomment %}
+            </div>
+            <div class='legend'>
+                {{ form.email.label_tag }}
+                {{ form.email }}
+            </div>
+            <div class='legend'>
+                {{ form.password1.label_tag }}
+                {{ form.password1 }}
+            </div>
+            <div class='legend'>
+                {{ form.password2.label_tag }}
+                {{ form.password2 }}
+            </div>
+            <div class='legend'>
+                {{ form.Img.label_tag }}
+                {{ form.Img }}
+            </div>
+            <button type='submit'>Sign Up</button>
+        </form>
+        {% if form.errors %}
+        {% comment %} 
+        各フィールドにはerrorsという属性があり、バリデーションで発生したそのフィールドのエラーがリストで格納されている
+        {% endcomment %}
+            <div class="alert alert-danger">
+                <ul>
+                {% for field in form %}
+                {% comment %} 
+                formはイテラブルで、各フィールドを順番に取り出せる
+                {% endcomment %}
+                    {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                {% comment %} non_field_errorsはフォーム全体に関するエラー {% endcomment %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

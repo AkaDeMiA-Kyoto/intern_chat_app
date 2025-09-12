@@ -1,0 +1,63 @@
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+    display: flex;
+    justify-content: space-around;
+    background-color: rgb(235, 235, 235);
+    flex-shrink: 0; /* 縮まない */
+}
+
+.header-button {
+    display: flex;
+    align-items: center; /* 縦方向の中央揃え */
+    margin: 0;
+}
+
+.fa-arrow-left {
+    color: rgb(136, 136, 136);
+}
+
+.main {
+  flex: 1; /* 余った領域をすべて使う */
+  overflow-y: auto; /* ここだけスクロール */
+}
+
+.msg {
+    border-bottom: 1px solid #bababa;
+    padding: 10px;
+}
+
+.user-time {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+p {
+    margin: 3px;
+    max-width: 90vw;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+.footer {
+    flex-shrink: 0; /* 縮まない */
+}
+
+.input {
+    width: 75vw;
+    height: 30px;
+    border-radius: 16px;
+}
+
+button {
+    margin-top: 0px;
+    width: 50px;
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid rgb(183, 183, 183);
+    background-color: rgb(255, 255, 255);
+}

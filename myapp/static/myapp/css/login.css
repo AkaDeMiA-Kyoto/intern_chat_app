@@ -1,0 +1,30 @@
+.header {
+    margin-bottom: 30px;
+}
+
+.legend {
+    text-align: center;
+}
+
+button {
+    margin-top: 30px;
+    width: 100px;
+    height: 40px;
+    border-radius: 20px;
+    border: 3px solid rgb(183, 183, 183);
+    background-color: rgb(255, 255, 255);
+}
+
+button:hover {
+    color: rgb(255, 255, 255);
+    background-color: rgb(5, 5, 5);
+    transition: 0.5s;
+}
+
+ul {
+    padding-left: 0px;
+}
+
+li {
+    list-style: none;
+}

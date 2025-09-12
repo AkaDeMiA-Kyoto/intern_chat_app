@@ -1,1 +1,49 @@
-TR
+{% extends 'myapp/base.html' %}
+
+{% load static %} 
+
+{% block title %}
+    Chat Apps | Talk_room
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href=" {% static 'myapp/css/talk_room.css' %}">
+{% endblock %}
+
+{% block header-title %}
+    {{ other_user }}
+{% endblock %}
+
+{% block header-button1 %}
+    <a href="{% url 'friends' %}" class="header-button"><i class="fa-solid fa-arrow-left fa-2x"></i></a>
+{% endblock %}
+
+{% block header-button2 %}
+    <form method="get" class="header-button">
+        <button type="submit">更新</button>
+    </form>
+{% endblock %}
+
+{% block content %}
+    <div class="main">
+        {% for message in messages %}
+            <div class="msg">
+                <div class="user-time">
+                    <p>＞ {{ message.sender.username }}</p>
+                    <span class"msg-time">{{ message.created_at|date:"m/d H:i" }}</span>
+                </div>
+                <p>{{ message.content }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
+
+{% block footer %}
+    <footer class="footer">
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="text" class="input" placeholder="メッセージを入力">
+            <button type="submit">送信</button>
+        </form>
+    </footer>
+{% endblock %}

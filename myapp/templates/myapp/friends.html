@@ -1,0 +1,60 @@
+{% extends 'myapp/base.html' %}
+
+{% load static %} 
+
+{% block title %}
+    Chat Apps | Friends
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href=" {% static 'myapp/css/friends.css' %}">
+{% endblock %}
+
+{% block header-title %}
+    友達
+{% endblock %}
+
+{% block content %}
+    <div class="main">
+        {% for friend in friends_list %}
+            <a href="{% url 'talk_room' friend.pk %}">
+                <div class="friend-container">
+                    <div class="icon">
+                        <img src="{{ friend.Img.url }}" alt="アイコン画像">
+                    </div>
+                    <div class="user_detail">
+                        <li class="username">{{ friend.username }}</li>
+                        <div class="latest_wrap">
+                            <li class="msg">{{ friend.latest_message_content|default_if_none:" "|truncatechars:14 }}</li>
+                            {% comment %} truncatechars:20 → 文字数で切る（例：20文字）
+                            truncatewords:10 → 単語数で切る（英語向け） {% endcomment %}
+                            <div class="timestamp">
+                                <li class="m-d">{{ friend.latest_message_time|default_if_none:" "|date:"m/d" }}</li>
+                                <li class="time">{{ friend.latest_message_time|default_if_none:" "|date:"H:i" }}</li>
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+            </a>
+        {% endfor %}
+    </div>
+{% endblock content %}
+
+{% block footer %}
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-container__item">
+                <a href="{% url 'friends' %}" class="footer-item__link">
+                    <span class="footer-item__icon"><img class="footer-icon" src="{% static 'myapp/img/people-24px.svg' %}"></span>
+                    <span class="footer-item__text">友達</span>
+                </a>
+            </div>
+            <div class="footer-container__item">
+                <a href="{% url 'setting' %}" class="footer-item__link">
+                    <span class="footer-item__icon"><img class="footer-icon" src="{% static 'myapp/img/settings-black-18dp.svg' %}"></span>
+                    <span class="footer-item__text">設定</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

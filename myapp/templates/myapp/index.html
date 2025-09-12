@@ -1,5 +1,5 @@
 {% load static %} 
-<!DOCTYPE html>
+
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -12,8 +12,8 @@
 </head>
 <body>
     <div class="wrap">
-        <a href="{% url 'login_view'  %}" class="button">ログイン</a><br>
-        <a href="{% url 'signup_view'  %}" class="button">会員登録</a>
+        <a href="{% url 'login_view' %}" class="button">ログイン</a><br>
+        <a href="{% url 'signup_view' %}" class="button">会員登録</a>
         {% comment %} {% url "urls.py で指定した name" %} {% endcomment %}
     </div>
 </body>
