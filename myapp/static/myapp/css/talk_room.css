@@ -1,0 +1,53 @@
+.talk-container {
+    display: flex;
+    flex-direction: column;
+}
+.content-sent {
+    background-color: #dcf8c6;
+    align-self: flex-end;
+    margin: 5px;
+    padding: 10px;
+    border-radius: 10px;
+}
+.content-received {
+    background-color: #e5e5ea;
+    align-self: flex-start;
+    margin: 5px;
+    padding: 10px;
+    border-radius: 10px;
+}
+.timestamp {
+    display: block;
+    font-size: 0.75em;
+    color: #888; 
+    text-align: right;
+    margin-top: 5px;
+}
+
+.content-sent .timestamp {
+    text-align: right;
+}
+
+.content-received .timestamp {
+    text-align: left;
+}
+.header-buttons {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+.header-buttons button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+.content-form-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-top: 1px solid #ccc;
+}

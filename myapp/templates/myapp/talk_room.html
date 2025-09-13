@@ -1,1 +1,38 @@
-TR
+{% extends "myapp/base.html" %}
+{% load static %}
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
+{% endblock %}
+{% block header-title %}
+<div class="header-buttons">
+    <button onclick="location.href='{% url 'friends' %}'">＜</button>
+    <h2>{{ talk_partner.username }}</h2>
+    <button onclick="location.reload()">↻ 更新</button>
+</div>
+{% endblock %}
+{% block content %}
+<div class="talk-container">
+    {% for talk in talks %}
+        {% if talk.sender.id == my_user.id %}
+            <div class="content-sent">
+                <p>{{ talk.content }}</p>
+                <span class="timestamp">{{ talk.created_at|date:"Y-m-d H:i" }}</span>
+            </div>
+        {% else %}
+            <div class="content-received">
+                <p>{{ talk.content }}</p>
+                <span class="timestamp">{{ talk.created_at|date:"Y-m-d H:i" }}</span>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}
+{% block footer %}
+<div class="content-form-container">
+<form method="post" action="{% url 'send_talk' talk_partner.id %}">
+    {% csrf_token %}
+    <input type="text" name="content" required>
+    <button type="submit">送信</button>
+</form>
+</div>
+{% endblock %}

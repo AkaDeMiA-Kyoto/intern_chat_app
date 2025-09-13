@@ -1,0 +1,23 @@
+.friend-icon {
+    width: 48px;  
+    height: 48px;  
+    object-fit: cover; 
+    border-radius: 50%; 
+    border: 1px solid black;
+}
+.friend-box {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid black;
+    padding-bottom: 10px;
+}
+.friend-list {
+    list-style: none;
+    padding-left: 0;
+}
+.friend-talk{
+    margin-left:10px
+}
+.friend-time{
+    margin-left:10px
+}

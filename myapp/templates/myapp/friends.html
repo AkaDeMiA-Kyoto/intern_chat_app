@@ -1,0 +1,28 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/friends.css' %}" />
+{% endblock %}
+{% block header-title %}friends{% endblock %}
+{% block content %}
+<div class="friends">
+    <ul class="friend-list">
+        {% for item in friends %}
+        <li class="friend-content">
+            <a class="friend-box" href="{% url 'talk_room' item.partner.id %}">
+                {% if item.partner.icon %}
+                    <img class="friend-icon" src="{{ item.partner.icon.url }}">
+                {% else %}
+                    <img class="friend-icon" src="{% static 'myapp/img/default_icon.png' %}">
+                {% endif %}
+                <div class="friend-username">{{ item.partner.username }}</div>
+                <div class="friend-talk">{{ item.last_talk.content }}</div>
+                <div class="friend-time">{{ item.last_talk.created_at|date:"n/j H:i" }}</div>
+            </a>
+        </li>
+        {% empty %}
+        <div>友達がいません</div>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

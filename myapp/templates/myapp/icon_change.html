@@ -1,0 +1,12 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+{% block header-title %}アイコン変更{% endblock %}
+{% block content %}
+<div class="form-container">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">変更</button>
+    </form>
+</div>
+{% endblock %}
