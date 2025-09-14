@@ -11,3 +11,15 @@ db.sqlite3
 .DS_Store
 
 .env
+
+media
+
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+.vscode/
