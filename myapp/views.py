@@ -88,7 +88,6 @@ def talk_room(request,user_id):
 def setting(request):
     return render(request, "myapp/setting.html")
 
-@login_required 
 def signup_view(request):
     if request.method=='POST':
         form = SignUpForm(request.POST,request.FILES)
