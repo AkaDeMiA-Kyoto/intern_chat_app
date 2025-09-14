@@ -43,7 +43,7 @@ class friends(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         current_user = self.request.user
-        all_users = get_user_model().objects.exclude(pk=current_user.pk)
+        all_users = get_user_model().objects.exclude(pk=current_user.pk).exclude(is_staff=True)
         
         user_list = []
         talked_with = set()
@@ -79,20 +79,20 @@ class friends(LoginRequiredMixin, ListView):
 
         return talked_users + untalked_users
 
-# class RoomView(LoginRequiredMixin, View):
-#     def get(self, request, username):
-#         # URLから渡されたusernameで相手ユーザーを取得
-#         talk_partner = get_object_or_404(get_user_model(), username=username)
+class talk_room(LoginRequiredMixin, View):
+    def get(self, request, username):
+        # URLから渡されたusernameで相手ユーザーを取得
+        talk_partner = get_object_or_404(get_user_model(), username=username)
         
-#         # ここにトーク履歴を取得するロジックを実装
-#         context = {
-#             'talk_partner': talk_partner,
-#             # 'messages': ...
-#         }
-#         return render(request, 'myapp/talk_room.html', context)
+        # ここにトーク履歴を取得するロジックを実装
+        context = {
+            'talk_partner': talk_partner,
+            # 'messages': ...
+        }
+        return render(request, 'myapp/talk_room.html', context)
 
-def talk_room(request):
-    return render(request, "myapp/talk_room.html")
+# def talk_room(request):
+#     return render(request, "myapp/talk_room.html")
 
 def setting(request):
     return render(request, "myapp/setting.html")

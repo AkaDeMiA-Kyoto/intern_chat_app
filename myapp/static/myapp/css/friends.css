@@ -1,0 +1,143 @@
+html{
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+body{
+    margin: 0;
+}
+
+/* ヘッダー */
+.header{
+    width: 100vw;
+    height: 64px;
+    border-bottom: solid 1px #9b9b9b;
+}
+.header-container{
+    position: relative;
+    width: 90%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.header-container__title{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1rem;
+    line-height: 1rem;
+    margin: auto;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #000;
+}
+
+/* フッター */
+.footer{
+    width: 100vw;
+    height: 64px;
+}
+.footer-container{
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 64px;
+    text-align: center;
+    border-top: solid 1px #9b9b9b;
+}
+.footer-container__item{
+    display: flex;
+    position: relative;
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: #9b9b9b;
+}
+.footer-item__link{
+    width: 90%;
+    height: 100%;
+    margin: auto;
+    text-decoration: none;
+}
+.footer-item__icon{
+    display: block;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 1.2rem;
+}
+.footer-item__text{
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    line-height: 0.8rem;
+    font-size: 0.8rem;
+    color: #000;
+}
+
+
+
+
+.user-link {
+    text-decoration: none;
+    color: inherit;
+    display: block; /* リンク全体をブロック要素にする */
+    margin-bottom: 10px; /* 各ユーザーの間にスペースを作成 */
+}
+
+.user-container {
+    display: flex; /* flexboxを有効にする */
+    align-items: center; /* 垂直方向の中央揃え */
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.img-container {
+    flex-shrink: 0; /* アイコンが縮まないようにする */
+    margin-right: 15px; /* アイコンとテキストの間にスペースを作成 */
+}
+
+/* ユーザーアイコンのスタイル */
+.user-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* 画像を丸くトリミング */
+    object-fit: cover; /* 画像が引き延ばされないように調整 */
+    border: 2px solid #000;
+}
+
+.info-container {
+    flex-grow: 1; /* 残りのスペースをすべて占めるようにする */
+}
+
+.talk-username {
+    /* ユーザー名の一行目のスタイル */
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.talk-info {
+    /* 最後のメッセージと時刻の二行目のスタイル */
+    color: #555;
+    font-size: 0.9em;
+}
+
+.latest-talk {
+    /* メッセージのスタイル */
+    margin-right: 10px;
+}
+
+.talk-time {
+    /* 時刻のスタイル */
+    color: #999;
+}
+
+.empty-space {
+    color: transparent;
+    user-select: none; /* テキストが選択されないようにする */
+}
