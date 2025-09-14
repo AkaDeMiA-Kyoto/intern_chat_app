@@ -6,7 +6,7 @@ from django.views.generic import ListView
 from django.contrib.auth import get_user_model
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import models 
+from django.db import models
 from .models import Message
 
 def index(request):
@@ -83,13 +83,32 @@ class talk_room(LoginRequiredMixin, View):
     def get(self, request, username):
         # URLから渡されたusernameで相手ユーザーを取得
         talk_partner = get_object_or_404(get_user_model(), username=username)
+
+        messages = Message.objects.filter(
+            models.Q(sender=request.user, receiver=talk_partner) | models.Q(sender=talk_partner, receiver=request.user)
+        ).order_by('timestamp')
         
         # ここにトーク履歴を取得するロジックを実装
         context = {
             'talk_partner': talk_partner,
-            # 'messages': ...
+            'messages': messages,
         }
         return render(request, 'myapp/talk_room.html', context)
+    
+    def post(self, request, username):
+        talk_partner = get_object_or_404(get_user_model(), username=username)
+        content = request.POST.get('content')
+        
+        if content:
+            # 新しいメッセージをデータベースに保存
+            Message.objects.create(
+                sender=request.user,
+                receiver=talk_partner,
+                content=content
+            )
+        
+        # 同じトークルームにリダイレクトして、画面を更新
+        return redirect('talk_room', username=username)
 
 # def talk_room(request):
 #     return render(request, "myapp/talk_room.html")

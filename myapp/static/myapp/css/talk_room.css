@@ -1,0 +1,82 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ヘッダーのスタイル */
+.talk-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ddd;
+}
+.talk-partner-name {
+    margin: 0;
+    font-size: 1.2em;
+}
+.header-button {
+    font-size: 1.5em;
+    text-decoration: none;
+    color: #007bff;
+}
+
+/* メッセージリストのコンテナ */
+.message-list-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+/* 個々のメッセージボックス */
+.message-box {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 15px;
+    max-width: 70%;
+}
+.my-message {
+    background-color: #007bff;
+    color: white;
+    margin-left: auto;
+}
+.partner-message {
+    background-color: #e0e0e0;
+    color: black;
+    margin-right: auto;
+}
+
+/* フッターのスタイル */
+.message-form-footer {
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-top: 1px solid #ddd;
+}
+.message-form-footer form {
+    display: flex;
+}
+.message-form-footer textarea {
+    flex-grow: 1;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 10px;
+    resize: none;
+}
+.message-form-footer button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+}
