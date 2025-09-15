@@ -1,1 +1,36 @@
-Friends
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block title %}friends{% endblock title %}
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
+{% endblock extra_style %}
+
+{% block content %}
+    <ul>
+    {% for item in friends_data %}
+        <li>
+            <a href="{% url "myapp:talk_room" item.friend.pk %}" class="friends_container">
+                {% if item.friend.icon %}
+                <img src="{{ item.friend.icon.url }}" alt="icon" class="icon">
+                {% else %}
+                <img src="" alt="icon" class="icon">
+                {% endif %}
+                <div class="new_chat">
+                    <span class="new_chat_name">{{ item.friend.username }}</span>
+                {% if item.latest_message %}
+                    <span class="new_chat_content">{{ item.latest_message.sender.username }}: {{ item.latest_message.content|truncatechars:20 }}</span>
+                    <span class="new_chat_time">{{ item.latest_message.time|date:"H:i" }}</span>
+                {% else %}
+                    <span class="new_chat_content">
+                        No Message
+                    </span>
+                {% endif %}
+                </div>
+            </a>
+        </li>
+    {% empty %}
+        <li>No Friends</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

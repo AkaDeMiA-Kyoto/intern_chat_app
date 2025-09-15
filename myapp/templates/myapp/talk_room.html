@@ -1,1 +1,46 @@
-TR
+{% extends "myapp/base.html" %}
+{% load static %}
+{% block extra_style %}
+    <link rel="stylesheet" href={% static "myapp/css/talk_room.css" %}>
+{% endblock extra_style %}
+    {% block title %}{{ friend.username }} とのトーク{% endblock title %}
+
+{% block header %}
+<header class="header">
+    <div class="header-container">
+        <a href="{% url 'myapp:friends' %}" class="header-btn">戻る</a>
+        <span class="header-container__title">
+            {{ friend.username }}
+        </span>
+        <a href="{% url 'myapp:talk_room' friend.pk %}" class="header-btn">更新</a>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<ul>
+    {% for chat in talk_log %}
+    <li>
+        <div class="chat-username">{{ chat.sender.username }}</div>
+        <div class="chat-content-box">
+            <span class="chat-content">{{ chat.content }}</span>
+        </div>
+        <span class="chat-date">{{ chat.time|date:"H:i" }}</span>
+    </li>
+    {% empty %}
+    <li>No Message</li>
+    {% endfor %}
+</ul>
+{% endblock content %}
+
+{% block footer %}
+<footer class="footer">
+    <div class="footer-container">
+        <form method="post" class="chatbox-container">
+            {% csrf_token %}
+            {{ form.content }}
+            <button type="submit" class="send-button">送信</button>
+        </form>
+    </div>
+</footer>
+{% endblock footer %}
