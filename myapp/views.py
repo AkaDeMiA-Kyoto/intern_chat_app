@@ -124,7 +124,7 @@ def two_factor_verify_view(request):
     user_id = request.session.get("2fa_user_id")
     if not user_id:
         messages.warning(request, "まずユーザー名とパスワードを入力してください。")
-        return redirect("login_view")  # あなたのURL名に合わせて
+        return redirect("login_view")  
 
     User = get_user_model()
     user = User.objects.get(id=user_id)
@@ -140,10 +140,6 @@ def two_factor_verify_view(request):
                 # 失敗カウント
                 EmailOTP.objects.filter(pk=otp.pk).update(attempts=F("attempts") + 1)
                 otp.refresh_from_db()
-                if otp.attempts >= 5:
-                    form.add_error(None, "失敗が多すぎます。再度ログインからやり直してください。")
-                else:
-                    form.add_error("code", "コードが違います。")
             else:
                 # 成功 → ログイン確定
                 otp.is_used = True
@@ -161,7 +157,7 @@ def two_factor_verify_view(request):
     return render(request, "myapp/two_factor.html", {"form": form, "user_email": user.email})
 
 def self_success_url_fallback():
-    # LoginView と同等の挙動に寄せるための簡易フォールバック
+    # LoginView と同等の挙動に寄せる
     from django.conf import settings
     return getattr(settings, "LOGIN_REDIRECT_URL", "/")
 
