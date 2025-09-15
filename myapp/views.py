@@ -8,6 +8,9 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import models
 from .models import Message
+from django.contrib import messages
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 
 def index(request):
     return render(request, "myapp/index.html")
@@ -23,18 +26,12 @@ def signup_view(request):
 
     return render(request, 'myapp/signup.html', {'form': form})
 
-# def login_view(request):
-#     return render(request, "myapp/login.html")
-
 class login_view(LoginView):
     # ログイン画面のテンプレートを指定
     template_name = 'myapp/login.html'
 
     # ログイン成功後のリダイレクト先URL名を指定
     authentication_form = AuthenticationForm
-
-# def friends(request):
-#     return render(request, "myapp/friends.html")
 
 class friends(LoginRequiredMixin, ListView):
     template_name = 'myapp/friends.html'
@@ -110,8 +107,75 @@ class talk_room(LoginRequiredMixin, View):
         # 同じトークルームにリダイレクトして、画面を更新
         return redirect('talk_room', username=username)
 
-# def talk_room(request):
-#     return render(request, "myapp/talk_room.html")
-
 def setting(request):
     return render(request, "myapp/setting.html")
+
+class username(LoginRequiredMixin, View):
+    def get(self, request):
+        # ユーザー名変更ページを表示
+        return render(request, 'myapp/username.html')
+
+    def post(self, request):
+        new_username = request.POST.get('new_username')
+        user = request.user
+
+        if new_username:
+            # 新しいユーザー名がすでに使われているか確認
+            if user.__class__.objects.filter(username=new_username).exists():
+                messages.error(request, 'このユーザー名はすでに使用されています。')
+            else:
+                user.username = new_username
+                user.save()
+                messages.success(request, 'ユーザー名を変更しました。')
+                return redirect('username')
+
+        return render(request, 'myapp/username.html')
+    
+class email(LoginRequiredMixin, View):
+    def get(self, request):
+        # メールアドレス変更ページを表示
+        return render(request, 'myapp/email.html')
+
+    def post(self, request):
+        new_email = request.POST.get('new_email')
+        user = request.user
+
+        if new_email:
+            # 1. メールアドレスの形式を検証
+            try:
+                validate_email(new_email)
+            except ValidationError:
+                messages.error(request, '無効なメールアドレスです。')
+                return render(request, 'myapp/email.html')
+                
+            user.email = new_email
+            user.save()
+            messages.success(request, 'メールアドレスを変更しました。')
+            return redirect('change_email')
+
+        return render(request, 'myapp/email.html')
+    
+class icon(LoginRequiredMixin, View):
+    def get(self, request):
+        # アイコン変更ページを表示
+        return render(request, 'myapp/icon.html')
+
+    def post(self, request):
+        new_icon = request.FILES.get('new_icon')
+        user = request.user
+
+        if new_icon:
+            # 既存のアイコンを削除
+            if user.image:
+                user.image.delete(save=False)
+            
+            # 新しいアイコンをアップロード
+            user.image = new_icon
+            user.save()
+            
+            messages.success(request, 'アイコンを変更しました。')
+            return redirect('icon')
+        else:
+            messages.error(request, 'ファイルが選択されていません。')
+
+        return render(request, 'myapp/icon.html')

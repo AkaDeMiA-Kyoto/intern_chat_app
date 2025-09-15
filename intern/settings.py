@@ -133,3 +133,5 @@ LOGIN_REDIRECT_URL = "friends"
 LANGUAGE_CODE = 'ja' # 使用言語を日本語にする
 
 TIME_ZONE = 'Asia/Tokyo' # タイムゾーンを東京にする
+
+LOGOUT_REDIRECT_URL = 'index'
