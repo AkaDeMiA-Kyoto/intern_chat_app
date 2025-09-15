@@ -23,10 +23,10 @@ class Talk(models.Model):
     talk = models.CharField(max_length=500)
     # 誰から
     talk_from = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="talk_from"
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="talk_from"
     )
     # 誰に
-    talk_to = models.ForeignKey(User, on_delete=models.CASCADE, related_name="talk_to")
+    talk_to = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="talk_to")
     # 時間は
     time = models.DateTimeField(auto_now_add=True)
 
