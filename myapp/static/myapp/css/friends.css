@@ -1,3 +1,39 @@
+/* 検索ボックス */
+.friends__search {
+    position: sticky;
+    top: 64px;
+    z-index: 2;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 16px;
+    background: #999;
+    border-bottom: 1px solid #ddd;
+}
+.friends__search-input {
+    flex: 1;
+    height: 2.2rem;
+    padding: 0 12px;
+    border: 1px solid #bbb;
+    border-radius: 9999px;
+}
+.friends__search-btn {
+    height: 2.2rem;
+    padding: 0 12px;
+    border: 1px solid #000;
+    border-radius: 12px;
+    background: #999;
+    cursor: pointer;
+}
+.friends__clear {
+    font-size: 0.9rem;
+    text-decoration: underline;
+    color: #555;
+}
+
+/* リストが隠れないように。高さ固定なら外すのも可 */
+.friend-list { height: auto; }
+
 /* headerを避ける */
 .friends {
     padding: 64px 0;

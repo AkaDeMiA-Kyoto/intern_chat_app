@@ -192,18 +192,22 @@ class Logout(LoginRequiredMixin, LogoutView):
 
 @login_required
 def friends(request):
-    user = request.user
-    friends = User.objects.exclude(id=user.id)
+    me = request.user
+    q = (request.GET.get("q") or "").strip()
+
+    friends_qs = User.objects.exclude(pk=me.pk)
+    if q:
+        friends_qs = friends_qs.filter(username__icontains=q)
 
     # トーク情報とフレンド情報を含む info を作成
     info = []
     info_have_message = []
     info_have_no_message = []
     
-    for friend in friends:
+    for friend in friends_qs:
         # 最新のメッセージの取得
         latest_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
+            Q(talk_from=me, talk_to=friend) | Q(talk_to=me, talk_from=friend)
         ).order_by('time').last()
 
         if latest_message:
