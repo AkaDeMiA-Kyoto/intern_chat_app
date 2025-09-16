@@ -21,6 +21,7 @@ from .forms import (
     SignUpForm,
     TalkForm,
     UserNameSettingForm,
+    FriendSearchForm,
 )
 from .models import Talk
 
@@ -73,18 +74,55 @@ def signup_view(request):
     }
     return render(request, "myapp/signup.html", context)
 
+import random
+from django.core.mail import send_mail
+from django.contrib.auth import login
 
-class Login(LoginView):
-    """ログインページ
+# class Login(LoginView):
+#     """ログインページ
 
-    GETの時は指定されたformを指定したテンプレートに表示
-    POSTの時はloginを試みる。→成功すればdettingのLOGIN_REDIRECT_URLで指定されたURLに飛ぶ
-    """
+#     GETの時は指定されたformを指定したテンプレートに表示
+#     POSTの時はloginを試みる。→成功すればdettingのLOGIN_REDIRECT_URLで指定されたURLに飛ぶ
+#     """
 
-    authentication_form = LoginForm
-    template_name = "myapp/login.html"
+#     authentication_form = LoginForm
+#     template_name = "myapp/login.html"
+#     n=random.randint(100000,999999)
+#     send_mail(
+#         "Djangoログイン認証",
+#         f"メール認証の値：{n}",
+#         "django@django.com",
+#         [f"{request.user.email}"]
+#     )
 
 
+def login_view(request):
+    if request.method == "GET":
+        form = LoginForm()
+        n=random.randint(100000,999999)
+        request.session['mail_authentication']=n
+        send_mail(
+            "Djangoログイン認証",
+            f"メール認証の値：{n}",
+            "django@django.com",
+            [f"{request.user.email}"]
+        )  
+    else:
+        form = LoginForm(data=request.POST)
+        session=request.session.get('mail_authentication')
+        authentication_number=int(request.POST['mail_authentication'])
+        if authentication_number==session:
+            del request.session["mail_authentication"]
+            if form.is_valid():
+                user = form.get_user()
+                if user:
+                    login(request, user)
+                    return redirect("friends")
+        else:
+            return redirect("login")
+    param = {"form": form} 
+    return render(request, "myapp/login.html", param)
+    
 class Logout(LoginRequiredMixin, LogoutView):
     """ログアウトページ"""
 
@@ -93,6 +131,7 @@ class Logout(LoginRequiredMixin, LogoutView):
 def friends(request):
     user = request.user
     friends = User.objects.exclude(id=user.id)
+    form=FriendSearchForm()
 
     # トーク情報とフレンド情報を含む info を作成
     info = []
@@ -118,8 +157,40 @@ def friends(request):
     
     context = {
         "info": info,
+        "form":form,
     }
     return render(request, "myapp/friends.html", context)
+
+@login_required
+def friend_search(request):
+    form=FriendSearchForm()
+    user=request.user
+    info = []
+    info_have_message = []
+    info_have_no_message = []
+
+    searched_friend_name=request.GET["name"]
+    searched_friend=User.objects.filter(username=searched_friend_name)
+    if searched_friend:
+        friend=User.objects.get(username=searched_friend_name)
+        latest_message = Talk.objects.filter(
+            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
+        ).order_by('time').last()
+
+        if latest_message:
+            info_have_message.append([friend, latest_message.talk, latest_message.time])
+        else:
+            info_have_no_message.append([friend, None, None])
+
+        info.extend(info_have_message)
+        info.extend(info_have_no_message)
+    
+    context = {
+        "info":info,
+        "form":form,
+    }
+    return render(request, "myapp/friends_search.html", context)
+    
 
 
 @login_required

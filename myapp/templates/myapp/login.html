@@ -25,6 +25,11 @@
         {{ form.password }}
         {{ form.password.errors }}
     </div>
+    <div class="login-form_authentication">
+        <label>メール認証：</label>
+        {{ form.mail_authentication }}
+        {{ form.mail_authentication.errors }}
+    </div>
     <button type="submit" class="login-form__submit">ログイン</button>
 </form>
 {% endblock %}

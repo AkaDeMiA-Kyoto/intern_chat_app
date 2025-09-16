@@ -1,6 +1,9 @@
 /* headerを避ける */
 .friends {
+    position: relative;
     padding: 64px 0;
+    top: 11vh;
+    z-index: -1;
 }
 
 /* バックエンド追加機能 */
@@ -94,4 +97,35 @@ header {
 
 .footer-container {
     background-color: #eee;
+}
+
+.form{
+    position: fixed;
+    display: flex;
+    top: 64px;
+    background-color: #fff;
+}
+.sentence{
+    display: block;
+    position: relative;
+    top: 150px;
+    text-align: center;
+}
+.search{
+    display: block;
+    margin-left: -0.5vw;
+    width: 80vw;
+    padding: 2vh;
+    border-radius: 5vw;
+    font-size: 15px;
+}
+.button{
+    display: block;
+    width: 13vw;
+    border-radius: 5vw;
+    margin-right: 0;
+    height: 6.5vh;
+    margin-top: 1.7vh;
+    margin-left: 3vw;
+    font-size: 15px;
 }

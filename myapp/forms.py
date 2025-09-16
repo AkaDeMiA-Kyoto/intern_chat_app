@@ -18,8 +18,7 @@ class SignUpForm(UserCreationForm):
 
 
 class LoginForm(AuthenticationForm):
-    pass
-
+    mail_authentication=forms.IntegerField()
 
 class MailSettingForm(forms.ModelForm):
     class Meta:
@@ -60,3 +59,6 @@ class TalkForm(forms.ModelForm):
         fields = ("talk",)
         # 入力予測の表示をさせない（めっちゃ邪魔）
         widgets = {"talk": forms.TextInput(attrs={"autocomplete": "off"})}
+
+class FriendSearchForm(forms.Form):
+    name=forms.CharField(label="",widget=forms.TextInput(attrs={'placeholder':'検索したいユーザー名を入力','class':'search'}))

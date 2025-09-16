@@ -5,7 +5,7 @@ from . import views
 urlpatterns = [
     path("", views.index, name="index"),
     path("signup/", views.signup_view, name="signup"),
-    path("login/", views.Login.as_view(), name="login"),
+    path("login/", views.login_view, name="login"),
     path("friends/", views.friends, name="friends"),
     # トーク画面
     # 誰とのトークかを、URLにて判別
@@ -21,4 +21,5 @@ urlpatterns = [
     path("mail_change_done/", views.mail_change_done, name="mail_change_done"),
     path("username_change/", views.username_change, name="username_change"),
     path("username_change_done/", views.username_change_done, name="username_change_done"),
+    path('friend_search/',views.friend_search,name="friend_search"),
 ]
