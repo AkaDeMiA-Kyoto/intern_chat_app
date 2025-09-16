@@ -5,24 +5,38 @@
 <link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />
 {% endblock %}
 
-{% block header-title %}
-{{ friend.username }}
-{% endblock %}
+{% block header %}
+    <header class="header">
+        <div class="header-container">
+            <a class="back" href="{% url 'friends' %}">戻る</a>
+            <span class="header-container__title">
+                {% block header-title %}{{ friend.username }}{% endblock %}
+            </span>
+            <a class="redirect" href="{% url 'talk_room' friend.id %}">更新</a>
+        </div>
+    </header>
+    {% endblock %}
 
 {% block content %}
 
 {% for talk in talk_list %}
-{{ talk.talk_from}} to {{ talk.talk_to }}
-{{ talk.content }}
+<div class="talk_block">
+to {{ talk.talk_to }}<br>
+{{ talk.content }}<br>
 {{ talk.pub_date}}
+</div>
 {% endfor %}
 
 {% endblock %}
 
 {% block footer %}
+<footer class="footer">
+<div class="footer-container">
     <form action="{% url 'talk_room' friend.id %}" method="post">
     {% csrf_token %}
         {{ form.as_p }}
-        <p><input type="submit" value="送信"></p>
+        <div class="submit"><input type="submit" value="送信"></div>
     </form>
+</div>
+</footer>
 {% endblock %}

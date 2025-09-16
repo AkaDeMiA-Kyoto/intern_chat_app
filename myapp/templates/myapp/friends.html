@@ -12,8 +12,8 @@
         <a class="friend_link" href="{% url 'talk_room' friend.id %}">
         <div class="friend_box">
             <img class="friend_img" src="{{ friend.icon.url }}">
-            {{ friend.username }}
-        {{ latest_message.content }}
+            {{ friend.username }}<br>
+        {{ latest_message.content }}<br>
         {{ latest_message.pub_date }}
         </div>
         </a>
