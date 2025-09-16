@@ -2,14 +2,17 @@ from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path('', views.index, name='index'),
     path('signup', views.signup_view, name='signup_view'),
     path('login', views.login_view, name='login_view'),
     path('friends', views.friends, name='friends'),
-    path('talk_room', views.talk_room, name='talk_room'),
+    path('talk_room/<int:friend_id>/', views.talk_room, name='talk_room'),
     path('setting', views.setting, name='setting'),
+    path('username_change', views.username_change, name='username_change'),
+    path('logout', LogoutView.as_view(), name='logout'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
