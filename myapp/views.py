@@ -38,7 +38,7 @@ def login_view(request):
 
             if user:
                 login(request, user)
-                return redirect('/friends')
+                return redirect('friends')
 
     else:
         form = LoginForm()
