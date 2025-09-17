@@ -1,0 +1,12 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+    
+    {% block extra_style %}<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting_complete.css' %}" />{% endblock %}
+
+ {% block header-title %}setting_complete{% endblock %}
+
+ {% block content %}
+ 完了
+ <a href="http://127.0.0.1:8000/">戻る</a>
+ {% endblock %}

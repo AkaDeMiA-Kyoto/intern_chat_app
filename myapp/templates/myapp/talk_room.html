@@ -1,1 +1,50 @@
-TR
+{% extends "myapp/base.html" %}
+{% load static %}
+
+    {% block extra_style %}<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/talk_room.css' %}" />{% endblock %}
+
+ {% block header-title %}
+ <div class="talk_room-header">
+    <a class="back-button" href={% url "friends" %}>
+        ＜戻る
+    </a>
+    <div class="header-name">
+    {{ recipient.username }}
+    </div>
+    <a class="renew-button" href="">
+        更新
+    </a>
+ </div>
+ {% endblock %}
+
+{% block content %}
+<div class="messages">
+    <ul class="message">
+        {% for item in talks %}
+        <li class="message-content">
+            <div class="message-box">
+                <img class="friend-icon" src="{{ item.sender.icon.url }}">
+                <div class="friend-username">{{ item.sender.username }}</div>
+                {% if item.talk %}
+                    <div class="friend-talk">{{ item.talk }}</div>
+                    <div class="friend-time">{{ item.time|date:"n/j H:i" }}</div>
+                {% endif %}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+
+{% block footer %}
+    <footer class="footer">
+        <div class="footer-container">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+            <button type="submit">送信</button>
+            </form>
+        </div>
+    </footer>
+    {% endblock %}
+

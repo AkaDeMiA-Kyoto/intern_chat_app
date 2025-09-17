@@ -1,0 +1,14 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+    
+    {% block extra_style %}<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/setting_logout.css' %}" />{% endblock %}
+
+ {% block header-title %}setting_logout{% endblock %}
+
+   {% block content %}
+    <form method="post" action="{% url 'setting_logout' %}">
+   {% csrf_token %}
+   <button type="submit">ログアウト</button>
+   </form>
+   {% endblock %}
