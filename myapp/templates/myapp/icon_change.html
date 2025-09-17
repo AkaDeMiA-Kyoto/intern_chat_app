@@ -1,0 +1,18 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/icon_change.css' %}" />
+{% endblock %}
+
+{% block header-title %}アイコン変更{% endblock %}
+
+{% block content %}
+    <form class="ui form" method="POST" enctype="multipart/form-data" action="">
+        {% csrf_token %}
+        {{form.as_p}}
+        現在の画像<br>
+        <img class="icon" src="{{ user.icon.url }}"><br>
+        <button type="submit" class="ui orange button">変更</button>
+    </form>
+{% endblock %}

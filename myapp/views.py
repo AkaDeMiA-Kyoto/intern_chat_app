@@ -1,9 +1,10 @@
 from django.shortcuts import redirect, render
-from .forms import SignupForm, LoginForm, TalkModelForm
+from .forms import SignupForm, LoginForm, TalkModelForm, UsernameChangeForm, EmailChangeForm, IconChangeForm
 from django.contrib.auth import login
 from .models import CustomUser, Talk
 from django.db.models import Q
 from datetime import datetime,timezone
+
 
 
 def index(request):
@@ -97,10 +98,61 @@ def setting(request):
     return render(request, "myapp/setting.html")
 
 def username_change(request):
-    return render(request, "myapp/username_change.html")
+    user = request.user
+    if request.method == 'POST':
+        form = UsernameChangeForm(request.POST)
+        if form.is_valid():
+            new_username = form.cleaned_data['username']
+            user.username = new_username
+            user.save()
+            return redirect('username_change_done')
+    else:
+        form = UsernameChangeForm()
+    return render(request, "myapp/username_change.html", {'form': form})
+
+def username_change_done(request):
+    return render(request, "myapp/username_change_done.html")
+
+def email_change(request):
+    user = request.user
+    if request.method == 'POST':
+        form = EmailChangeForm(request.POST)
+        if form.is_valid():
+            new_email = form.cleaned_data['email']
+            user.email = new_email
+            user.save()
+            return redirect('email_change_done')
+    else:
+        form = EmailChangeForm()
+    return render(request, "myapp/email_change.html", {'form': form})
+
+def email_change_done(request):
+    return render(request, "myapp/email_change_done.html")
+
+def icon_change(request):
+    user = request.user
+    if request.method == 'POST':
+        form = IconChangeForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_icon = form.cleaned_data['icon']
+            user.icon = new_icon
+            user.save()
+            return redirect('icon_change_done')
+    else:
+        form = IconChangeForm(initial={'icon': user.icon})
+    return render(request, "myapp/icon_change.html", {'form': form})
+
+def icon_change_done(request):
+    return render(request, "myapp/icon_change_done.html")
+
+def password_change(request):
+    return render(request, "myapp/password_change.html")
+
+def password_change_done(request):
+    return render(request, "myapp/password_change_done.html")
 
 def logout(request):
-    pass
+    return render(request, "myapp/index.html")
 
 
 

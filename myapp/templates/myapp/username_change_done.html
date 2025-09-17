@@ -1,0 +1,12 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/css/usermane_change_done.css' %}" />
+{% endblock %}
+
+{% block header-title %}ユーザー名変更{% endblock %}
+
+{% block content %}
+<div class="title">ユーザー名変更完了</div>
+{% endblock %}

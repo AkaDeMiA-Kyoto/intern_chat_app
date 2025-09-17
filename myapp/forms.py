@@ -15,4 +15,12 @@ class TalkModelForm(forms.ModelForm):
     class Meta:
         model = Talk
         fields = ['content']
-    
+
+class UsernameChangeForm(forms.Form): 
+    username = forms.CharField(max_length=100, label='新しいユーザー名')
+
+class EmailChangeForm(forms.Form): 
+    email = forms.EmailField(max_length=100, label='新しいメールアドレス')
+
+class IconChangeForm(forms.Form): 
+    icon = forms.FileField(label='画像')
