@@ -22,6 +22,7 @@ from .forms import (
     TalkForm,
     UserNameSettingForm,
     FriendSearchForm,
+    VerifyForm
 )
 from .models import Talk
 
@@ -98,31 +99,42 @@ from django.contrib.auth import login
 
 def login_view(request):
     if request.method == "GET":
-        form = LoginForm()
-        n=random.randint(100000,999999)
-        request.session['mail_authentication']=n
-        send_mail(
-            "Djangoログイン認証",
-            f"メール認証の値：{n}",
-            "django@django.com",
-            [f"{request.user.email}"]
-        )  
+        pass
     else:
-        form = LoginForm(data=request.POST)
-        session=request.session.get('mail_authentication')
-        authentication_number=int(request.POST['mail_authentication'])
-        if authentication_number==session:
-            del request.session["mail_authentication"]
-            if form.is_valid():
-                user = form.get_user()
-                if user:
-                    login(request, user)
-                    return redirect("friends")
-        else:
-            return redirect("login")
+        user=authenticate(request,username=request.POST['username'],password=request.POST['password'])
+        if user is not None:
+            n=random.randint(100000,999999)
+            request.session['mail_authentication']=n
+            request.session['user_id']=user.pk
+            send_mail(
+                "Djangoログイン認証",
+                f"メール認証の値：{n}",
+                "django@django.com",
+                [user.email]
+            )
+            return redirect("verify")
+    form = LoginForm() 
     param = {"form": form} 
     return render(request, "myapp/login.html", param)
     
+def verify(request):
+    if request.method=='POST':
+        user_id = request.session.get('user_id')
+        correct_code = request.session.get('mail_authentication')
+        number=int(request.POST['mail_authentication'])
+        if user_id is None or correct_code is None:
+            return redirect('login')
+        else:
+            if number == correct_code:
+                user = User.objects.get(pk=user_id)
+                login(request, user) 
+                del request.session['user_id']
+                del request.session['mail_authentication']
+                return redirect('friends')
+    
+    form=VerifyForm()
+    return render(request,'myapp/verify.html',{'form':form})
+
 class Logout(LoginRequiredMixin, LogoutView):
     """ログアウトページ"""
 

@@ -18,6 +18,9 @@ class SignUpForm(UserCreationForm):
 
 
 class LoginForm(AuthenticationForm):
+    pass
+
+class VerifyForm(forms.Form):
     mail_authentication=forms.IntegerField()
 
 class MailSettingForm(forms.ModelForm):

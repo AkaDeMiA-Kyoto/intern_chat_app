@@ -22,4 +22,5 @@ urlpatterns = [
     path("username_change/", views.username_change, name="username_change"),
     path("username_change_done/", views.username_change_done, name="username_change_done"),
     path('friend_search/',views.friend_search,name="friend_search"),
+    path('verify/',views.verify,name='verify'),
 ]
