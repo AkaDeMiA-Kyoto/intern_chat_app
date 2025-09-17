@@ -1,0 +1,41 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+ {% block extra_style %}
+ <link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}" />
+ {% endblock %}
+{% block header-title %}友達{% endblock %}
+{% block content %}
+<table class="user-table">
+    <thead>
+        <tr>
+            <th>ユーザー</th>
+            <th>直近のメッセージ</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in other_users %}
+        <tr>
+            <td class="user">
+                <a href="{% url 'talk_room' recipient_pk=user.pk %}">
+                    <div class="user-info">
+                        <img src="{{ user.icon.url }}" class="usericon">
+                        <span class="username">{{ user.username }}</span>
+                    </div>
+                </a>
+            </td>
+            <td>
+                {% if user.last_message_content %}
+                    {{ user.last_message_content }}
+                {% else %}
+                    まだメッセージがありません
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">あなた以外のユーザーはいません。</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

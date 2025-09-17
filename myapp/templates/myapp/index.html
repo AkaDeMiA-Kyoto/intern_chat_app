@@ -1,1 +1,20 @@
-I
+{% load static%}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'myapp/css/index.css' %}">
+    <title>index</title>
+</head>
+<body>
+    <form action="{% url 'login_view' %}" method="GET">
+        {% csrf_token %}
+        <button type="submit" class="btn">ログイン</button>
+    </form>
+    <form action="{% url 'signup_view' %}" method="GET">
+        {% csrf_token %}
+        <button type="submit" class="btn">会員登録</button>
+    </form>
+</body>
+</html>

@@ -1,1 +1,33 @@
-S
+{% extends "myapp/base.html" %}
+{% load static %}
+ {% block extra_style %}
+ <link rel="stylesheet" href="{% static 'myapp/css/setting.css' %}" />
+ {% endblock %}
+{% block header-title %}設定{% endblock %}
+{% block content %}
+{% if user.is_authenticated %}
+<div class="buttons">
+    <a href="{% url 'username_change' %}">
+      <button type="submit">ユーザー名変更</button>
+    </a>
+
+    <a href="{% url 'email_change' %}">
+      <button type="submit">メールアドレス変更</button>
+    </a>
+
+    <a href="{% url 'icon_change' %}">
+      <button type="submit">アイコン変更</button>
+    </a>
+
+    <a href="{% url 'pw_change' %}">
+      <button type="submit">パスワード変更</button>
+    </a>
+
+    <a href="{% url 'logout' %}">
+      <button type="submit">ログアウト</button>
+    </a>
+</div>
+{% else %}
+<a href="{% url 'login' %}">ログイン</a>
+{% endif %}
+{% endblock %}

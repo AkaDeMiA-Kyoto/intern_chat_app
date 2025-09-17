@@ -1,1 +1,28 @@
-TR
+{% extends "myapp/base.html" %}
+{% load static %}
+ {% block extra_style %}
+ <link rel="stylesheet" href="{% static 'myapp/css/talk_room.css' %}" />
+ {% endblock %}
+{% block header-title %}{{ recipient.username }}さんとのトーク{% endblock %}
+{% block content %}
+<div class="message-list">
+    {% for message in messages %}
+        <div class = "message {% if message.sender == request.user %}me{% else %}other{% endif %}">
+            <p>{{ message.content }}</p>
+        </div>
+    {% empty %}
+        <p>まだやり取りがありません。</p>
+    {% endfor %}
+</div>
+<div class = "message-input-container">
+    <form method = "post" class = "message-form">
+        {% csrf_token %}
+        <div class="form-field-wrapper">
+            {{ form.as_p }}
+        </div>
+        <div class="form-button-wrapper">
+            <button type = "submit" class = "submit-button">送信</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
