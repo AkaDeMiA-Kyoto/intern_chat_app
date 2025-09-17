@@ -132,8 +132,8 @@ MEDIA_ROOT = BASE_DIR / 'media_local'
 
 AUTH_USER_MODEL = 'myapp.CustomUser' 
 
-LOGIN_REDIRECT_URL = "http://127.0.0.1:8000/friends/"
-LOGOUT_REDIRECT_URL = "http://127.0.0.1:8000/" 
+LOGIN_REDIRECT_URL = "/friends"
+LOGOUT_REDIRECT_URL = "/" 
 
 # デプロイ環境のための設定(追加)
 if os.path.isfile('.env'): # .envファイルが存在しない時にもエラーが発生しないようにする
