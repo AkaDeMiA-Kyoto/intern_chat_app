@@ -16,7 +16,13 @@
             友達に応じて表示
             ＞for文を回して表示
         -->
-
+        <div class="search-form-container">
+            <i class="fa-solid fa-magnifying-glass" style="color: #575757;"></i>
+            <form method="get" action=""> <!-- action="" は現在のURLに送信するという意味 -->
+                <input class="input-bar"type="text" name="query" placeholder="ユーザー名で検索..." value="{{ query|default:'' }}">
+                <button type="submit" class="button">検索</button>
+            </form>
+        </div>
         <!--
             最新のトークを表示するVer
             friendsではなく、作成したtalk_listでforをまわす

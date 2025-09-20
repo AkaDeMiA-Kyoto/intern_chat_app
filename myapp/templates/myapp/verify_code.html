@@ -1,0 +1,35 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/login.css' %}">
+{% endblock %}
+
+{% block header_title %}ログイン{% endblock %}
+
+{% block content %}
+<h2>二段階認証</h2>
+<p>ご登録のメールアドレスに送信された6桁の認証コードを入力してください。</p>
+
+<form method="post">
+    {% csrf_token %}
+    
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <p style="color: red;">{{ error }}</p>
+        {% endfor %}
+    {% endif %}
+
+    {{ form.code.label_tag }}
+    {{ form.code }}
+    {% if form.code.errors %}
+        {% for error in form.code.errors %}
+            <p style="color: red;">{{ error }}</p>
+        {% endfor %}
+    {% endif %}
+    
+    <button type="submit">認証</button>
+</form>
+{% endblock %}
+
+{% block footer %}{% endblock %}

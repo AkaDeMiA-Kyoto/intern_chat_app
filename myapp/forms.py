@@ -60,3 +60,10 @@ class TalkForm(forms.ModelForm):
         fields = ("talk",)
         # 入力予測の表示をさせない（めっちゃ邪魔）
         widgets = {"talk": forms.TextInput(attrs={"autocomplete": "off"})}
+
+class VerifyCodeForm(forms.Form):
+    code = forms.CharField(
+        label="認証コード",
+        max_length=6,
+        widget=forms.TextInput(attrs={'placeholder': '6桁のコードを入力'})
+    )

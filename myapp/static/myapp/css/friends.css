@@ -11,6 +11,27 @@
     height: calc(100vh - 128px);
 }
 
+.search-form-container {
+    padding: 10px;
+    background-color: #d6d6d6;
+    display: flex;
+    justify-content: center;
+}
+
+.input-bar {
+    border-radius: 5px;
+    margin-left: 10px;
+    border: solid 1px #ffffff;
+    width: 60vw;
+}
+
+.button {
+    border-radius: 10px;
+    background-color: #d6d6d6;
+    border: solid 1px #575757;
+    color: #575757;
+}
+
 /*
  * margin:autoと横幅の指定でcalcを上手く利用することで、単位が違う横幅指定をしつつ
  * 全体のバランスを取れるように設計する

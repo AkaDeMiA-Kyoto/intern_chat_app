@@ -1,3 +1,12 @@
+import random
+import time
+from django.views.generic import FormView
+from django.contrib.auth import login
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.conf import settings
+
+from .forms import VerifyCodeForm
 import operator
 
 from django.contrib.auth import authenticate, get_user_model, login
@@ -74,25 +83,110 @@ def signup_view(request):
     return render(request, "myapp/signup.html", context)
 
 
-class Login(LoginView):
-    """ログインページ
-
-    GETの時は指定されたformを指定したテンプレートに表示
-    POSTの時はloginを試みる。→成功すればdettingのLOGIN_REDIRECT_URLで指定されたURLに飛ぶ
-    """
-
-    authentication_form = LoginForm
+# 1. ログイン処理をカスタマイズするビュー
+class CustomLoginView(LoginView):
     template_name = "myapp/login.html"
+  
+
+    def form_valid(self, form):
+        # 認証されたユーザーオブジェクトを取得
+        user = form.get_user()
+
+        # 6桁のランダムな認証コードを生成
+        code = f"{random.randint(0, 999999):06d}"
+
+        # セッションに認証情報を一時保存 (有効期間600秒 = 10分)
+        self.request.session['2fa_user_id'] = user.id
+        self.request.session['2fa_code'] = code
+        self.request.session['2fa_expiry'] = time.time() + 600 # 10分
+
+        # メールを送信
+        subject = '二段階認証コードのお知らせ'
+        message = f'あなたの認証コードは {code} です。10分以内にご入力ください。'
+        from_email = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [user.email]
+
+        try:
+            send_mail(subject, message, from_email, recipient_list)
+        except Exception as e:
+            # メール送信失敗時のエラーハンドリング
+            print(f"Error sending email: {e}")
+            form.add_error(None, "認証コードの送信中にエラーが発生しました。")
+            return self.form_invalid(form)
+
+        # 認証コード入力ページへリダイレクト
+        return redirect('verify_code')
+
+
+# 2. 認証コードを検証するビュー
+class VerifyCodeView(FormView):
+    template_name = 'myapp/verify_code.html'
+    form_class = VerifyCodeForm
+    success_url = reverse_lazy(settings.LOGIN_REDIRECT_URL)
+
+    def dispatch(self, request, *args, **kwargs):
+        # セッションに2FA情報がなければログインページに戻す
+        if '2fa_user_id' not in self.request.session:
+            return redirect('login')
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        entered_code = form.cleaned_data['code']
+        
+        # セッションから情報を取得
+        user_id = self.request.session.get('2fa_user_id')
+        stored_code = self.request.session.get('2fa_code')
+        expiry_time = self.request.session.get('2fa_expiry')
+
+        # コードの検証
+        if user_id is None or stored_code is None or expiry_time is None:
+            form.add_error(None, "認証セッションが無効です。もう一度ログインしてください。")
+            return self.form_invalid(form)
+
+        if time.time() > expiry_time:
+            form.add_error(None, "認証コードの有効期限が切れました。もう一度ログインしてください。")
+            return self.form_invalid(form)
+            
+        if entered_code != stored_code:
+            form.add_error('code', "認証コードが正しくありません。")
+            return self.form_invalid(form)
+
+        # 検証成功
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            form.add_error(None, "ユーザーが見つかりません。")
+            return self.form_invalid(form)
+        
+        # ユーザーをログインさせる
+        login(self.request, user)
+
+        # セッションから2FA情報を削除
+        self.request.session.pop('2fa_user_id', None)
+        self.request.session.pop('2fa_code', None)
+        self.request.session.pop('2fa_expiry', None)
+
+        return super().form_valid(form)
 
 
 class Logout(LoginRequiredMixin, LogoutView):
+    pass
     """ログアウトページ"""
 
 
 @login_required
 def friends(request):
     user = request.user
+
+    # GETリクエストから'query'という名前のパラメータを取得する
+    query = request.GET.get('query')
+
     friends = User.objects.exclude(id=user.id)
+
+    # もし検索クエリ(query)が存在すれば、friendsをさらにフィルタリング
+    if query:
+        # usernameにqueryが含まれるユーザーを部分一致・大文字小文字無視で検索
+        friends = friends.filter(username__icontains=query)
 
     # トーク情報とフレンド情報を含む info を作成
     info = []
@@ -118,6 +212,7 @@ def friends(request):
     
     context = {
         "info": info,
+        "query": query,
     }
     return render(request, "myapp/friends.html", context)
 
