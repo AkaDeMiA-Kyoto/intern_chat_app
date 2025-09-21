@@ -9,8 +9,15 @@
 
 {% block content %}
 <div class="friends">
+    <!-- 友達検索 -->
+    <div class="search">
+        <div class="glass"></div>
+        <form action="{% url 'friends' %}" method="get" class="search_box">
+            <input type="text" class="search_field" name="query" value="{{ request.GET.query }}" placeholder="ユーザー名で検索">
+            <button type="submit" value="search" class="search_button">検索</button>
+        </form>
+    </div>
     <!-- 友達のリスト表示部分 -->
-    <ul class="friend-list">
 
         <!--
             友達に応じて表示
@@ -22,6 +29,7 @@
             friendsではなく、作成したtalk_listでforをまわす
             ＞ここでどういうリストなら表示ができるかを考えてリストの項目を設計
         -->
+    <ul class="friend-list">
         {% for friend, talk, time in info %}
         <a class="friend-list__link" href="{% url 'talk_room' friend.id %}">
         <li class="friend-list__item">

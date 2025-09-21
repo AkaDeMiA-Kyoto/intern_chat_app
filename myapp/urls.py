@@ -5,7 +5,8 @@ from . import views
 urlpatterns = [
     path("", views.index, name="index"),
     path("signup/", views.signup_view, name="signup"),
-    path("login/", views.Login.as_view(), name="login"),
+    path("login/", views.login_view, name="login"),
+    path("one_time_pass/", views.AuthOneTime, name='one_time_pass'),
     path("friends/", views.friends, name="friends"),
     # トーク画面
     # 誰とのトークかを、URLにて判別

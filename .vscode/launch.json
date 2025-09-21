@@ -1,0 +1,51 @@
+{
+    // IntelliSense を使用して利用可能な属性を学べます。
+    // 既存の属性の説明をホバーして表示します。
+    // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "runserver",
+            "type": "debugpy",
+            "request": "launch",
+            "args": [
+                "runserver"
+            ],
+            "django": true,
+            "program": "${workspaceFolder}/manage.py",
+            "env":{
+                "DB_USER":"chatadmin",
+                "DB_PASSWORD":"eggychat1",
+            }
+        },
+        {
+            "name": "makemigrations",
+            "type": "debugpy",
+            "request": "launch",
+            "args": [
+                "makemigrations"
+            ],
+            "django": true,
+            "program": "${workspaceFolder}/manage.py",
+            "env":{
+                "DB_USER":"chatadmin",
+                "DB_PASSWORD":"eggyadmin1",
+            }
+        },
+        {
+            "name": "migrate",
+            "type": "debugpy",
+            "request": "launch",
+            "args": [
+                "migrate"
+            ],
+            "django": true,
+            "program": "${workspaceFolder}/manage.py",
+            "env":{
+                "DB_USER":"chatadmin",
+                "DB_PASSWORD":"eggychat1",
+            }
+        },
+    ]
+}

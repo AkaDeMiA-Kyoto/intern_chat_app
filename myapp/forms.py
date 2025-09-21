@@ -6,7 +6,7 @@ from django.contrib.auth.forms import (
     UserCreationForm,
 )
 
-from .models import Talk
+from .models import Talk,OneTimePass
 
 User = get_user_model()
 
@@ -17,8 +17,13 @@ class SignUpForm(UserCreationForm):
         fields = ("username", "email", "icon")
 
 
+class PassForm(forms.Form):
+    password = forms.CharField(max_length=6)
+
+
 class LoginForm(AuthenticationForm):
-    pass
+    class Meta:
+        model = User
 
 
 class MailSettingForm(forms.ModelForm):
@@ -41,7 +46,7 @@ class ImageSettingForm(forms.ModelForm):
         fields = ("icon",)
 
 
-class PasswordChangeForm(PasswordChangeForm):
+class PasswordChangeForm2(PasswordChangeForm):
     """Django 標準パスワード変更フォーム
 
     Djangoはユーザモデルに未加工の (単なるテキストの) パスワードは保存せずハッシュ値でのみ保存する。

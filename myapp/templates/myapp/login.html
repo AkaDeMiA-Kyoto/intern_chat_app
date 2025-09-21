@@ -13,7 +13,7 @@
     <span>ユーザーID, パスワードが一致しません．</span>
 </div>
 {% endif %}
-<form method="POST" action="{% url 'login' %}" class="login-form">
+<form method="POST" class="login-form">
     {% csrf_token %}
     <div class="login-form__username">
         <label>ユーザーネーム:</label>
