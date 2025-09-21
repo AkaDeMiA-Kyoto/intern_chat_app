@@ -1,4 +1,5 @@
 import operator
+import random
 
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.decorators import login_required
@@ -21,8 +22,11 @@ from .forms import (
     SignUpForm,
     TalkForm,
     UserNameSettingForm,
+    FriendSearchForm,
 )
 from .models import Talk
+from django.core.mail import send_mail
+from django.contrib import messages
 
 User = get_user_model()
 
@@ -84,6 +88,32 @@ class Login(LoginView):
     authentication_form = LoginForm
     template_name = "myapp/login.html"
 
+    def form_valid(self, form):
+        user = form.get_user()
+        login(self.request, user)
+        code = str(random.randint(100000, 999999))
+        self.request.session["2fa_code"] = code
+        self.request.session["2fa_verified"] = False
+        send_mail(
+            "二段階認証のコードです",
+            f"次のコードを入力してください: {code}",
+            "thisistest@gmail.com",
+            [user.email],
+        )
+        return redirect("verify_code")
+    
+def verify_code(request):
+    if request.method == "POST":
+        input_code = request.POST.get("code")
+        if input_code == request.session.get("2fa_code"):
+            request.session["2fa_verified"] = True
+            request.session.pop("2fa_code", None)
+            return redirect("friends")
+        else:
+            messages.error(request, "認証コードが間違っています。もう一度入力してください。")
+            return redirect("verify_code")
+
+    return render(request, "myapp/verify.html")
 
 class Logout(LoginRequiredMixin, LogoutView):
     """ログアウトページ"""
@@ -92,7 +122,10 @@ class Logout(LoginRequiredMixin, LogoutView):
 @login_required
 def friends(request):
     user = request.user
+    query = request.GET.get("q", "")
     friends = User.objects.exclude(id=user.id)
+    if query:
+        friends = friends.filter(username__icontains=query)
 
     # トーク情報とフレンド情報を含む info を作成
     info = []

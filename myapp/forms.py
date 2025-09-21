@@ -60,3 +60,6 @@ class TalkForm(forms.ModelForm):
         fields = ("talk",)
         # 入力予測の表示をさせない（めっちゃ邪魔）
         widgets = {"talk": forms.TextInput(attrs={"autocomplete": "off"})}
+
+class FriendSearchForm(forms.Form):
+    query = forms.CharField(label="友達を検索", max_length=100)
