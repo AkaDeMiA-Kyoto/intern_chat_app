@@ -17,7 +17,7 @@ from django.contrib.auth.views import (
     PasswordChangeDoneView,
     PasswordChangeView,
 )
-from django.db.models import Q
+from django.db.models import Q, OuterRef, Subquery 
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 
@@ -101,7 +101,7 @@ class Login(LoginView):
             form.add_error(None, "このアカウントにメールアドレスが登録されていません。")
             return self.form_invalid(form)
 
-        # OTP発行＆送信
+
         otp = EmailOTP.create_for(user, ttl_minutes=10)
         send_mail(
             subject="【ログイン確認】パスコード",
@@ -111,7 +111,6 @@ class Login(LoginView):
             fail_silently=False,
         )
 
-        # 認証予定ユーザーIDと next をセッションに保存
         self.request.session["2fa_user_id"] = user.id
         nxt = self.request.POST.get("next") or self.request.GET.get("next")
         if nxt:
@@ -137,16 +136,13 @@ def two_factor_verify_view(request):
             if (otp is None) or (not otp.is_valid_now()):
                 form.add_error(None, "コードが無効か期限切れです。はじめからやり直してください。")
             elif code != otp.code:
-                # 失敗カウント
                 EmailOTP.objects.filter(pk=otp.pk).update(attempts=F("attempts") + 1)
                 otp.refresh_from_db()
             else:
-                # 成功 → ログイン確定
                 otp.is_used = True
                 otp.save(update_fields=["is_used"])
                 login(request, user)
 
-                # リダイレクト先を決定
                 next_url = request.session.pop("2fa_next", None)
                 request.session.pop("2fa_user_id", None)
                 return redirect(next_url or self_success_url_fallback())
@@ -157,7 +153,6 @@ def two_factor_verify_view(request):
     return render(request, "myapp/two_factor.html", {"form": form, "user_email": user.email})
 
 def self_success_url_fallback():
-    # LoginView と同等の挙動に寄せる
     from django.conf import settings
     return getattr(settings, "LOGIN_REDIRECT_URL", "/")
 
@@ -195,25 +190,28 @@ def friends(request):
     if q:
         friends_qs = friends_qs.filter(username__icontains=q)
 
-    # トーク情報とフレンド情報を含む info を作成
-    info = []
+    talks_between = (Talk.objects
+        .filter(Q(talk_from=me, talk_to=OuterRef("pk")) | Q(talk_from=OuterRef("pk"), talk_to=me))
+        .order_by("-time"))
+
+    friends_qs = friends_qs.annotate(
+        latest_time=Subquery(talks_between.values("time")[:1]),
+        latest_text=Subquery(talks_between.values("talk")[:1]),
+    )
+
     info_have_message = []
     info_have_no_message = []
-    
     for friend in friends_qs:
-        # 最新のメッセージの取得
-        latest_message = Talk.objects.filter(
-            Q(talk_from=me, talk_to=friend) | Q(talk_to=me, talk_from=friend)
-        ).order_by('time').last()
-
-        if latest_message:
-            info_have_message.append([friend, latest_message.talk, latest_message.time])
+        lt = getattr(friend, "latest_time", None)
+        lx = getattr(friend, "latest_text", None)
+        if lt:
+            info_have_message.append([friend, lx, lt])
         else:
             info_have_no_message.append([friend, None, None])
-    
-    # 時間順に並び替え
+
     info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
-    
+
+    info = []
     info.extend(info_have_message)
     info.extend(info_have_no_message)
     
@@ -229,9 +227,10 @@ def talk_room(request, user_id):
     user = request.user
     friend = get_object_or_404(User, id=user_id)
     # 自分→友達、友達→自分のトークを全て取得
-    talk = Talk.objects.filter(
-        Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-    ).order_by("time")
+    talk = (Talk.objects
+            .filter(Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend))
+            .select_related("talk_from", "talk_to")
+            .order_by("time"))
     # 送信form
     form = TalkForm()
     # メッセージ送信だろうが更新だろが、表示に必要なパラメーターは変わらないので、この時点でまとめて指定
