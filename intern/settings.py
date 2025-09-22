@@ -78,8 +78,12 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg',
+        'NAME': 'myapp_database',
+        'USER' : 'myapp_user',
+        'PASSWORD' : 'django_project',
+        'HOST' : 'localhost',
+        'PORT' : '5432',
     }
 }
 
