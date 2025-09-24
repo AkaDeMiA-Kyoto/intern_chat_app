@@ -8,7 +8,7 @@
 {% block header_title %}ログイン{% endblock %}
 
 {% block content %}
-{% if form.errors  %}
+<!-- {% if form.errors  %}
 <div class="login-error-message">
     <span>ユーザーID, パスワードが一致しません．</span>
 </div>
@@ -26,6 +26,14 @@
         {{ form.password.errors }}
     </div>
     <button type="submit" class="login-form__submit">ログイン</button>
+</form> -->
+<form method="post">
+  {% csrf_token %}
+  <label for="name"> ユーザー名</label> 
+  <input type="text" name="username" id="name"><br>
+  <label for="pass"> パスワード</label>
+  <input type="password" name="password" id="pass"><br>
+  <button type="submit">ログイン</button>
 </form>
 {% endblock %}
 

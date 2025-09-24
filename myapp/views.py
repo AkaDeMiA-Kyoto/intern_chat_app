@@ -22,7 +22,10 @@ from .forms import (
     TalkForm,
     UserNameSettingForm,
 )
-from .models import Talk
+from .models import Talk, OneTimeCode
+
+import random
+from django.core.mail import send_mail
 
 User = get_user_model()
 
@@ -74,15 +77,53 @@ def signup_view(request):
     return render(request, "myapp/signup.html", context)
 
 
-class Login(LoginView):
-    """ログインページ
+""" class Login(LoginView):
+    ログインページ
 
     GETの時は指定されたformを指定したテンプレートに表示
     POSTの時はloginを試みる。→成功すればdettingのLOGIN_REDIRECT_URLで指定されたURLに飛ぶ
-    """
+    
 
     authentication_form = LoginForm
-    template_name = "myapp/login.html"
+    template_name = "myapp/login.html" """
+
+def send_otp(user):
+    code = str(random.randint(000000, 999999))
+    OneTimeCode.objects.create(user=user, code=code)
+
+    send_mail(
+        subject="ログイン用ワンタイムパスワード",
+        message=f"あなたのワンタイムパスワードは {code} です。（15分間有効）",
+        from_email="example@example.com",
+        recipient_list=[user.email],
+    )
+
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
+        if user:
+            send_otp(user)
+            request.session["pending_user_id"] = user.id
+            return redirect("onetimecode")
+    return render(request, "myapp/login.html")
+
+def onetimecode_view(request):
+    if request.method == "POST":
+        code = request.POST["code"]
+        user_id = request.session.get("pending_user_id")
+        if user_id:
+            try:
+                user = User.objects.get(id=user_id)
+                otp = OneTimeCode.objects.filter(user=user, code=code).last()
+                if otp and otp.is_valid():
+                    login(request, user) 
+                    del request.session["pending_user_id"]
+                    return redirect("friends")
+            except User.DoesNotExist:
+                pass
+    return render(request, "myapp/onetimecode.html")
 
 
 class Logout(LoginRequiredMixin, LogoutView):

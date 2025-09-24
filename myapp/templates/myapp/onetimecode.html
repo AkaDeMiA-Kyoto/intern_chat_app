@@ -1,0 +1,19 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/onetimecode.css' %}">
+{% endblock %}
+
+{% block header_title %}ワンタイムパスワード{% endblock %}
+
+{% block content %}
+<form method="post">
+  {% csrf_token %}
+  <label for="code">ワンタイムパスワード</label>
+  <input type="text" name="code" id="name"><br>
+  <button type="submit">送信</button>
+</form>
+{% endblock %}
+
+{% block footer %}{% endblock %}

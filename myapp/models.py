@@ -1,11 +1,21 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
+from django.utils import timezone
+import datetime
+from django.conf import settings
 
 class User(AbstractUser):
     icon = models.ImageField(
         verbose_name="画像", upload_to="uploads", default="images/noimage.png"
     )
+
+class OneTimeCode(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_valid(self):
+        return timezone.now() < self.created_at + datetime.timedelta(minutes=15)
 
 
 # トーク内容を全てdatbaseに保存する形をとる
