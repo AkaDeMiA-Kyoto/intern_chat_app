@@ -1,5 +1,7 @@
 import operator
+import secrets
 
+from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,7 +13,9 @@ from django.contrib.auth.views import (
 )
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
+from django.core.mail import send_mail
 from django.urls import reverse_lazy
+from django.conf import settings
 
 from .forms import (
     ImageSettingForm,
@@ -22,7 +26,7 @@ from .forms import (
     TalkForm,
     UserNameSettingForm,
 )
-from .models import Talk
+from .models import Talk, TwoFactorCode
 
 User = get_user_model()
 
@@ -75,14 +79,13 @@ def signup_view(request):
 
 
 class Login(LoginView):
-    """ログインページ
-
-    GETの時は指定されたformを指定したテンプレートに表示
-    POSTの時はloginを試みる。→成功すればdettingのLOGIN_REDIRECT_URLで指定されたURLに飛ぶ
-    """
-
     authentication_form = LoginForm
     template_name = "myapp/login.html"
+    def form_valid(self, form):
+        user = form.get_user()
+        self.request.session['user_id'] = user.id
+        generate_and_send_code(user)
+        return redirect('verify_code')
 
 
 class Logout(LoginRequiredMixin, LogoutView):
@@ -272,3 +275,54 @@ class PasswordChange(PasswordChangeView):
 
 class PasswordChangeDone(PasswordChangeDoneView):
     """Django標準パスワード変更後ビュー"""
+
+def generate_and_send_code(user):
+    code = str(secrets.randbelow(1000000)).zfill(6)
+
+    two_factor_code, created = TwoFactorCode.objects.update_or_create(
+        user=user,
+        defaults={'code': code}
+    )
+
+    subject = '2段階認証コード'
+    message = f'認証コードは {code} です。'
+    from_email = settings.EMAIL_HOST_USER
+    recipient_list = [user.email]
+
+    send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+
+
+def verify_code(request):
+    if request.method == 'POST':
+        user_id = request.session.get('user_id')
+        user = User.objects.get(id=user_id)
+        if not user_id:
+            messages.error(request, 'セッション情報が無効です。再度ログインしてください。')
+            return redirect('login')
+        entered_code = request.POST.get('code')
+
+        try:
+            two_factor_code = TwoFactorCode.objects.get(user=user)
+            if two_factor_code.code == entered_code and not two_factor_code.is_expired():
+                login(request, user)
+                two_factor_code.delete()
+                del request.session['user_id']
+                return redirect(settings.LOGIN_REDIRECT_URL)
+            else:
+                messages.error(request, '無効なコードです。')
+        except TwoFactorCode.DoesNotExist:
+            messages.error(request, '無効なコードです。')
+
+    return render(request, 'myapp/verify_code.html')
+
+
+def user_search_view(request):
+    query = request.GET.get('q')
+    users = []
+    if query:
+        users = User.objects.filter(username__icontains=query)
+    context = {
+        'users' : users,
+        'query' : query,
+    }
+    return render(request, 'myapp/friends.html', context)

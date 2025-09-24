@@ -9,37 +9,52 @@
 
 {% block content %}
 <div class="friends">
-    <!-- 友達のリスト表示部分 -->
-    <ul class="friend-list">
+    <form method="get" action="{% url 'user_search' %}" class="research_form">
+        <input type="text" name="q" value="{{ query|default:'' }}" placeholder="ユーザー名を入力">
+        <button type="submit">検索</button>
+    </form>
+    {% if query %}
+        <h2>検索結果</h2>
+        <ul>
+            {% for user in users %}
+                <li>{{ user.username }}</li>
+            {% empty %}
+                <li>検索条件に合致するユーザーは見つかりませんでした。</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <!-- 友達のリスト表示部分 -->
+        <ul class="friend-list">
 
-        <!--
-            友達に応じて表示
-            ＞for文を回して表示
-        -->
+            <!--
+                友達に応じて表示
+                ＞for文を回して表示
+            -->
 
-        <!--
-            最新のトークを表示するVer
-            friendsではなく、作成したtalk_listでforをまわす
-            ＞ここでどういうリストなら表示ができるかを考えてリストの項目を設計
-        -->
-        {% for friend, talk, time in info %}
-        <a class="friend-list__link" href="{% url 'talk_room' friend.id %}">
-        <li class="friend-list__item">
-            <!-- それぞれが別のトーク画面に飛ぶようにリンクをはる -->
-                <img class="friend-list__usericon" src="{{ friend.icon.url }}">
-                <div class="friend-list__username">{{ friend.username }}</div>
-                <!-- ここから最新のトークを表示する部分 -->
-                {% if talk %}
-                <div class="friend-list__talk">
-                    <p class="friend-list__content">{{ talk }}</p>
-                    <p class="friend-list__time">{{ time|date:"n/j H:i" }}</p>
-                </div>
-                {% endif %}
-        </li>
-        </a>
-        {% empty %}
-        {% endfor %}
-        <!-- ここまで　最新のトークを表示するVer -->
-    </ul>
+            <!--
+                最新のトークを表示するVer
+                friendsではなく、作成したtalk_listでforをまわす
+                ＞ここでどういうリストなら表示ができるかを考えてリストの項目を設計
+            -->
+            {% for friend, talk, time in info %}
+            <a class="friend-list__link" href="{% url 'talk_room' friend.id %}">
+            <li class="friend-list__item">
+                <!-- それぞれが別のトーク画面に飛ぶようにリンクをはる -->
+                    <img class="friend-list__usericon" src="{{ friend.icon.url }}">
+                    <div class="friend-list__username">{{ friend.username }}</div>
+                    <!-- ここから最新のトークを表示する部分 -->
+                    {% if talk %}
+                    <div class="friend-list__talk">
+                        <p class="friend-list__content">{{ talk }}</p>
+                        <p class="friend-list__time">{{ time|date:"n/j H:i" }}</p>
+                    </div>
+                    {% endif %}
+            </li>
+            </a>
+            {% empty %}
+            {% endfor %}
+            <!-- ここまで　最新のトークを表示するVer -->
+        </ul>
+    {% endif %}
 </div>
 {% endblock %}
