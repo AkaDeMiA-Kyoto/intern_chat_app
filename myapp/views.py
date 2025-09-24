@@ -22,10 +22,11 @@ from .forms import (
     TalkForm,
     UserNameSettingForm,
 )
-from .models import Talk, OneTimeCode
+from .models import Talk, OneTimeCode, User
 
 import random
 from django.core.mail import send_mail
+
 
 User = get_user_model()
 
@@ -133,7 +134,11 @@ class Logout(LoginRequiredMixin, LogoutView):
 @login_required
 def friends(request):
     user = request.user
+    query = request.GET.get("query")
     friends = User.objects.exclude(id=user.id)
+
+    if query:
+        friends = friends.filter(username__icontains=query)
 
     # トーク情報とフレンド情報を含む info を作成
     info = []
