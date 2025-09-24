@@ -164,7 +164,7 @@ def friends(request):
     user = request.user
     query = request.GET.get('query')
     if query:
-        friends = User.objects.exclude(id=user.id).filter(username=query)
+        friends = User.objects.exclude(id=user.id).filter(Q(username__contains=query) | Q(email__contains=query))
     else:
         friends = User.objects.exclude(id=user.id)
 
@@ -172,13 +172,14 @@ def friends(request):
     info = []
     info_have_message = []
     info_have_no_message = []
-    
+    Talks = Talk.objects.select_related('talk_to','talk_from').order_by('-time')
+
     for friend in friends:
         # 最新のメッセージの取得
-        latest_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-        ).order_by('time').last()
-
+        for talk in Talks:
+            if (talk.talk_from == user and talk.talk_to == friend) or (talk.talk_from == friend and talk.talk_to == user): 
+                latest_message = talk
+                break
         if latest_message:
             info_have_message.append([friend, latest_message.talk, latest_message.time])
         else:

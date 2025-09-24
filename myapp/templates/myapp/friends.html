@@ -13,7 +13,7 @@
     <div class="search">
         <div class="glass"></div>
         <form action="{% url 'friends' %}" method="get" class="search_box">
-            <input type="text" class="search_field" name="query" value="{{ request.GET.query }}" placeholder="ユーザー名で検索">
+            <input type="text" class="search_field" name="query" value="{{ request.GET.query }}" placeholder="ユーザー名またはEmailで検索">
             <button type="submit" value="search" class="search_button">検索</button>
         </form>
     </div>
