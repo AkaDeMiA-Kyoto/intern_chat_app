@@ -8,7 +8,7 @@ import secrets
 
 class User(AbstractUser):
     icon = models.ImageField(
-        verbose_name="画像", upload_to="uploads", default="images/noimage.png"
+        verbose_name="画像", upload_to="uploads"
     )
 
 

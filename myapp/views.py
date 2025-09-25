@@ -25,7 +25,7 @@ from .forms import (
     ImageSettingForm,
     LoginForm,
     MailSettingForm,
-    PasswordChangeForm,
+    UserPasswordChange,
     SignUpForm,
     TalkForm,
     UserNameSettingForm,
@@ -220,46 +220,37 @@ def friends(request):
     }
     return render(request, "myapp/friends.html", context)
 
+def get_queryset(user, friend):
+    return (Talk.objects
+            .filter(Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend))
+            .select_related("talk_from", "talk_to")   # N+1回避
+            .order_by("time"))
 
 @login_required
 def talk_room(request, user_id):
-    # ユーザ・友達をともにオブジェクトで取得
     user = request.user
     friend = get_object_or_404(User, id=user_id)
-    # 自分→友達、友達→自分のトークを全て取得
-    talk = (Talk.objects
-            .filter(Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend))
-            .select_related("talk_from", "talk_to")
-            .order_by("time"))
-    # 送信form
+
+    # ★ ここだけ置き換え：取得と並び替えは get_queryset に集約
+    talk = get_queryset(user, friend)
+
     form = TalkForm()
-    # メッセージ送信だろうが更新だろが、表示に必要なパラメーターは変わらないので、この時点でまとめて指定
     context = {
         "form": form,
         "talk": talk,
         "friend": friend,
     }
 
-    # POST（メッセージ送信あり）
     if request.method == "POST":
-        # 送信内容を取得
         new_talk = Talk(talk_from=user, talk_to=friend)
         form = TalkForm(request.POST, instance=new_talk)
-
-        # 送信内容があった場合
         if form.is_valid():
-            # 保存
             form.save()
-            # 更新
-            # このようなリダイレクト処理はPOSTのリクエストを初期化し、リクエストをGETに戻すことにより
-            # 万一更新処理を連打されてもPOSTのままにさせない等の用途がある
-            return redirect("talk_room", user_id)
-        # バリデーションが通らなかった時の処理を記述
+            # ★ 安全な指定（URL名にパラメータを渡す）
+            return redirect("talk_room", user_id=friend.id)
         else:
-            # エラー時 form.errors には エラー内容が格納されている
             print(form.errors)
 
-    # POSTでない（リダイレクトorただの更新）&POSTでも入力がない場合
     return render(request, "myapp/talk_room.html", context)
 
 
@@ -365,10 +356,11 @@ class PasswordChange(PasswordChangeView):
         form_class: パスワード変更フォーム
     """
 
-    form_class = PasswordChangeForm
+    form_class = UserPasswordChange
     success_url = reverse_lazy("password_change_done")
     template_name = "myapp/password_change.html"
 
 
 class PasswordChangeDone(PasswordChangeDoneView):
     """Django標準パスワード変更後ビュー"""
+    template_name = "myapp/password_change_done.html"
