@@ -79,10 +79,15 @@ WSGI_APPLICATION = 'intern.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'myapp_db',        
+        'USER': 'mizuki1',          
+        'PASSWORD': 'thisistest',  
+        'HOST': 'localhost',       
+        'PORT': '5432',            
     }
 }
+
 
 
 # Password validation
@@ -138,3 +143,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/friends'
 LOGOUT_REDIRECT_URL = '/'
+DEFAULT_FROM_EMAIL="noreply@example.com"
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

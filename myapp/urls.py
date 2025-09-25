@@ -6,7 +6,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("signup/", views.signup_view, name="signup"),
     path("login/", views.Login.as_view(), name="login"),
-    path("friends/", views.friends, name="friends"),
+    path("friends/",  views.searchView.as_view(), name="friends"),
     # トーク画面
     # 誰とのトークかを、URLにて判別
     # ユーザー名に重複が許されていないので、ユーザー名で判別
@@ -21,4 +21,5 @@ urlpatterns = [
     path("mail_change_done/", views.mail_change_done, name="mail_change_done"),
     path("username_change/", views.username_change, name="username_change"),
     path("username_change_done/", views.username_change_done, name="username_change_done"),
+    path("passcode_input/", views.passcodeView.as_view(), name="passcode"),
 ]

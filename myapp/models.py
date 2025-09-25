@@ -6,6 +6,9 @@ class User(AbstractUser):
     icon = models.ImageField(
         verbose_name="画像", upload_to="uploads", default="images/noimage.png"
     )
+    passcode=models.CharField(max_length=6, blank=True, null=True)
+    passcode_created_at=models.TimeField(blank=True, null=True)
+    is_verified = models.BooleanField(default=False)
 
 
 # トーク内容を全てdatbaseに保存する形をとる

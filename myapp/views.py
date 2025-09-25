@@ -21,8 +21,15 @@ from .forms import (
     SignUpForm,
     TalkForm,
     UserNameSettingForm,
+    PasscodeForm
 )
 from .models import Talk
+from django.core.mail import send_mail
+import random
+import string
+from django.views import View
+from django.utils import timezone
+
 
 User = get_user_model()
 
@@ -83,7 +90,13 @@ class Login(LoginView):
 
     authentication_form = LoginForm
     template_name = "myapp/login.html"
-
+    def form_valid(self, form):
+        # ログイン処理（親のform_validを呼ぶことでユーザーがログイン状態になる）
+        response = super().form_valid(form)
+        user = self.request.user
+        if not user.is_verified:
+            return redirect('passcode')  # 未認証ならパスコード入力画面へ
+        return response 
 
 class Logout(LoginRequiredMixin, LogoutView):
     """ログアウトページ"""
@@ -272,3 +285,61 @@ class PasswordChange(PasswordChangeView):
 
 class PasswordChangeDone(PasswordChangeDoneView):
     """Django標準パスワード変更後ビュー"""
+def generate_passcode(length=6):
+    return ''.join(random.choices(string.digits, k=length))
+
+def passcode_user(user):
+        passcode = generate_passcode()
+        user.passcode = passcode
+        user.save()
+        send_mail(
+                "タイトル: パスコードのご案内",
+                "本文: 新しいパスコードは{}です。".format(passcode),
+                "noreply@example.com", 
+                [user.email]
+            )
+def passcode_valid(user, input_passcode):
+    if input_passcode==user.passcode:
+        return True
+    else:
+        return False
+
+class passcodeView(LoginRequiredMixin,View):
+    def get(self,request):
+        form=PasscodeForm()
+        user=request.user
+        passcode_user(user)
+        return render(request, 'myapp/passcode_input.html', {'form': form})
+    def post(self,request):
+        form=PasscodeForm(request.POST)
+        if form.is_valid():
+            input_passcode=form.cleaned_data['passcode']
+            user=request.user
+            if passcode_valid(user, input_passcode):
+                user.is_verified = True
+                user.save()
+                return redirect('friends')
+            else:
+                form.add_error(None, 'パスコードが違います')
+                return render(request, 'myapp/passcode_input.html', {'form': form})
+            
+class searchView(View):
+    def get(self,request):
+        word=request.GET.get('search')
+        info = []
+        if word:
+            results = User.objects.filter(username__contains=word)
+            for friend in results:
+                latest_talk = Talk.objects.filter(
+                    talk_from=friend
+                ).order_by('-time').first()
+                if latest_talk:
+                    info.append((friend, latest_talk.talk, latest_talk.time))
+                else:
+                    info.append((friend, None, None))
+        else:
+            results = User.objects.none()  
+        print('検索ワード:', word)
+        print('検索結果:', results)
+        context = {'results': results, 'info': info}
+        return render(request, 'myapp/friends.html', context)
