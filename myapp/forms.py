@@ -24,7 +24,9 @@ class SecondAuthenticationForm(forms.Form):
     random_password = forms.IntegerField(label="認証コード")
 
 class NameFilterForm(forms.Form):
-    name_filter = forms.CharField(max_length=30)
+    name_filter = forms.CharField(max_length=30, required=False, widget=forms.TextInput(attrs={
+                'placeholder': 'ユーザー名で検索'
+            }))
 
 class MailSettingForm(forms.ModelForm):
     class Meta:

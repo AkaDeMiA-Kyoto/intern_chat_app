@@ -22,6 +22,7 @@ from .forms import (
     TalkForm,
     UserNameSettingForm,
     SecondAuthenticationForm,
+    NameFilterForm,
 )
 from .models import Talk
 
@@ -130,8 +131,14 @@ def second_authentication(request):
 @login_required
 def friends(request):
     user = request.user
-    friends = User.objects.exclude(id=user.id)
-
+    if request.method == "GET":
+        form = NameFilterForm()
+        friends = User.objects.exclude(id=user.id)
+    elif request.method == "POST":
+        form = NameFilterForm(request.POST)
+        if form.is_valid():
+            name_filter = form.cleaned_data.get("name_filter")
+            friends = User.objects.filter(username__contains=name_filter).exclude(id=user.id)
     # トーク情報とフレンド情報を含む info を作成
     info = []
     info_have_message = []
@@ -153,9 +160,11 @@ def friends(request):
     
     info.extend(info_have_message)
     info.extend(info_have_no_message)
+
     
     context = {
         "info": info,
+        "form": form,
     }
     return render(request, "myapp/friends.html", context)
 
