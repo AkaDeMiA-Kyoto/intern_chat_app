@@ -4,7 +4,6 @@ from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import (
-    LoginView,
     LogoutView,
     PasswordChangeDoneView,
     PasswordChangeView,
@@ -17,7 +16,7 @@ from .forms import (
     ImageSettingForm,
     LoginForm,
     MailSettingForm,
-    PasswordChangeForm,
+    PasswordCForm,
     SignUpForm,
     TalkForm,
     UserNameSettingForm,
@@ -351,7 +350,7 @@ class PasswordChange(PasswordChangeView):
         form_class: パスワード変更フォーム
     """
 
-    form_class = PasswordChangeForm
+    form_class = PasswordForm
     success_url = reverse_lazy("password_change_done")
     template_name = "myapp/password_change.html"
 
