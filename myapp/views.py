@@ -108,13 +108,10 @@ def login_view(request):
                     [trylogin.email] # 宛先はリスト形式（複数可）
                 )
                 return redirect('one_time_pass', preserve_request=True)
-                # return render(request, "myapp/one_time_pass.html")
             else:
-                form = LoginForm(data=request.POST)
                 error_message = 'ユーザー名とパスワードが一致しません。'
                 return render(request,"myapp/login.html",{'form':form,'error':error_message,})
         else:
-            form = LoginForm()
             error_message = 'ユーザー名とパスワードが一致しません。'
             return render(request,"myapp/login.html",{'form':form,'error':error_message,})
     else:
@@ -135,7 +132,6 @@ def AuthOneTime(request):
                     login(request, trylogin)
                     return redirect('friends')
             else:
-                form = PassForm()
                 content = {
                     'form': form,
                     'errormessage':'誤ったワンタイムパスワードです。',
@@ -143,7 +139,6 @@ def AuthOneTime(request):
                 
                 return render(request,'myapp/one_time_pass.html',content)
         else:
-            form = PassForm()
             content = {
                 'form': form,
             }
