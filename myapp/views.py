@@ -182,6 +182,8 @@ def friends(request):
             if (talk.talk_from == user and talk.talk_to == friend) or (talk.talk_from == friend and talk.talk_to == user): 
                 latest_message = talk
                 break
+            else:
+                latest_message = None
         if latest_message:
             info_have_message.append([friend, latest_message.talk, latest_message.time])
         else:
