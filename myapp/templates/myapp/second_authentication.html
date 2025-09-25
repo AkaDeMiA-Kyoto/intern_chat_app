@@ -1,0 +1,11 @@
+{% extends "myapp/base.html" %}
+{% block header_title %}二段階認証{% endblock %}
+{% block content %}
+{% if form.errors  %}
+{{ form.random_password.errors }}
+{% endif %}
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+</form>
+{% endblock %}

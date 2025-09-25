@@ -21,8 +21,12 @@ from .forms import (
     SignUpForm,
     TalkForm,
     UserNameSettingForm,
+    SecondAuthenticationForm,
 )
 from .models import Talk
+
+from django.core.mail import send_mail
+import random
 
 User = get_user_model()
 
@@ -83,10 +87,44 @@ class Login(LoginView):
 
     authentication_form = LoginForm
     template_name = "myapp/login.html"
+    def form_valid(self,form):
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
+        user = authenticate(self.request, username=username, password=password)
+        if user is not None:
+            random_password = random.randint(100000, 999999)
+            self.request.session['2a_user_id'] = user.id
+            self.request.session['2a_password'] = random_password
+            send_mail(
+                "二段階認証",
+                "認証コードは"+str(random_password),
+                "watanabe@example.com",
+                [user.email]
+            )
+            return redirect('second_authentication')
+        else:
+            return self.form_invalid(form)
 
-
-class Logout(LoginRequiredMixin, LogoutView):
-    """ログアウトページ"""
+def second_authentication(request):
+    if request.method == 'POST':
+        form = SecondAuthenticationForm(request.POST)
+        if form.is_valid():
+            auth_code = form.cleaned_data.get('random_password')
+            if auth_code == request.session.get('2a_password'):
+                user_id = request.session.get('2a_user_id')
+                user = User.objects.get(id=user_id)
+                login(request, user)
+                del request.session['2a_user_id']
+                del request.session['2a_password']
+                return redirect("friends")
+            else:
+                form.add_error(None, '認証コードが正しくありません。')
+    else:
+        form = SecondAuthenticationForm()
+    context = {
+        "form": form,
+    }
+    return render(request, 'myapp/second_authentication.html', context)
 
 
 @login_required

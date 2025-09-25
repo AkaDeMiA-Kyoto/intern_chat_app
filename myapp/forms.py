@@ -20,6 +20,8 @@ class SignUpForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     pass
 
+class SecondAuthenticationForm(forms.Form):
+    random_password = forms.IntegerField(label="認証コード")
 
 class MailSettingForm(forms.ModelForm):
     class Meta:
