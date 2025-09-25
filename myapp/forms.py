@@ -32,14 +32,14 @@ class MailSettingForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ("email",)
-        labels = {"email": "新しいユーザー名"}
+        labels = {"email": "新しいメールアドレス"}
 
 
 class UserNameSettingForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ("username",)
-        labels = {"username": "新しいメールアドレス"}
+        labels = {"username": "新しいメール"}
 
 
 class ImageSettingForm(forms.ModelForm):
