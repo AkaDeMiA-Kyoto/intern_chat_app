@@ -28,3 +28,6 @@ class Talk(models.Model):
 
     def __str__(self):
         return "{}>>{}".format(self.talk_from, self.talk_to)
+    
+    class Meta:
+        db_table='talk'

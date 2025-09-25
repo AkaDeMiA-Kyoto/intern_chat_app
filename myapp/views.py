@@ -150,11 +150,13 @@ def friends(request):
     info_have_message = []
     info_have_no_message = []
     
+    talks=Talk.objects.select_related('talk_to','talk_from').order_by('time')
     for friend in friends:
         # 最新のメッセージの取得
-        latest_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-        ).order_by('time').last()
+        for talk in talks:
+            if talk.talk_to==friend or talk.talk_from==friend:  
+                latest_message = talk
+                break
 
         if latest_message:
             info_have_message.append([friend, latest_message.talk, latest_message.time])
@@ -181,18 +183,19 @@ def friend_search(request):
     info_have_message = []
     info_have_no_message = []
 
-    searched_friend_name=request.GET["name"]
-    searched_friend=User.objects.filter(username=searched_friend_name)
+    searched_info=request.GET["name"]
+    searched_friend=User.objects.filter(Q(username__contains=searched_info)|Q(email__contains=searched_info))
     if searched_friend:
-        friend=User.objects.get(username=searched_friend_name)
-        latest_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-        ).order_by('time').last()
+        # friends=User.objects.filter(username__contain=searched_friend_name)
+        for friend in searched_friend:
+            latest_message = Talk.objects.filter(
+                Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
+            ).order_by('time').last()
 
-        if latest_message:
-            info_have_message.append([friend, latest_message.talk, latest_message.time])
-        else:
-            info_have_no_message.append([friend, None, None])
+            if latest_message:
+                info_have_message.append([friend, latest_message.talk, latest_message.time])
+            else:
+                info_have_no_message.append([friend, None, None])
 
         info.extend(info_have_message)
         info.extend(info_have_no_message)

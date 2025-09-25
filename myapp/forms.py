@@ -64,4 +64,4 @@ class TalkForm(forms.ModelForm):
         widgets = {"talk": forms.TextInput(attrs={"autocomplete": "off"})}
 
 class FriendSearchForm(forms.Form):
-    name=forms.CharField(label="",widget=forms.TextInput(attrs={'placeholder':'検索したいユーザー名を入力','class':'search'}))
+    name=forms.CharField(label="",widget=forms.TextInput(attrs={'placeholder':'検索したいユーザー名またはメールアドレスを入力','class':'search'}))
