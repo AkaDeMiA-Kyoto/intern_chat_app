@@ -39,7 +39,7 @@ class UserNameSettingForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ("username",)
-        labels = {"username": "新しいメール"}
+        labels = {"username": "新しいユーザー名"}
 
 
 class ImageSettingForm(forms.ModelForm):
