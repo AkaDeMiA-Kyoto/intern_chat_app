@@ -225,6 +225,12 @@ def talk_room(request, user_id):
         "friend": friend,
     }
 
+    print(f'{user}')
+
+    print(f'{friend}')
+    print(f'{talk}')
+
+
     # POST（メッセージ送信あり）
     if request.method == "POST":
         # 送信内容を取得
