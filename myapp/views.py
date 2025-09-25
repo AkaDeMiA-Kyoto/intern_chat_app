@@ -110,11 +110,13 @@ def login_view(request):
                 return redirect('one_time_pass', preserve_request=True)
                 # return render(request, "myapp/one_time_pass.html")
             else:
-                print(form.errors)
+                form = LoginForm(data=request.POST)
+                error_message = 'ユーザー名とパスワードが一致しません。'
+                return render(request,"myapp/login.html",{'form':form,'error':error_message,})
         else:
             form = LoginForm()
-            error_message = ''
-            return render(request,"myapp/login.html",{'form':form})
+            error_message = 'ユーザー名とパスワードが一致しません。'
+            return render(request,"myapp/login.html",{'form':form,'error':error_message,})
     else:
         form = LoginForm()
         error_message = ''
@@ -203,7 +205,7 @@ def talk_room(request, user_id):
     user = request.user
     friend = get_object_or_404(User, id=user_id)
     # 自分→友達、友達→自分のトークを全て取得
-    talk = Talk.objects.filter(
+    talk = Talk.objects.select_related('talk_from').filter(
         Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
     ).order_by("time")
     # 送信form

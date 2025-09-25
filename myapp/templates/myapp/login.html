@@ -25,6 +25,9 @@
         {{ form.password }}
         {{ form.password.errors }}
     </div>
+    {% if error %}
+        {{ error }}
+    {% endif %}
     <button type="submit" class="login-form__submit">ログイン</button>
 </form>
 {% endblock %}
