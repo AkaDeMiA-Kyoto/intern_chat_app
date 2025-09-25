@@ -43,7 +43,7 @@ class ImageSettingForm(forms.ModelForm):
         fields = ("icon",)
 
 
-class PasswordForm(PasswordChangeForm):
+class PasswordCForm(PasswordChangeForm):
     """Django 標準パスワード変更フォーム
 
     Djangoはユーザモデルに未加工の (単なるテキストの) パスワードは保存せずハッシュ値でのみ保存する。

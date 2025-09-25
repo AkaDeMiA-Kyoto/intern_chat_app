@@ -350,7 +350,7 @@ class PasswordChange(PasswordChangeView):
         form_class: パスワード変更フォーム
     """
 
-    form_class = PasswordForm
+    form_class = PasswordCForm
     success_url = reverse_lazy("password_change_done")
     template_name = "myapp/password_change.html"
 
