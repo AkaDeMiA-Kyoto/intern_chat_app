@@ -7,7 +7,6 @@ from django.contrib.auth.views import LoginView
 from django.core.mail import send_mail
 from django.db.models import F
 from django.shortcuts import redirect, render
-from django.utils import timezone
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
