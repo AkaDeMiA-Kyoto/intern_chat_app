@@ -222,7 +222,7 @@ def friends(request):
 def get_queryset(user, friend):
     return (Talk.objects
             .filter(Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend))
-            .select_related("talk_from", "talk_to")   # N+1回避
+            .select_related("talk_from", "talk_to")  
             .order_by("time"))
 
 @login_required
@@ -230,7 +230,6 @@ def talk_room(request, user_id):
     user = request.user
     friend = get_object_or_404(User, id=user_id)
 
-    # ★ ここだけ置き換え：取得と並び替えは get_queryset に集約
     talk = get_queryset(user, friend)
 
     form = TalkForm()
@@ -245,7 +244,6 @@ def talk_room(request, user_id):
         form = TalkForm(request.POST, instance=new_talk)
         if form.is_valid():
             form.save()
-            # ★ 安全な指定（URL名にパラメータを渡す）
             return redirect("talk_room", user_id=friend.id)
         else:
             print(form.errors)
