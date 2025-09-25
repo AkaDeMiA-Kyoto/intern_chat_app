@@ -23,6 +23,9 @@ class LoginForm(AuthenticationForm):
 class SecondAuthenticationForm(forms.Form):
     random_password = forms.IntegerField(label="認証コード")
 
+class NameFilterForm(forms.Form):
+    name_filter = forms.CharField(max_length=30)
+
 class MailSettingForm(forms.ModelForm):
     class Meta:
         model = User
