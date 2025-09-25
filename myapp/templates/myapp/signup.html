@@ -1,1 +1,47 @@
-SU
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>signup</title>
+    <link rel="stylesheet" href="{% static 'myapp/css/signup.css'%}">
+</head>
+
+<body>
+    <div>会員登録</div>
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <div>
+            <label for="">Username:</label>
+            <div class="question">{{ form.username }}</div>
+        </div>
+        <div>
+            <label for="">Email:</label>
+            <div class="question">{{ form.email }}</div>
+        </div>
+        <div>
+            <label for="">Password:</label>
+            <div class="question">{{ form.password1 }}</div>
+        </div>
+        <div>
+            <label for="">Password confirmation:</label>
+            <div class="question">{{ form.password2 }}</div>
+        </div>
+        <div>
+            <label for="">img:</label>
+            <div class="question">{{ form.image }}</div>
+        </div>
+        <button type="submit">submit</button>
+        {% if form.errors %}
+        {{ form.username.errors }}
+        {{ form.email.errors }}
+        {{ form.password.errors }}
+        {{ form.password2.errors }}
+        {{ form.image.errors }}
+        {% endif %}
+    </form>
+</body>
+
+</html>

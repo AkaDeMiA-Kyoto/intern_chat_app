@@ -1,0 +1,34 @@
+{% extends 'myapp/base.html' %}
+{%load static%}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>friends</title>
+    {% block extra_style %}<link rel="stylesheet" href="{% static 'myapp/css/friends.css'%}">{% endblock %}
+</head>
+<body>
+    {% block header-title %}友達{% endblock %}
+    {% block content %}
+    {% for i,j in friend_text %}
+    <a href="{% url 'talk_room' i.pk %}">
+        <div class="wrapper1">
+            {% if i.image %}
+            <img src="{{ i.image.url }}" alt="">
+            {% else %}
+            <img src="{% static 'myapp/img/default.png' %}" alt="">
+            {% endif %}
+            <div class="wrapper2">
+                <div class="username">{{ i.username }}</div>
+                <div class="wrapper3">
+                    <div class="text">{{ j.text|truncatechars:17 }}</div>
+                    <div class="time">{{ j.send_time|date:"n/j G:i" }}</div>
+                </div>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+    {% endblock %}
+</body>
+</html>

@@ -1,1 +1,59 @@
-TR
+{% extends 'myapp/base.html' %}
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>talk_room</title>
+    {% block extra_style %}<link rel="stylesheet" href="{% static 'myapp/css/talk_room.css'%}">{% endblock %}
+</head>
+<body>
+    {% block header-title %}
+    <div class="hed">
+        <a href="{% url 'friends' %}" class="return">&lt;</a>
+        <div class="other_name">{{ the_other_user.username }}</div>
+        <a href="#" class=reload>更新</a>
+    </div>
+    {% endblock %}
+    {% block content %}
+    <div class="body">
+        {% for i in messages %}
+        {% if i.sender == request.user %}
+        <div class="wrapper1">
+            <div class="wrapper2">
+                <div>{{ i.sender }}</div>
+                <div class="text">{{ i.text }}</div>
+                <div>{{ i.send_time|date:"n/j G:i" }}</div>
+            </div>
+        </div>
+        {% else %}
+        <div class="wrapper3">
+            <div class="wrapper4">
+                <div class="wrapper5">
+                    {% if i.sender.image %}
+                    <img src="{{ i.sender.image.url }}" alt="">
+                    {% else %}
+                    <img src="{% static 'myapp/img/default.png' %}" alt="">
+                    {% endif %}
+                    <div>{{ i.sender }}</div>
+                </div>
+                <div class="text">{{ i.text }}</div>
+                <div>{{ i.send_time|date:"n/j G:i" }}</div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endblock %}
+    {% block footer %}
+    <footer>
+        <form method="POST" action="{% url 'talk_room' the_other_user.pk %}">
+            {% csrf_token %}
+            <div>{{ form.text }}</div>
+            <button type="submit">送信</button>
+        </form>
+    </footer>
+    {% endblock %}
+</body>
+</html>
