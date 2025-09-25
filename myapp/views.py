@@ -131,14 +131,20 @@ def second_authentication(request):
 @login_required
 def friends(request):
     user = request.user
-    if request.method == "GET":
-        form = NameFilterForm()
-        friends = User.objects.exclude(id=user.id)
-    elif request.method == "POST":
-        form = NameFilterForm(request.POST)
-        if form.is_valid():
-            name_filter = form.cleaned_data.get("name_filter")
-            friends = User.objects.filter(username__contains=name_filter).exclude(id=user.id)
+    form = NameFilterForm(request.GET)
+    friends = User.objects.exclude(id=user.id)
+    if form.is_valid():
+        name_filter = form.cleaned_data.get("name_filter")
+        if name_filter:
+            friends = friends.filter(username__contains=name_filter)
+#    if request.method == "GET":
+#        form = NameFilterForm()
+#        friends = User.objects.exclude(id=user.id)
+#    elif request.method == "POST":
+#        form = NameFilterForm(request.POST)
+#        if form.is_valid():
+#            name_filter = form.cleaned_data.get("name_filter")
+#            friends = User.objects.filter(username__contains=name_filter).exclude(id=user.id)
     # トーク情報とフレンド情報を含む info を作成
     info = []
     info_have_message = []

@@ -9,7 +9,7 @@
 
 {% block content %}
 <div class="friends">
-    <form action="#" method="POST">
+    <form action="#" method="GET">
         {% csrf_token %}
         <img src="{% static 'myapp/img/検索.png' %}" alt="">
         <div>{{ form.name_filter }}</div>
