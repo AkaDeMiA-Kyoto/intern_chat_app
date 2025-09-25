@@ -143,25 +143,28 @@ def friends(request):
     user = request.user
     friends = User.objects.exclude(id=user.id)
     form=FriendSearchForm()
+    talked_friends=[]
 
     # トーク情報とフレンド情報を含む info を作成
     info = []
     info_have_message = []
     info_have_no_message = []
-    
+
     talks=Talk.objects.select_related('talk_to','talk_from').order_by('time')
     for friend in friends:
         # 最新のメッセージの取得
         for talk in talks:
-            if talk.talk_to==friend or talk.talk_from==friend:  
+            if (talk.talk_to==friend and talk.talk_from==user) or (talk.talk_from==friend and talk.talk_to==user):  
                 latest_message = talk
+                info_have_message.append([friend, latest_message.talk, latest_message.time])
+                talked_friends.append(friend)
                 break
-
-        if latest_message:
-            info_have_message.append([friend, latest_message.talk, latest_message.time])
+    for friend in friends:
+        if friend in talked_friends:
+            pass
         else:
-            info_have_no_message.append([friend, None, None])
-    
+            info_have_no_message.append([friend, None, None]) 
+
     # 時間順に並び替え
     info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
     
@@ -214,8 +217,9 @@ def talk_room(request, user_id):
     friend = get_object_or_404(User, id=user_id)
     # 自分→友達、友達→自分のトークを全て取得
     talk = Talk.objects.filter(
-        Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-    ).order_by("time")
+    Q(talk_from_id=user.id, talk_to_id=friend.pk) | Q(talk_to_id=user.id, talk_from_id=friend.pk)
+).order_by("time")
+
     # 送信form
     form = TalkForm()
     # メッセージ送信だろうが更新だろが、表示に必要なパラメーターは変わらないので、この時点でまとめて指定
@@ -225,10 +229,6 @@ def talk_room(request, user_id):
         "friend": friend,
     }
 
-    print(f'{user}')
-
-    print(f'{friend}')
-    print(f'{talk}')
 
 
     # POST（メッセージ送信あり）
