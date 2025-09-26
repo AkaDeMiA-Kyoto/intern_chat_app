@@ -24,6 +24,14 @@ from .forms import (
 )
 from .models import Talk
 
+from django.contrib import messages
+from django.urls import reverse
+from .models import OTPCode
+from django.core.mail import send_mail
+from .forms import OTPVerificationForm
+from datetime import datetime
+
+
 User = get_user_model()
 
 
@@ -76,13 +84,41 @@ def signup_view(request):
 
 class Login(LoginView):
     """ログインページ
-
     GETの時は指定されたformを指定したテンプレートに表示
-    POSTの時はloginを試みる。→成功すればdettingのLOGIN_REDIRECT_URLで指定されたURLに飛ぶ
+    POSTの時はloginを試みる。→成功すればsettingのLOGIN_REDIRECT_URLで指定されたURLに飛ぶ
     """
 
     authentication_form = LoginForm
     template_name = "myapp/login.html"
+
+    def form_valid(self, form):
+        """
+        パスワード認証が成功した後に実行されるメソッド。
+        """
+        user = form.get_user()
+        if user.is_authenticated:
+            login(self.request, user)
+            # 1. パスコードを生成または取得する
+            otp_code, created = OTPCode.objects.get_or_create(user=user)
+            if not created:
+                # 既存のパスコードを更新するロジック
+                otp_code.passcode = otp_code._meta.get_field('passcode').get_default()
+                otp_code.created_at = datetime.now()
+                otp_code.save()
+
+            # 2. パスコードをメールで送信する
+            send_mail(
+                '2段階認証パスコード',
+                f'あなたのパスコードは {otp_code.passcode} です。',
+                'from@example.com',
+                [user.email],
+            )
+
+            # 3. 2段階認証用のビューにリダイレクトする
+            return redirect(reverse('verify_otp')) # 'verify_otp'はurls.pyで定義したURL名
+
+        # パスワード認証に失敗した場合の処理（デフォルトの挙動を継承）
+        return super().form_valid(form)
 
 
 class Logout(LoginRequiredMixin, LogoutView):
@@ -93,6 +129,11 @@ class Logout(LoginRequiredMixin, LogoutView):
 def friends(request):
     user = request.user
     friends = User.objects.exclude(id=user.id)
+
+    query = request.GET.get('q')
+
+    if query:
+        friends = friends.filter(username__icontains=query)
 
     # トーク情報とフレンド情報を含む info を作成
     info = []
@@ -272,3 +313,28 @@ class PasswordChange(PasswordChangeView):
 
 class PasswordChangeDone(PasswordChangeDoneView):
     """Django標準パスワード変更後ビュー"""
+
+
+
+@login_required
+def verify_otp(request):
+    if request.method == 'POST':
+        form = OTPVerificationForm(request.POST)
+        if form.is_valid():
+            passcode = form.cleaned_data.get('passcode')
+            try:
+                # ユーザーとパスコードの組み合わせを検証
+                otp_code = OTPCode.objects.get(user=request.user, passcode=passcode)
+                if otp_code.is_valid():
+                    # 認証成功
+                    login(request, request.user)
+                    messages.success(request, '認証に成功しました。')
+                    otp_code.delete() # パスコードを削除
+                    return redirect(reverse('friends'))  # ログイン後のページにリダイレクト
+                else:
+                    messages.error(request, 'パスコードの有効期限が切れています。再度ログインしてください。')
+            except OTPCode.DoesNotExist:
+                messages.error(request, '無効なパスコードです。')
+    else:
+        form = OTPVerificationForm()
+    return render(request, 'myapp/verify_otp.html', {'form': form})

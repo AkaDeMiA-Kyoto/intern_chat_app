@@ -60,3 +60,6 @@ class TalkForm(forms.ModelForm):
         fields = ("talk",)
         # 入力予測の表示をさせない（めっちゃ邪魔）
         widgets = {"talk": forms.TextInput(attrs={"autocomplete": "off"})}
+
+class OTPVerificationForm(forms.Form):
+    passcode = forms.CharField(label="パスコード", max_length=6)

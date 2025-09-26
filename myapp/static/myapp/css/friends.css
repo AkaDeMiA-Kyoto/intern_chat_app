@@ -95,3 +95,7 @@ header {
 .footer-container {
     background-color: #eee;
 }
+
+.search-form {
+    padding-top: 64px;
+}

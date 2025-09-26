@@ -1,6 +1,9 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import User, AbstractUser
 from django.db import models
 
+from datetime import datetime, timedelta
+from django.utils import timezone
+import random
 
 class User(AbstractUser):
     icon = models.ImageField(
@@ -8,7 +11,7 @@ class User(AbstractUser):
     )
 
 
-# トーク内容を全てdatbaseに保存する形をとる
+# トーク内容を全てdatabaseに保存する形をとる
 # ＞１個のトーク内容に紐づける情報は
 # ＞〇誰が送ったのか
 # ＞〇誰に送ったのか
@@ -28,3 +31,16 @@ class Talk(models.Model):
 
     def __str__(self):
         return "{}>>{}".format(self.talk_from, self.talk_to)
+    
+
+
+def generate_passcode():
+    return random.randint(100000, 999999)
+
+class OTPCode(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    passcode = models.CharField(max_length=6, default=generate_passcode)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_valid(self):
+        return timedelta(minutes=5) >= timezone.now() - self.created_at
