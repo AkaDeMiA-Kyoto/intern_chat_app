@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends "myapp/base.html" %}
 {% load static %}
 
@@ -57,3 +58,38 @@
     });
 </script>
 {% endblock %}
+=======
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'myapp/css/talk_room.css' %}">
+    <title>トークルーム</title>
+</head>
+<body>
+    <header class="talk-header">
+        <a href="{% url 'friends' %}" class="header-button">←</a>
+        <h1 class="talk-partner-name">{{ talk_partner.username }}</h1>
+        <a href="{% url 'talk_room' username=talk_partner.username %}" class="header-button">↻</a>
+    </header>
+
+    <div class="message-list-container">
+        {% for message in messages %}
+            <div class="message-box {% if message.sender == request.user %}my-message{% else %}partner-message{% endif %}">
+                <p>{{ message.content }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <footer class="message-form-footer">
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="content" placeholder="メッセージを入力..." required></textarea>
+            <button type="submit">送信</button>
+        </form>
+    </footer>
+</body>
+</html>
+>>>>>>> 568a137c735e2253106d8e0a27f94eeb14bead04

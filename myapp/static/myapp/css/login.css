@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .login-error-message {
     width: 100vw;
     height: 1rem;
@@ -32,3 +33,18 @@
     color: #000;
     background-color: #fff;
 }
+=======
+button {
+    display: block;
+    background-color: #fff;
+    color: #000;
+    margin: 0 auto;
+    padding: 10px 16px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 20px;
+    border-radius: 8px;
+    width: 120px;
+    border: solid 1px #939393;
+}
+>>>>>>> 568a137c735e2253106d8e0a27f94eeb14bead04

@@ -1,0 +1,7 @@
+.current-icon{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* 画像を丸くトリミング */
+    object-fit: cover; /* 画像が引き延ばされないように調整 */
+    border: 2px solid #000;
+}

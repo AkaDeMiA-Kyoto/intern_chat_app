@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-{% extends "myapp/base.html" %}
-
-{% block header_title %}パスワード変更{% endblock %}
-
-{% block content %}
-<p>パスワード変更完了</p>
-{% endblock %}
-=======
 {% load static %}
 <!DOCTYPE html>
 <html lang="ja">
@@ -14,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'myapp/css/base.css' %}">
-    <title>パスワード変更完了</title>
+    <link rel="stylesheet" href="{% static 'myapp/css/logout.css' %}">
+    <title>設定</title>
 </head>
 <body>
     <header class="header">
@@ -24,10 +16,6 @@
             </span>
         </div>
     </header>
-
-    <div class="container">
-        <p>パスワード変更完了</p>
-    </div>
 
     <footer class="footer">
         <div class="footer-container">
@@ -47,4 +35,3 @@
     </footer>
 </body>
 </html>
->>>>>>> 568a137c735e2253106d8e0a27f94eeb14bead04

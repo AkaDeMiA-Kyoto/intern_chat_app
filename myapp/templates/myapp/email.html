@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-{% extends "myapp/base.html" %}
-
-{% block header_title %}パスワード変更{% endblock %}
-
-{% block content %}
-<p>パスワード変更完了</p>
-{% endblock %}
-=======
 {% load static %}
 <!DOCTYPE html>
 <html lang="ja">
@@ -14,19 +5,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'myapp/css/base.css' %}">
-    <title>パスワード変更完了</title>
+    <link rel="stylesheet" href="{% static 'myapp/css/email.css' %}">
+    <title>メールアドレス変更</title>
 </head>
 <body>
     <header class="header">
         <div class="header-container">
             <span class="header-container__title">
-                {% block header-title %}設定{% endblock %}
+                {% block header-title %}メールアドレス変更{% endblock %}
             </span>
         </div>
     </header>
 
     <div class="container">
-        <p>パスワード変更完了</p>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <p>現在のメールアドレス: <strong>{{ request.user.email }}</strong></p>
+            <input type="email" name="new_email" placeholder="新しいメールアドレス" required>
+            <button type="submit">変更</button>
+        </form>
     </div>
 
     <footer class="footer">
@@ -47,4 +52,3 @@
     </footer>
 </body>
 </html>
->>>>>>> 568a137c735e2253106d8e0a27f94eeb14bead04

@@ -1,7 +1,7 @@
 """intern URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/2.2/topics/http/urls/
+    https://docs.djangoproject.com/en/4.0/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf import settings
 from django.contrib import admin
+<<<<<<< HEAD
 from django.urls import path, include
 import myapp.views as myapp
 from django.contrib.staticfiles.urls import static
@@ -22,6 +23,9 @@ from django.contrib.staticfiles.urls import static
 # 画像表示のためにimport
 from django.conf.urls.static import static
 from django.conf import settings
+=======
+from django.urls import include, path
+>>>>>>> 568a137c735e2253106d8e0a27f94eeb14bead04
 
 urlpatterns = [
     path('admin/', admin.site.urls),

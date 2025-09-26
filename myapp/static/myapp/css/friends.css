@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* headerを避ける */
 .friends {
     padding: 64px 0;
@@ -98,4 +99,63 @@ header {
 
 .search-form {
     padding-top: 64px;
+=======
+.user-link {
+    text-decoration: none;
+    color: inherit;
+    display: block; /* リンク全体をブロック要素にする */
+    margin-bottom: 10px; /* 各ユーザーの間にスペースを作成 */
+}
+
+.user-container {
+    display: flex; /* flexboxを有効にする */
+    align-items: center; /* 垂直方向の中央揃え */
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.img-container {
+    flex-shrink: 0; /* アイコンが縮まないようにする */
+    margin-right: 15px; /* アイコンとテキストの間にスペースを作成 */
+}
+
+/* ユーザーアイコンのスタイル */
+.user-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* 画像を丸くトリミング */
+    object-fit: cover; /* 画像が引き延ばされないように調整 */
+    border: 2px solid #000;
+}
+
+.info-container {
+    flex-grow: 1; /* 残りのスペースをすべて占めるようにする */
+}
+
+.talk-username {
+    /* ユーザー名の一行目のスタイル */
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.talk-info {
+    /* 最後のメッセージと時刻の二行目のスタイル */
+    color: #555;
+    font-size: 0.9em;
+}
+
+.latest-talk {
+    /* メッセージのスタイル */
+    margin-right: 10px;
+}
+
+.talk-time {
+    /* 時刻のスタイル */
+    color: #999;
+}
+
+.empty-space {
+    color: transparent;
+    user-select: none; /* テキストが選択されないようにする */
+>>>>>>> 568a137c735e2253106d8e0a27f94eeb14bead04
 }

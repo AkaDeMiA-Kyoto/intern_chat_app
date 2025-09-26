@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import (
@@ -63,3 +64,12 @@ class TalkForm(forms.ModelForm):
 
 class OTPVerificationForm(forms.Form):
     passcode = forms.CharField(label="パスコード", max_length=6)
+=======
+from django.contrib.auth.forms import UserCreationForm
+from .models import CustomUser
+
+class SignUpForm(UserCreationForm):
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'email', 'password1', 'password2','image')
+>>>>>>> 568a137c735e2253106d8e0a27f94eeb14bead04
