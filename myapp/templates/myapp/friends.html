@@ -14,7 +14,7 @@
                 {% if item.friend.icon %}
                 <img src="{{ item.friend.icon.url }}" alt="icon" class="icon">
                 {% else %}
-                <img src="" alt="icon" class="icon">
+                <img src="{% static "myapp/img/kkrn_icon_user_14.svg" %}" alt="icon" class="icon">
                 {% endif %}
                 <div class="new_chat">
                     <span class="new_chat_name">{{ item.friend.username }}</span>

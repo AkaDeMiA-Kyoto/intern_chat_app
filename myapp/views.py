@@ -30,7 +30,7 @@ class LogoutView(LogoutView):
 @login_required
 def friends(request):
     user = request.user
-    friends = CustomUser.objects.all()
+    friends = CustomUser.objects.exclude(pk=user.pk)
     friends_data = []
     for friend in friends:
         latest_message = Message.objects.filter(
