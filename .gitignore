@@ -278,3 +278,8 @@ $RECYCLE.BIN/
 
 # 環境変数ファイル
 .env
+
+dump.json
+database_backup.sql
+*.sql
+data/*.json
