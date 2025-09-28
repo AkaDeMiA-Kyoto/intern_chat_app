@@ -320,7 +320,7 @@ def user_search_view(request):
     query = request.GET.get('q')
     users = []
     if query:
-        users = User.objects.filter(username__icontains=query)
+        users = User.objects.filter(Q(username__icontains=query)|Q(email__icontains=query))
     context = {
         'users' : users,
         'query' : query,
