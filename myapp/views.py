@@ -1,5 +1,7 @@
 import operator
+import json
 
+from django.utils.crypto import get_random_string
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -17,14 +19,16 @@ from .forms import (
     ImageSettingForm,
     LoginForm,
     MailSettingForm,
-    PasswordChangeForm,
+    PasswordChangeForm2,
     SignUpForm,
     TalkForm,
     UserNameSettingForm,
+    PassForm,
 )
-from .models import Talk
+from .models import Talk,OneTimePass
 
 User = get_user_model()
+from django.core.mail import send_mail
 
 
 def index(request):
@@ -74,15 +78,78 @@ def signup_view(request):
     return render(request, "myapp/signup.html", context)
 
 
-class Login(LoginView):
-    """ログインページ
+# class Login(LoginView):
+#     """ログインページ
 
-    GETの時は指定されたformを指定したテンプレートに表示
-    POSTの時はloginを試みる。→成功すればdettingのLOGIN_REDIRECT_URLで指定されたURLに飛ぶ
-    """
+#     GETの時は指定されたformを指定したテンプレートに表示
+#     POSTの時はloginを試みる。→成功すればdettingのLOGIN_REDIRECT_URLで指定されたURLに飛ぶ
+#     """
 
-    authentication_form = LoginForm
-    template_name = "myapp/login.html"
+#     authentication_form = LoginForm
+#     template_name = "myapp/login.html" 
+
+#formに入力された値と一致するuserが存在するならばメールする
+#メールにあるワンタイムパスワードを入力するページに遷移し一致したならログイン成功
+
+def login_view(request):
+    if request.method == "POST":
+        form = LoginForm(data=request.POST)
+        if form.is_valid():
+            trylogin_user = authenticate(username=form.cleaned_data['username'],password=form.cleaned_data['password'])
+            if trylogin_user is not None:
+                trylogin = User.objects.get(username=form.cleaned_data['username'])
+                onepass = get_random_string(6)
+                request.session['passwd'] = onepass
+                request.session['trylogin'] = trylogin.pk
+                send_mail(
+                    "ログイン2段階認証",
+                    "あなたのワンタイムパスワードは" + str(onepass),
+                    "from@example.com",
+                    [trylogin.email] # 宛先はリスト形式（複数可）
+                )
+                return redirect('one_time_pass', preserve_request=True)
+            else:
+                error_message = 'ユーザー名とパスワードが一致しません。'
+                return render(request,"myapp/login.html",{'form':form,'error':error_message,})
+        else:
+            error_message = 'ユーザー名とパスワードが一致しません。'
+            return render(request,"myapp/login.html",{'form':form,'error':error_message,})
+    else:
+        form = LoginForm()
+        error_message = ''
+        return render(request,"myapp/login.html",{'form':form})
+            
+            
+
+def AuthOneTime(request):
+    if request.method == "POST":
+        form = PassForm(request.POST)
+        if form.is_valid():
+            passwd = request.session.get('passwd')
+            trylogin_id = request.session.get('trylogin')
+            trylogin = User.objects.get(id = trylogin_id)
+            if form.cleaned_data['password'] == passwd:
+                    login(request, trylogin)
+                    return redirect('friends')
+            else:
+                content = {
+                    'form': form,
+                    'errormessage':'誤ったワンタイムパスワードです。',
+                }
+                
+                return render(request,'myapp/one_time_pass.html',content)
+        else:
+            content = {
+                'form': form,
+            }
+            return render(request,'myapp/one_time_pass.html',content)
+
+    else:
+        form = PassForm()
+        content = {
+            'form': form,
+        }
+        return render(request,'myapp/one_time_pass.html',content)
 
 
 class Logout(LoginRequiredMixin, LogoutView):
@@ -92,23 +159,32 @@ class Logout(LoginRequiredMixin, LogoutView):
 @login_required
 def friends(request):
     user = request.user
-    friends = User.objects.exclude(id=user.id)
+    query = request.GET.get('query')
+    if query:
+        friends = User.objects.exclude(id=user.id).filter(Q(username__contains=query) | Q(email__contains=query))
+    else:
+        friends = User.objects.exclude(id=user.id)
 
     # トーク情報とフレンド情報を含む info を作成
     info = []
     info_have_message = []
     info_have_no_message = []
-    
+    Talks = Talk.objects.select_related('talk_to','talk_from').order_by('-time')
+
     for friend in friends:
-        # 最新のメッセージの取得
-        latest_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-        ).order_by('time').last()
+        latest_message = None
+
+    
+        for talk in Talks:
+            if (talk.talk_from == user and talk.talk_to == friend) or (talk.talk_from == friend and talk.talk_to == user):
+                latest_message = talk
+                break
 
         if latest_message:
             info_have_message.append([friend, latest_message.talk, latest_message.time])
         else:
             info_have_no_message.append([friend, None, None])
+
     
     # 時間順に並び替え
     info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
@@ -128,7 +204,7 @@ def talk_room(request, user_id):
     user = request.user
     friend = get_object_or_404(User, id=user_id)
     # 自分→友達、友達→自分のトークを全て取得
-    talk = Talk.objects.filter(
+    talk = Talk.objects.select_related('talk_from').filter(
         Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
     ).order_by("time")
     # 送信form
@@ -265,7 +341,7 @@ class PasswordChange(PasswordChangeView):
         form_class: パスワード変更フォーム
     """
 
-    form_class = PasswordChangeForm
+    form_class = PasswordChangeForm2
     success_url = reverse_lazy("password_change_done")
     template_name = "myapp/password_change.html"
 

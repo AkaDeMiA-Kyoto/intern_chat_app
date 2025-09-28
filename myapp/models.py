@@ -6,6 +6,11 @@ class User(AbstractUser):
     icon = models.ImageField(
         verbose_name="画像", upload_to="uploads", default="images/noimage.png"
     )
+    
+
+class OneTimePass(models.Model):
+    user = models.OneToOneField(User,on_delete=models.PROTECT)
+    password = models.CharField(max_length=6,blank=False,null=True)
 
 
 # トーク内容を全てdatbaseに保存する形をとる
