@@ -32,6 +32,7 @@ from .forms import (
     UserNameSettingForm,
 )
 from .models import Talk
+from django.db.models import Subquery, OuterRef, F
 
 User = get_user_model()
 
@@ -173,48 +174,36 @@ class Logout(LoginRequiredMixin, LogoutView):
     pass
     """ログアウトページ"""
 
-
 @login_required
 def friends(request):
     user = request.user
-
-    # GETリクエストから'query'という名前のパラメータを取得する
     query = request.GET.get('query')
 
-    friends = User.objects.exclude(id=user.id)
+    latest_talk_sq = Talk.objects.filter(
+        Q(talk_from=user, talk_to=OuterRef('pk')) |
+        Q(talk_to=user, talk_from=OuterRef('pk'))
+    ).order_by('-time') 
 
-    # もし検索クエリ(query)が存在すれば、friendsをさらにフィルタリング
+    friends = User.objects.exclude(id=user.id).annotate(
+        latest_message=Subquery(latest_talk_sq.values('talk')[:1]),
+        latest_time=Subquery(latest_talk_sq.values('time')[:1]),
+    )
+
     if query:
-        # usernameにqueryが含まれるユーザーを部分一致・大文字小文字無視で検索
-        friends = friends.filter(username__icontains=query)
+        friends = friends.filter(
+            Q(username__icontains=query) | Q(email__icontains=query)
+        )
 
-    # トーク情報とフレンド情報を含む info を作成
-    info = []
-    info_have_message = []
-    info_have_no_message = []
-    
-    for friend in friends:
-        # 最新のメッセージの取得
-        latest_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-        ).order_by('time').last()
+    friends = friends.order_by(
+        F('latest_time').desc(nulls_last=True)
+    )
 
-        if latest_message:
-            info_have_message.append([friend, latest_message.talk, latest_message.time])
-        else:
-            info_have_no_message.append([friend, None, None])
-    
-    # 時間順に並び替え
-    info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
-    
-    info.extend(info_have_message)
-    info.extend(info_have_no_message)
-    
     context = {
-        "info": info,
+        "friends": friends,
         "query": query,
     }
     return render(request, "myapp/friends.html", context)
+
 
 
 @login_required

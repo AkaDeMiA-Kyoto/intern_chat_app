@@ -25,6 +25,10 @@
     width: 60vw;
 }
 
+input::placeholder {
+    font-size: 11px;
+}
+
 .button {
     border-radius: 10px;
     background-color: #d6d6d6;

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'myapp',
+    'debug_toolbar'
 ]
 """
 今回myappにlogin周りの機能も入れていますが別々にする時はappを追加するのを忘れないようにする
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'intern.urls'
@@ -148,3 +150,5 @@ LOGOUT_REDIRECT_URL = '/'
 
 # 開発用: メール内容をコンソールに出力する
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+INTERNAL_IPS = ['127.0.0.1',]

@@ -18,8 +18,8 @@
         -->
         <div class="search-form-container">
             <i class="fa-solid fa-magnifying-glass" style="color: #575757;"></i>
-            <form method="get" action=""> <!-- action="" は現在のURLに送信するという意味 -->
-                <input class="input-bar"type="text" name="query" placeholder="ユーザー名で検索..." value="{{ query|default:'' }}">
+            <form method="get" action=""> 
+                <input class="input-bar"type="text" name="query" placeholder="ユーザー名またはメールアドレスで検索..." value="{{ query|default:'' }}">
                 <button type="submit" class="button">検索</button>
             </form>
         </div>
@@ -28,17 +28,17 @@
             friendsではなく、作成したtalk_listでforをまわす
             ＞ここでどういうリストなら表示ができるかを考えてリストの項目を設計
         -->
-        {% for friend, talk, time in info %}
+        {% for friend in friends %}
         <a class="friend-list__link" href="{% url 'talk_room' friend.id %}">
         <li class="friend-list__item">
             <!-- それぞれが別のトーク画面に飛ぶようにリンクをはる -->
                 <img class="friend-list__usericon" src="{{ friend.icon.url }}">
                 <div class="friend-list__username">{{ friend.username }}</div>
                 <!-- ここから最新のトークを表示する部分 -->
-                {% if talk %}
+                {% if friend.latest_message %}
                 <div class="friend-list__talk">
-                    <p class="friend-list__content">{{ talk }}</p>
-                    <p class="friend-list__time">{{ time|date:"n/j H:i" }}</p>
+                    <p class="friend-list__content">{{ friend.latest_message }}</p>
+                    <p class="friend-list__time">{{ friend.latest_time|date:"n/j H:i" }}</p>
                 </div>
                 {% endif %}
         </li>
