@@ -28,6 +28,10 @@ urlpatterns = [
     path('', include('myapp.urls')),
 ]
 
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [path("__debug__/", include(debug_toolbar.urls))]
+
 """ 
 画像をローカルに保存するために必要
 """
