@@ -9,7 +9,7 @@ from django.contrib.auth.views import (
     PasswordChangeDoneView,
     PasswordChangeView,
 )
-from django.db.models import Q
+from django.db.models import Q,Subquery, OuterRef
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 
@@ -105,30 +105,15 @@ class Logout(LoginRequiredMixin, LogoutView):
 @login_required
 def friends(request):
     user = request.user
-    friends = User.objects.exclude(id=user.id)
-
-    # トーク情報とフレンド情報を含む info を作成
-    info = []
-    info_have_message = []
-    info_have_no_message = []
-    
+    latest_message = Talk.objects.filter(
+            Q(talk_from=user, talk_to=OuterRef('pk')) | Q(talk_to=user, talk_from=OuterRef('pk'))
+        ).order_by('-time')
+    friends = User.objects.exclude(id=user.id).annotate(
+        latest_message=Subquery(latest_message.values('talk')[:1]),
+        latest_time=Subquery(latest_message.values('time')[:1])
+    )
     for friend in friends:
-        # 最新のメッセージの取得
-        latest_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-        ).order_by('time').last()
-
-        if latest_message:
-            info_have_message.append([friend, latest_message.talk, latest_message.time])
-        else:
-            info_have_no_message.append([friend, None, None])
-    
-    # 時間順に並び替え
-    info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
-    
-    info.extend(info_have_message)
-    info.extend(info_have_no_message)
-    
+            info.append((friend, friend.latest_talk, friend.latest_time))
     context = {
         "info": info,
     }
@@ -329,16 +314,18 @@ class searchView(View):
         info = []
         if word:
             results = User.objects.filter(username__contains=word)
-            for friend in results:
-                latest_talk = Talk.objects.filter(
-                    talk_from=friend
-                ).order_by('-time').first()
-                if latest_talk:
-                    info.append((friend, latest_talk.talk, latest_talk.time))
-                else:
-                    info.append((friend, None, None))
         else:
-            results = User.objects.none()  
+            results = User.objects.all()  
+        latest_talk_qs = Talk.objects.filter(
+            talk_from=OuterRef('pk')
+        ).order_by('-time')
+
+        results = results.annotate(
+            latest_talk=Subquery(latest_talk_qs.values('talk')[:1]),
+            latest_time=Subquery(latest_talk_qs.values('time')[:1])
+        )
+        for friend in results:
+            info.append((friend, friend.latest_talk, friend.latest_time))
         print('検索ワード:', word)
         print('検索結果:', results)
         context = {'results': results, 'info': info}

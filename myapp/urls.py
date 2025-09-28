@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,include
 
 from . import views
 
@@ -22,4 +22,5 @@ urlpatterns = [
     path("username_change/", views.username_change, name="username_change"),
     path("username_change_done/", views.username_change_done, name="username_change_done"),
     path("passcode_input/", views.passcodeView.as_view(), name="passcode"),
+    path("__debug__/", include("debug_toolbar.urls")),
 ]
