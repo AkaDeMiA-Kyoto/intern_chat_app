@@ -132,24 +132,70 @@ def friends(request):
 
     query = request.GET.get('q')
 
-    if query:
-        friends = friends.filter(username__icontains=query)
 
     # トーク情報とフレンド情報を含む info を作成
     info = []
     info_have_message = []
     info_have_no_message = []
+
+    # N+1問題修正前
+    # if query:
+    #     friends = friends.filter(username__icontains=query)
+    # 
+    # for friend in friends:
+    #     # 最新のメッセージの取得
+    #     latest_message = Talk.objects.filter(
+    #         Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
+    #     ).order_by('time').last()
+
+    #     if latest_message:
+    #         info_have_message.append([friend, latest_message.talk, latest_message.time])
+    #     else:
+    #         info_have_no_message.append([friend, None, None])
+
+
+    # N+1問題修正後
+    if query:
+        friends = friends.filter(
+            Q(username__icontains=query) | Q(email__icontains=query)
+        )
+
+    # フィルタリングされたフレンドのIDリスト
+    friend_ids = list(friends.values_list('id', flat=True))
+
+    # 2. 全てのフレンドとの間の最新メッセージを一度に取得 (クエリ 2回目)
     
+    # 自分に関連するすべてのトークを取得し、時間降順にソートする
+    all_talks = Talk.objects.filter(
+        Q(talk_from=user) | Q(talk_to=user)
+    ).select_related(
+        'talk_from', 'talk_to' # N+1防止のため、Userデータも同時に取得
+    ).order_by('-time')
+
+    # 3. Pythonのメモリ上で、各フレンドIDの最新メッセージを特定
+    latest_talks_dict = {}
+    
+    for talk in all_talks:
+        # このメッセージの相手（フレンド）を特定
+        friend_id = talk.talk_from.id if talk.talk_to.id == user.id else talk.talk_to.id
+        
+        # フィルタリングされたフレンドに含まれていて、かつ
+        # まだ最新メッセージが辞書に登録されていなければ（降順なので最初に見つけたものが最新）
+        if friend_id in friend_ids and friend_id not in latest_talks_dict:
+            latest_talks_dict[friend_id] = talk
+
+    # 4. info リストを構築 (N+1問題は解消済み)
+    info_have_message = []
+    info_have_no_message = []
+
     for friend in friends:
-        # 最新のメッセージの取得
-        latest_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-        ).order_by('time').last()
+        latest_message = latest_talks_dict.get(friend.id)
 
         if latest_message:
+            # Talkオブジェクトからデータを取得
             info_have_message.append([friend, latest_message.talk, latest_message.time])
         else:
-            info_have_no_message.append([friend, None, None])
+            info_have_no_message.append([friend, None, None])    
     
     # 時間順に並び替え
     info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
@@ -168,10 +214,20 @@ def talk_room(request, user_id):
     # ユーザ・友達をともにオブジェクトで取得
     user = request.user
     friend = get_object_or_404(User, id=user_id)
+
     # 自分→友達、友達→自分のトークを全て取得
+    # N+1問題解消後
+    # talk = Talk.objects.filter(
+    #     Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
+    # ).order_by("time")
+
+    # N+1問題解消後
     talk = Talk.objects.filter(
         Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
+    ).select_related(
+        'talk_from', 'talk_to'  # 送信者と受信者のUserデータを一括取得
     ).order_by("time")
+
     # 送信form
     form = TalkForm()
     # メッセージ送信だろうが更新だろが、表示に必要なパラメーターは変わらないので、この時点でまとめて指定

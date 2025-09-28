@@ -1,4 +1,5 @@
-from django.urls import path
+from django.urls import path, include
+from django.conf import settings
 
 from . import views
 
@@ -23,3 +24,10 @@ urlpatterns = [
     path("username_change/", views.username_change, name="username_change"),
     path("username_change_done/", views.username_change_done, name="username_change_done"),
 ]
+
+# DEBUGモードでのみツールバーのURLを追加
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
