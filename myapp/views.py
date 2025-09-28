@@ -137,33 +137,36 @@ def friends(request):
         name_filter = form.cleaned_data.get("name_filter")
         if name_filter:
             friends = friends.filter(username__contains=name_filter)
-#    if request.method == "GET":
-#        form = NameFilterForm()
-#        friends = User.objects.exclude(id=user.id)
-#    elif request.method == "POST":
-#        form = NameFilterForm(request.POST)
-#        if form.is_valid():
-#            name_filter = form.cleaned_data.get("name_filter")
-#            friends = User.objects.filter(username__contains=name_filter).exclude(id=user.id)
-    # トーク情報とフレンド情報を含む info を作成
-    info = []
+    
+    
+    all_my_talks = Talk.objects.filter(
+        Q(talk_from=user) | Q(talk_to=user)
+    ).select_related('talk_from', 'talk_to')
+
+
+    latest_talks = {}
+    for talk in all_my_talks:
+        if talk.talk_from == user:
+            friend_id = talk.talk_to.id
+        else:
+            friend_id = talk.talk_from.id
+        if friend_id not in latest_talks or talk.time > latest_talks[friend_id].time:
+            latest_talks[friend_id] = talk
+
     info_have_message = []
     info_have_no_message = []
     
     for friend in friends:
-        # 最新のメッセージの取得
-        latest_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-        ).order_by('time').last()
-
+        latest_message = latest_talks.get(friend.id)
+        
         if latest_message:
             info_have_message.append([friend, latest_message.talk, latest_message.time])
         else:
             info_have_no_message.append([friend, None, None])
     
-    # 時間順に並び替え
     info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
     
+    info = []
     info.extend(info_have_message)
     info.extend(info_have_no_message)
 
@@ -183,7 +186,7 @@ def talk_room(request, user_id):
     # 自分→友達、友達→自分のトークを全て取得
     talk = Talk.objects.filter(
         Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-    ).order_by("time")
+    ).select_related('talk_from', 'talk_to').order_by("time")
     # 送信form
     form = TalkForm()
     # メッセージ送信だろうが更新だろが、表示に必要なパラメーターは変わらないので、この時点でまとめて指定
