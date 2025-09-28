@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from . import views
 
@@ -23,4 +23,5 @@ urlpatterns = [
     path("mail_change_done/", views.mail_change_done, name="mail_change_done"),
     path("username_change/", views.username_change, name="username_change"),
     path("username_change_done/", views.username_change_done, name="username_change_done"),
+    path("__debug__/", include("debug_toolbar.urls")),
 ]

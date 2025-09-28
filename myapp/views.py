@@ -27,6 +27,8 @@ from .models import Talk, OneTimeCode, User
 import random
 from django.core.mail import send_mail
 
+from django.db.models import OuterRef, Subquery
+
 
 User = get_user_model()
 
@@ -144,7 +146,19 @@ def friends(request):
     friends = User.objects.exclude(id=user.id)
 
     if query:
-        friends = friends.filter(username__icontains=query)
+        friends = friends.filter(Q(username__icontains=query) | Q(email__icontains=query))
+
+    latest_message_subquery = (
+        Talk.objects.filter(
+            Q(talk_from=user, talk_to=OuterRef("pk")) | Q(talk_to=user, talk_from=OuterRef("pk"))
+        )
+        .order_by("-time")
+    )
+
+    friends = friends.annotate(
+        last_talk=Subquery(latest_message_subquery.values("talk")[:1]),
+        last_time=Subquery(latest_message_subquery.values("time")[:1]),
+    )
 
     # トーク情報とフレンド情報を含む info を作成
     info = []
@@ -152,13 +166,8 @@ def friends(request):
     info_have_no_message = []
     
     for friend in friends:
-        # 最新のメッセージの取得
-        latest_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-        ).order_by('time').last()
-
-        if latest_message:
-            info_have_message.append([friend, latest_message.talk, latest_message.time])
+        if friend.last_time:
+            info_have_message.append([friend, friend.last_talk, friend.last_time])
         else:
             info_have_no_message.append([friend, None, None])
     
