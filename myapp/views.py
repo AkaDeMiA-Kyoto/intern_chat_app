@@ -100,6 +100,7 @@ def send_otp(user):
     )
 
 def login_view(request):
+    error_message = None
     if request.method == "POST":
         username = request.POST["username"]
         password = request.POST["password"]
@@ -108,9 +109,12 @@ def login_view(request):
             send_otp(user)
             request.session["pending_user_id"] = user.id
             return redirect("onetimecode")
-    return render(request, "myapp/login.html")
+        else:
+            error_message = "正しいユーザー名とパスワードを入力してください"
+    return render(request, "myapp/login.html", {"error_message": error_message})
 
 def onetimecode_view(request):
+    error_message = None
     if request.method == "POST":
         code = request.POST["code"]
         user_id = request.session.get("pending_user_id")
@@ -122,9 +126,11 @@ def onetimecode_view(request):
                     login(request, user) 
                     del request.session["pending_user_id"]
                     return redirect("friends")
+                else:
+                    error_message = "ワンタイムコードが間違っています"
             except User.DoesNotExist:
                 pass
-    return render(request, "myapp/onetimecode.html")
+    return render(request, "myapp/onetimecode.html", {"error_message": error_message})
 
 
 class Logout(LoginRequiredMixin, LogoutView):

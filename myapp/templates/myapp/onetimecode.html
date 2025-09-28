@@ -14,6 +14,9 @@
   <input type="text" name="code" id="name"><br>
   <button type="submit">送信</button>
 </form>
+{% if error_message %}
+  <p>{{ error_message }}</p>
+{% endif %}
 {% endblock %}
 
 {% block footer %}{% endblock %}
