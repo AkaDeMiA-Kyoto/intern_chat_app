@@ -313,7 +313,9 @@ class searchView(View):
         word=request.GET.get('search')
         info = []
         if word:
-            results = User.objects.filter(username__contains=word)
+            results = User.objects.filter(
+        Q(username__contains=word) | Q(email__contains=word)
+    )
         else:
             results = User.objects.all()  
         latest_talk_qs = Talk.objects.filter(
