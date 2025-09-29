@@ -9,7 +9,7 @@ from django.contrib.auth.views import (
     PasswordChangeDoneView,
     PasswordChangeView,
 )
-from django.db.models import Q
+from django.db.models import OuterRef, Q, Subquery
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 
@@ -91,22 +91,33 @@ class Logout(LoginRequiredMixin, LogoutView):
 
 @login_required
 def friends(request):
-    user = request.user
-    friends = User.objects.exclude(id=user.id)
 
+    user = request.user
+    query = request.GET.get('q')
+    
     # トーク情報とフレンド情報を含む info を作成
     info = []
     info_have_message = []
     info_have_no_message = []
+
+    latest_talks = Talk.objects.filter(
+        Q(talk_from=request.user, talk_to=OuterRef("pk"))| Q(talk_to=request.user, talk_from=OuterRef("pk"))
+    ).order_by("-time")
+
+    friends = (User.objects.exclude(id=user.id).annotate(
+        latest_message=Subquery(latest_talks.values("talk")[:1]),
+        latest_time=Subquery(latest_talks.values("time")[:1])
+    ))
+
+    if query:
+        friends = friends.filter(
+            Q(username__icontains=query) | Q(email__icontains=query)
+            )
     
     for friend in friends:
         # 最新のメッセージの取得
-        latest_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-        ).order_by('time').last()
-
-        if latest_message:
-            info_have_message.append([friend, latest_message.talk, latest_message.time])
+        if friend.latest_message:
+            info_have_message.append([friend, friend.latest_message, friend.latest_time])
         else:
             info_have_no_message.append([friend, None, None])
     
@@ -118,6 +129,8 @@ def friends(request):
     
     context = {
         "info": info,
+        "friends": friends,
+        "query": query,
     }
     return render(request, "myapp/friends.html", context)
 

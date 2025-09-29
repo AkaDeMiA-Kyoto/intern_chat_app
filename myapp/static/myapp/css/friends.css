@@ -95,3 +95,18 @@ header {
 .footer-container {
     background-color: #eee;
 }
+
+.form{
+    display:flex;
+}
+
+.button {
+    width:20%; 
+    height:35px;
+}
+
+.input {
+    width:300px;
+    padding: 10px;
+    -webkit-appearance: none;
+}

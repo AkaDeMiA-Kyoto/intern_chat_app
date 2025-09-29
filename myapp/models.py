@@ -6,8 +6,7 @@ class User(AbstractUser):
     icon = models.ImageField(
         verbose_name="画像", upload_to="uploads", default="images/noimage.png"
     )
-
-
+    is_verified = models.BooleanField(default=False)
 # トーク内容を全てdatbaseに保存する形をとる
 # ＞１個のトーク内容に紐づける情報は
 # ＞〇誰が送ったのか

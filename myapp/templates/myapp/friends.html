@@ -9,6 +9,20 @@
 
 {% block content %}
 <div class="friends">
+    <div class="search">
+    <form action="{% url 'friends' %}" class="form" method="get">
+        <input type="text" name="q" placeholder="ユーザー名またはメールアドレスで検索" value="{{ query|default:'' }}" class="input">
+        <button type="submit" class="button">検索</button>
+    </form>
+    <ul>
+        {% if query %}
+            {% for user in users %}
+            <li>{{user.username}}({{ user.email }})</li>
+            {% empty %}
+            {% endfor %}
+        {% endif %}
+    </ul>
+    </div>
     <!-- 友達のリスト表示部分 -->
     <ul class="friend-list">
 
