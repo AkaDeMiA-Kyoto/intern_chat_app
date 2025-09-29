@@ -115,8 +115,8 @@ def second_authentication(request):
                 user_id = request.session.get('2a_user_id')
                 user = User.objects.get(id=user_id)
                 login(request, user)
-                del request.session['2a_user_id']
-                del request.session['2a_password']
+                request.session.pop('2a_user_id', None)
+                request.session.pop('2a_password', None)
                 return redirect("friends")
             else:
                 form.add_error(None, '認証コードが正しくありません。')
