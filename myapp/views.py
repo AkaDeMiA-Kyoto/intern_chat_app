@@ -214,7 +214,7 @@ def talk_room(request, user_id):
     # 自分→友達、友達→自分のトークを全て取得
     talk = Talk.objects.filter(
         Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-    ).order_by("time")
+    ).order_by("time").select_related("talk_from", "talk_to")
     # 送信form
     form = TalkForm()
     # メッセージ送信だろうが更新だろが、表示に必要なパラメーターは変わらないので、この時点でまとめて指定
