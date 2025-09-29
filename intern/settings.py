@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-import os
+import os, environ
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ozyl(r!*=wht$a7^pp+wp=zg5g96yg5wz!7fwe$gq63874z9##'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -122,6 +122,8 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -137,3 +139,11 @@ LOGIN_REDIRECT_URL = 'friends'
 LOGOUT_REDIRECT_URL = 'index'
 
 TIME_ZONE = 'Asia/Tokyo' # タイムゾーンを東京にする
+
+# デプロイ環境のための設定(追加)
+if os.path.isfile('.env'): # .envファイルが存在しない時にもエラーが発生しないようにする
+    env = environ.Env(DEBUG=(bool, False))
+    environ.Env.read_env('.env')
+
+    DEBUG = env('DEBUG')
+    ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
