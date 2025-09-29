@@ -125,7 +125,7 @@ def friends(request):
     query = request.GET.get("q", "")
     friends = User.objects.exclude(id=user.id)
     if query:
-        friends = friends.filter(username__icontains=query)
+        friends = friends.filter( Q(username__icontains=query) | Q(email__icontains=query) )
 
     latest_talks = Talk.objects.filter(
         Q(talk_from=user, talk_to=OuterRef("pk")) | Q(talk_to=user, talk_from=OuterRef("pk"))
