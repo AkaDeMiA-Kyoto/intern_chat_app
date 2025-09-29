@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'myapp',
         'USER': 'ivyak',
-        'PASSWORD': '',
+        'PASSWORD': '7415Ring',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -128,7 +128,6 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
-# STATICFILES_DIRS = ["/home/ivyak/django_project/intern_chat_app/static"]
 
 
 # Default primary key field type
