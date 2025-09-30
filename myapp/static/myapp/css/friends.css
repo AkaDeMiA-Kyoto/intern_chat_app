@@ -5,10 +5,13 @@
 
 /* バックエンド追加機能 */
 .friend-list {
+    position: relative;
     list-style: none;
+    display: block;
     padding: 0;
     margin: 0;
     height: calc(100vh - 128px);
+    z-index: 1;
 }
 
 /*
@@ -17,28 +20,36 @@
  */
 .friend-list__item {
     list-style: none;
+    display: block;
     width: calc(100% - 32px);
     height: 4rem;
     padding: 8px 16px;
     border-bottom: solid 1px #888;
     position: relative;
+    z-index: 1;
 }
 
 /* 下にしか枠線を引いていないので、初めの要素にだけ上にも枠線を引くように設定 */
 .friend-list__item:first-child {
+    position: relative;
     border-top: solid 1px #888;
+    z-index: 1;
 }
 
 .friend-list__link {
+    position: relative;
     display: block;
     text-decoration: none;
     color: #000;
+    z-index: 1;
 }
 
 .friends__list-wrap {
+    position: relative;
     width: 100%;
     margin: 0;
     padding: 0;
+    z-index: 1;
 }
 
 /* ユーザーアイコンの表示 */
@@ -52,17 +63,20 @@
     float: left;
     /* ここは調べた方が早い、便利要素object-fit */
     object-fit: cover;
-    z-index: -1;
+    z-index: 1;
 }
 
 .friend-list__username {
+    position: relative;
     font-size: 1.2rem;
     width: calc(100% - 4rem - 8px);
     margin: 0 0 0 auto;
+    z-index: 1;
 }
 
 /* LINEのようにユーザーの最後のやりとりを表示できるようにしてみる */
 .friend-list__talk {
+    position: relative;
     width: calc(100% - 4rem - 8px);
     margin: 1rem 0 1rem auto;
     display: -webkit-flex;
@@ -71,26 +85,31 @@
     justify-content: space-between;
     font-size: 0.8rem;
     color: #888;
+    z-index: 1;
 }
 
 .friend-list__content {
+    position: relative;
     max-width: calc(100% - 2.4rem - 16px);
     margin: auto 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    z-index: 1;
 }
 
 .friend-list__time {
     width: 2.4rem;
     margin: auto 0;
+    z-index: 1;
 }
 /* ここまで　LINEのようにユーザーの最後のやりとりを表示できるようにしてみる */
 
 /* ここはbaseに入れたいな */
 header {
-    position: fixed;
+    position: relative;
     background-color: #eee;
+    z-index: 100000;
 }
 
 .footer-container {

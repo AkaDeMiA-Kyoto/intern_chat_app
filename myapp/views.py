@@ -24,7 +24,7 @@ import unicodedata
 from django.shortcuts import render
 from django.contrib.auth import get_user_model
 from django.db.models import Q, OuterRef, Subquery, F, Value, Case, When, CharField
-
+from django.db.models import OuterRef, Subquery
 
 from .forms import (
     ImageSettingForm,
@@ -104,34 +104,30 @@ class Logout(LoginRequiredMixin, LogoutView):
 @login_required
 def friends(request):
     user = request.user
-    friends = User.objects.exclude(id=user.id)
 
-    # トーク情報とフレンド情報を含む info を作成
-    info = []
-    info_have_message = []
-    info_have_no_message = []
-    
-    for friend in friends:
-        # 最新のメッセージの取得
-        latest_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-        ).order_by('time').last()
+    latest_talk_qs = (
+        Talk.objects
+        .filter(
+            Q(talk_from=user, talk_to=OuterRef("pk")) |
+            Q(talk_to=user, talk_from=OuterRef("pk"))
+        )
+        .order_by("-time")
+    )
 
-        if latest_message:
-            info_have_message.append([friend, latest_message.talk, latest_message.time])
-        else:
-            info_have_no_message.append([friend, None, None])
-    
-    # 時間順に並び替え
-    info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
-    
-    info.extend(info_have_message)
-    info.extend(info_have_no_message)
-    
-    context = {
-        "info": info,
-    }
-    return render(request, "myapp/friends.html", context)
+    friends_qs = (
+        User.objects
+        .exclude(id=user.id)
+        .annotate(
+            latest_talk_text=Subquery(latest_talk_qs.values("talk")[:1]),
+            latest_talk_time=Subquery(latest_talk_qs.values("time")[:1]),
+        )
+    )
+
+    info = [(f, f.latest_talk_text, f.latest_talk_time) for f in friends_qs]
+
+    info.sort(key=lambda x: (x[2] is None, x[2] or 0))
+
+    return render(request, "myapp/friends.html", {"info": info})
 
 
 @login_required
@@ -140,9 +136,11 @@ def talk_room(request, user_id):
     user = request.user
     friend = get_object_or_404(User, id=user_id)
     # 自分→友達、友達→自分のトークを全て取得
-    talk = Talk.objects.filter(
-        Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-    ).order_by("time")
+    talk = (Talk.objects
+        .filter(Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend))
+        .select_related("talk_from", "talk_to")                     
+        .only("talk", "time", "talk_from__username", "talk_to__username")
+        .order_by("time"))
     # 送信form
     form = TalkForm()
     # メッセージ送信だろうが更新だろが、表示に必要なパラメーターは変わらないので、この時点でまとめて指定

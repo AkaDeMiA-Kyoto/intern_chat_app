@@ -146,3 +146,11 @@ LOGIN_REDIRECT_URL = 'friends'
 LOGOUT_REDIRECT_URL = '/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": lambda request: True,
+    "SHOW_COLLAPSED": True,
+    "SQL_WARNING_THRESHOLD": 50,
+    "RESULTS_CACHE_SIZE": 200,
+    "ENABLE_STACKTRACES": True,
+}
