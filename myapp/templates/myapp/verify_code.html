@@ -1,0 +1,26 @@
+{% extends "myapp/base.html" %}
+{% load static %}
+
+{% block header_title %}ログイン{% endblock %}
+
+{% block content %}
+<p>ご登録のメールアドレスに認証コードを送信しました。</p>
+<p>届いた6桁のコードを入力してください。</p>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<form method="post" action="{% url 'verify_code' %}">
+    {% csrf_token %}
+    <label for="id_code">認証コード:</label>
+    <input type="text" id="id_code" name="code" maxlength="6" required>
+    <button type="submit">送信</button>
+</form>
+
+{% endblock %}
+{% block footer %}{% endblock %}

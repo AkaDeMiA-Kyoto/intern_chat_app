@@ -1,13 +1,15 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
 from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
     path("signup/", views.signup_view, name="signup"),
-    path("login/", views.login_view, name="login"),
-    path("one_time_pass/", views.AuthOneTime, name='one_time_pass'),
+    path("login/", views.Login.as_view(), name="login"),
     path("friends/", views.friends, name="friends"),
+    path("friends/search/", views.user_search_view, name="user_search"),
     # トーク画面
     # 誰とのトークかを、URLにて判別
     # ユーザー名に重複が許されていないので、ユーザー名で判別
@@ -22,4 +24,9 @@ urlpatterns = [
     path("mail_change_done/", views.mail_change_done, name="mail_change_done"),
     path("username_change/", views.username_change, name="username_change"),
     path("username_change_done/", views.username_change_done, name="username_change_done"),
+    path('send_code/', views.generate_and_send_code, name='send_code'),
+    path('verify_code/', views.verify_code, name='verify_code'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -3,90 +3,12 @@
     padding: 64px 0;
 }
 
-
-
 /* バックエンド追加機能 */
 .friend-list {
     list-style: none;
     padding: 0;
     margin: 0;
-    height: calc(100vh - 128px - 2rem);
-}
-
-.search {
-    position: relative;
-    height: 2.5em;
-    background-color: #a9a9a9;
-}
-
-.search_box {
-    position: relative;
-    top: -2.2rem;
-    height: 1.75rem;
-    left: 60px;
-    width: calc(100vw - 80px);
-}
-
-.search_field {
-    position: relative;
-    width: calc(100vw - 160px);
-    height: 1.5rem;
-    font-size: 18px;
-    border-color: #a9a9a9;
-    border-style: hidden;
-    border-radius: 10px;
-    top: -2.5px;
-}
-
-.glass {
-    display: inline-block;
-    position: relative;
-    width: 1em;
-    height: 1em;
-    color: #454343;
-    font-size: 35px;
-    left: 10px;
-    top: 5px;
-    z-index: 3;
-}
-
-.glass::before {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 0.7em;
-    height: 0.7em;
-    box-sizing: border-box;
-    border: 0.15em solid currentColor;
-    border-radius: 50%;
-    background-color: #a9a9a9;
-    content: "";
-}
-
-.glass::after {
-    position: absolute;
-    top: 0px;
-    left: 50%;
-    z-index: -1;
-    transform: rotate(-45deg);
-    width: 0.15em;
-    height: 1em;
-    box-sizing: border-box;
-    background-color: currentColor;
-    content: "";
-}
-
-.search_button {
-    position: relative;
-    left: 10px;
-    width: 3em;
-    font-size: 18px;
-    height: 1.7em;
-    border-radius: 15px;
-    color: #454343;
-    border: solid 3px;
-    border-color: #454343;
-    background: #a9a9a9;
+    height: calc(100vh - 128px);
 }
 
 /*
@@ -94,6 +16,7 @@
  * 全体のバランスを取れるように設計する
  */
 .friend-list__item {
+    list-style: none;
     width: calc(100% - 32px);
     height: 4rem;
     padding: 8px 16px;
@@ -172,4 +95,8 @@ header {
 
 .footer-container {
     background-color: #eee;
+}
+
+li {
+    list-style: none;
 }
