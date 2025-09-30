@@ -1,6 +1,8 @@
 /* headerを避ける */
 .friends {
     padding: 64px 0;
+    position: relative;
+    z-index: 0;
 }
 
 /* バックエンド追加機能 */
