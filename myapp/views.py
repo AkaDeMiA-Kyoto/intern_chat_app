@@ -11,7 +11,7 @@ from django.contrib.auth.views import (
     PasswordChangeDoneView,
     PasswordChangeView,
 )
-from django.db.models import Q
+from django.db.models import Q, OuterRef, Subquery, Max
 from django.shortcuts import get_object_or_404, redirect, render
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
@@ -97,28 +97,38 @@ def friends(request):
     user = request.user
     friends = User.objects.exclude(id=user.id)
 
-    # トーク情報とフレンド情報を含む info を作成
+
+    latest_talk_id_subquery = Talk.objects.filter(
+        Q(talk_from=user, talk_to=OuterRef('pk')) | Q(talk_to=user, talk_from=OuterRef('pk'))
+    ).order_by('-time', '-pk').values('pk')[:1]
+
+    friends_with_latest = friends.annotate(
+        latest_talk_id=Subquery(latest_talk_id_subquery)
+    )
+
+    talk_ids = friends_with_latest.values_list('latest_talk_id', flat=True)
+    valid_talk_ids = [id for id in talk_ids if id is not None]
+
+    latest_talks = Talk.objects.filter(
+        pk__in=valid_talk_ids
+    ).select_related('talk_from', 'talk_to').in_bulk()
+    
     info = []
     info_have_message = []
-    info_have_no_message = []
-    
-    for friend in friends:
-        # 最新のメッセージの取得
-        latest_message = Talk.objects.filter(
-            Q(talk_from=user, talk_to=friend) | Q(talk_to=user, talk_from=friend)
-        ).order_by('time').last()
+    info_no_message = []
 
+    for friend in friends_with_latest:
+        latest_message = latest_talks.get(friend.latest_talk_id) 
+        
         if latest_message:
             info_have_message.append([friend, latest_message.talk, latest_message.time])
         else:
-            info_have_no_message.append([friend, None, None])
-    
-    # 時間順に並び替え
+            info_no_message.append([friend, None, None])
+
     info_have_message = sorted(info_have_message, key=operator.itemgetter(2), reverse=True)
-    
     info.extend(info_have_message)
-    info.extend(info_have_no_message)
-    
+    info.extend(info_no_message)
+
     context = {
         "info": info,
     }
