@@ -1,0 +1,34 @@
+{% extends 'myapp/base.html' %}
+{% load static %}
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'myapp/css/friends.css' %}">
+{% endblock %}
+
+{% block header-title %}友達{% endblock %}
+
+{% block content %}
+<div class="friends-container">
+    <ul class="friends-list">
+         {% for it in items %}
+        <li class="friend-item">
+            <div class="friend-info">
+                <span class="friend-name">{{ it.other.username }}</span>
+                <span class="last-mes">
+                    {% if it.last_msg %}
+                        {{ it.last_msg.text|truncatechars:30 }}
+                        <small>（{{ it.last_msg.created_at|date:"m/d H:i" }}）</small>
+                    {% endif %}
+                </span>
+            </div>
+            <div style="margin-top:6px;">
+                {% if it.room %}
+                <a href="{% url 'talk_room' it.room.id %}">開く</a>
+                {% else %}
+                <a href="{% url 'start_dm' it.other.id %}">DM開始</a>
+                {% endif %}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

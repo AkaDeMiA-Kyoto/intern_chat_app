@@ -1,0 +1,35 @@
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+html{
+    height: 100vh;
+}
+
+ul, li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.friends-container {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.friend-item {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px 20px;
+}
+
+.friend-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
